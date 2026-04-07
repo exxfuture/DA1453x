@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="6. The Bluetooth® Device Name" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">
+    <link rel="prev" title="4. Initial Project" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>5. The Bluetooth® Device Address</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#non-public-static-bd-address">5.1. Non-public (Static BD Address)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#non-public-static-unique-bd-address">5.2. Non-public (Static Unique BD Address)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#non-public-user-generated-bdaddress">5.3. Non-public (User Generated BDAddress)</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">5. </span>The Bluetooth® Device Address</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-bluetooth-device-address">
+<span id="bluetooth-device-address"></span><h1><span class="section-number">5. </span>The Bluetooth® Device Address<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#the-bluetooth-device-address" title="Link to this heading"></a></h1>
+<p>Bluetooth® devices identify themselves using a 48-bit device address. This is commonly represented as a set of <strong>12-hex</strong> digits and is often referred to as a BD address. These addresses are used in order to manage connections and keep track of BLE bondings.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/bd_android.jfif"><img alt="_images/bd_android.jfif" src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/bd_android.jfif" style="width: 300px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 12 </span><span class="caption-text">12-hex digits as Bluetooth device address</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="warning admonition">
+<p class="admonition-title">iOS address hex</p>
+<p>If you are using a Bluetooth® Explorer Tool on an iOS device then the BD address will not be displayed. If you don’t have access to an Android phone then try using the Bluetooth® Explorer Tool built into the Chrome browser, see <a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html#before-you-get-started"><span class="std std-ref">Before You Get Started</span></a> for details.</p>
+</div>
+<dl class="simple">
+<dt>There are two types of BD addresses:</dt><dd><dl class="simple">
+<dt><strong>Public addresses</strong>:</dt><dd><p>They are registered with and purchased from the IEEE and contain an identifier of the entity who registered the address range (OUI). Public addresses remain static and unique for a given Bluetooth® device.</p>
+</dd>
+<dt><strong>Non-public addresses</strong>:</dt><dd><ul class="simple">
+<li><p>No registration with the IEEE is required (and no payments to be made)</p></li>
+<li><p>The first two bits of a non-public address are binary ones. In other words, the first hex digit of the address <strong>must</strong> be <code class="docutils literal notranslate"><span class="pre">0xC</span></code>, <code class="docutils literal notranslate"><span class="pre">0xD</span></code>, <code class="docutils literal notranslate"><span class="pre">0xE</span></code>, or <code class="docutils literal notranslate"><span class="pre">0xF</span></code></p></li>
+<li><p>The address can be device specific and remain constant over the life of a product</p></li>
+<li><p>The address can change at some given interval - often to ensure some level of privacy</p></li>
+<li><p>The address can be randomly generated at boot-up</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+</dl>
+<div class="error admonition">
+<p class="admonition-title">Random addresses</p>
+<p><strong>Non-public addresses</strong> are often inaccurately labeled as <strong>Random</strong>. This term is misleading because, although these addresses can be generated randomly, they don’t have to be truly random.</p>
+</div>
+<dl class="simple">
+<dt>SDK6 offers various methods for the assignment of the Bluetooth® Device Address:</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>If you are using a <strong>public</strong> address</dt><dd><ul>
+<li><p>A BD Address can be stored in a specific part of the OTP of the device during production. The SDK will automatically handle this. If you are using a module then this field has likely already been programmed</p></li>
+<li><p>If there is no address stored in OTP, the SDK6 will assign the address provided in the file: <strong>…_config_advanced.h</strong> (previously mentioned these files in <a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#user-configuration-modules"><span class="std std-ref">User configuration modules</span></a> .The address is defined as <code class="docutils literal notranslate"><span class="pre">CFG_NVDS_TAG_BD_ADDRESS</span></code> modify this regarding target).</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>If you are using a <strong>non-public</strong> address</dt><dd><ul>
+<li><p>The SDK6 can manage generation of a random address at boot-up</p></li>
+<li><p>The SDK6 can manage generation of a static random address which is unique to the device</p></li>
+<li><p>The user can generate an address based on a custom scheme</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+<p><strong>In the following, we will explore the use of non-public addresses.</strong></p>
+<section id="non-public-static-bd-address">
+<h2><span class="section-number">5.1. </span>Non-public (Static BD Address)<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#non-public-static-bd-address" title="Link to this heading"></a></h2>
+<p>We have already seen the result of using a public address which is how <strong>empty_peripheral_template</strong> was implemented initially. In the following we will explore <strong>options</strong> for generation of non-public addresses. First, we will allow the SDK6 to set a <strong>new</strong> random non-public address at <strong>every boot-up</strong>.</p>
+<ul>
+<li><dl>
+<dt>In <strong>user_config.h</strong>, change the definition of <code class="docutils literal notranslate"><span class="pre">USER_CFG_ADDRESS_MODE</span></code> to <code class="docutils literal notranslate"><span class="pre">APP_CFG_ADDR_STATIC</span></code></dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/*************************************************************************</span>
+<span class="cm">* Privacy Capabilities and address configuration of local device:</span>
+<span class="cm">* - APP_CFG_ADDR_PUB               No Privacy, Public BDA</span>
+<span class="cm">* - APP_CFG_ADDR_STATIC            No Privacy, Random Static BDA</span>
+<span class="cm">* - APP_CFG_HOST_PRIV_RPA          Host Privacy, RPA, Public Identity</span>
+<span class="cm">* - APP_CFG_HOST_PRIV_NRPA         Host Privacy, NRPA (non-connectable ONLY)</span>
+<span class="cm">* - APP_CFG_CNTL_PRIV_RPA_PUB      Controller Privacy, RPA or PUB, Public Identity</span>
+<span class="cm">* - APP_CFG_CNTL_PRIV_RPA_RAND     Controller Privacy, RPA, Public Identity</span>
+<span class="cm">*</span>
+<span class="cm">* Select only one option for privacy / addressing configuration.</span>
+<span class="cm">**************************************************************************</span>
+<span class="cm">*/</span>
+<span class="hll"><span class="cp">#define USER_CFG_ADDRESS_MODE       APP_CFG_ADDR_STATIC</span>
+</span></pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>Build the project (<strong>F7</strong>) and load it onto target (twice, press <strong>Ctrl+F5</strong>)</p></li>
+<li><p>Use your BLE explorer app to verify that the BD address has changed and that it changes at every reboot.</p></li>
+</ul>
+</section>
+<section id="non-public-static-unique-bd-address">
+<h2><span class="section-number">5.2. </span>Non-public (Static Unique BD Address)<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#non-public-static-unique-bd-address" title="Link to this heading"></a></h2>
+<p>In software development and certain applications, having a <strong>static</strong> and <strong>unique</strong> address for a device is often crucial.
+This would be an address that <strong>does not</strong> change after a reboot and that is <strong>globally unique to a specific device</strong>.</p>
+<dl>
+<dt>We can achieve this with a minor modification of the callback triggered when a non-public address is requested by the BLE stack:</dt><dd><ul>
+<li><p>Open the file <strong>user_callback_config.h</strong> and identify the callback <code class="docutils literal notranslate"><span class="pre">app_on_generate_static_random_addr</span></code>. This callback is currently re-routed to the function <code class="docutils literal notranslate"><span class="pre">default_app_generate_static_random_addr</span></code></p></li>
+<li><dl>
+<dt>Change the re-routing to the function <code class="docutils literal notranslate"><span class="pre">default_app_generate_unique_static_random_addr</span></code>:</dt><dd><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- .app_on_generate_static_random_addr = default_app_generate_static_random_addr,</span>
+<span class="gi">+ .app_on_generate_static_random_addr = default_app_generate_unique_static_random_addr,</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>Build the project (<strong>F7</strong>) and load it onto target (twice, press <strong>Ctrl+F5</strong>)</p></li>
+<li><p>Use your BLE explorer app to verify that the BD address has changed and that it no longer changes at every reboot. If you have a second development kit, you will be able to observe that it advertises it’s own static unique address when running the same firmware</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="non-public-user-generated-bdaddress">
+<h2><span class="section-number">5.3. </span>Non-public (User Generated BDAddress)<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html#non-public-user-generated-bdaddress" title="Link to this heading"></a></h2>
+<p>Occasionally, the <strong>user</strong> would like to <strong>assign</strong> a BD address based on some custom scheme.
+To handle this we will need to again re-route the callback that we just modified - this time to our own custom function.</p>
+<dl>
+<dt>This bonus re-routing will also show you how to redirect a callback to user space, a basic concept in SDK6:</dt><dd><ul>
+<li><p>Open the file <strong>user_callback_config.h</strong> and identify the callback <code class="docutils literal notranslate"><span class="pre">app_on_generate_static_random_addr</span></code>.</p></li>
+<li><dl>
+<dt>Re-route the callback to a, still to be implemented, custom function that we will call <code class="docutils literal notranslate"><span class="pre">user_get_bdaddr</span></code>:</dt><dd><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- .app_on_generate_static_random_addr = app_on_generate_static_random_addr,</span>
+<span class="gi">+ .app_on_generate_static_random_addr = user_get_bdaddr,</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>In <strong>empty_peripheral_template.h</strong>, add a prototype for the custom function we are about to implement:</dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_get_bdaddr</span><span class="p">(</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">bd_addr</span><span class="o">*</span><span class="w"> </span><span class="n">address</span><span class="w"> </span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>We are now ready to implement the user generated BD address assignment. At the bottom of the <strong>user_empty_peripheral_template.c</strong> file, add the following function:</dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_get_bdaddr</span><span class="p">(</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">bd_addr</span><span class="w"> </span><span class="o">*</span><span class="n">address</span><span class="w"> </span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="k">struct</span><span class="w"> </span><span class="nc">bd_addr</span><span class="w"> </span><span class="n">tempAddr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0xEE</span><span class="p">,</span><span class="mh">0xFF</span><span class="p">,</span><span class="mh">0xC0</span><span class="p">,</span><span class="mh">0xEE</span><span class="p">,</span><span class="mh">0xFF</span><span class="p">,</span><span class="mh">0xC0</span><span class="p">};</span>
+<span class="w">   </span><span class="n">memcpy</span><span class="p">(</span><span class="n">address</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tempAddr</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>Build the project (<strong>F7</strong>) and load it onto target (twice, press <strong>Ctrl+F5</strong>)</p></li>
+<li><p>Use your BLE explorer app to verify that the BD address has changed to <strong>C0:FF:EE:C0:FF:EE</strong> (notice that we provided the address in little-endian format).</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>Some explanation is required as this point. The callback sends us a pointer to a structure that our function can populate with a new BD address.We basically copy our custom address into this structure of 6 octets using <code class="docutils literal notranslate"><span class="pre">memcpy</span></code>.</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html" class="btn btn-neutral float-left" title="4. Initial Project" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html" class="btn btn-neutral float-right" title="6. The Bluetooth® Device Name" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./5. The Bluetooth® Device Address — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

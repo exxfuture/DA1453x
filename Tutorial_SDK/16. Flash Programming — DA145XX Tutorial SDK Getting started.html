@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>16. Flash Programming — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="17. OTP Programming" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">
+    <link rel="prev" title="15. The Software Cursor" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>16. Flash Programming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#preparing-the-development-kit"><button class="toctree-expand" title="Open/close menu"></button>16.1. Preparing the Development Kit</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da1453x-devkt-p-flash-jumper-settings">16.1.1. DA1453x DEVKT-P Flash Jumper Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14531-devkt-p-flash-jumper-settings">16.1.2. DA14531 DEVKT-P Flash Jumper Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14531-usb-kit-flash-jumper-settings">16.1.3. DA14531 USB Kit Flash Jumper Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14585-basic-kit-flash-jumper-settings">16.1.4. DA14585 Basic Kit Flash Jumper Settings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14585-6-pro-kit-flash-jumper-settings">16.1.5. DA14585/6 PRO Kit Flash Jumper Settings</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#programming-flash-memory">16.2. Programming Flash Memory</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">16. </span>Flash Programming</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="flash-programming">
+<h1><span class="section-number">16. </span>Flash Programming<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#flash-programming" title="Link to this heading"></a></h1>
+<p>In the previous sections we built our application, loaded it directly into the RAM of the DA1453x and DA1458x devices, and executed it using the debugger. This process is suitable for development but for production the application will be stored in either OTP, external SPI flash or loaded via the I2C or UART by the ROM based bootloader present in all DA1453x and DA14585/DA14586 devices.</p>
+<p>Refer to the following documents for more details about the boot options available on DA1453x and DA14585/DA14586 devices:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://lpccs-docs.renesas.com/DA14535/AN-B-072-DA14531-Booting-from-serial-interfaces/index.html">DA1453x</a></p></li>
+<li><p><a class="reference external" href="https://www.renesas.com/us/en/document/apn/b-055-da14585-interfacing-external-memory">DA14585</a></p></li>
+</ul>
+</div></blockquote>
+<p>In this section we will describe how to program your application code into the external SPI flash present on all DA1453x and DA1458x development kit boards, allowing the Bootloader to load it into RAM and start execution following a power on reset.</p>
+<section id="preparing-the-development-kit">
+<h2><span class="section-number">16.1. </span>Preparing the Development Kit<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#preparing-the-development-kit" title="Link to this heading"></a></h2>
+<p>Before the SPI flash can be programmed we need to ensure the jumpers that connect it to the DA1453x and DA1458x device are present. In the following sections we describe the required jumper configuration for each of the Development Kits.</p>
+<section id="da1453x-devkt-p-flash-jumper-settings">
+<h3><span class="section-number">16.1.1. </span>DA1453x DEVKT-P Flash Jumper Settings<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da1453x-devkt-p-flash-jumper-settings" title="Link to this heading"></a></h3>
+<p>The additional jumpers illustrated below need to be added to the DA1453x DEVKT-P (DA14535 daughter board) to enable flash programming.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14535_pro_flash.svg"><img alt="_images/da14535_pro_flash.svg" src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14535_pro_flash.svg" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 30 </span><span class="caption-text">Additional jumpers for flash programming on the DA1453x DEVKT-P</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="da14531-devkt-p-flash-jumper-settings">
+<h3><span class="section-number">16.1.2. </span>DA14531 DEVKT-P Flash Jumper Settings<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14531-devkt-p-flash-jumper-settings" title="Link to this heading"></a></h3>
+<p>The additional jumpers illustrated below need to be added to the DA14531 DEVKT-P to enable flash programming.</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14531_pro_flash.png"><img alt="_images/da14531_pro_flash.png" src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14531_pro_flash.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 31 </span><span class="caption-text">Additional jumpers for flash programming on the DA14531 DEVKT-P</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="da14531-usb-kit-flash-jumper-settings">
+<h3><span class="section-number">16.1.3. </span>DA14531 USB Kit Flash Jumper Settings<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14531-usb-kit-flash-jumper-settings" title="Link to this heading"></a></h3>
+<p>No additional configuration is required, the switch settings detailed in the <a class="reference external" href="http://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html#da14531-usb-kit">Preparing the development kit</a> section of this tutorial already enable flash programming.</p>
+</section>
+<section id="da14585-basic-kit-flash-jumper-settings">
+<h3><span class="section-number">16.1.4. </span>DA14585 Basic Kit Flash Jumper Settings<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14585-basic-kit-flash-jumper-settings" title="Link to this heading"></a></h3>
+<p>The additional jumpers illustrated below need to be added to the DA14585 Basic kit to enable flash programming.</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14585_basic_flash.png"><img alt="_images/da14585_basic_flash.png" src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14585_basic_flash.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 32 </span><span class="caption-text">Additional jumpers for flash programming on the DA14585 Basic Development Kit</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="da14585-6-pro-kit-flash-jumper-settings">
+<h3><span class="section-number">16.1.5. </span>DA14585/6 PRO Kit Flash Jumper Settings<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#da14585-6-pro-kit-flash-jumper-settings" title="Link to this heading"></a></h3>
+<p>The additional jumpers illustrated below need to be added to the DA14585/86 PRO kit to enable flash programming when using a DA14585 Daughter Board.</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14585_86_pro_flash.png"><img alt="_images/da14585_86_pro_flash.png" src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/da14585_86_pro_flash.png" style="width: 900px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 33 </span><span class="caption-text">Additional jumpers for flash programming on the DA14585/86 PRO Development Kit</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>These additional jumper should not be added when using a DA14586 Daughter Board as this device contains internal flash memory.</p>
+</div>
+</section>
+</section>
+<section id="programming-flash-memory">
+<h2><span class="section-number">16.2. </span>Programming Flash Memory<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#programming-flash-memory" title="Link to this heading"></a></h2>
+<p>Once you have correctly configured the jumpers on your development kit you can the use the Flash Programmer tool contained within the SmartSnippets™ Toolbox to program your application into the flash memory. If you’re not already familiar with the SmartSnippets™ Toolbox then it is <strong>strongly recommended</strong> that you review the section 19 of the <a class="reference external" href="http://lpccs-docs.renesas.com/UM-B-083/index.html">User Manual</a>.</p>
+<p>To program the flash, start the SmartSnippets Toolbox, connect to the development kit board using the JTAG option and select the Flash Programmer Tool from the tools menu. Now load the application you want to program using the “Import from file” button.</p>
+<div class="hint admonition">
+<p class="admonition-title">Flashing : Hex and Binary Files</p>
+<p>You can use the tool program either a hex file or a binary file into flash. For the empty_peripheral_template project these files can be found in the following folder: <code class="docutils literal notranslate"><span class="pre">empty_peripheral_template\\Keil_5\\out_DA145xx\\Objects</span></code>.</p>
+</div>
+<figure class="align-center" id="id6">
+<img alt="_images/flash_prog_file.png" src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/flash_prog_file.png">
+<figcaption>
+<p><span class="caption-number">Figure 34 </span><span class="caption-text">Select a file to program into Flash memory</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>To program the loaded file into the flash memory simply press the <strong>Connect</strong> button and then the <strong>Burn &amp; Verify</strong> button. Once programming is complete you’ll see a message saying <strong>SPI memory verification succeeded</strong> in the Log window.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html" class="btn btn-neutral float-left" title="15. The Software Cursor" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html" class="btn btn-neutral float-right" title="17. OTP Programming" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./16. Flash Programming — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

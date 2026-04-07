@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<!-- saved from url=(0202)https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html -->
+<html class="writer-html5" lang="en" data-content_root="../"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3. BLE Development Environment and First Application — UM-B-119: DA1453x/DA1458x SW Platform Reference Manual</title>
+      <link rel="stylesheet" type="text/css" href="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/lpc_cs_theme.css">
+      <link rel="stylesheet" type="text/css" href="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/copybutton.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/js"></script><script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/jquery.js"></script>
+      <script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/documentation_options.js"></script>
+      <script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/doctools.js"></script>
+      <script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/sphinx_highlight.js"></script>
+      <script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/clipboard.min.js"></script>
+      <script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/copybutton.js"></script>
+    <script src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/search.html">
+    <link rel="next" title="4. User Guides" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/User_guides/User_guides.html">
+    <link rel="prev" title="2. Software Platform Overview" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html">
+            
+              <img src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html">2. Software Platform Overview</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>3. BLE Development Environment and First Application</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#development-environment"><button class="toctree-expand" title="Open/close menu"></button>3.1. Development Environment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#overview">3.1.1. Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#software-development-kit-sdk-structure"><button class="toctree-expand" title="Open/close menu"></button>3.1.2. Software Development Kit (SDK) Structure</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#root-directory">3.1.2.1. root Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#binaries-directory">3.1.2.2. binaries Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#config-directory">3.1.2.3. config Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#doc-directory">3.1.2.4. doc Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#projects-directory">3.1.2.5. projects Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#sdk-directory">3.1.2.6. sdk Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#third-party-directory">3.1.2.7. third_party Directory</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#utilities-directory">3.1.2.8. utilities Directory</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#proximity-reporter-your-first-bluetooth-low-energy-application"><button class="toctree-expand" title="Open/close menu"></button>3.2. Proximity Reporter: Your First Bluetooth Low Energy Application</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#application-description">3.2.1. Application Description</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#user-interface">3.2.2. User Interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#loading-the-project">3.2.3. Loading the Project</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#going-through-the-code"><button class="toctree-expand" title="Open/close menu"></button>3.2.4. Going Through the Code</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#basic-operation">3.2.4.1. Basic Operation</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#initialization">3.2.4.2. Initialization</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#events-processing-and-callbacks">3.2.4.3. Events Processing and Callbacks</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#ble-application-abstract-code-flow">3.2.5. BLE Application Abstract Code Flow</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#building-the-project-for-different-targets">3.2.6. Building the Project for Different Targets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#interacting-with-ble-application">3.2.7. Interacting with BLE Application</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/User_guides/User_guides.html">4. User Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Peripheral%20Example%20Applications/Peripheral%20Example%20Applications.html">5. Peripheral Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/appendices.html">6. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Revision_History/Revision_History.html">7. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html">UM-B-119: DA1453x/DA1458x SW Platform Reference Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3. </span>BLE Development Environment and First Application</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ble-development-environment-and-first-application">
+<h1><span class="section-number">3. </span>BLE Development Environment and First Application<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#ble-development-environment-and-first-application" title="Link to this heading"></a></h1>
+<section id="development-environment">
+<h2><span class="section-number">3.1. </span>Development Environment<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#development-environment" title="Link to this heading"></a></h2>
+<section id="overview">
+<h3><span class="section-number">3.1.1. </span>Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#overview" title="Link to this heading"></a></h3>
+<p>This section first provides an overview for the DA1453x/DA1458x development environment that consists of the:</p>
+<ul class="simple">
+<li><p><strong>Arm Keil uVision IDE/Debugger</strong>, <strong>Arm C/C++ Compiler</strong>, and its essential middleware components <strong>Keil IDE</strong> and the <strong>Keil build</strong> tools</p></li>
+<li><p>Arm <strong>Segger JTAG</strong> cables and software that is fully supported by the Keil environment</p></li>
+<li><p>DA1453x/DA1458x <strong>Software Development Kit (SDK)</strong></p></li>
+</ul>
+<p>The development environment is also supported by a number of other utilities and tools such as:</p>
+<p>SmartSnippets™ Toolbox, which is a framework of PC-based utilities to control the DA1453x/DA1458x development kit, and consists of:</p>
+<ul class="simple">
+<li><p><strong>Booter</strong> that is used to download hex files to DA1453x/DA1458x RAM over UART and to reset the chip to execute from there</p></li>
+<li><p><strong>Board Setup</strong> is used to manage communication with the chip</p></li>
+<li><p><strong>UART Terminal</strong> is available only for connection over UART. After the selected file is successfully downloaded to the DA1453x/DA1458x chip,
+the ‘Start Terminal’ button is activated and the user can click the button to receive data from UART</p></li>
+<li><p><strong>Terminal Scripting</strong> tool is a Terminal Emulation tool bundled with SmartSnippents Toolbox that enables users to download a firmware and interact
+with a target device in real time</p></li>
+<li><p><strong>Power Profiler</strong> is used for plotting the current (and associated charge) drawn by the DA1453x/DA1458x on the DK in real time over USB</p></li>
+<li><p><strong>Battery Lifetime Estimator</strong> tool is available for DA1458x families. This tool is used to estimate the battery lifetime for a selected device family</p></li>
+<li><p><strong>OTP Programmer</strong> tool is used to burn the OTP Memory and OTP Header</p></li>
+<li><p><strong>SPI Flash/EEPROM Programmer</strong> is used to download an image file to the SPI Flash Memory or EEPROM</p></li>
+<li><p><strong>RF Master</strong> is an implementation of Bluetooth SIG standardized receiver and
+transmitter HCI commands and additional custom test HCI commands. RF Master has replaced the
+Connection Manager tool. RF Master supports the following tests:</p>
+<ul>
+<li><p>LE Tx/Rx</p></li>
+<li><p>Unmodulated Tx/Rx</p></li>
+<li><p>Continuous Tx</p></li>
+<li><p>XTAL</p></li>
+<li><p>Sleep</p></li>
+</ul>
+</li>
+</ul>
+<p>The “User Guide” html for all these utilities is available under the “help” drop down menu of the SmartSnippets™ Toolbox application.
+This is installed by SmartSnippets™ Studio.</p>
+</section>
+<section id="software-development-kit-sdk-structure">
+<h3><span class="section-number">3.1.2. </span>Software Development Kit (SDK) Structure<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#software-development-kit-sdk-structure" title="Link to this heading"></a></h3>
+<p>The SDK structure is defined in the following sections.</p>
+<section id="root-directory">
+<h4><span class="section-number">3.1.2.1. </span>root Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#root-directory" title="Link to this heading"></a></h4>
+<p>The SDK contains the following main directories.</p>
+<figure class="align-center" id="root-tree">
+<img alt="../_images/root_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/root_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 17 </span><span class="caption-text"><strong>root Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#root-tree" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="binaries-directory">
+<h4><span class="section-number">3.1.2.2. </span>binaries Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#binaries-directory" title="Link to this heading"></a></h4>
+<p>This directory holds the executable binaries of the PC applications stored in the host_apps directory as
+well as the binary file of the production test tool firmware. These binaries are provided so that the
+developer can run/test the applications with no need to compile the projects.</p>
+<figure class="align-center" id="binaries-tree">
+<img alt="../_images/binaries_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/binaries_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 18 </span><span class="caption-text"><strong>binaries Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#binaries-tree" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="config-directory">
+<h4><span class="section-number">3.1.2.3. </span>config Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#config-directory" title="Link to this heading"></a></h4>
+<p>This directory contains the DA1453x/DA1458x configuration files for the SmartSnippets tool and binary/hex files of
+flash programmer and secondary_boatloader.</p>
+</section>
+<section id="doc-directory">
+<h4><span class="section-number">3.1.2.4. </span>doc Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#doc-directory" title="Link to this heading"></a></h4>
+<p>This directory contains the SDK license files and chm files with the API documentation for each device family.</p>
+</section>
+<section id="projects-directory">
+<h4><span class="section-number">3.1.2.5. </span>projects Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#projects-directory" title="Link to this heading"></a></h4>
+<p>This directory contains the various SDK example projects. The projects directory is divided into two
+main directories:</p>
+<ul class="simple">
+<li><p>host_apps</p></li>
+<li><p>target_apps</p></li>
+</ul>
+<figure class="align-center" id="projects-tree">
+<img alt="../_images/projects_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/projects_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 19 </span><span class="caption-text"><strong>projects Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#projects-tree" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="host-apps-directory">
+<h5><span class="section-number">3.1.2.5.1. </span>host_apps Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#host-apps-directory" title="Link to this heading"></a></h5>
+<p>This directory holds example applications that run on an external processor (PC or other CPU).
+Actually, it contains the proximity and SUOTA initiator applications that run on PCs.</p>
+<figure class="align-center" id="host-apps-tree">
+<img alt="../_images/host_apps_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/host_apps_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 20 </span><span class="caption-text"><strong>host_apps Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#host-apps-tree" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="target-apps-directory">
+<h5><span class="section-number">3.1.2.5.2. </span>target_apps Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#target-apps-directory" title="Link to this heading"></a></h5>
+<p>This directory holds example applications that run on the DA1453x/DA1458x SoC. Each project directory
+contains Keil project files, along with the specific project’s source code and configuration files as
+shown in <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#target-apps-tree"><span class="std std-numref">Figure 21</span></a>.</p>
+<figure class="align-center" id="target-apps-tree">
+<img alt="../_images/target_apps_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/target_apps_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 21 </span><span class="caption-text"><strong>target_apps Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#target-apps-tree" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The <code class="docutils literal notranslate"><span class="pre">ble_examples</span></code> directory contains DA1453x/DA1458x SoC BLE application examples for “Integrated processor” or “External processor” configuration.
+The ble_examples demonstrate the BLE functionality of the DA1453x/DA1458x SoC. The following list describes briefly each BLE example.</p>
+<ul class="simple">
+<li><p><strong>ble_app_barebone</strong>: BLE example that demonstrates basic BLE procedures such as advertising, connection, connection parameters update
+and implementation of the device information service. It is based on the “Integrated processor” configuration.</p></li>
+<li><p><strong>ble_app_profile</strong>: BLE example that demonstrates the same as the ble_app_barebone project, plus the implementation of a custom service (128-bit UUID)
+defined by the user. The application demonstrates only the custom database creation. It is based on the “Integrated processor” configuration.</p></li>
+<li><p><strong>ble_app_peripheral</strong>: BLE example that demonstrates the same as the ble_app_profile. The application also adds some basic interaction over the
+provided custom service (read/write/notify values). It is based on the “Integrated processor” configuration.</p></li>
+<li><p><strong>ble_app_sleepmode</strong>: BLE example that demonstrates the same as the ble_app_profile. The application adds the use of the sleep mode API, and makes use
+of the two available sleep modes – Extended sleep mode (with or without OTP copy) with OTP copy. It is based on the “Integrated processor” configuration.</p></li>
+<li><p><strong>ble_app_security</strong>: BLE example that demonstrates the same as the ble_app_profile. The application adds the various security/privacy features.
+It is based on the “Integrated processor” configuration.</p></li>
+<li><p><strong>ble_app_ota</strong>: BLE example that demonstrates the same as the ble_app_profile. The application adds the over-the-air programming feature.
+It is based on the “Integrated processor” configuration.</p></li>
+<li><p><strong>ble_app_all_in_one</strong>: only for DA1458x targets, BLE example that combines in one example the features of the previous ble_app_&lt;example&gt; projects.
+It is based on the “Integrated processor” configuration.</p></li>
+<li><p><strong>prox_monitor_ext</strong>: BLE example that demonstrates the proximity monitor service. It also includes the device information client service.
+It uses the “External processor” configuration.</p></li>
+<li><p><strong>prox_reporter</strong>: BLE example that demonstrates the proximity reporter service. It also includes the device information server service,
+the battery server service and the software patching over the air receiver (SUOTAR) service. It uses the “Integrated processor” configuration.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">hci</span></code> directory contains a DA1453x/DA1458x SoC application example for HCI interface over UART.</p>
+<ul class="simple">
+<li><p><strong>hci</strong>: example that demonstrates HCI over serial interface that allows the development of the host on a separate processor.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">misc</span></code> directory contains miscellaneous application examples for the DA1453x/DA1458x SoC. The following list describes briefly each example.</p>
+<ul class="simple">
+<li><p><strong>aes</strong>: AES Encryption demo application is a simple application example, which demonstrates how the CryptoAPI can be used to encrypt or decrypt user data using
+the AES algorithm.</p></li>
+<li><p><strong>ancs_client</strong>: only for DA1458x targets, ANCS Client example application is a sample implementation of an Apple Notification Center Service (ANCS) Client.</p></li>
+<li><p><strong>ble_app_noncon</strong>: BLE example that demonstrates non-connectable advertising.</p></li>
+<li><p><strong>ble_app_lecb</strong>: BLE example that demonstrates LE credit based channels.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">peripheral_examples</span></code> directory contains DA1453x/DA1458x SoC peripheral examples. The examples demonstrate some of the non-BLE functionality of the
+DA1453x/DA1458x SoC. The following list describes briefly each peripheral example.</p>
+<ul class="simple">
+<li><p><strong>adc</strong>: analog to digital conversion example</p></li>
+<li><p><strong>blinky</strong>: blinks a led</p></li>
+<li><p><strong>i2c</strong>: i2c interface example</p></li>
+<li><p><strong>quadrature_decoder</strong>: quadrature decoder example</p></li>
+<li><p><strong>shared</strong>: shared library for peripheral examples</p></li>
+<li><p><strong>spi</strong>: spi interface example</p></li>
+<li><p><strong>systick</strong>: SysTick timer control example</p></li>
+<li><p><strong>timer0</strong>: timer0 control example</p></li>
+<li><p><strong>timer2</strong>: timer2 control example</p></li>
+<li><p><strong>uart</strong>: uart communication example</p></li>
+</ul>
+<p>The Keil projects contained in the ble_examples SDK directories are based on the structure shown in <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#project-directory-example-layout"><span class="std std-numref">Figure 22</span></a>.</p>
+<figure class="align-center" id="project-directory-example-layout">
+<img alt="../_images/project_directory_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/project_directory_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 22 </span><span class="caption-text"><strong>Project Directory Example Layout</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#project-directory-example-layout" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The Keil_5 directory contains the Keil project files <code class="docutils literal notranslate"><span class="pre">*.uvprojx</span></code> and <code class="docutils literal notranslate"><span class="pre">*.uvoptx</span></code>.</p>
+<p>The src directory contains the user’s application source code and header files (e.g. <code class="docutils literal notranslate"><span class="pre">user_&lt;example_name&gt;.c</span></code>, <code class="docutils literal notranslate"><span class="pre">user_&lt;example_name&gt;.h</span></code> or more) and two directories:
+config and platform. These two directories contain files that must be included in a user project structure. The names of these
+files must not be altered by the user.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The custom_profile directory can be omitted when the user does not use a Custom profile in his application.</p>
+</div>
+<figure class="align-center" id="src-project-directory-example-layout">
+<img alt="../_images/src_directory_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/src_directory_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 23 </span><span class="caption-text"><strong>src Project Directory Example Layout</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#src-project-directory-example-layout" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_config_advanced.h</span></code>: holds DA1453x/DA1458x advanced configuration settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_config_basic.h</span></code>: holds DA1453x/DA1458x basic configuration settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code>: callback functions that handle various events or operations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_config.h</span></code>: holds advertising parameters, connection parameters, etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_config_sw_ver.h</span></code>: holds user-specific information about the software version.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_custs1_def.c</span></code>: defines the structure of the Custom 1 profile database structure.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_custs_config.c</span></code>: defines the cust_prf_funcs[] array, which contains the Custom profiles API functions calls.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_modules_config.h</span></code>: defines which application modules are included or excluded from the user’s application.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_periph_setup.h</span></code>: holds hardware-related settings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_profiles_config.h</span></code>: defines which BLE profiles (Bluetooth SIG adopted or custom ones) will be included in the user’s application.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_periph_setup.c</span></code>: source code file that handles peripheral configuration and initialization.</p></li>
+</ul>
+</section>
+</section>
+<section id="sdk-directory">
+<h4><span class="section-number">3.1.2.6. </span>sdk Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#sdk-directory" title="Link to this heading"></a></h4>
+<p>This directory holds the core files of the SDK. The directory structure of the core SDK modules is depicted below.</p>
+<figure class="align-center" id="sdk-directory-structure">
+<img alt="../_images/sdk_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/sdk_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 24 </span><span class="caption-text"><strong>sdk Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#sdk-directory-structure" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="app-modules-directory">
+<h5><span class="section-number">3.1.2.6.1. </span>app_modules Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#app-modules-directory" title="Link to this heading"></a></h5>
+<p>This directory holds the application source and header files.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">api</span></code>: contains the application header files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src</span></code>: contains the application’s project specific code for some BLE profiles and handling functions for BLE operations, like advertising,
+connection, security/encryption, etc.</p></li>
+</ul>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>New Features Starting from SDK version 6.0.24</strong></p>
+<p>1/ Added application files for profiles</p>
+<ul class="simple">
+<li><p>Blood Pressure Profile (BLP)</p></li>
+<li><p>Health Thermometer Profile (HTP)</p></li>
+<li><p>Time Profile (TIP)</p></li>
+<li><p>Heart Rate Profile (HRP)</p></li>
+<li><p>Running Speed and Cadence Profile (RSCP)</p></li>
+<li><p>HID Over Gatt Profile Device (HOGPD)</p></li>
+<li><p>Phone Alert Status Profile (PASP)</p></li>
+<li><p>Location and Navigation Profile (LANP)</p></li>
+<li><p>Cycling Speed and Cadence Profile (CSCP)</p></li>
+<li><p>Scan Parameters Profile (SCPP)</p></li>
+<li><p>Alert Notification Profile (ANP)</p></li>
+</ul>
+<p>2/ Secure storage features: we introduced two app modules: <code class="docutils literal notranslate"><span class="pre">app_easy_storage.c</span></code> and <code class="docutils literal notranslate"><span class="pre">app_easy_crypto.c</span></code></p>
+<ul class="simple">
+<li><p>Encryption module: provides an easy-to-use API for encryption functions.</p></li>
+<li><p>Storage module: provides an easy-to-use API for memory storage functions.</p></li>
+</ul>
+</div>
+</section>
+<section id="ble-stack-directory">
+<h5><span class="section-number">3.1.2.6.2. </span>ble_stack Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#ble-stack-directory" title="Link to this heading"></a></h5>
+<p>This directory contains BLE stack related files.</p>
+</section>
+<section id="common-project-files-directory">
+<h5><span class="section-number">3.1.2.6.3. </span>common_project_files Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#common-project-files-directory" title="Link to this heading"></a></h5>
+<p>This directory contains the following folders plus three configuration header files.</p>
+<figure class="align-center" id="common-project-files-directory-structure">
+<img alt="../_images/common_project_files_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/common_project_files_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 25 </span><span class="caption-text"><strong>common_project_files Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#common-project-files-directory-structure" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ldscripts</span></code>: contains GNU LD linker scripts for the DA1453x/DA1458x SoC.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">misc</span></code>: contains the ROM symbol definition files. This file will be used as input into the linker to create the final executable. The executable files, as well as the compilation outputs, are saved in a newly created directory named out_DA14531, out_DA14531_01,out_DA14535, out_DA14585 or out_DA14586, depending on the selected SoC.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scatterfiles</span></code>: contains Keil scatter files for the DA1453x/DA1458x SoC.</p></li>
+</ul>
+<p>The three configuration files are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_periph_setup.h</span></code>: definitions of the used hardware platform.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_scatter_config.h</span></code>: definitions of the memory layout.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_stack_config.h</span></code>: definitions of the stack.</p></li>
+</ul>
+</section>
+<section id="platform-directory">
+<h5><span class="section-number">3.1.2.6.4. </span>platform Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#platform-directory" title="Link to this heading"></a></h5>
+<p>This directory contains the platform specific files for the Arm Cortex-M0 processor and its supported peripherals (BLE, serial interfaces, GPIOs, etc.).</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">arch</span></code>: contains the system files and the main() application function.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">core_modules</span></code>: contains core system modules, like the kernel that implements the message handling, the GTL implementation, the non-volatile data storage manipulation, RF drivers, etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">driver</span></code>: contains all the supported drivers for the Arm Cortex-M0 peripherals.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">include</span></code>: header files of the core source files.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">system_library</span></code>: contains the object files of the patched ROM functions and the code for the RF calibration. More information for the patched functions is given in the Release Notes of the SDK distribution.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">utilities</span></code>: contains the system utilities modules, like OTP header and OTP Configuration Script, it contains also the Flexible Software Package (FSP) external processor user applicatioon source code.</p></li>
+</ul>
+</section>
+</section>
+<section id="third-party-directory">
+<h4><span class="section-number">3.1.2.7. </span>third_party Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#third-party-directory" title="Link to this heading"></a></h4>
+<p>This directory holds any third-party source file that is used within the SDK.</p>
+<figure class="align-center" id="third-party-directory-structure">
+<img alt="../_images/third_party_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/third_party_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 26 </span><span class="caption-text"><strong>third_party Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#third-party-directory-structure" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="utilities-directory">
+<h4><span class="section-number">3.1.2.8. </span>utilities Directory<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#utilities-directory" title="Link to this heading"></a></h4>
+<p>This directory holds utilities and tools that supplement the SDK.</p>
+<figure class="align-center" id="utilities-directory-structure">
+<img alt="../_images/utilities_tree.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/utilities_tree.png">
+<figcaption>
+<p><span class="caption-number">Figure 27 </span><span class="caption-text"><strong>utilities Directory Structure</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#utilities-directory-structure" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">flash_programmer</span></code>: Flash programmer for DA1453x/DA1458x SoC. For more detailed information, see Appendix <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/flash_prog.html#flash-programmer"><span class="std std-numref">Section 6.4</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prod_test</span></code>: production test utility. For more detailed information, see Appendix <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/prod_line_tool_ref_cli.html#production-line-tool-reference-cli"><span class="std std-numref">Section 6.3</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">secondary_bootloader</span></code>: secondary bootlader utility. For more detailed information, see Appendix <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/creation_of_secondary_bootloader.html#creation-of-a-secondary-bootloader"><span class="std std-numref">Section 6.2</span></a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mkimage</span></code>: make image tool. For more detailed information, see Appendix <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/creation_of_secondary_bootloader.html#the-make-image-tool"><span class="std std-numref">Section 6.2.7.4</span></a>.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="proximity-reporter-your-first-bluetooth-low-energy-application">
+<span id="id1"></span><h2><span class="section-number">3.2. </span>Proximity Reporter: Your First Bluetooth Low Energy Application<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#proximity-reporter-your-first-bluetooth-low-energy-application" title="Link to this heading"></a></h2>
+<section id="application-description">
+<h3><span class="section-number">3.2.1. </span>Application Description<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#application-description" title="Link to this heading"></a></h3>
+<p>The Proximity profile defines the behavior of a Bluetooth device when it moves away
+from a peer device so that either the connection is dropped or the path loss
+increases above a predefined level. Either of these conditions will cause an immediate
+alert. This alert can be used to notify the user that the devices have become separated.</p>
+<p>The Proximity profile can also be used to define the behavior of two devices which are coming closer together such that either a connection
+is made or the path loss decreases below a predefined level.</p>
+<p>The Proximity profile defines two roles:</p>
+<ul class="simple">
+<li><p><strong>Proximity Monitor (PM)</strong>: The Proximity Monitor shall be a GATT client</p></li>
+<li><p><strong>Proximity Reporter (PR)</strong>: The Proximity Reporter shall be a GATT server</p></li>
+</ul>
+<p>This section describes only the Proximity Reporter application.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The Proximity Reporter application supports entering deep sleep mode (e.g.
+shipping mode – when the device is not yet activated by the end customer).
+Upon wakeup, application execution will not restart. To restart execution
+after wakeup the developer must program the code to OTP or to external flash
+memory resource (e.g. SPI flash).</p>
+</div>
+</section>
+<section id="user-interface">
+<h3><span class="section-number">3.2.2. </span>User Interface<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#user-interface" title="Link to this heading"></a></h3>
+<p>The application will notify the user when an alert indication, link loss and immediate alert are
+triggered. The Alert Notification will be:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">High</span> <span class="pre">level</span> <span class="pre">alert</span></code>: A fast (500 ms) LED blinking</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Low</span> <span class="pre">level</span> <span class="pre">alert</span></code>: A slow (1500 ms) LED blinking</p></li>
+</ul>
+<p>The user can stop alert notification by pressing a push button. The selected
+LED and push button (port and pin number of the DA1453x/DA1458x) are defined
+by the user configuration depending on the target device (DA1453x/DA1458x).
+The user file <code class="docutils literal notranslate"><span class="pre">user_periph_setup.h</span></code> holds the peripheral configuration settings
+of the LED and push button.</p>
+</section>
+<section id="loading-the-project">
+<span id="e2studio"></span><h3><span class="section-number">3.2.3. </span>Loading the Project<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#loading-the-project" title="Link to this heading"></a></h3>
+<p>The Proximity Reporter application, in particular, may be built and run, using
+any of the following IDEs, out of the box: <strong>Keil</strong>; <strong>e² studio</strong>, <strong>Eclipse</strong> AND <strong>IAR</strong>.
+For each of the aforementioned IDEs, there is a dedicated folder – including all
+the necessary project files – residing in
+<code class="docutils literal notranslate"><span class="pre">&lt;sdk_root_directory&gt;\projects\target_apps\ble_examples\prox_reporter</span></code>, namely
+Keil_5, Eclipse, e² studio and IAR, respectively.</p>
+<p>For the sake of simplicity, we will proceed to refer to the Keil IDE, unless
+explicitly mentioning e² studio, Eclipse or IAR.</p>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#proximity-reporter-keil-project-layout"><span class="std std-numref">Figure 28</span></a> shows the Keil project layout with emphasis on the user related files. These are included in the Keil project folders
+<code class="docutils literal notranslate"><span class="pre">user_config</span></code>, <code class="docutils literal notranslate"><span class="pre">user_platform</span></code> and <code class="docutils literal notranslate"><span class="pre">user_app</span></code>. These folders contain the user configuration files of the Proximity Reporter
+application.</p>
+<figure class="align-center" id="proximity-reporter-keil-project-layout">
+<img alt="../_images/keil_user_files.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/keil_user_files.png">
+<figcaption>
+<p><span class="caption-number">Figure 28 </span><span class="caption-text"><strong>Proximity Reporter Keil Project Layout</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#proximity-reporter-keil-project-layout" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>e² studio SDK 6 Getting Started Guide</strong></p>
+<p>To start building a fully working solution on e2 studio and SDK6 you can refer to the <a class="reference external" href="https://lpccs-docs.renesas.com/e2_studio_sdk6_getting_started/index.html">e² studio SDK 6 Getting Started Guide</a>.</p>
+</div>
+</section>
+<section id="going-through-the-code">
+<h3><span class="section-number">3.2.4. </span>Going Through the Code<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#going-through-the-code" title="Link to this heading"></a></h3>
+<section id="basic-operation">
+<h4><span class="section-number">3.2.4.1. </span>Basic Operation<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#basic-operation" title="Link to this heading"></a></h4>
+<p>The Proximity Reporter application supports the following services:</p>
+<ul class="simple">
+<li><p>Immediate Alert service (UUID 0x1802)</p></li>
+<li><p>Link Loss service (UUID 0x1803)</p></li>
+<li><p>Tx Power service (UUID 0x1804)</p></li>
+<li><p>Device Information service (UUID 0x180A)</p></li>
+<li><p>Battery service (UUID 0x180F)</p></li>
+<li><p>Software Update Over The Air Receiver (SUOTAR) service (UUID 0xFEF5)</p></li>
+</ul>
+<p>The Proximity Reporter application has the following features:</p>
+<ul class="simple">
+<li><p>Two levels of Alert Indications. Low/High -&gt; Slow/Fast green LED blinking.</p></li>
+<li><p>500 ms advertising interval.</p></li>
+<li><p>Extended sleep without OTP copy mode after 3 minutes of inactivity.</p></li>
+<li><p>Push button.</p></li>
+<li><p>Stop Alert indications.</p></li>
+<li><p>Exit Extended sleep without OTP copy mode.</p></li>
+<li><p>Pairing / bonding / encryption.</p></li>
+<li><p>Supports Extended / Deep sleep mode/ Hibernation / Stateful hibernation
+(<strong>the last two modes being applicable to DA1453x only</strong>).</p></li>
+</ul>
+<p>The Proximity Reporter operation is implemented in C source file <code class="docutils literal notranslate"><span class="pre">user_proxr.c</span></code>.</p>
+</section>
+<section id="initialization">
+<h4><span class="section-number">3.2.4.2. </span>Initialization<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#initialization" title="Link to this heading"></a></h4>
+<p>The previously mentioned Keil project folders (user_config, user_platform and user_app), contain the files
+that initialize and configure the Proximity Reporter application.</p>
+<p><strong>user_config</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_config_advanced.h</span></code>: holds DA1453x/DA1458x advanced configuration settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_config_basic.h</span></code>: holds DA1453x/DA1458x basic configuration settings</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code>: callback functions that handle various events or operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_config.h</span></code>: holds advertising parameters, connection parameters, etc.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_modules_config.h</span></code>: defines which application modules are included or excluded from the user’s application
+For example:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell0"><span></span><span class="cp">#define EXCLUDE_DLG_DISS          (0)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>In this case the Device information application profile is included in the core
+SDK and the SDK takes care of the Device information application profile
+message handling internally.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell1"><span></span><span class="cp">#define EXCLUDE_DLG_DISS          (1)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell1">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>In this case the Device information application profile is excluded from the core SDK.
+The user application must take care of the Device information application profile message handling.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user_profiles_config.h</span></code> defines which BLE profiles (Bluetooth SIG adopted or custom ones) will be included in the user’s application. The BLE profiles that are included in the <code class="docutils literal notranslate"><span class="pre">user_profile_config.h</span></code> file are:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell2"><span></span><span class="cm">/***************************************************************************************/</span>
+<span class="cm">/* Used BLE profiles (used by "rwprf_config.h").                                       */</span>
+<span class="cm">/***************************************************************************************/</span>
+
+<span class="cp">#define CFG_PRF_DISS</span>
+<span class="cp">#define CFG_PRF_PXPR</span>
+<span class="cp">#define CFG_PRF_SUOTAR</span>
+<span class="cp">#define CFG_PRF_BASS</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<ul class="simple">
+<li><p>CFG_PRF_DISS: includes the Device Information service</p></li>
+<li><p>CFG_PRF_PXPR: includes the Immediate Alert, Link Loss and Tx Power services</p></li>
+<li><p>CFG_PRF_SUOTAR: includes the Software Update Over The Air service</p></li>
+<li><p>CFG_PRF_BASS: includes the Battery service</p></li>
+</ul>
+<p><strong>user_platform</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user_periph_setup.h</span></code>: holds hardware related settings relative to the Development Kit</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_periph_setup.c</span></code>: source code file that handles peripheral (GPIO, UART, etc.) configuration and initialization relative to the selected Development Kit</p></li>
+</ul>
+<p><strong>user_app</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">user_proxr.c</span> <span class="pre">&amp;</span> <span class="pre">user_proxr.h</span></code>: proximity reporter application source and header files</p></li>
+</ul>
+<p>These files provide the main application, and define what to do when a button is pressed,
+when a connection is dropped or when adverting stops. These are all implemented as user
+callbacks as described in the next section.
+The trigger mechanism used to wake up from deep sleep or hibernation is also
+defined, as it is demonstrated in the proximity reporter application:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_DEEP_SLEEP_WAKEUP_GPIO</span></code> – An external wake up interrupt (instantaneous button press) triggers the system to wake up from deep sleep.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_DEEP_SLEEP_WAKEUP_POR</span></code>  –  A power on reset (POR) source (continuous button press for approximately 3 seconds, by default) triggers the system to wake up from deep sleep.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_DEEP_SLEEP_WAKEUP_RTC</span></code> – An RTC interrupt triggers the system to wake up from deep sleep after 10 seconds (<strong>applicable to DA1453x only</strong>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_DEEP_SLEEP_WAKEUP_TIMER1</span></code> – A Timer1 interrupt triggers the system to wake up from deep sleep after
+136.47 ms (= 2047 clock cycles * (1 / 15 ms/clock cycle)) if Timer1 uses the internal RCX oscillator whose
+typical frequency is 15 kHz or after 62.47 ms (= 2047 clock cycles * (1 / 32.768 ms/clock cycle)) if Timer1
+uses an external XTAL oscillator whose typical frequency is 32.768 kHz (<strong>applicable to DA1453x only</strong>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_APP_GOTO_HIBERNATION</span></code> – Wake up the system from specific GPIO (P0_3) (<strong>applicable to DA1453x only</strong>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CFG_APP_GOTO_STATEFUL_HIBERNATION</span></code> – Wake up the system from specific GPIO (P0_3) (<strong>applicable to DA1453x only</strong>).</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When defining either <code class="docutils literal notranslate"><span class="pre">CFG_APP_GOTO_HIBERNATION</span></code> or <code class="docutils literal notranslate"><span class="pre">CFG_APP_GOTO_STATEFUL_HIBERNATION</span></code>,
+<code class="docutils literal notranslate"><span class="pre">CFG_SPI_FLASH_ENABLE</span></code> in <code class="docutils literal notranslate"><span class="pre">da1458x_config_basic.h</span></code> shall be undefined.
+Otherwise, a compilation error –
+“Config error: Can not define both CFG_SPI_FLASH_ENABLE and
+CFG_APP_GOTO_HIBERNATION/CFG_APP_GOTO_STATEFUL_HIBERNATION.” – will occur.</p>
+<p>Furthermore, if SUOTAR is to be used, <code class="docutils literal notranslate"><span class="pre">CFG_I2C_EEPROM_ENABLE</span></code> in
+<code class="docutils literal notranslate"><span class="pre">da1458x_config_basic.h</span></code> shall be defined instead (if not, a compilation
+error – “SUOTA application is enabled but both I2C EEPROM and SPI Flash are
+disabled” – will occur). If SUOTAR will not be used,
+<code class="docutils literal notranslate"><span class="pre">#define</span> <span class="pre">EXCLUDE_DLG_SUOTAR</span> <span class="pre">(1)</span></code> in <code class="docutils literal notranslate"><span class="pre">user_modules_config.h</span></code> shall be
+defined and <code class="docutils literal notranslate"><span class="pre">CFG_PRF_SUOTAR</span></code> in <code class="docutils literal notranslate"><span class="pre">user_profiles_config.h</span></code> shall be undefined.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For more information about the Hibernation mode of DA1453x, see the
+respective datasheet.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If none of the above-mentioned DEEP_SLEEP flags is defined, the system does not enter
+the Deep sleep mode, but the selected Extended sleep mode (as defined in the <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code> file).
+The system exits the Extended sleep mode, if the user presses the button that causes advertising to restart.
+In the case of DA1453x, the system may alternatively exit the Extended sleep mode
+through an RTC interrupt (if <code class="docutils literal notranslate"><span class="pre">CFG_EXT_SLEEP_WAKEUP_RTC</span></code> is defined) or a
+Timer1 interrupt (if <code class="docutils literal notranslate"><span class="pre">CFG_EXT_SLEEP_WAKEUP_TIMER1</span></code> is defined).</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When the system enters the Deep sleep mode, all the RAM blocks are switched off.
+No application code or data are retained.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When the system exits the Deep sleep mode, the boot rom code is executed and the
+application code has to be loaded again, either from OTP memory or external memory
+source (e.g. SPI flash).</p>
+</div>
+</section>
+<section id="events-processing-and-callbacks">
+<h4><span class="section-number">3.2.4.3. </span>Events Processing and Callbacks<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#events-processing-and-callbacks" title="Link to this heading"></a></h4>
+<p>Several events can occur during the lifetime of the Bluetooth low energy application
+and these events need to be handled in a specific manner. The application is
+responsible to select which events and operations to handle and which
+to leave to be handled by the default SDK behavior.</p>
+<p>The SDK uses a mechanism that registers callbacks for every event or operation
+that defines the system behavior. The C header file <code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code>,
+which is part of the user application, contains the registration of callback functions.</p>
+<p>The Proximity Reporter application registers the following callback functions:</p>
+<ul class="simple">
+<li><p><strong>General BLE events</strong>:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell3"><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">app_callbacks</span><span class="w"> </span><span class="n">user_app_callbacks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_connection</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_connection</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_disconnect</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">user_app_on_disconnect</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_rejected</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_complete</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_set_dev_config_complete</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_set_dev_config_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_nonconn_complete</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_undirect_complete</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">app_advertise_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_direct_complete</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_db_init_complete</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_db_init_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_scanning_completed</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_report_ind</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_name</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_appearance</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_appearance</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_slv_pref_params</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_slv_pref_params</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_set_dev_info</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_set_dev_info</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_data_length_change</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_request</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_update_params_request</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_generate_static_random_addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_generate_static_random_addr</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_svc_changed_cfg_ind</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_peer_features</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="cp">#if (BLE_APP_SEC)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_pairing_request</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_pairing_request</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_tk_exch</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_tk_exch</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_irk_exch</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_csrk_exch</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ltk_exch</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_ltk_exch</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_pairing_succeeded</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_encrypt_ind</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_encrypt_req_ind</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_security_req_ind</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_addr_solved_ind</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_addr_resolve_failed</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="cp">#if !defined (__DA14531_01__) &amp;&amp; !defined (__DA14535__)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_cmp_evt</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_size_ind</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_addr_ind</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="cp">#endif </span><span class="c1">// not for DA14531-01, DA14535</span>
+<span class="p">};</span>
+<span class="cp">#endif </span><span class="c1">// (BLE_APP_SEC)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The structure above defines whether each event is processed by a default handler,
+by a user-defined handler or is not processed at all (NULL entries). The user
+defined handlers (e.g. <code class="docutils literal notranslate"><span class="pre">app_advertise_complete()</span></code>) are defined in a C source file <code class="docutils literal notranslate"><span class="pre">user_proxr.c</span></code>.</p>
+<ul class="simple">
+<li><p><strong>System specific events</strong>:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell4"><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">arch_main_loop_callbacks</span><span class="w"> </span><span class="n">user_app_main_loop_callbacks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_init</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_init</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// By default the watchdog timer is reloaded and resumed when the system wakes up.</span>
+<span class="w">    </span><span class="c1">// The user has to take into account the watchdog timer handling (keep it running,</span>
+<span class="w">    </span><span class="c1">// freeze it, reload it, resume it, etc.), when the app_on_ble_powered() is being</span>
+<span class="w">    </span><span class="c1">// called and may potentially affect the main loop.</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ble_powered</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// By default the watchdog timer is reloaded and resumed when the system wakes up.</span>
+<span class="w">    </span><span class="c1">// The user has to take into account the watchdog timer handling (keep it running,</span>
+<span class="w">    </span><span class="c1">// freeze it, reload it, resume it, etc), when the app_on_system_powered() is being</span>
+<span class="w">    </span><span class="c1">// called and may potentially affect the main loop.</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_system_powered</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+
+<span class="w">    </span><span class="p">.</span><span class="n">app_before_sleep</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_validate_sleep</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_going_to_sleep</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_resume_from_sleep</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="p">};</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The above structure defines that a certain event is processed by a default
+handler or by a user-defined handler or is not processed at all (NULL entries).
+In this case the default SDK application initialization function is used and all other
+events are not handled.</p>
+<ul class="simple">
+<li><p><strong>BLE operations</strong>:</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell5"><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">default_app_operations</span><span class="w"> </span><span class="n">user_default_app_operations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">default_operation_adv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">default_advertise_operation</span><span class="p">,</span>
+<span class="p">};</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The above structure defines that a certain operation is processed by a default
+handler or by a user-defined handler or is not processed at all
+(NULL entries). In this case only the default advertising operation is used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>DA1453x/DA1458x SDK supports the URI data type in advertising and/or scan
+response packets. The URI data type allows the representation of a URI. A
+Uniform Resource Identifier (URI) is a compact sequence of characters that
+identifies an abstract or physical resource, as defined in IETF STD66.</p>
+<p>An example implementation of a URI can be seen in the advertising data of
+the proximity reporter demo application. Please check <code class="docutils literal notranslate"><span class="pre">ADV_TYPE_URI</span></code> in
+the <code class="docutils literal notranslate"><span class="pre">USER_ADVERTISE_DATA</span></code> definition in the <code class="docutils literal notranslate"><span class="pre">usef_config.h</span></code> file of
+the project.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell6"><span></span><span class="cp">#define USER_ADVERTISE_DATA   ("\x09"\</span>
+<span class="cp">                              ADV_TYPE_COMPLETE_LIST_16BIT_SERVICE_IDS\</span>
+<span class="cp">                              ADV_UUID_LINK_LOSS_SERVICE\</span>
+<span class="cp">                              ADV_UUID_IMMEDIATE_ALERT_SERVICE\</span>
+<span class="cp">                              ADV_UUID_TX_POWER_SERVICE\</span>
+<span class="cp">                              ADV_UUID_SUOTAR_SERVICE\</span>
+<span class="cp">                              "\x10"\</span>
+<span class="cp">                              ADV_TYPE_URI\</span>
+<span class="cp">                              "\x16\x2F\x2F\x77\x77\x77\x2E\x69\x61\x6E\x61\x2E\x6F\x72\x67")</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell6">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+</div>
+</section>
+</section>
+<section id="ble-application-abstract-code-flow">
+<span id="id2"></span><h3><span class="section-number">3.2.5. </span>BLE Application Abstract Code Flow<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#ble-application-abstract-code-flow" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#proximity-reporter-user-application-code-flow"><span class="std std-numref">Figure 29</span></a> shows the abstract code
+flow diagram of the Proximity Reporter application. The diagram depicts the SDK
+interaction with the callback functions registered in <code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code>
+and the functions implemented in <code class="docutils literal notranslate"><span class="pre">user_proxr.c</span></code>. The user configuration block
+purely executes the callbacks defined for these operations and events. It
+simply calls the default handlers for each of the events until adverting is
+started. The first user-defined callback is <code class="docutils literal notranslate"><span class="pre">app_advertise_complete()</span></code>, which is
+plugged into the callback table as <code class="docutils literal notranslate"><span class="pre">.app_on_adv_undirect_complete()</span></code>.</p>
+<figure class="align-center" id="proximity-reporter-user-application-code-flow">
+<img alt="../_images/User_Application_Code_Flow.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/User_Application_Code_Flow.png">
+<figcaption>
+<p><span class="caption-number">Figure 29 </span><span class="caption-text"><strong>Proximity Reporter - User Application Code Flow</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#proximity-reporter-user-application-code-flow" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The default advertising function is <code class="docutils literal notranslate"><span class="pre">default_advertise_operation()</span></code>, as
+shown in the following code snippet, and is located
+in <code class="docutils literal notranslate"><span class="pre">&lt;sdk_default_directory&gt;\sdk\app_modules\src\app_default_hnd</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell7"><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">default_advertise_operation</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">user_default_hnd_conf</span><span class="p">.</span><span class="n">adv_scenario</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">DEF_ADV_FOREVER</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">app_easy_gap_undirected_advertise_start</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">user_default_hnd_conf</span><span class="p">.</span><span class="n">adv_scenario</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">DEF_ADV_WITH_TIMEOUT</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">app_easy_gap_undirected_advertise_with_timeout_start</span><span class="p">(</span><span class="n">user_default_hnd_conf</span><span class="p">.</span><span class="n">advertise_period</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell7">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The parameters of the <code class="docutils literal notranslate"><span class="pre">default_advertise_operation()</span></code> can be configured in
+the <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code> file located in <code class="docutils literal notranslate"><span class="pre">&lt;sdk_default_directory&gt;\projects\target_apps\ble_examples\prox_reporter\src\config</span></code>
+as shown in the following code snippet. This specifies that the advertising is to last 3 minutes and that there is no security defined for the connection.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell8"><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">default_handlers_configuration</span><span class="w">  </span><span class="n">user_default_hnd_conf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Configure the advertise operation used by the default handlers</span>
+<span class="w">    </span><span class="c1">// Possible values:</span>
+<span class="w">    </span><span class="c1">//  - DEF_ADV_FOREVER</span>
+<span class="w">    </span><span class="c1">//  - DEF_ADV_WITH_TIMEOUT</span>
+<span class="w">    </span><span class="p">.</span><span class="n">adv_scenario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEF_ADV_WITH_TIMEOUT</span><span class="p">,</span>
+
+<span class="w">    </span><span class="c1">// Configure the advertise period in case of DEF_ADV_WITH_TIMEOUT.</span>
+<span class="w">    </span><span class="c1">// It is measured in timer units (3 min). Use MS_TO_TIMERUNITS macro to convert</span>
+<span class="w">    </span><span class="c1">// from milliseconds (ms) to timer units.</span>
+<span class="w">    </span><span class="p">.</span><span class="n">advertise_period</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MS_TO_TIMERUNITS</span><span class="p">(</span><span class="mi">180000</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">// Configure the security start operation of the default handlers</span>
+<span class="w">    </span><span class="c1">// if the security is enabled (CFG_APP_SECURITY)</span>
+<span class="w">    </span><span class="c1">// Possible values:</span>
+<span class="w">    </span><span class="c1">//  - DEF_SEC_REQ_NEVER</span>
+<span class="w">    </span><span class="c1">//  - DEF_SEC_REQ_ON_CONNECT</span>
+<span class="w">    </span><span class="p">.</span><span class="n">security_request_scenario</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEF_SEC_REQ_NEVER</span>
+<span class="p">};</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">app_advertise_complete()</span></code> user function is used to define the specific
+behavior that the application has when the 3-minute advertising period is finished.
+As shown in the code snippet below, this is to stop any active alert, enable a
+button to wake up from deep sleep and then to enter deep sleep. For DA1453x the
+wake-up source may alternatively be RTC or Timer1.</p>
+<p>It should be highlighted that two power modes have been introduced for DA1453x only,
+namely hibernation and stateful hibernation.
+Both modes are clockless ones, while RAM block(s) may or may not be retained:</p>
+<ul class="simple">
+<li><p>When in hibernation, no code/data is retained (see the hibernation mode
+configuration in <code class="docutils literal notranslate"><span class="pre">user_proxr.h</span></code>).</p></li>
+<li><p>When in stateful hibernation, all three RAM blocks are retained (see the stateful
+hibernation mode configuration in <code class="docutils literal notranslate"><span class="pre">user_proxr.h</span></code>). As soon as the device wakes
+up from stateful hibernation, both the processor state and system register content
+will be restored – code execution will resume from the point the device went to
+stateful hibernation onwards: the orange LED – D5 on the 376-18-B Motherboard –
+will be turned on for a couple of seconds. Then, the device will get idle
+(in the <code class="docutils literal notranslate"><span class="pre">ARCH_SLEEP_OFF</span></code> case) or go to extended sleep (in the <code class="docutils literal notranslate"><span class="pre">ARCH_EXT_SLEEP_ON</span></code>
+case), waiting for an interrupt to occur – by pressing the SW2 button on the
+376-18-B Motherboard, the device will get active and restart advertising.</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell9"><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">app_advertise_complete</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">status</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">GAP_ERR_NO_ERROR</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">GAP_ERR_CANCELED</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="cp">#if (BLE_PROX_REPORTER)</span>
+<span class="w">         </span><span class="n">app_proxr_alert_stop</span><span class="p">();</span>
+<span class="cp">#endif</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">GAP_ERR_CANCELED</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">arch_ble_ext_wakeup_on</span><span class="p">();</span>
+
+<span class="cp">#if defined (__DA14531__)</span>
+<span class="w">    </span><span class="c1">// Configure PD_TIM</span>
+<span class="cp">#if defined (CFG_EXT_SLEEP_WAKEUP_RTC) || defined (CFG_EXT_SLEEP_WAKEUP_TIMER1) || \</span>
+<span class="cp">    defined (CFG_DEEP_SLEEP_WAKEUP_RTC) || defined (CFG_DEEP_SLEEP_WAKEUP_TIMER1)</span>
+<span class="w">    </span><span class="c1">// Ensure PD_TIM is open</span>
+<span class="w">    </span><span class="n">SetBits16</span><span class="p">(</span><span class="n">PMU_CTRL_REG</span><span class="p">,</span><span class="w"> </span><span class="n">TIM_SLEEP</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// Wait until PD_TIM is opened</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">((</span><span class="n">GetWord16</span><span class="p">(</span><span class="n">SYS_STAT_REG</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">TIM_IS_UP</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TIM_IS_UP</span><span class="p">);</span>
+<span class="cp">#else</span>
+<span class="w">    </span><span class="c1">// Close PD_TIM</span>
+<span class="w">    </span><span class="n">SetBits16</span><span class="p">(</span><span class="n">PMU_CTRL_REG</span><span class="p">,</span><span class="w"> </span><span class="n">TIM_SLEEP</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">    </span><span class="c1">// Wait until PD_TIM is closed</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">((</span><span class="n">GetWord16</span><span class="p">(</span><span class="n">SYS_STAT_REG</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">TIM_IS_DOWN</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">TIM_IS_DOWN</span><span class="p">);</span>
+<span class="cp">#endif</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#if defined (CFG_APP_GOTO_DEEP_SLEEP)</span>
+<span class="w">    </span><span class="c1">// Put system into deep sleep</span>
+<span class="w">    </span><span class="n">put_system_into_deep_sleep</span><span class="p">();</span>
+<span class="cp">#elif defined (__DA14531__) &amp;&amp; defined (CFG_APP_GOTO_HIBERNATION)</span>
+<span class="w">    </span><span class="c1">// Put system into hibernation</span>
+<span class="w">    </span><span class="n">arch_set_hibernation</span><span class="p">(</span><span class="n">HIB_WAKE_UP_PIN_MASK</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">CFG_HIBERNATION_RAM1</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">CFG_HIBERNATION_RAM2</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">CFG_HIBERNATION_RAM3</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">CFG_HIBERNATION_REMAP</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">CFG_HIBERNATION_PAD_LATCH_EN</span><span class="p">);</span>
+<span class="cp">#elif defined (__DA14531__) &amp;&amp; defined (CFG_APP_GOTO_STATEFUL_HIBERNATION)</span>
+<span class="w">    </span><span class="c1">// Put system into stateful hibernation</span>
+<span class="w">    </span><span class="n">arch_set_stateful_hibernation</span><span class="p">(</span><span class="n">HIB_WAKE_UP_PIN_MASK</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">CFG_STATEFUL_HIBERNATION_RAM1</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">CFG_STATEFUL_HIBERNATION_RAM2</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">CFG_STATEFUL_HIBERNATION_RAM3</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">CFG_STATEFUL_HIBERNATION_REMAP</span><span class="p">,</span>
+<span class="w">                                  </span><span class="n">CFG_STATEFUL_HIBERNATION_PAD_LATCH_EN</span><span class="p">);</span>
+<span class="w">    </span><span class="cp">#if (DEVELOPMENT_DEBUG)</span>
+<span class="w">        </span><span class="c1">// Turn on the orange LED (D5 on the 376-18-B Motherboard)</span>
+<span class="w">        </span><span class="n">SetWord16</span><span class="p">(</span><span class="n">P09_MODE_REG</span><span class="p">,</span><span class="w"> </span><span class="p">((</span><span class="kt">uint32_t</span><span class="p">)</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">((</span><span class="kt">uint32_t</span><span class="p">)</span><span class="w"> </span><span class="n">PID_GPIO</span><span class="p">));</span>
+<span class="w">        </span><span class="n">SetWord16</span><span class="p">(</span><span class="n">P0_SET_DATA_REG</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">GPIO_ALERT_LED_PIN</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// Keep it on for a couple of seconds</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="o">*</span><span class="mi">2000000</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">--</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">__NOP</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// Turn it off</span>
+<span class="w">        </span><span class="n">SetWord16</span><span class="p">(</span><span class="n">P0_RESET_DATA_REG</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="n">GPIO_ALERT_LED_PIN</span><span class="p">);</span>
+<span class="w">    </span><span class="cp">#endif </span><span class="c1">// DEVELOPMENT_DEBUG</span>
+
+<span class="w">    </span><span class="c1">// Configure button to trigger wake-up interrupt from extended sleep</span>
+<span class="w">    </span><span class="n">app_button_enable</span><span class="p">();</span>
+<span class="cp">#elif defined (__DA14531__) &amp;&amp; defined (CFG_EXT_SLEEP_WAKEUP_RTC)</span>
+<span class="w">    </span><span class="c1">// Configure RTC to trigger wake-up interrupt from extended sleep</span>
+<span class="w">    </span><span class="n">configure_rtc_wakeup</span><span class="p">();</span>
+<span class="cp">#elif defined (__DA14531__) &amp;&amp; defined (CFG_EXT_SLEEP_WAKEUP_TIMER1)</span>
+<span class="w">    </span><span class="c1">// Configure TIMER1 to trigger wake-up interrupt from extended sleep</span>
+<span class="w">    </span><span class="n">configure_timer1_wakeup</span><span class="p">();</span>
+<span class="cp">#else</span>
+<span class="w">    </span><span class="c1">// Configure button to trigger wake-up interrupt from extended sleep</span>
+<span class="w">    </span><span class="n">app_button_enable</span><span class="p">();</span>
+<span class="cp">#endif</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell9">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>As far as stateful hibernation is concerned, besides defining <code class="docutils literal notranslate"><span class="pre">CFG_APP_GOTO_STATEFUL_HIBERNATION</span></code>
+in <code class="docutils literal notranslate"><span class="pre">user_proxr.h</span></code>, <code class="docutils literal notranslate"><span class="pre">CFG_STATEFUL_HIBERNATION</span></code> shall be defined as well in the
+project (assembly) settings, as shown in <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#defining-cfg-stateful-hibernation-in-the-keil-ide"><span class="std std-numref">Figure 30</span></a>,
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#defining-cfg-stateful-hibernation-in-the-eclipse-ide"><span class="std std-numref">Figure 32</span></a>, and
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#defining-cfg-stateful-hibernation-in-the-iar-ide"><span class="std std-numref">Figure 33</span></a> for Keil, Eclipse,
+and IAR IDEs, respectively.</p>
+</div>
+<figure class="align-center" id="defining-cfg-stateful-hibernation-in-the-keil-ide">
+<img alt="../_images/keil_stateful_hibernation.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/keil_stateful_hibernation.png">
+<figcaption>
+<p><span class="caption-number">Figure 30 </span><span class="caption-text"><strong>Defining CFG_STATEFUL_HIBERNATION in the Keil IDE</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#defining-cfg-stateful-hibernation-in-the-keil-ide" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="defining-cfg-stateful-hibernation-in-the-e2-studio-ide">
+<img alt="../_images/e2studio_stateful_hibernation.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/e2studio_stateful_hibernation.png">
+<figcaption>
+<p><span class="caption-number">Figure 31 </span><span class="caption-text"><strong>Defining CFG_STATEFUL_HIBERNATION in the e² studio IDE</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#defining-cfg-stateful-hibernation-in-the-e2-studio-ide" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="defining-cfg-stateful-hibernation-in-the-eclipse-ide">
+<img alt="../_images/eclipse_stateful_hibernation.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/eclipse_stateful_hibernation.png">
+<figcaption>
+<p><span class="caption-number">Figure 32 </span><span class="caption-text"><strong>Defining CFG_STATEFUL_HIBERNATION in the Eclipse IDE</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#defining-cfg-stateful-hibernation-in-the-eclipse-ide" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="defining-cfg-stateful-hibernation-in-the-iar-ide">
+<img alt="../_images/iar_stateful_hibernation.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/iar_stateful_hibernation.png">
+<figcaption>
+<p><span class="caption-number">Figure 33 </span><span class="caption-text"><strong>Defining CFG_STATEFUL_HIBERNATION in the IAR IDE</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#defining-cfg-stateful-hibernation-in-the-iar-ide" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="building-the-project-for-different-targets">
+<span id="building-the-proximity-reporter-application"></span><h3><span class="section-number">3.2.6. </span>Building the Project for Different Targets<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#building-the-project-for-different-targets" title="Link to this heading"></a></h3>
+<p>The Proximity Reporter application can be built for different target processors, DA14585, DA14586, DA14531, DA14531_01, DA14535 and DA14533.</p>
+<p>The selection is done with the Keil tool as shown in <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#id3"><span class="std std-numref">Figure 34</span></a>.</p>
+<figure class="align-center" id="id3">
+<img alt="../_images/Building_the_Projec_for_Different_Targets.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/Building_the_Projec_for_Different_Targets.png">
+<figcaption>
+<p><span class="caption-number">Figure 34 </span><span class="caption-text"><strong>Building the Project for Different Targets</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In order to build proximity reporter project for DA14533 target, you select the DA14535 target and then add DA14533 define <code class="docutils literal notranslate"><span class="pre">__DA14533__</span></code>.</p>
+<figure class="align-center" id="building-the-project-for-da14533-target">
+<img alt="../_images/DA14533.jpg" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/DA14533.jpg">
+<figcaption>
+<p><span class="caption-number">Figure 35 </span><span class="caption-text"><strong>Building the Project for DA14533 Target</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#building-the-project-for-da14533-target" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>After the proper selection of the target processor, the application is ready to be built.</p>
+<p>The Proximity Reporter application does not use the UART and so the only jumpers that must
+be present are those for the debugger interface as mentioned in <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#debugger-jumper-configuration"><span class="std std-numref">Table 5</span></a>.</p>
+<div class="wy-table-responsive"><table class="docutils align-center" id="debugger-jumper-configuration">
+<caption><span class="caption-number">Table 5 </span><span class="caption-text">Debugger Jumper Configuration</span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#debugger-jumper-configuration" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Target</p></th>
+<th class="head"><p>SW_CLK PIN</p></th>
+<th class="head"><p>SW_CLK PIN DK connection</p></th>
+<th class="head"><p>SW_DIO PIN</p></th>
+<th class="head"><p>SD_DIO PIN DK connection</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>DA1458x</p></td>
+<td><p>SW_CLK</p></td>
+<td><p>Connect J1.21 with J1.22</p></td>
+<td><p>SW_DIO</p></td>
+<td><p>Connect J1.23 with J1.24</p></td>
+</tr>
+<tr class="row-odd"><td><p>DA1453x</p></td>
+<td><p>P0_2</p></td>
+<td><p>Connect J1.21 with J1.22</p></td>
+<td><p>P0_10</p></td>
+<td><p>Connect J1.23 with J1.24</p></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<section id="interacting-with-ble-application">
+<h3><span class="section-number">3.2.7. </span>Interacting with BLE Application<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#interacting-with-ble-application" title="Link to this heading"></a></h3>
+<p>The SmartBond™ application, available on iOS or Android, is a mobile application that works as a generic tool for interacting with Bluetooth® Low Energy devices. It used to scan for, and connect to, the DIALOG-PRXR.
+The iPhone/Android mobile acts as a BLE Central and the application as a BLE Peripheral.</p>
+<figure class="align-center" id="smartbond-application-connected-to-proximity-reporter-application">
+<a class="reference internal image-reference" href="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/smartbond.png"><img alt="../_images/smartbond.png" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/smartbond.png" style="height: 1100px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 36 </span><span class="caption-text"><strong>Smartbond Application Connected to Proximity Reporter Application</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html#smartbond-application-connected-to-proximity-reporter-application" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html" class="btn btn-neutral float-left" title="2. Software Platform Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/User_guides/User_guides.html" class="btn btn-neutral float-right" title="4. User Guides" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./3. BLE Development Environment and First Application — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

@@ -1,0 +1,10 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=macosx
+activeLaunchTarget=null\:---
+configDescList=org.eclipse.launchbar.core.descriptorType.default\:RAM_DA14531_01,org.eclipse.launchbar.core.descriptorType.default\:RAM_DA14531
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:RAM_DA14535/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:RAM_DA14535/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.eclipse.launchbar.core.descriptorType.default\:RAM_DA14585/activeLaunchMode=debug
+org.eclipse.launchbar.core.descriptorType.default\:RAM_DA14585/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local

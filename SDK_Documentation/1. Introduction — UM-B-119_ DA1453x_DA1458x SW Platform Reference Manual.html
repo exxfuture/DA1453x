@@ -1,0 +1,1360 @@
+<!DOCTYPE html>
+<!-- saved from url=(0108)https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html -->
+<html class="writer-html5" lang="en" data-content_root="../"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1. Introduction — UM-B-119: DA1453x/DA1458x SW Platform Reference Manual</title>
+      <link rel="stylesheet" type="text/css" href="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/lpc_cs_theme.css">
+      <link rel="stylesheet" type="text/css" href="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/copybutton.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/js"></script><script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/jquery.js"></script>
+      <script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/documentation_options.js"></script>
+      <script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/doctools.js"></script>
+      <script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/sphinx_highlight.js"></script>
+      <script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/clipboard.min.js"></script>
+      <script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/copybutton.js"></script>
+    <script src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/search.html">
+    <link rel="next" title="2. Software Platform Overview" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html">
+    <link rel="prev" title="UM-B-119: DA1453x/DA1458x SW Platform Reference Manual" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html">
+            
+              <img src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>1. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#target-audience">1.1. Target Audience</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#device-modes"><button class="toctree-expand" title="Open/close menu"></button>1.2. Device Modes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#single-mode-devices">1.2.1. Single Mode Devices</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#dual-mode-devices">1.2.2. Dual Mode Devices</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#main-building-blocks">1.3. Main Building Blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#hardware-configurations"><button class="toctree-expand" title="Open/close menu"></button>1.4. Hardware Configurations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#integrated-processor">1.4.1. Integrated Processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#external-processor">1.4.2. External Processor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#network-modes"><button class="toctree-expand" title="Open/close menu"></button>1.5. Network Modes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#broadcasting">1.5.1. Broadcasting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#connecting">1.5.2. Connecting</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#profiles"><button class="toctree-expand" title="Open/close menu"></button>1.6. Profiles</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#generic-profiles">1.6.1. Generic Profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#use-case-specific-profiles"><button class="toctree-expand" title="Open/close menu"></button>1.6.2. Use-Case-Specific Profiles</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#sig-defined-gatt-based-profiles">1.6.2.1. SIG-Defined GATT-Based Profiles</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#vendor-specific-profiles">1.6.2.2. Vendor-Specific Profiles</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#generic-access-profile-layer">1.6.3. Generic Access Profile Layer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#generic-attribute-profile-layer">1.6.4. Generic Attribute Profile Layer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#protocol-stack">1.7. Protocol Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#controller"><button class="toctree-expand" title="Open/close menu"></button>1.8. Controller</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#physical-layer-phy">1.8.1. Physical Layer (PHY)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#link-layer-ll"><button class="toctree-expand" title="Open/close menu"></button>1.8.2. Link Layer (LL)</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#bluetooth-device-address">1.8.2.1. Bluetooth Device Address</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#advertising-and-scanning">1.8.2.2. Advertising and Scanning</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#host-controller-interface-controller-side">1.8.3. Host Controller Interface – Controller Side</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#host"><button class="toctree-expand" title="Open/close menu"></button>1.9. Host</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#host-controller-interface-host-side">1.9.1. Host Controller Interface – Host Side</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#logical-link-control-and-adaptation-protocol">1.9.2. Logical Link Control and Adaptation Protocol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#attribute-protocol">1.9.3. Attribute Protocol</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#security-manager">1.9.4. Security Manager</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#application">1.9.5. Application</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1458x-system-on-chip-platform"><button class="toctree-expand" title="Open/close menu"></button>1.10. DA1458x System on Chip Platform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1458x-overview">1.10.1. DA1458x Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1458x-key-features">1.10.2. DA1458x Key Features</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1453x-system-on-chip-platform"><button class="toctree-expand" title="Open/close menu"></button>1.11. DA1453x System on Chip Platform</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1453x-overview">1.11.1. DA1453x Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14531-key-features">1.11.2. DA14531 Key Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14535-key-features">1.11.3. DA14535 Key Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14533-key-features">1.11.4. DA14533 Key Features</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html">2. Software Platform Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html">3. BLE Development Environment and First Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/User_guides/User_guides.html">4. User Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Peripheral%20Example%20Applications/Peripheral%20Example%20Applications.html">5. Peripheral Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/appendices.html">6. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Revision_History/Revision_History.html">7. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html">UM-B-119: DA1453x/DA1458x SW Platform Reference Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">1. </span>Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#introduction" title="Link to this heading"></a></h1>
+<p>The aim of this document is to serve as a reference to the Embedded Software
+Developers, to provide a kick-start with a practical and high-level
+comprehension on Bluetooth low energy (BLE) standards. It gives a system
+architecture and software architecture overview for the <strong>DA1453x/DA1458x</strong> System
+on Chip (SoC) family of integrated circuit (IC) devices.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p><strong>Document Updates for SDK6.0.24 Release</strong></p>
+<p>The latest features and enhancements introduced in the recent SDK 6.0.24 release are detailed in the document, here is a quick summary.</p>
+<ul>
+<li><p>The New SDK 6.0.24 is now RED compliant, ensuring full compliance with the Radio Equipment Directive (RED) standards: The following updates have been made:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><strong>mkimage binary</strong></p></li>
+</ul>
+<p>The mkimage binary has been modified in order to support image signing.For this purpose the uECC source code has been imported in the SDK third party directory so that it can be used from the mkimage project, Refer to <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/creation_of_secondary_bootloader.html#the-make-image-tool"><span class="std std-numref">Section 6.2.7.4</span></a>.</p>
+<ul class="simple">
+<li><p><strong>Secondary bootloader</strong></p></li>
+</ul>
+<p>The secondary bootloader has been changed to support booting of signed multi images, Refer to <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/creation_of_secondary_bootloader.html#creation-of-a-secondary-bootloader"><span class="std std-numref">Section 6.2</span></a>.</p>
+<ul class="simple">
+<li><p><strong>SUOTA secure features</strong></p></li>
+</ul>
+<p>SUOTA application is updated by adding an anti-rollback feature so that older images cannot be downloaded, refer to the <a class="reference external" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">SUOTA Tutorial</a>.</p>
+<ul class="simple">
+<li><p><strong>Secure Storage API</strong></p></li>
+</ul>
+<p>A layer has been added for securely storing data in external SPI/I2C memory. Two modules were created: an encryption module and a storage module, Refer to <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#easy-api"><span class="std std-numref">Section 2.5.3.2</span></a>.</p>
+</div></blockquote>
+</li>
+<li><p>Includes various fixes and improvements. Refer to the <a class="reference external" href="https://lpccs-docs.renesas.com/sdk6_kll/index.html">SDK6 Known Limitations List</a>.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In this document:</p>
+<ul class="simple">
+<li><p><strong>DA1453x</strong> is referring to DA14531-00, DA14531-01, DA14530, DA14535 and DA14533</p></li>
+<li><p><strong>DA1458x</strong> is referring to DA14585 and DA14586.</p></li>
+<li><p>The DA14531-<strong>00</strong> is the main DA14531 device. The <strong>-00</strong> is just a new
+naming to introduce the variant DA14531-01. The DA14531-<strong>01</strong> is a
+<strong>ROM</strong> variant of the main DA14531-<strong>00</strong>.</p></li>
+<li><p>The DA14535 is a DA14531 upgrade.</p></li>
+<li><p>The DA14533 is optimized for automotive and industrial applications at higher temperatures, and it is rated as operating up to 105 ºC and compliant with the AEC-Q100 (Grade 2) standard.</p></li>
+</ul>
+</div>
+<p>Table 1 presents the differentiation among the variants of the DA1453x concerning
+the BLE features and SDK support.</p>
+<div class="wy-table-responsive"><table class="docutils align-left" id="da1453x-product-variants-differentiation">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">DA1453x Product Variants Differentiation</span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1453x-product-variants-differentiation" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>BLE Features</strong></p></th>
+<th class="head"><p><strong>DA14531</strong></p></th>
+<th class="head"><p><strong>DA14531-01</strong></p></th>
+<th class="head"><p><strong>DA14535</strong></p></th>
+<th class="head"><p><strong>DA14533</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>BLE Central support</p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>BLE Observer support</p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>LL Privacy feature (privacy on the controller side)</p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Compatible with SDK 6.0.12 or higher</p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+<td><p><em>NO*</em></p></td>
+</tr>
+<tr class="row-even"><td><p>Compatible with SDK 6.0.18</p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+<td><p><strong>NO</strong></p></td>
+</tr>
+<tr class="row-odd"><td><p>Compatible with SDK 6.0.22 or higher</p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+<td><p><strong>YES</strong></p></td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The <strong>DA14530</strong> is pin-for-pin compatible with the DA14531 and provides cost
+savings by operating from an internal LDO (no internal DCDC converter),
+eliminating the cost of a DC/DC inductor.</p></li>
+</ul>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The SmartBond™ <strong>DA14586</strong> is a SoC with an integrated Flash (2 Mbit). The DA14586 is pin-to-pin compatible with the DA14585.</p></li>
+</ul>
+</div>
+<section id="target-audience">
+<h2><span class="section-number">1.1. </span>Target Audience<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#target-audience" title="Link to this heading"></a></h2>
+<p>This document is aimed at Embedded Software Developers / Embedded Firmware
+Engineers that work on application development with SmartBond™
+DA1453x/DA1458x devices based on the DA1453x/DA1458x System on Chip (SoC)
+platform.</p>
+<p>Developers who are new to the DA1453x/DA1458x System on Chip (SoC) platform are
+advised to scan through the entire document in order to get familiar with what
+is covered, and where to find specific information.</p>
+<p>Experienced Embedded Firmware developers will be able to to dive deep
+into the SDK after going through some key chapters and technical
+documentation along with the provided example applications. This will
+give a better understanding on Renesas’s DA1453x/DA1458x Bluetooth® low
+energy devices and how to best utilize the capabilities offered by
+Renesas’s DA1453x/DA1458x SoC platform.</p>
+</section>
+<section id="device-modes">
+<h2><span class="section-number">1.2. </span>Device Modes<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#device-modes" title="Link to this heading"></a></h2>
+<p>Devices that support both BLE and Basic Rate (BR) / Enhanced Data Rate protocol (EDR)
+are referred as dual-mode
+devices. Typically, inside the Bluetooth ecosystem a mobile phone or
+laptop computer is considered a dual-mode device, unless specifically
+stated otherwise. Devices that only support BLE are referred to as
+single-mode devices.</p>
+<section id="single-mode-devices">
+<h3><span class="section-number">1.2.1. </span>Single Mode Devices<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#single-mode-devices" title="Link to this heading"></a></h3>
+<p>A single-mode (BLE or Bluetooth Low Energy) device, implements
+only BLE and is able to communicate with both single-mode and dual-mode
+devices. However, not with devices that support only BR/EDR. BLE support is
+a must-have for single-mode devices to handle incoming messages and
+issue a response.</p>
+</section>
+<section id="dual-mode-devices">
+<h3><span class="section-number">1.2.2. </span>Dual Mode Devices<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#dual-mode-devices" title="Link to this heading"></a></h3>
+<p>A dual-mode BR/EDR/LE, Bluetooth Low Energy Ready device, implements
+both BR/EDR and BLE and is able to communicate with any Bluetooth
+device.</p>
+</section>
+</section>
+<section id="main-building-blocks">
+<h2><span class="section-number">1.3. </span>Main Building Blocks<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#main-building-blocks" title="Link to this heading"></a></h2>
+<p>In the classic Bluetooth standard, the protocol stack consists of two
+blocks: the Controller and the Host. In Bluetooth BR/EDR devices, these
+two are usually implemented separately. However, more up-to-date
+Bluetooth devices include an increased number of building blocks. The
+main building blocks that exist in almost every Bluetooth device are the
+following:</p>
+<ul class="simple">
+<li><p>The Application that uses the Bluetooth protocol stack interface to
+implement a particular use case</p></li>
+<li><p>The Host that contains the upper layers of the Bluetooth protocol
+stack</p></li>
+<li><p>The Controller that contains the lower layers of the Bluetooth
+protocol stack, including the radio</p></li>
+</ul>
+<p>Bluetooth specifications also offer a standard communication protocol
+between the host and the controller called Host Controller Interface
+(HCI), which allows interoperability between hosts and controllers when
+these are developed by different entities.</p>
+</section>
+<section id="hardware-configurations">
+<h2><span class="section-number">1.4. </span>Hardware Configurations<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#hardware-configurations" title="Link to this heading"></a></h2>
+<p>These main building blocks can be implemented in a single integrated
+circuit (IC) or System on Chip (SoC) device, or can be split and
+executed in more than one IC that is connected through a suitable
+communication interface and protocol (UART, USB, SPI, or other).</p>
+<section id="integrated-processor">
+<h3><span class="section-number">1.4.1. </span>Integrated Processor<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#integrated-processor" title="Link to this heading"></a></h3>
+<p>Most sensor applications tend to use the integrated processor (SoC)
+hardware configuration as it drives overall system complexity and
+associated printed circuit board (PCB) realization costs lower.</p>
+</section>
+<section id="external-processor">
+<h3><span class="section-number">1.4.2. </span>External Processor<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#external-processor" title="Link to this heading"></a></h3>
+<p>Powerful computing devices like smartphones and tablets usually opt for
+the external processor, with the corresponding HCI protocol, which may be
+either proprietary or standard. This approach also allows additional BLE
+connectivity with specialized microcontrollers to be integrated without
+modifying the overall design.</p>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#integrated-vs-external-processor-ble-hardware-configurations"><span class="std std-numref">Figure 1</span></a>
+shows a comparison between the two approaches when Bluetooth is implemented:</p>
+<figure class="align-center" id="integrated-vs-external-processor-ble-hardware-configurations">
+<img alt="../_images/image1.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image1.png">
+<figcaption>
+<p><span class="caption-number">Figure 1 </span><span class="caption-text"><strong>Integrated vs. External Processor BLE Hardware Configurations</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#integrated-vs-external-processor-ble-hardware-configurations" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="network-modes">
+<h2><span class="section-number">1.5. </span>Network Modes<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#network-modes" title="Link to this heading"></a></h2>
+<p>BLE devices use two distinct communication methods, each with certain
+benefits and limitations: Broadcasting and Connecting. Both methods
+follow certain procedures established by the Generic Access Profile
+(GAP).</p>
+<section id="broadcasting">
+<h3><span class="section-number">1.5.1. </span>Broadcasting<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#broadcasting" title="Link to this heading"></a></h3>
+<p>When connectionless broadcasting is used, a BLE device sends data out to
+any scanning device or receiver that is within acceptable listening
+range. Essentially, this mechanism allows a BLE device to send data out
+one-way to anyone or anything that is capable of picking up the
+transmission.</p>
+<p>Broadcasting defines two separate roles:</p>
+<ul class="simple">
+<li><p>Broadcaster: Sends non-connectable advertising packets periodically
+to anyone willing to receive them.</p></li>
+<li><p>Observer: Repeatedly scans the pre-set frequencies to receive any
+non-connectable advertising packets.</p></li>
+</ul>
+<p>Broadcasting is the only way for a device to transmit data to more than
+one peer at a time. These broadcasted data are sent out with the use of the
+advertising features of BLE.</p>
+</section>
+<section id="connecting">
+<h3><span class="section-number">1.5.2. </span>Connecting<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#connecting" title="Link to this heading"></a></h3>
+<p>For bi-directional data transmission in BLE, a connection needs to be
+present. A BLE connection is nothing more than an established,
+periodical exchange of data at specific points in time
+(connection events) between the two involved BLE peers. Typically,
+data is exchanged only between the two BLE connection peers, and no
+other device is involved. Connections define two separate roles:</p>
+<ul class="simple">
+<li><p>Central (master): Repeatedly scans the pre-set BLE frequencies for
+connectable advertising packets and, when suitable, initiates a
+connection. Once the connection is established, the central manages
+the timing and initiates periodical data exchange.</p></li>
+<li><p>Peripheral (slave): A device that sends connectable advertising
+packets periodically and accepts incoming connections. Once in an
+active connection, the peripheral follows the central’s timing and
+regularly exchanges data with the central device.</p></li>
+</ul>
+<p>For a connection to be initiated, the central device picks up the
+connectable advertising packets from a peripheral and then sends a
+request to the peripheral device to establish an exclusive connection
+between the two devices. Once the connection is established, the
+peripheral stops advertising and the two devices can begin exchanging
+data in both directions. Although the central is the device that manages
+the connection establishment, data can be sent independently by either
+device during each connection event, and the roles do not impose
+restrictions in data throughput or priority. It is therefore possible
+for a device to act as a central and a peripheral at the same time, for
+a central device to be connected to multiple peripherals as well as for
+a peripheral device to be connected to multiple centrals.</p>
+<p>Connections provide the ability to organize data with much
+finer-grained control over each field or property through the use of
+additional protocol layers and, more specifically, the Generic Attribute
+Profile (GATT). Data is organized around units called services and
+characteristics. Moreover, connections allow for higher throughput and
+have the ability to establish a secure encrypted link, as well as
+negotiation of connection parameters to fit the data model.</p>
+<p>A BLE device can have multiple services and characteristics, organized
+in a meaningful structure. Services can contain multiple
+characteristics, each with their own access rights and descriptive
+metadata.</p>
+</section>
+</section>
+<section id="profiles">
+<h2><span class="section-number">1.6. </span>Profiles<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#profiles" title="Link to this heading"></a></h2>
+<p>The Bluetooth specification clearly separates the concept of Protocol
+and Profile. This distinction is made due to the different purposes each
+concept serves. The overall specifications are divided into:</p>
+<ul class="simple">
+<li><p>Protocols: are the building blocks used by all devices
+that conform to the Bluetooth specification. Protocols essentially
+form the layers that implement the different packet formats,
+routing, multiplexing, encoding, and decoding that allow data to be
+sent effectively between peers.</p></li>
+<li><p>Profiles: are vertical slices of functionality that define either
+basic modes of operation required by all devices (such as the Generic
+Access Profile and the Generic Attribute Profile) or specific use
+cases (Proximity Profile, Glucose Profile); profiles essentially
+specify how protocols should be used to achieve a particular
+objective, whether generic or specific.</p></li>
+</ul>
+<section id="generic-profiles">
+<h3><span class="section-number">1.6.1. </span>Generic Profiles<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#generic-profiles" title="Link to this heading"></a></h3>
+<p>Generic profiles are defined by the Bluetooth specification. Two profiles
+are fundamental, as they ensure the interoperability between BLE
+devices from different vendors:</p>
+<ul class="simple">
+<li><p>Generic Access Profile (GAP): Specifies the usage model of the
+lower-level radio protocols to define roles, procedures, and modes
+that allow devices to broadcast data, discover devices, establish
+connections, manage connections, and negotiate security levels; GAP
+is essentially, the uppermost control layer of BLE. This profile is
+mandatory for all BLE devices, and all must comply with GAP.</p></li>
+<li><p>Generic Attribute Profile (GATT): Addresses data exchange in BLE and
+specifies the basic data model and procedures to allow devices to
+discover, read, write, and push data elements between them. It is
+basically, the top most data layer of BLE.</p></li>
+</ul>
+<p>GAP and GATT are so fundamental to BLE that they are often used as the
+base for the provision of application programming interfaces (APIs) that
+act as the entry point for the application to interact with the protocol
+stack.</p>
+</section>
+<section id="use-case-specific-profiles">
+<h3><span class="section-number">1.6.2. </span>Use-Case-Specific Profiles<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#use-case-specific-profiles" title="Link to this heading"></a></h3>
+<p>Use-case-specific profiles are usually limited to GATT-based profiles.
+Largely all of these profiles use the procedures and operating models of
+the GATT profile as a base building block for all further extensions.
+However, version 4.1 of the specification introduces Logical Link Control and
+Adaptation Protocol (L2CAP) connection-oriented channels, which indicates that
+GATT-less profiles are also possible.</p>
+<section id="sig-defined-gatt-based-profiles">
+<h4><span class="section-number">1.6.2.1. </span>SIG-Defined GATT-Based Profiles<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#sig-defined-gatt-based-profiles" title="Link to this heading"></a></h4>
+<p>The Bluetooth SIG provides a solid reference framework for
+the control and data layers of devices involved in a BLE network. It
+also provides a predefined set of use-case profiles based on GATT, that
+completely cover all procedures and data formats required to implement a
+wide range of specific use cases, like:</p>
+<ul class="simple">
+<li><p>Find Me Profile: allows devices to physically locate other devices.
+For example, with the use of a smartphone to find a BLE enabled keyring, or
+vice versa.</p></li>
+<li><p>Proximity Profile: detects the presence or absence of nearby
+devices. Beep if an item is forgotten when left in an area like a
+room.</p></li>
+<li><p>HID over GATT Profile: transfers Human Interface Device (HID) data
+over BLE. For example, for keyboards, mice, remote controls.</p></li>
+<li><p>Glucose Profile: securely transfers glucose levels over BLE.</p></li>
+<li><p>Health Thermometer Profile: transfers body temperature readings
+over BLE.</p></li>
+</ul>
+<p>The Bluetooth SIG Specification in its Adopted Documents page provides
+a full list of SIG-approved profiles (more information at
+<a class="reference external" href="https://www.bluetooth.com/specifications/adopted-specifications">https://www.bluetooth.com/specifications/adopted-specifications</a>). A
+developer can also browse directly the list of all currently adopted
+services for the Bluetooth services and characteristics at the Bluetooth
+Developer Portal.</p>
+</section>
+<section id="vendor-specific-profiles">
+<h4><span class="section-number">1.6.2.2. </span>Vendor-Specific Profiles<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#vendor-specific-profiles" title="Link to this heading"></a></h4>
+<p>The Bluetooth specification allows vendors to define their
+profiles for use cases that are not covered by the SIG-defined profiles.
+Those profiles can be kept private to the two peers involved in a
+particular use case (for example, a new sensor accessory and a
+smartphone application), or they can also be published by the vendor so
+that other parties can provide implementations of the profile based on
+the vendor-supplied specification. An example of a published
+vendor-specific profile is Apple’s iBeacon.</p>
+</section>
+</section>
+<section id="generic-access-profile-layer">
+<h3><span class="section-number">1.6.3. </span>Generic Access Profile Layer<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#generic-access-profile-layer" title="Link to this heading"></a></h3>
+<p>The Generic Access Profile (GAP) layer is responsible for the overall
+connection functionality. GAP handles the device’s access modes and
+procedures including device discovery, that directly interface with the
+application and/or profiles, and handle device discovery and
+connection-related services for the device. In addition, GAP takes care
+of the initiation of security features.</p>
+<p>Essentially, GAP can be considered as the BLE top-most control layer,
+given that GAP specifies how devices carry out control procedures such as
+device discovery and to establish a secure connection. This is done to ensure
+interoperability and thus allow data exchange between devices from
+different vendors.</p>
+<p>GAP specifies four roles that a device can adopt in a BLE network:</p>
+<ul class="simple">
+<li><p>Broadcaster: The device is advertising with specific data, to let
+any device that initiates know, for example, that it is a
+device to which a connection can be made. This advertisement contains the device address and optionally
+additional data, such as the device name.</p></li>
+<li><p>Observer: The scanning device, after an advertisement is received,
+sends a ‘scan request’ to the advertiser. The advertiser responds
+with a ‘scan response’. This is the process of device discovery,
+after which the scanning device is aware of the presence of the
+advertising device, and knows that a
+connection with the advertising device is possible.</p></li>
+<li><p>Central: When a connection is initiated, the central device must specify a
+peer device address to connect to. If an Advertisement is received
+that matches the peer device’s address, the central device will then send
+out a request to establish a connection (link) with the advertising
+device. It will consider the particular connection parameters during
+connection establishment process.</p></li>
+<li><p>Peripheral: Once a connection is established, the device will
+function as a slave if it was the advertiser and function as the master if it was
+the initiator.</p></li>
+</ul>
+<p>Fundamentally, GAP establishes different sets of rules and concepts that
+regulate and standardize the low-level operation of devices. In
+particular:</p>
+<ul class="simple">
+<li><p>The roles and interaction between them.</p></li>
+<li><p>The operational modes and transitions across those devices.</p></li>
+<li><p>The operational procedures to achieve consistent and interoperable
+communication.</p></li>
+<li><p>All security aspects, including security modes and procedures.</p></li>
+<li><p>Additional data formats for non-protocol data.</p></li>
+</ul>
+</section>
+<section id="generic-attribute-profile-layer">
+<h3><span class="section-number">1.6.4. </span>Generic Attribute Profile Layer<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#generic-attribute-profile-layer" title="Link to this heading"></a></h3>
+<p>The Generic Attribute Profile (GATT) layer is a service framework that
+defines all sub-procedures to use the Attribute Protocol (ATT). GATT
+describes in full detail how profile and user data is to be exchanged
+over a BLE connection. In contrast to GAP, which defines the low-level
+interactions with devices, GATT deals only with actual data transfer
+procedures and formats.</p>
+<p>GATT also provides the reference framework for all of the GATT-based
+profiles as defined by SIG. Effectively by covering the precise use
+cases for the profiles, GATT ensures interoperability between devices from
+different vendors. All the standard BLE profiles are therefore based on
+GATT and must comply with GATT to operate correctly. This makes GATT a
+key section of the BLE specification, since every data collection that
+is relevant to applications and users must be formatted, packed, and
+transmitted according to its rules.</p>
+<p>GATT defines two roles for the interacting BLE devices:</p>
+<ul class="simple">
+<li><p>Client: sends requests to a server, receives responses and
+potential server-initiated updates. The GATT client does
+not know anything in advance about the server’s attributes, so it
+must first inquire the presence and nature of those attributes by
+means of a service discovery. After the service discovery is completed, it
+starts to read and write attributes found on the server, as well as
+receive server-initiated updates. It corresponds to the ATT client.</p></li>
+<li><p>Server: receives requests from a client and issues responses. It
+also sends server-initiated updates when configured to do so, and
+is the role responsible to store the user data and make the user data
+available to the client, organized in attributes. Every BLE device
+sold must include at least a basic GATT server that can respond to
+client requests, even if only to return an error response. It
+corresponds to the ATT server.</p></li>
+</ul>
+<p>Know that GATT and GAP roles are completely independent, but concurrently
+compatible to each other. For instance, it is possible for both a GAP
+central and a GAP peripheral to act as a GATT client or server, or even
+both at the same time.</p>
+<p>GATT uses ATT as a transport protocol for data exchange between devices.
+This data is organized hierarchically in sections called services, which
+groups conceptually related pieces of user data called characteristics.</p>
+</section>
+</section>
+<section id="protocol-stack">
+<h2><span class="section-number">1.7. </span>Protocol Stack<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#protocol-stack" title="Link to this heading"></a></h2>
+<p>Similar to all Bluetooth devices from an architectural point of view, a
+single-mode BLE device is divided into three blocks: controller, host,
+and application. Each of these basic building blocks consist of several
+layers, which make the device operational and tightly integrated in the
+so-called Protocol Stack. See <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#ble-protocol-stack-layers"><span class="std std-numref">Figure 2</span></a>.</p>
+<figure class="align-center" id="ble-protocol-stack-layers">
+<img alt="../_images/image2.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image2.png">
+<figcaption>
+<p><span class="caption-number">Figure 2 </span><span class="caption-text"><strong>BLE Protocol Stack Layers</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#ble-protocol-stack-layers" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The following sections provide a description of the aforementioned
+building blocks along with the layers that exist for each building block.</p>
+</section>
+<section id="controller">
+<h2><span class="section-number">1.8. </span>Controller<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#controller" title="Link to this heading"></a></h2>
+<p>The Controller includes all the lower level functionality necessary for
+a BLE device to communicate. The Controller consists of a Physical Layer
+(PHY), a Link Layer (LL) and the controller side of the Host
+Controller Interface (HCI).</p>
+<section id="physical-layer-phy">
+<h3><span class="section-number">1.8.1. </span>Physical Layer (PHY)<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#physical-layer-phy" title="Link to this heading"></a></h3>
+<p>In the Physical Layer (PHY) a key block, among others, is the 1 Mbps
+adaptive frequency-hopping Gaussian Frequency-Shift Keying (GFSK) radio
+that operates in the unlicensed 2.4 GHz Industrial, Scientific, and
+Medical (ISM) band.</p>
+</section>
+<section id="link-layer-ll">
+<h3><span class="section-number">1.8.2. </span>Link Layer (LL)<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#link-layer-ll" title="Link to this heading"></a></h3>
+<p>The Link Layer (LL) directly interfaces with the PHY. LL is the hard
+real-time constrained layer of the protocol stack, because LL has to comply
+with all the timing requirements defined in the specification. Given
+that many of the calculations done by the LL are computationally
+expensive, automated functions are usually implemented in hardware to
+avoid overloading the Central Processing Unit (CPU) that runs all
+software layers in the stack. Therefore, the LL implementation comes
+through a combination of custom hardware and software. The functionality
+that LL provides, usually includes: Preamble, Access Address, and air
+protocol framing, CRC generation and verification, data whitening,
+random number generation and AES encryption. LL is usually kept isolated
+from the higher layers of the protocol stack with an interface that hides
+this complexity and its real-time requirements.</p>
+<p>The LL principally controls the Radio Frequency (RF) state of the device
+and manages the link state of the radio, which is how the device connects
+to other devices. A BLE device can be a master, a slave, or both
+depending on the use case and the corresponding requirements. A master
+is able to connect to multiple slaves and a slave can connect to
+multiple masters. Typically, devices such as smartphones or tablets tend
+to act as a master, while smaller, simpler, and memory-constrained
+devices such as standalone sensors generally adopt the slave role. A
+device can only be in one of the following five states: standby,
+advertising, scanning, initiating, or connected. See
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#link-layer-states"><span class="std std-numref">Figure 3</span></a>:</p>
+<figure class="align-center" id="link-layer-states">
+<img alt="../_images/image3.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image3.png">
+<figcaption>
+<p><span class="caption-number">Figure 3 </span><span class="caption-text"><strong>Link Layer States</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#link-layer-states" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Advertisers transmit data without being connected, while scanners listen
+for advertisers. An initiator is a device that is responding to an
+advertiser with a connection request. If the advertiser accepts, both
+the advertiser and initiator will enter in a connected state. When a device
+is in a connection state, the device will be connected in one of two roles:
+master or slave. Typically, devices that initiate connections will be
+masters and devices that advertise their availability and accept
+connections will be slaves. Therefore, the Link Layer defines the
+following roles:</p>
+<ul class="simple">
+<li><p>Advertiser: A device sending advertising packets.</p></li>
+<li><p>Scanner: A device scanning for advertising packets.</p></li>
+<li><p>Master: A device that initiates a connection (initiator) and manages
+the connection later.</p></li>
+<li><p>Slave: A device that accepts a connection request and follows the
+master’s timing.</p></li>
+</ul>
+<p>These roles can be logically grouped into two pairs: advertiser and
+scanner (when not in an active connection) and master and slave (when in
+a connection).</p>
+<section id="bluetooth-device-address">
+<h4><span class="section-number">1.8.2.1. </span>Bluetooth Device Address<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#bluetooth-device-address" title="Link to this heading"></a></h4>
+<p>The Bluetooth device address is the primary identifier of a Bluetooth
+device, similar to what an Ethernet Media Access Control (MAC) address
+is for network devices. It is a 48-bit (6-byte) number that uniquely
+identifies a device among peers. There are two types of device
+addresses, and a device can obtain one or both types:</p>
+<p>Public device address:</p>
+<p>This is the equivalent to a fixed, factory-programmed device address as
+used in BR/EDR devices as well. It has to be registered with the
+Institute of Electrical and Electronics Engineers (IEEE) Registration
+Authority and should never change throughout the lifetime of the device.</p>
+<p>Random device address:</p>
+<p>This address can either be preprogrammed or dynamically generated on the device at
+runtime. There are numerous use cases in which such
+addresses are useful in BLE.</p>
+</section>
+<section id="advertising-and-scanning">
+<h4><span class="section-number">1.8.2.2. </span>Advertising and Scanning<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#advertising-and-scanning" title="Link to this heading"></a></h4>
+<p>The BLE specification allows only one packet format and two types of
+packets: advertising and data.</p>
+<p>Advertising packets are used for two purposes:</p>
+<ul class="simple">
+<li><p>To broadcast data for applications that do not need the overhead of a
+full connection establishment</p></li>
+<li><p>To discover slaves and then connect with slaves</p></li>
+</ul>
+<p>Data packets are used for user data transport between the master and the
+slave devices, in a bi-directional manner.</p>
+<p>Finally, the Link Layer acts as a reliable data bearer since all
+received packets are checked against a 24-bit Cyclic Redundancy Check
+(CRC) and retransmissions are scheduled when the error checking
+mechanism detects a transmission failure. Since there is no pre-defined
+retransmission upper bound, the Link Layer will continuously resend the
+packet until it is finally acknowledged by the receiver.</p>
+</section>
+</section>
+<section id="host-controller-interface-controller-side">
+<h3><span class="section-number">1.8.3. </span>Host Controller Interface – Controller Side<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#host-controller-interface-controller-side" title="Link to this heading"></a></h3>
+<p>The Host Controller Interface (HCI) at the Controller side,
+provides a means of communication to the host via a standardized
+interface. The Bluetooth specification defines HCI as a set of commands
+and events for the host and the controller to interact with each other,
+along with a data packet format and a set of rules for flow control and
+other procedures. Additionally, the spec defines several transports,
+each of which augments the HCI protocol for a specific physical
+transport (UART, USB, SDIO, etc.).</p>
+</section>
+</section>
+<section id="host">
+<h2><span class="section-number">1.9. </span>Host<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#host" title="Link to this heading"></a></h2>
+<p>The Host block consists of a set of layers, each with specific role and
+functionality, the cooperation of which makes the overall block
+operational. As shown in <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#ble-protocol-stack-layers"><span class="std std-numref">Figure 2</span></a>
+these layers are the Logical Link
+Control and Adaptation Protocol (L2CAP), the Attribute Protocol (ATT),
+the Security Manager (SM) and the Generic Attribute Profile
+(GATT) and Generic Access Profile (GAP).</p>
+<section id="host-controller-interface-host-side">
+<h3><span class="section-number">1.9.1. </span>Host Controller Interface – Host Side<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#host-controller-interface-host-side" title="Link to this heading"></a></h3>
+<p>The HCI interface at the Host side provides a means of communication to
+the controller via a standardized interface. Similar to the Controller
+Side HCI, implementation of this layer is established either through a software API,
+or over a hardware interface such as UART or SPI.</p>
+</section>
+<section id="logical-link-control-and-adaptation-protocol">
+<h3><span class="section-number">1.9.2. </span>Logical Link Control and Adaptation Protocol<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#logical-link-control-and-adaptation-protocol" title="Link to this heading"></a></h3>
+<p>The Logical Link Control and Adaptation Protocol (L2CAP) layer provides
+data encapsulation services to the upper layers. As a result, L2CAP allows logical
+end-to-end communication with the use of data transfer. Essentially, L2CAP serves as
+a protocol multiplexer that takes multiple protocols from the upper
+layers and encapsulates them into the standard BLE packet format and
+vice versa. L2CAP is also responsible for package fragmentation and
+reassembly. During this process large packets originating from the upper
+layers of the transmitting side are fitted into the 27-byte maximum
+payload size of the BLE packets. The reverse process takes place on the
+receiving end, where the fragmented large upper layer packets are
+reassembled by multiple small BLE packets and transmitted upstream
+towards the appropriate upper level entity.</p>
+<p>The L2CAP layer is in charge of routing two main protocols: the
+Attribute Protocol (ATT) and the Security Manager Protocol (SMP).
+Moreover, L2CAP can create its own user-defined channels for
+high-throughput data transfer, a feature called LE Credit Based Flow
+Control Mode.</p>
+</section>
+<section id="attribute-protocol">
+<h3><span class="section-number">1.9.3. </span>Attribute Protocol<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#attribute-protocol" title="Link to this heading"></a></h3>
+<p>The ATT layer enables a BLE device to provide certain pieces of data,
+known as attributes, to another BLE device. In the context of ATT, the
+device exposing attributes is referred to as the server, and the peer
+device interested and working with these attributes is referred to as
+the client. The Link Layer state (master or slave) of the device is
+independent from the ATT role of the device. For example, a master
+device may either be an ATT server or an ATT client, while a slave
+device may also be either an ATT server or an ATT client. It is also
+possible for a device to be both an ATT server and an ATT client
+simultaneously.</p>
+<p>Essentially ATT is a simple client/server stateless protocol based on
+the attributes presented by a device. A client requests data from a
+server, and a server sends data to clients. The protocol is strict
+meaning that in case of a pending request (i.e. no response yet
+received for an already issued request) no further requests can be
+submitted until the response is received and processed. This applies to
+both directions independently in the situation where two peers are acting
+both as a client and server.</p>
+<p>Each ATT server contains data organized in the form of attributes, each
+of which is assigned a 16-bit attribute handle called Universally
+Unique Identifier (UUID), a set of permissions, and finally a value.
+Effectively, the attribute handle is a mere identifier used to access an
+attribute value. The UUID specifies the type and nature of the data
+contained in the value. When a client wants to read or write attribute
+values from or to a server, it issues a read or write request to the
+server using the attribute handle. The server will respond with the
+attribute value or an acknowledgement. In the case of a read operation,
+it is up to the client to parse the value and understand the data type
+based on the UUID of the attribute. On the other hand, during a write
+operation, the client is expected to provide data that is consistent
+with the attribute type and the server is free to reject the operation
+if that is not the case.</p>
+</section>
+<section id="security-manager">
+<h3><span class="section-number">1.9.4. </span>Security Manager<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#security-manager" title="Link to this heading"></a></h3>
+<p>The Security Manager (SM) layer defines the means for pairing and key
+distribution, and provides functions for the other layers of the protocol
+stack to securely connect and exchange data with another BLE device. The Security Manager
+includes both a protocol and a series of security algorithms that are
+designed to give the BLE protocol stack the ability to generate
+and exchange security keys to allow the peers, to communicate securely
+over an encrypted link, to trust the identity of the remote device, and
+if required, to hide the public Bluetooth Address. SM defines two roles:</p>
+<ul class="simple">
+<li><p>Initiator: Always is the Central</p></li>
+<li><p>Responder: Always is the Peripheral</p></li>
+</ul>
+<p>In addition, SM provides support for the following three procedures:</p>
+<ul class="simple">
+<li><p>Pairing: The procedure by which a security encryption key is
+generated and manipulated in order for the device to be able to
+switch to a secure and encrypted link. This key is temporary and not
+stored or available for subsequent connections.</p></li>
+<li><p>Bonding: A sequence of pairing followed by the generation and
+exchange of permanent security keys, typically stored in non-volatile
+memory. Therefore, allows the creation of a permanent bond
+between two devices, which allows to quickly set up a secure
+link in subsequent connections without the need to do a bonding
+procedure again.</p></li>
+<li><p>Encryption Reestablishment: After a bonding procedure is complete,
+keys might have been stored on both sides of the connection. If
+encryption keys have been stored, this procedure defines how to use
+those keys in subsequent connections to re-establish a secure,
+encrypted connection without having to go through the pairing (or
+bonding) procedure again.</p></li>
+</ul>
+<p>Pairing can therefore create a secure link that will only last for the
+lifetime of the connection. On the other hand, bonding actually creates a permanent
+association (also called bond) in the form of shared security keys that
+will be used in later connections until either side decides to delete
+them. Certain documentation and APIs sometimes use the term pairing with
+bonding instead of simply bonding, since a bonding procedure always
+includes a pairing phase before.</p>
+<p>Although it is always up to the initiator to trigger the beginning for a
+specific security procedure, the responder can asynchronously request
+the start of any of the procedures as listed above. However, there are no
+guarantees for the responder that the initiator will actually
+adhere to the request, rendering this to more of an optional rather than
+a binding request. This security request can logically be issued only by
+the slave or the peripheral end of the connection.</p>
+</section>
+<section id="application">
+<h3><span class="section-number">1.9.5. </span>Application<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#application" title="Link to this heading"></a></h3>
+<p>The application, like in all other types of systems, is at the highest
+layer and the one responsible for containing the logic, user interface,
+and data handling of everything related to the actual use-case that the
+application implements. The architecture of an application is highly
+dependent on each particular implementation and in BLE it typically uses
+the capabilities provided by the BLE profiles.</p>
+</section>
+</section>
+<section id="da1458x-system-on-chip-platform">
+<h2><span class="section-number">1.10. </span>DA1458x System on Chip Platform<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1458x-system-on-chip-platform" title="Link to this heading"></a></h2>
+<section id="da1458x-overview">
+<h3><span class="section-number">1.10.1. </span>DA1458x Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1458x-overview" title="Link to this heading"></a></h3>
+<p>The DA1458x platform includes a number of blocks as shown in
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14585-system-on-chip-platform-main-blocks"><span class="std std-numref">Figure 4</span></a> and <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14586-system-on-chip-platform-main-blocks"><span class="std std-numref">Figure 5</span></a>:</p>
+<figure class="align-center" id="da14585-system-on-chip-platform-main-blocks">
+<img alt="../_images/image4.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image4.png">
+<figcaption>
+<p><span class="caption-number">Figure 4 </span><span class="caption-text"><strong>DA14585 System on Chip Platform Main Blocks</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14585-system-on-chip-platform-main-blocks" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="da14586-system-on-chip-platform-main-blocks">
+<img alt="../_images/image6.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image6.png">
+<figcaption>
+<p><span class="caption-number">Figure 5 </span><span class="caption-text"><strong>DA14586 System on Chip Platform Main Blocks</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14586-system-on-chip-platform-main-blocks" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In the following sections a brief overview of the platform’s main
+building blocks is given. For detailed information please see
+the specific device datasheet.</p>
+</section>
+<section id="da1458x-key-features">
+<h3><span class="section-number">1.10.2. </span>DA1458x Key Features<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1458x-key-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Complies with Bluetooth V5.0, ETSI EN 300 328 and
+EN 300 440 Class 2 (Europe), FCC CFR47 Part 15 (US) and
+ARIB STD-T66 (Japan)</p></li>
+<li><p>Supports up to 8 Bluetooth LE connections</p></li>
+<li><p>Fast cold boot in less than 50 ms</p></li>
+<li><dl class="simple">
+<dt>Processing power</dt><dd><ul>
+<li><p>16 MHz 32 bit Arm®  Cortex® M0 with SWD interface</p></li>
+<li><p>Dedicated Link Layer Processor</p></li>
+<li><p>AES-128 bit encryption Processor</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Memories</dt><dd><ul>
+<li><p>64 kB One-Time-Programmable (OTP) memory</p></li>
+<li><p>96 kB Data/Retention SRAM</p></li>
+<li><p>128 kB ROM</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Power management</dt><dd><ul>
+<li><p>Integrated Buck/Boost DCDC converter</p></li>
+<li><p>P0, P1 and P2 ports with 3.3 V tolerance</p></li>
+<li><p>Easy decoupling of only 4 supply pins</p></li>
+<li><p>Supports coin (typ. 3.0 V) and alkaline (typ. 1.5 V) battery cells</p></li>
+<li><p>1.8 V cold boot support</p></li>
+<li><p>10-bit ADC for battery voltage measurement</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Digital controlled oscillators</dt><dd><ul>
+<li><p>16 MHz crystal (±20 ppm max) and RC oscillator</p></li>
+<li><p>32 kHz crystal (±50 ppm, ±500 ppm max) and RCX oscillator</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Flexible Reset Circuitry</dt><dd><ul>
+<li><p>System &amp; Power On Reset in a single pin</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>General purpose, Capture and Sleep timers</p></li>
+<li><dl class="simple">
+<dt>Digital interfaces</dt><dd><ul>
+<li><p>Gen. purpose I/Os: 14 (WLCSP34), 25 (QFN40), 32 (QFN48)</p></li>
+<li><p>2 x UARTs with hardware flow control up to 1 Mbps</p></li>
+<li><p>SPI+™ interface</p></li>
+<li><p>I2C bus at 100 kHz, 400 kHz</p></li>
+<li><p>3-axes capable Quadrature Decoder</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Analog interfaces</dt><dd><ul>
+<li><p>4-channel 10-bit ADC</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Radio transceiver</dt><dd><ul>
+<li><p>Fully integrated 2.4 GHz CMOS transceiver</p></li>
+<li><p>Single wire antenna: no RF matching or RX/TX switching required</p></li>
+<li><p>Supply current at VBAT3V:</p></li>
+<li><p>TX: 3.4 mA, RX: 3.7 mA (with ideal DCDC)</p></li>
+<li><p>0 dBm transmit output power</p></li>
+<li><p>-20 dBm output power in “Near Field Mode”</p></li>
+<li><p>-93 dBm receiver sensitivity</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Packages:</dt><dd><ul>
+<li><p>WLCSP 34 pins, 2.40 mm x 2.66 mm</p></li>
+<li><p>QFN 40 pins, 5 mm x 5 mm</p></li>
+<li><p>QFN 48 pins, 6 mm x 6 mm</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>SPI™ is a trademark of Motorola, Inc.</p></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="da1453x-system-on-chip-platform">
+<h2><span class="section-number">1.11. </span>DA1453x System on Chip Platform<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1453x-system-on-chip-platform" title="Link to this heading"></a></h2>
+<section id="da1453x-overview">
+<h3><span class="section-number">1.11.1. </span>DA1453x Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da1453x-overview" title="Link to this heading"></a></h3>
+<p>The DA1453x platform includes a number of blocks as shown in
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14531-system-on-chip-platform-main-blocks"><span class="std std-numref">Figure 6</span></a>,
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14530-system-on-chip-platform-main-blocks"><span class="std std-numref">Figure 7</span></a> and
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14535-system-on-chip-platform-main-blocks"><span class="std std-numref">Figure 8</span></a>:</p>
+<figure class="align-center" id="da14531-system-on-chip-platform-main-blocks">
+<img alt="../_images/image5.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image5.png">
+<figcaption>
+<p><span class="caption-number">Figure 6 </span><span class="caption-text"><strong>DA14531 System on Chip Platform Main Blocks</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14531-system-on-chip-platform-main-blocks" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="da14530-system-on-chip-platform-main-blocks">
+<img alt="../_images/image7.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image7.png">
+<figcaption>
+<p><span class="caption-number">Figure 7 </span><span class="caption-text"><strong>DA14530 System on Chip Platform Main Blocks</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14530-system-on-chip-platform-main-blocks" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="da14535-system-on-chip-platform-main-blocks">
+<img alt="../_images/da14535-block.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/da14535-block.png">
+<figcaption>
+<p><span class="caption-number">Figure 8 </span><span class="caption-text"><strong>DA14535 System on Chip Platform Main Blocks</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14535-system-on-chip-platform-main-blocks" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="da14533-system-on-chip-platform-main-blocks">
+<img alt="../_images/da14533-block.png" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/da14533-block.png">
+<figcaption>
+<p><span class="caption-number">Figure 9 </span><span class="caption-text"><strong>DA14533 System on Chip Platform Main Blocks</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14533-system-on-chip-platform-main-blocks" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In the following section a brief overview of the platform’s main
+building blocks is given. For detailed information please see
+the specific device datasheet.</p>
+</section>
+<section id="da14531-key-features">
+<h3><span class="section-number">1.11.2. </span>DA14531 Key Features<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14531-key-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Compatible with Bluetooth V5.1, ETSI EN 300 328 and EN 300 440 Class 2
+(Europe), FCC CFR47 Part 15 (US) and ARIB STD-T66 (Japan)</p></li>
+<li><p>Supports up to 3 BLE connections</p></li>
+<li><p>Typical cold boot to radio active 35 ms</p></li>
+<li><dl class="simple">
+<dt>Processing power</dt><dd><ul>
+<li><p>16 MHz 32-bit Arm® Cortex® M0+ with SWD interface</p></li>
+<li><p>Dedicated Link Layer Processor</p></li>
+<li><p>AES-128 Encryption Processor</p></li>
+<li><p>Software-based certified True Random Number Generator (TRNG)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Memories</dt><dd><ul>
+<li><p>32 kB One-Time-Programmable (OTP)</p></li>
+<li><p>48 kB Retainable System RAM</p></li>
+<li><p>144 kB ROM</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Power management <strong>(See Note below)</strong></dt><dd><ul>
+<li><p>Integrated Buck/Boost DCDC converter</p></li>
+<li><p>Buck: 1.8 V ≤ VBAT_HIGH ≤ 3.3 V if OTP read needed</p></li>
+<li><p>Buck: 1.1 V ≤ VBAT_HIGH ≤ 3.3 V if RAM retained</p></li>
+<li><p>Boost: 1.1 V ≤ VBAT_LOW ≤ 1.65 V</p></li>
+<li><p>Clock-less hibernation mode: Buck 270 nA, Boost 240 nA</p></li>
+<li><p>10-bit ADC for battery voltage monitoring</p></li>
+<li><p>Built-in temperature sensor for die temperature monitoring</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Digital controlled oscillators</dt><dd><ul>
+<li><p>32 MHz crystal and 32 MHz RC oscillator</p></li>
+<li><p>32 kHz crystal and 32/512 kHz RC oscillator</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>15 kHz RCX as 32 kHz crystal replacement</p></li>
+<li><p>Programmable Reset Circuitry</p></li>
+<li><p>2× General purpose Timers with capture and PWM capabilities</p></li>
+<li><dl class="simple">
+<dt>Digital interfaces</dt><dd><ul>
+<li><p>GPIOs: 6 (WLCSP17), 12 (FCGQFN24)</p></li>
+<li><p>2× UARTs (one with flow control)</p></li>
+<li><p>SPI Master/Slave up to 32 MHz (Master)</p></li>
+<li><p>I2C bus at 100 kHz and 400 kHz</p></li>
+<li><p>3-axis capable Quadrature Decoder</p></li>
+<li><p>Keyboard controller</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Analog interfaces</dt><dd><ul>
+<li><p>4-channel 10-bit ADC</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Radio transceiver</dt><dd><ul>
+<li><p>Fully integrated 2.4 GHz CMOS transceiver</p></li>
+<li><p>Single wire antenna</p></li>
+<li><p>TX: 3.5 mA, RX: 2.2 mA (system currents with DC-DC, VBAT_HIGH =3 V and
+0 dBm)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Programmable transmit output power from -19.5 dBm to +2.5 dBm</p></li>
+<li><p>-94 dBm receiver sensitivity</p></li>
+<li><dl class="simple">
+<dt>Packages:</dt><dd><ul>
+<li><p>WLCSP 17 balls, 1.7 × 2.05, 0.5 mm pitch</p></li>
+<li><p>FCGQFN 24 pins, 2.2 × 3, 0.4 mm pitch</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>The DA14530 is pin-for-pin compatible with the DA14531 and provides cost savings by operating from an internal LDO, eliminating the cost of a DC/DC inductor.</p></li>
+<li><p>SPI™ is a trademark of Motorola, Inc.</p></li>
+</ul>
+</div>
+</section>
+<section id="da14535-key-features">
+<h3><span class="section-number">1.11.3. </span>DA14535 Key Features<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14535-key-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>Compatible with Bluetooth V5.3, ETSI EN 300 328 and EN 300 440 Class 2
+(Europe), FCC CFR47 Part 15 (US) and ARIB STD-T66 (Japan)</p></li>
+<li><p>Supports up to 3 BLE connections</p></li>
+<li><p>Typical cold boot to radio active 35 ms</p></li>
+<li><dl class="simple">
+<dt>Processing power</dt><dd><ul>
+<li><p>16 MHz 32-bit Arm® Cortex® M0+ with SWD interface</p></li>
+<li><p>Dedicated Link Layer Processor</p></li>
+<li><p>AES-128 Encryption Processor</p></li>
+<li><p>Software-based certified True Random Number Generator (TRNG)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Memories</dt><dd><ul>
+<li><p>12 kB One-Time-Programmable (OTP)</p></li>
+<li><p>64 kB Retainable System RAM</p></li>
+<li><p>160 kB ROM</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Power management</dt><dd><ul>
+<li><p>Integrated Buck/Boost DCDC converter</p></li>
+<li><p>Buck: 1.8 V ≤ VBAT_HIGH ≤ 3.6 V</p></li>
+<li><p>Boost: 1.2 V ≤ VBAT_LOW ≤ 1.65 V</p></li>
+<li><p>Clock-less hibernation mode: Buck &lt; 550 nA, Boost &lt; 550 nA</p></li>
+<li><p>Built-in temperature sensor for die temperature monitoring</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>Programmable Reset Circuitry</p></li>
+<li><dl class="simple">
+<dt>Clocks</dt><dd><ul>
+<li><p>32 MHz crystal and 32 MHz RC oscillator</p></li>
+<li><p>32 kHz crystal and 32/512 kHz RC oscillator</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>15 kHz RCX as crystal replacement</p></li>
+<li><p>2× General purpose Timers with capture and PWM capabilities</p></li>
+<li><dl class="simple">
+<dt>Digital interfaces</dt><dd><ul>
+<li><p>12 x GPIOs</p></li>
+<li><p>2× UARTs (one with flow control)</p></li>
+<li><p>SPI Master/Slave up to 32 MHz (Master)</p></li>
+<li><p>I2C bus at 100 kHz and 400 kHz</p></li>
+<li><p>3-axis capable Quadrature Decoder</p></li>
+<li><p>Keyboard controller</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Analog interfaces</dt><dd><ul>
+<li><p>4-channel 10-bit ADC</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Radio transceiver</dt><dd><ul>
+<li><p>Fully integrated 2.4 GHz CMOS transceiver</p></li>
+<li><p>Single wire antenna</p></li>
+<li><p>TX: 3.6 mA, RX: 2.6 mA (system currents with DC-DC, VBAT_HIGH =3 V and
+0 dBm)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Programmable transmit output power from -18 dBm to +4 dBm</dt><dd><ul>
+<li><p>-94 dBm receiver sensitivity</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Packages:</dt><dd><ul>
+<li><p>FCGQFN 24 pins, 2.2 × 3, 0.4 mm pitch</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="da14533-key-features">
+<h3><span class="section-number">1.11.4. </span>DA14533 Key Features<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html#da14533-key-features" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>Wireless Connectivity</dt><dd><ul>
+<li><p>Compatible with Bluetooth v5.3</p></li>
+<li><p>Supports up to three Bluetooth® LE connections</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Radio transceiver:</dt><dd><ul>
+<li><p>Fully integrated 2.4 GHz CMOS transceiver</p></li>
+<li><p>Single wire antenna</p></li>
+<li><p>Programmable transmit output power from -19 dBm to +4 dBm</p></li>
+<li><p>-94.5 dBm receiver sensitivity</p></li>
+<li><p>TX: 3.5 mA, RX: 2.1 mA (system currents with DCDC, VBAT_HIGH = 3 V and 0 dBm)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Certifications &amp; Compliance</dt><dd><ul>
+<li><p>ETSI EN 300 328 and EN 300 440 Class 2 (Europe)</p></li>
+<li><p>FCC CFR47 Part 15 (US)</p></li>
+<li><p>ARIB STD-T66 (Japan)</p></li>
+<li><p>AEC Q100 Grade 2 Automotive Qualification</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Processing Power</dt><dd><ul>
+<li><p>16 MHz 32-bit Arm® Cortex-M0+ with SWD interface</p></li>
+<li><p>Dedicated Link Layer and AES-128 Encryption Processor</p></li>
+<li><p>Software-based True Random Number Generator (TRNG)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Memory</dt><dd><ul>
+<li><p>12 kB One-Time-Programmable (OTP)</p></li>
+<li><p>64 kB Retainable System RAM</p></li>
+<li><p>160 kB ROM</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Power Management</dt><dd><ul>
+<li><p>Integrated Low IQ Buck DCDC converter</p></li>
+<li><p>Buck: 1.8 V ≤ VBAT_HIGH ≤ 3.6 V</p></li>
+<li><p>Clock-less hibernation mode: Buck &lt; 550 nA</p></li>
+<li><p>Built-in temperature sensor for die temperature monitoring</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Clocks</dt><dd><ul>
+<li><p>32 MHz crystal and 32 MHz RC oscillator</p></li>
+<li><p>32 kHz crystal and 32/512 kHz RC oscillator</p></li>
+<li><p>15 kHz RCX as crystal replacement</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Timers &amp; Reset</dt><dd><ul>
+<li><p>2× General-purpose timers with capture and PWM capabilities</p></li>
+<li><p>Programmable reset circuitry</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Digital Interfaces</dt><dd><ul>
+<li><p>9 × GPIOs</p></li>
+<li><p>2 × UARTs (one with flow control)</p></li>
+<li><p>SPI Master/Slave up to 32 MHz (Master)</p></li>
+<li><p>I2C bus at 100 kHz and 400 kHz</p></li>
+<li><p>3-axis capable Quadrature Decoder</p></li>
+<li><p>Keyboard controller</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Analog Interfaces</dt><dd><ul>
+<li><p>3-channel 10-bit ADC</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Performance &amp; Environment</dt><dd><ul>
+<li><p>Typical cold boot to radio active: 35 ms</p></li>
+<li><p>Operating temperature: -40 ºC to 105 ºC</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>Package</dt><dd><ul>
+<li><p>Wettable Flanks FCQFN 22 pins</p></li>
+<li><p>Dimensions: 3.5 mm × 3.5 mm × 0.55 mm, 0.5 mm pitch</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>SPI™ is a trademark of Motorola, Inc.</p></li>
+</ul>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html" class="btn btn-neutral float-left" title="UM-B-119: DA1453x/DA1458x SW Platform Reference Manual" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html" class="btn btn-neutral float-right" title="2. Software Platform Overview" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./1. Introduction — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<!-- saved from url=(0128)https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>22. SUOTA Overview — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="24. SUOTA Demonstration" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">
+    <link rel="prev" title="21. HCI Mode" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1" aria-expanded="false"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#" aria-expanded="false">22. SUOTA Overview</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#bootloader"><button class="toctree-expand" title="Open/close menu"></button>23.1. Bootloader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#rom-bootloader">23.1.1. ROM Bootloader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#secondary-bootloader">23.1.2. Secondary Bootloader</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#software-update-over-the-air-suota-service">23.2. Software Update Over-the-Air (SUOTA) Service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#image-creation-non-volatile-memory-programming-tool">23.3. Image Creation &amp; Non-volatile Memory Programming Tool</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">22. </span>SUOTA Overview</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="suota-overview">
+<h1><span class="section-number">22. </span>SUOTA Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#suota-overview" title="Link to this heading"></a></h1>
+<p>In order to be able to <strong>update</strong> application software <strong>over-the-air</strong>, the DA1453x/DA1458x must be connected to an <strong>external non-volatile memory</strong> (SPI flash or EEPROM).</p>
+<p>In this Tutorial:</p>
+<ul>
+<li><p>DA1453x is referring to DA14531-00, DA14531-01, DA14530, DA14535 and DA14533</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The DA14531-00 is the main DA14531 device. The -00 is just a new naming to introduce the variant DA14531-01. The DA14531-01 is a ROM variant of the main DA14531-00.</p></li>
+<li><p>The DA14535 is a DA14531 upgrade.</p></li>
+<li><p>The DA14533 is optimized for automotive and industrial applications at higher temperatures, and it is rated as operating up to 105 ºC and compliant with the AEC-Q100 (Grade 2) standard.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>DA1458x is referring to DA14585 and DA14586.</p></li>
+</ul>
+<p>In addition, several software components and tools are required:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Bootloader</p></li>
+<li><p>SUOTA Service</p></li>
+<li><p>Image Creation Tool</p></li>
+<li><p>Non-volatile Memory Programming Tool</p></li>
+</ul>
+</div></blockquote>
+<p>Each of these items is described in the following sections and the following video provides an overview of the SUOTA process.</p>
+<div style="text-align:center">
+   <video width="600" height="400" poster="progress.jpg" controls="">
+      <source src="suota.mp4" type="video/mp4">
+      Your browser does not support this tag!
+   </video>
+<p><b><i>Demonstration of Dialog SmartBond™ DA145xx SUOTA</i></b></p>
+</div></section>
+<section id="cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">
+<h1><span class="section-number">23. </span>Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota" title="Link to this heading"></a></h1>
+<p>The latest SDK 6.0.24 introduces enhanced Cybersecurity mechanisms to ensure secure boot and firmware updates for Bluetooth-enabled devices.
+These updates include support for encrypted and signed images.</p>
+<p>The Secure Secondary Bootloader now supports booting encrypted and/or signed images, ensuring that only authorized firmware is executed.
+The bootloader allows for up to five decryption keys and five verification keys, which are securely stored in the OTP (One-Time Programmable) memory.
+To facilitate secure firmware updates, the mkimage tool is used to create:</p>
+<ul class="simple">
+<li><p>Single SUOTA Images for direct firmware updates</p></li>
+<li><p>Multi-Images, consisting of two single images combined with a product header, ensuring efficient memory allocation for SUOTA updates.</p></li>
+</ul>
+<p>The encrypted/signed multi-application image is stored in external flash/EEPROM and transferred via Bluetooth to the SUOTA smartphone application.
+The SUOTA application includes an anti-rollback feature to prevent downgrading to older, potentially vulnerable firmware versions.
+These topics will be covered in detail in this tutorial, guiding you through the implementation of these security features step by step.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/SUOTA_RED.svg"><img alt="_images/SUOTA_RED.svg" src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/SUOTA_RED.svg" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 63 </span><span class="caption-text">Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="bootloader">
+<h2><span class="section-number">23.1. </span>Bootloader<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#bootloader" title="Link to this heading"></a></h2>
+<p>The Software Update Over-the-Air procedure is based upon the use of a <strong>secondary bootloader</strong>. The secondary bootloader resides in the external non-volatile memory, along with one or more application images. In addition to the secondary bootloader, DA1453x/DA1458x devices contain a <strong>ROM based bootloader</strong> that is executed (before the dual image bootloader) when a <strong>Power-on-Reset</strong> or <strong>Hardware Reset occurs</strong>.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/bootloader-overview.png"><img alt="_images/bootloader-overview.png" src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/bootloader-overview.png" style="height: 400px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 64 </span><span class="caption-text">Bootloader Execution Overview</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="rom-bootloader">
+<h3><span class="section-number">23.1.1. </span>ROM Bootloader<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#rom-bootloader" title="Link to this heading"></a></h3>
+<p>When a Power-on Reset occurs the ROM based bootloader on the DA1453x/DA1458x device is executed. This searches for an application image that it can load into internal RAM and execute.</p>
+</section>
+<section id="secondary-bootloader">
+<h3><span class="section-number">23.1.2. </span>Secondary Bootloader<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#secondary-bootloader" title="Link to this heading"></a></h3>
+<p>The secondary bootloader is <strong>stored in external non-volatile memory</strong>. When the ROM bootloader executes, it locates the secondary bootloader and loads it into RAM. The secondary bootloader then searches the external non-volatile memory for an application image. Assuming one is located then this is loaded into RAM and executed.</p>
+<div class="warning admonition">
+<p class="admonition-title">golden image</p>
+<p>Secondary bootloader uses the concept of a golden image ensuring that, even in the event of a power failure during an update, the device is always recoverable.</p>
+</div>
+<p>In <a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html#suota-secondary-bootloader"><span class="std std-ref">SUOTA Secondary Bootloader</span></a> we discuss more about this important feature.</p>
+</section>
+</section>
+<section id="software-update-over-the-air-suota-service">
+<h2><span class="section-number">23.2. </span>Software Update Over-the-Air (SUOTA) Service<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#software-update-over-the-air-suota-service" title="Link to this heading"></a></h2>
+<p>Renesas SUOTA service is instantiated as a GATT Primary Service.</p>
+<dl class="simple">
+<dt>The service defines a control point by which it enables a peer device to initiate a software update and it defines two roles:</dt><dd><ul class="simple">
+<li><p>The <strong>SUOTA Initiator</strong>, which is the device that transmits the firmware image. It holds the role of the <strong>GATT Client</strong> for the SUOTA service and also the <strong>Central’s role for GAP</strong>.</p></li>
+<li><p>The <strong>SUOTA Receiver</strong>, which receives the new software image, stores the image into the external SPI Flash/EEPROM device and runs the new image. It is the <strong>GATT Server</strong> for the SUOTA service and also holds the <strong>GAP Peripheral Role</strong>.</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="image-creation-non-volatile-memory-programming-tool">
+<h2><span class="section-number">23.3. </span>Image Creation &amp; Non-volatile Memory Programming Tool<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#image-creation-non-volatile-memory-programming-tool" title="Link to this heading"></a></h2>
+<p>The SmartSnippets™ ToolBox contains a non-volatile memory programming tool that supports the creation of SUOTA images. Further details are provided in the following chapters.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html" class="btn btn-neutral float-left" title="21. HCI Mode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html" class="btn btn-neutral float-right" title="24. SUOTA Demonstration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./22. SUOTA Overview — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<!-- saved from url=(0136)https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html -->
+<html class="writer-html5" lang="en" data-content_root="../"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2. Software Platform Overview — UM-B-119: DA1453x/DA1458x SW Platform Reference Manual</title>
+      <link rel="stylesheet" type="text/css" href="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/lpc_cs_theme.css">
+      <link rel="stylesheet" type="text/css" href="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/copybutton.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/js"></script><script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/jquery.js"></script>
+      <script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/documentation_options.js"></script>
+      <script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/doctools.js"></script>
+      <script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/sphinx_highlight.js"></script>
+      <script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/clipboard.min.js"></script>
+      <script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/copybutton.js"></script>
+    <script src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/search.html">
+    <link rel="next" title="3. BLE Development Environment and First Application" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html">
+    <link rel="prev" title="1. Introduction" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html">
+            
+              <img src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html">1. Introduction</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>2. Software Platform Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#system-software-and-main-loop">2.1. System Software and Main Loop</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#peripheral-and-radio-drivers">2.2. Peripheral and Radio Drivers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#real-time-kernel"><button class="toctree-expand" title="Open/close menu"></button>2.3. Real-Time Kernel</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#overview">2.3.1. Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#scheduler">2.3.2. Scheduler</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#tasks">2.3.3. Tasks</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#dynamic-memory-allocation">2.3.4. Dynamic Memory Allocation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#messages">2.3.5. Messages</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#timer">2.3.6. Timer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#bluetooth-low-energy-software"><button class="toctree-expand" title="Open/close menu"></button>2.4. Bluetooth Low Energy Software</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id1">2.4.1. Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#gap">2.4.2. GAP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#ble-data-services"><button class="toctree-expand" title="Open/close menu"></button>2.4.3. BLE Data Services</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#gatt">2.4.3.1. GATT</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#attdb">2.4.3.2. ATTDB</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#ble-profiles">2.4.4. BLE Profiles</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#le-data-packet-length-extension">2.4.5. LE Data Packet Length Extension</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#application-software"><button class="toctree-expand" title="Open/close menu"></button>2.5. Application Software</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id3">2.5.1. Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#api">2.5.2. API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#message-api"><button class="toctree-expand" title="Open/close menu"></button>2.5.3. Message API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#mid-layer-api">2.5.3.1. Mid Layer API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#easy-api">2.5.3.2. Easy API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#app-profile-api">2.5.4. app_&lt;profile&gt; API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#app-entry-point-api">2.5.5. App Entry Point API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-callback-api">2.5.6. User Callback API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#default-handlers">2.5.7. Default Handlers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-configuration-description"><button class="toctree-expand" title="Open/close menu"></button>2.5.8. User Configuration Description</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#files-da1458x-config-basic-h-and-da1458x-config-advanced-h">2.5.8.1. Files da1458x_config_basic.h and da1458x_config_advanced.h</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-callback-config-h">2.5.8.2. File user_callback_config.h</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-config-h">2.5.8.3. File user_config.h</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-modules-config-h">2.5.8.4. File user_modules_config.h</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-periph-setup-h">2.5.8.5. File user_periph_setup.h</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-profiles-config-h">2.5.8.6. File user_profiles_config.h</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#supported-hardware-configurations"><button class="toctree-expand" title="Open/close menu"></button>2.6. Supported Hardware Configurations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#integrated-processor">2.6.1. Integrated Processor</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#external-processor">2.6.2. External Processor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#software-development-environment">2.7. Software Development Environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html">3. BLE Development Environment and First Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/User_guides/User_guides.html">4. User Guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Peripheral%20Example%20Applications/Peripheral%20Example%20Applications.html">5. Peripheral Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Appendix/appendices.html">6. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Revision_History/Revision_History.html">7. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html">UM-B-119: DA1453x/DA1458x SW Platform Reference Manual</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2. </span>Software Platform Overview</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="software-platform-overview">
+<h1><span class="section-number">2. </span>Software Platform Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#software-platform-overview" title="Link to this heading"></a></h1>
+<p>This section gives an overview of the overall platform
+including the software architecture that supports the DA1453x/DA1458x SoC
+Platform. <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#software-architecture"><span class="std std-numref">Figure 10</span></a> shows a diagram of the overall software
+architecture and provides a visual overview of the various layers of software
+that are involved. The following paragraphs of this document provide a high
+level description of the functionality of each layer and the APIs that each
+layer exposes to the application programmer.</p>
+<figure class="align-center" id="software-architecture">
+<img alt="../_images/image11.png" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image11.png">
+<figcaption>
+<p><span class="caption-number">Figure 10 </span><span class="caption-text"><strong>Software Architecture</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#software-architecture" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="system-software-and-main-loop">
+<h2><span class="section-number">2.1. </span>System Software and Main Loop<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#system-software-and-main-loop" title="Link to this heading"></a></h2>
+<p>At system start up the main function initializes the system and gets
+into the main loop. The key concept is simple: check if the BLE is
+active, and if it is, provide CPU time to the kernel scheduler to process
+all pending messages and events. Next, inquire if the user application
+has non-message related tasks to do. If both kernel and user
+application have nothing more to do, then quickly transition into low
+power mode and wait for an interrupt to start again. The main loop is
+not intended to be altered by the user application.</p>
+<p>A set of callbacks are provided that notify the application
+about the state of the main loop. We often use the term asynchronous
+execution for these callbacks to distinguish them from other events and
+callbacks that are generated from within the kernel scheduler, which is
+referred to as synchronous execution. The application can partially control
+the main loop with the return value of the callbacks or by setting the
+sleep settings accordingly. It is important to understand here, that the
+Kernel scheduler is called from within the main loop when the BLE is
+active. If we do not grant control back to the main loop or if the BLE
+is inactive, the processing of the kernel messages is delayed.</p>
+</section>
+<section id="peripheral-and-radio-drivers">
+<h2><span class="section-number">2.2. </span>Peripheral and Radio Drivers<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#peripheral-and-radio-drivers" title="Link to this heading"></a></h2>
+<p>The system software incorporates a number of drivers for the peripheral
+devices, the radio and some hardware specific blocks of the BLE.
+Application programmers are able to use the peripheral drivers, however
+the rest of the drivers are to be used only by the kernel and BLE
+controller software.</p>
+</section>
+<section id="real-time-kernel">
+<h2><span class="section-number">2.3. </span>Real-Time Kernel<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#real-time-kernel" title="Link to this heading"></a></h2>
+<p>The DA1453x/DA1458x software platform utilizes a small and efficient Real-Time
+Kernel licensed from Riviera Waves. Almost the complete BLE Stack
+and most of the application makes use of the services offered by the
+Real-Time Kernel. The kernel offers task, message, events and dynamic
+memory capabilities. The tasks communicate with messages, which are
+pushed in a queue whenever a task is trying to send a message to another
+task. Timers and other hardware events also push events in a queue.
+Whenever the kernel scheduler is called from the main loop it pops
+messages and events out of the queues according to their priority and
+invokes the relevant handler, to trigger the execution of the different
+tasks. The execution continues until the queues are empty.</p>
+<section id="overview">
+<h3><span class="section-number">2.3.1. </span>Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#overview" title="Link to this heading"></a></h3>
+<p>The DA1453x/DA1458x software platform utilizes a small and efficient Real-Time
+Kernel licensed from Riviera Waves. The kernel offers the following
+features:</p>
+<ul class="simple">
+<li><p>Task creation and state transition</p></li>
+<li><p>Message exchange between tasks</p></li>
+<li><p>Timer management</p></li>
+<li><p>Dynamic memory allocation</p></li>
+<li><p>BLE events scheduling and handling</p></li>
+</ul>
+</section>
+<section id="scheduler">
+<h3><span class="section-number">2.3.2. </span>Scheduler<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#scheduler" title="Link to this heading"></a></h3>
+<p>The core of the kernel is a scheduler that runs in the main loop of the
+application. The scheduler checks if an event is set and calls the
+corresponding handler to service the pending events. The event may be a
+BLE or a timer event, or a message between two tasks.</p>
+<p>The scheduler obtains any of the timing information from the BLE core hardware.
+The main loop code ensures that the kernel scheduler is not executed while the
+hardware module of the BLE core is not in sleep mode.</p>
+<p>The implementation of the kernel resides in the ROM memory area. Because of that
+the source code files are not included in the SDK distribution. The definitions
+of the API types and the prototypes of API functions can be found in the
+following header files.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_task.h</span></code>  - Kernel task management and creation API</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_msg.h</span></code>   - Message handling API</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_mem.h</span></code>   - Dynamic memory allocation API</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_timer.h</span></code> - Timer creation and deletion API</p></li>
+</ul>
+</section>
+<section id="tasks">
+<h3><span class="section-number">2.3.3. </span>Tasks<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#tasks" title="Link to this heading"></a></h3>
+<p>Each standalone software module, i.e. BLE stack layers/GATT
+profiles/Host application et cetera, of the DA1453x/DA1458x SDK is instantiated
+as a task of the kernel. The task is usually created at system
+initialization. The maximum supported number of tasks in a single BLE
+application is 23.</p>
+<p>A task is defined by the task ID number, which is a unique identifier per
+task and a task descriptor structure. The type of the structure is
+struct ke_task_desc and is defined in ke_task.h. The members of the task
+descriptor determine the message handlers for each state of the
+application, the default message handlers, the placeholder of the
+current task state, the highest valid state of the task and the maximum
+number of task instances.</p>
+<p>The task is created by calling the <code class="docutils literal notranslate"><span class="pre">ke_task_create()</span></code> function. The task ID
+and descriptor are passed into the function parameters.</p>
+<p>The state of the task is changed by calling <code class="docutils literal notranslate"><span class="pre">ke_task_set()</span></code> function.
+The current state of the task is returned by <code class="docutils literal notranslate"><span class="pre">ke_state_get()</span></code> function.</p>
+<p>All the API functions and types of kernel task creation and management
+are declared in the <code class="docutils literal notranslate"><span class="pre">ke_task.h</span></code> header file.</p>
+<ul>
+<li><p>Types:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_msg_handler</span></code>   – Message handler structure</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_state_handler</span></code> – List of message handlers for a specific or default state</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_task_desc</span></code>     - Task descriptor</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Functions:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_task_create()</span></code> – Creates a new task</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_state_set()</span></code>   – Sets the state of the task</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_state_get()</span></code>   – Returns the current state of the task</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="dynamic-memory-allocation">
+<h3><span class="section-number">2.3.4. </span>Dynamic Memory Allocation<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#dynamic-memory-allocation" title="Link to this heading"></a></h3>
+<p>The kernel provides an API to the application code for dynamic memory
+allocation in the heap memories of the kernel. There are four heap
+memory areas defined in DA1453x/DA1458x kernel:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">KE_MEM_ENV</span></code> – Used for environmental variables memory allocation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KE_MEM_ATT_DB</span></code> – Used for ATT protocol databases, i.e. services,
+characteristics, attributes</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KE_MEM_KE_MSG</span></code> – Used for kernel messages memory allocation</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KE_MEM_NON_RETENTION</span></code> – General purpose heap memory. If the allocated
+memory space in this heap is non zero, when the system decides to
+enter sleep (extended sleep with or without OTP copy), then the RAM
+memory blocks, which are touched by the non retention heap, must be
+retained.</p></li>
+</ul>
+<p>The size of the heap memories is determined either by the user via the per target
+configuration file <code class="docutils literal notranslate"><span class="pre">da1458x_config_advanced.h</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">da14585_config_advanced.h</span></code> for DA14585/586</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da14531_config_advanced.h</span></code> for DA14531-0x</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da14535_config_advanced.h</span></code> for DA14535, or</p></li>
+</ul>
+<p>automatically by the SDK file <code class="docutils literal notranslate"><span class="pre">da1458x_scatter_config.h</span></code>.</p>
+<p>Dynamic memory allocation in any of these heaps is done by calling
+the <code class="docutils literal notranslate"><span class="pre">ke_malloc()</span></code> function. The size and the selection of the heap memory
+are passed in the parameters of the function. If the memory space in the
+selected heap memory is insufficient, then the kernel memory management code
+will try to allocate the requested memory space in another heap. If
+memory allocation fails in all heap memories of the kernel, then a system software
+reset is issued.</p>
+<p>The API functions provided by the kernel are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_malloc()</span></code> – Allocate the requested memory space</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_msg_free()</span></code> – Free the allocated memory space at the requested memory
+address</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To enable the logging of heap memory usage, which is a feature that can be used
+in development/debug mode, an application must be executed in the Keil debugger
+environment.</p>
+<ul class="simple">
+<li><p>For SDK-6.0.18 and previous versions the default library (<code class="docutils literal notranslate"><span class="pre">&lt;target&gt;.lib</span></code> file)
+must be replaced with the target specific library file that supports the
+heap logging mechanism. For example, in case of DA1458x, this is the library
+file <code class="docutils literal notranslate"><span class="pre">da14585_586_with_heap_logging.lib</span></code>.</p></li>
+<li><p>For SDK-6.0.22 and forth the developer must build the application with the
+macro <code class="docutils literal notranslate"><span class="pre">CFG_USE_HEAP_LOG</span></code> defined in <code class="docutils literal notranslate"><span class="pre">system_library.h</span></code> header file.</p></li>
+</ul>
+<p>Then, the developer must stop the program execution in debug mode and type
+in the Keil debug command line box the <code class="docutils literal notranslate"><span class="pre">disp_heaplog</span></code> keyword. This will
+show the heap memory statistics.</p>
+</div>
+</section>
+<section id="messages">
+<h3><span class="section-number">2.3.5. </span>Messages<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#messages" title="Link to this heading"></a></h3>
+<p>The kernel provides a mechanism to exchange messages between tasks.
+The messages exchanged by the kernel have a specific format. The format is
+determined by the <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">ke_msg</span></code> type defined in <code class="docutils literal notranslate"><span class="pre">ke_msg.h</span></code>. The <code class="docutils literal notranslate"><span class="pre">ke_msg</span></code>
+structure includes the following members:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">id</span></code>: A 16-bit unsigned integer that contains the message identification.
+The ten least significant bits form a sequential number that is unique among
+the messages of the task. In the six most significant bits is
+the ID of the task, to ensure the uniqueness of the message
+identification in the system. The macro <code class="docutils literal notranslate"><span class="pre">KE_BUILD_ID</span></code> can be used to
+build message IDs compliant to this convention.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">dest_id</span></code>: Task ID of the destination task of the message.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">src_id</span></code>: Task ID of the source task of the message.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">param_len</span></code>: Size of the message data contained in <code class="docutils literal notranslate"><span class="pre">param</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">param</span></code>: The placeholder of the message data. The type of the
+structure member is a one position table of a 32-bit unsigned integer.
+However the size of the allocated memory space is determined by the
+heap memory, which is allocated by the message memory allocation function and
+is equal to <code class="docutils literal notranslate"><span class="pre">param_len</span></code>.</p></li>
+</ul>
+<p>The transmission of a message is done in three steps:</p>
+<ol class="arabic simple">
+<li><p>Allocation of a message structure by the sender task. One of the following macros is called for message allocation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">KE_MSG_ALLOC</span></code>: Allocates space in <code class="docutils literal notranslate"><span class="pre">KE_MEM_KE_MSG</span></code> heap memory for
+the message. Message ID, source and destination task IDs, and the type of
+message data are passed in the parameters of the function.
+A function calculates the memory space to allocate based on the type of
+data. Returns a pointer to the start of the data of the allocated
+message.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">KE_MSG_ALLOC_DYN</span></code>: Similar to <code class="docutils literal notranslate"><span class="pre">KE_MSG_ALLOC</span></code>. Additional memory size
+to the size of data type is passed in an additional parameter.</p></li>
+</ul>
+</li>
+<li><p>Fills in the message parameters. The code of the source task should
+fill in the data of the message.</p></li>
+<li><p>Pushes the message structure in the kernel.</p></li>
+</ol>
+<p>Function <code class="docutils literal notranslate"><span class="pre">ke_msg_send()</span></code> is called to send the message to the destination task.
+The pointer returned by <code class="docutils literal notranslate"><span class="pre">KE_MSG_ALLOC</span></code> or <code class="docutils literal notranslate"><span class="pre">KE_MSG_ALLOC_DYN</span></code> must be passed
+in the parameter of the function. If the message is allocated but not
+sent, <code class="docutils literal notranslate"><span class="pre">ke_msg_free()</span></code> must be called to free the allocated memory space.</p>
+<p>The reception of a message sent to a task is implemented by defining a
+message handler function (structure <code class="docutils literal notranslate"><span class="pre">ke_msg_handler</span></code>) in the task
+descriptor of the message (<code class="docutils literal notranslate"><span class="pre">ke_task_desc</span></code>). A state handler should return
+<code class="docutils literal notranslate"><span class="pre">KE_MSG_CONSUMED</span></code> when the message is consumed by the destination task and
+return <code class="docutils literal notranslate"><span class="pre">KE_MSG_NO_FREE</span></code> when the message is forwarded to another task. Function
+<code class="docutils literal notranslate"><span class="pre">ke_msg_forward()</span></code> must be used for this operation.</p>
+</section>
+<section id="timer">
+<h3><span class="section-number">2.3.6. </span>Timer<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#timer" title="Link to this heading"></a></h3>
+<p>The DA1453x/DA1458x kernel provides timer services to create and delete a
+timer event. The time reference of the kernel timers is the <code class="docutils literal notranslate"><span class="pre">BLE_GROSS_TIMER</span></code>
+of the BLE HW core. The precision of the <code class="docutils literal notranslate"><span class="pre">BLE_GROSS_TIMER</span></code> timer is 10 ms.
+The task that requested the timer event will be notified with a message about the expiration
+of the timer. The message ID is equal to the
+timer ID used for timer creation. Therefore, the timer ID must be a valid message
+ID. A timer handler function must also be defined in the list of task handlers. Kernel timers are one-shot timers.</p>
+<ul class="simple">
+<li><p>API functions:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">app_timer_set()</span></code> – This is a wrapper of <code class="docutils literal notranslate"><span class="pre">ke_timer_set()</span></code>.
+Timer ID, task ID and timeout in units of 10 ms. The maximum valid
+timeout is 4194300, which corresponds to a period of 699 minutes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ke_timer_delete()</span></code> – Deletes an active kernel timer.</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="bluetooth-low-energy-software">
+<h2><span class="section-number">2.4. </span>Bluetooth Low Energy Software<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#bluetooth-low-energy-software" title="Link to this heading"></a></h2>
+<p>The BLE software implements the Bluetooth® Low Energy protocol
+as specified in Version 5.0 (DA14585/586), 5.1 (DA14531-0x) and 5.3 (DA14535)
+of the Bluetooth® standard and complies with these standards. It is a
+single-mode BLE implementation. Therefore there is no support for the Basic
+Rate / Enhanced Data Rate protocol (BR/EDR).</p>
+<p>The basic parts of the BLE software consists of the Host and Controller
+related software.</p>
+<p>Each layer (ATT, GATT, GAP, etc.) of the stack is instantiated as
+multiple different tasks. The radio events are captured by the drivers
+and fed to the low level software of the BLE controller. The event
+handlers spawn messages that trigger the protocol layers. If user action
+or user notification is required, this sequence of messages will dispatch
+messages to the application or profile task. In the reverse direction,
+if the user application wants to do a specific operation, it
+dispatches messages to the lower layers, beginning a sequence of
+messages that may reach, depending to the operation, the BLE controller
+and the radio.</p>
+<p>On top of the Host, a library of ready to use profiles and some profile
+utilities are provided to simplify application development. Programmers
+should interface with the profile, GATT and GAP modules to do all of
+the functionality required by a BLE application.</p>
+<p>In this section the Bluetooth Low Energy layers of the software
+architecture are described.</p>
+<section id="id1">
+<h3><span class="section-number">2.4.1. </span>Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id1" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id2"><span class="std std-numref">Figure 11</span></a> presents a diagram of the Bluetooth
+Low Energy software architecture.</p>
+<figure class="align-center" id="id2">
+<img alt="../_images/image41.png" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image41.png">
+<figcaption>
+<p><span class="caption-number">Figure 11 </span><span class="caption-text"><strong>Bluetooth Low Energy Software</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Most of the BLE controller for the DA1453x/DA1458x is implemented in
+hardware. On top of the controller, the Host is implemented with all the
+required layers. The L2CAP and SMP are internal layers within the stack
+and are not intended for direct access from the application, although
+this is possible. Most of the ATT layer should not be accessed from the
+application directly, since its functionality is provided through GATT.
+The attribute database API may be used to implement profile related
+functionality.</p>
+<p>The GAP and GATT layers are built on top of the ATT and SMP. Those two
+layers form the borderline of the Host with the application. The
+majority of the operations can be done with the use of those two APIs. To
+further assist the development, the DA1453x/DA1458x SDK provides a library
+of ready-to-use profile implementations. Those profiles make use of the
+GATT and ATT APIs and a set of helper functions gathered within the
+<code class="docutils literal notranslate"><span class="pre">prf_utils.c</span></code>. The profiles expose a message API and a set of function
+calls to the application.</p>
+<p>The code of the Host is pre-compiled and burned into ROM while the
+profile implementation and the <code class="docutils literal notranslate"><span class="pre">prf_utils.c</span></code> are provided in source code,
+compiled with the application and run in RAM. The symbols of the ROM are
+included into file:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">da14585_symbols.txt</span></code> for the DA14585/586 ROM.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da14531_symbols.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">da14531_01_symbols</span></code> for the DA14531-0x ROM.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da14535_symbols.txt</span></code> for the DA14535 ROM.</p></li>
+</ul>
+<p>and linked with the user application during the build process.</p>
+<p>The arrows in <a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id2"><span class="std std-numref">Figure 11</span></a> designate the APIs
+that a user application can use. Moreover, these are also listed in
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#bluetooth-low-energy-software-api"><span class="std std-numref">Table 2</span></a> as a reference.</p>
+<div class="wy-table-responsive"><table class="docutils align-center" id="bluetooth-low-energy-software-api">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text">Bluetooth Low Energy Software API</span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#bluetooth-low-energy-software-api" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>API</p></th>
+<th class="head"><p>API Files</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ATT Database</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">attm_db.h</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>GAP Manager</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gapm.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">gapm_task.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">gapm_util.h</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p>GAP Controller</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gapc.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">gapc_task.h</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>GATT Manager</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gattm.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">gattm_task.h</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p>GATT Controller</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gattc.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">gattc_task.h</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Profile Utilities</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">prf_utils.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">prf_utils_128.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">prf_types.h</span></code></p>
+</td>
+</tr>
+<tr class="row-even"><td><p>&lt;Profile&gt;</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&lt;profile&gt;.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;profile&gt;_task.h</span></code></p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Custom Profile</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">custs1_task.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">custs1.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">custs2_task.h</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">custs2.h</span></code></p>
+</td>
+</tr>
+</tbody>
+</table></div>
+<p>The following sections describe the role and usage of the various APIs.
+For more information please see the documents that describe each
+layer.</p>
+</section>
+<section id="gap">
+<h3><span class="section-number">2.4.2. </span>GAP<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#gap" title="Link to this heading"></a></h3>
+<p>The RW-BLE Generic Access Profile (GAP) defines the basic procedures
+related to the discovery and link management of Bluetooth devices.
+Furthermore, it defines procedures related to the use of different LE
+security modes and levels.</p>
+<p>The RW-BLE GAP provides complete and substantial support for the LE GAP:</p>
+<ul class="simple">
+<li><p>Four Roles: central, peripheral, broadcaster and scanner</p></li>
+<li><p>Broadcast and Scan</p></li>
+<li><p>Modes: Discovery, Connectivity, Bonding</p></li>
+<li><p>Security with Authentication, Encryption and Signing</p></li>
+<li><p>Link Establishment and Detachment</p></li>
+<li><p>Random and Static Addresses</p></li>
+<li><p>Privacy Features</p></li>
+<li><p>Pairing and Key Generation</p></li>
+</ul>
+<p>The RW-BLE GAP is divided into two parts: the GAP Manager (GAPM) and the
+GAP Controller (GAPC). The GAP Manager manages all application requests
+that are not related to an established link. The GAP Controller (called
+GAPC) on the other hand is created upon a connection to a peer device
+and deleted when the connection is terminated.</p>
+<p>The GAP Manager initialization takes place in the <code class="docutils literal notranslate"><span class="pre">system_init()</span></code>
+function. When the GAP entity has been initialized and ready to
+provide services to the upper layers, the GAP entity dispatches the
+<code class="docutils literal notranslate"><span class="pre">GAPM_DEVICE_READY_IND</span></code> message. This message is handled internally in the
+GAP application module. In response, the GAP module configures the GAP
+Manager to a specific role, to send a <code class="docutils literal notranslate"><span class="pre">GAPM_SET_DEV_CONFIG</span></code> message. After
+the GAP Manager configuration is complete, the device is ready to
+initialize the databases, and then according to the selected role,
+do operations such as scanning and advertising to establish
+connections with other peers.</p>
+<p>For example, in order to start advertising, the <code class="docutils literal notranslate"><span class="pre">GAPM_START_ADVERTISE_CMD</span></code>
+message is compiled and sent to the GAPM. A message is allocated with the
+the <code class="docutils literal notranslate"><span class="pre">KE_MSG_ALLOC</span></code> macro. For example:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell0"><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KE_MSG_ALLOC</span><span class="p">(</span><span class="n">GAPM_START_ADVERTISE_CMD</span><span class="p">,</span>
+<span class="w">                                                   </span><span class="n">TASK_GAPM</span><span class="p">,</span>
+<span class="w">                                                   </span><span class="n">TASK_APP</span><span class="p">,</span>
+<span class="w">                                                   </span><span class="n">gapm_start_advertise_cmd</span><span class="p">);</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell0">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The message is filled with the necessary data:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell1"><span></span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">op</span><span class="p">.</span><span class="n">code</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="n">GAPM_ADV_UNDIRECT</span><span class="p">;</span>
+<span class="n">cmd</span><span class="o">-&gt;</span><span class="n">op</span><span class="p">.</span><span class="n">addr_src</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">GAPM_PUBLIC_ADDR</span><span class="p">;</span>
+<span class="n">cmd</span><span class="o">-&gt;</span><span class="n">intv_min</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">APP_ADV_INT_MIN</span><span class="p">;</span>
+<span class="n">cmd</span><span class="o">-&gt;</span><span class="n">intv_max</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">APP_ADV_INT_MAX</span><span class="p">;</span>
+<span class="n">cmd</span><span class="o">-&gt;</span><span class="n">channel_map</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">APP_ADV_CHMAP</span><span class="p">;</span>
+<span class="n">cmd</span><span class="o">-&gt;</span><span class="n">info</span><span class="p">.</span><span class="n">host</span><span class="p">.</span><span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GAP_GEN_DISCOVERABLE</span><span class="p">;</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell1">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>and is then sent to the GAPM task. The result is to start an undirected
+advertising operation.</p>
+<p>When a remote peer tries to connect to the device, the GAP Controller
+will report the peer’s request with the <code class="docutils literal notranslate"><span class="pre">GAPC_CONNECTION_REQ_IND</span></code> to the
+application. Since the stack is now referring to a specific connection,
+the messages will now be delivered from/to the related GAP Controller.
+The application GAP handler will respond to this request with the
+desired security requirements and will try to establish a secure or
+non-secure connection with the peer according to the requirements. The
+security management protocol messages arrive at the application through
+the GAP Controller. After a secure connection is established, the device is
+connected and can start to use the available profile services. Each
+service may have its own security requirement and establishing a
+connection with adequate security will expose the services to the peer.</p>
+</section>
+<section id="ble-data-services">
+<h3><span class="section-number">2.4.3. </span>BLE Data Services<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#ble-data-services" title="Link to this heading"></a></h3>
+<p>After an connection with the peer device is established, the GAP related
+operations only manage certain aspects of the connection such as
+change connection parameters, security level or to drop the connection.
+The data services of a BLE connection are provided through the database.
+The BLE stack provides numerous APIs to the application to manage and
+exchange data with local and remote databases. Those are the GATT
+Manager API and GATT Controller API. Alternatively, the programmer can also
+make use of the Attribute database API (ATTDB) directly instead of going
+through GATT to add and manage services and characteristics in the
+database. The reason behind this is to produce smaller and efficient
+code. The user can use either approach, through GATT or directly to ATTDB.</p>
+<section id="gatt">
+<h4><span class="section-number">2.4.3.1. </span>GATT<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#gatt" title="Link to this heading"></a></h4>
+<p>Similar to GAP, GATT consists of two modules: the GATT Manager and the
+GATT Controller. The GATT Manager is not related to a specific
+connection and is instantiated once to provide a message API that is used to
+manage the internal attribute database. The GATT Manager is put
+between either the profile or the application and the ATT Manager, and conveys
+messages between them. It provides service and attribute operations such
+as adding services and characteristics to the database, setting and
+getting permission level, and setting and getting values to attributes.</p>
+<p>The GATT controller is related to a specific BLE connection instance.
+The interface is used in both client and server roles. In a client role
+the interface is used to discover, read and write attributes of peer
+devices and to receive notifications or indications. In a server role,
+this interface is notified when modification of the database is
+requested by the peer device, and to send indications or notifications.</p>
+</section>
+<section id="attdb">
+<h4><span class="section-number">2.4.3.2. </span>ATTDB<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#attdb" title="Link to this heading"></a></h4>
+<p>Instead of using the GATT Manager API, the user can directly access the
+native attribute database API. The ATTDB API provides functions to add
+elements to the database (services and attributes), choose the position
+of the element in the database, hide/show attributes as well as manage
+the permissions and their value. For a detailed description of the ATTDB
+supported functions, please see the files <code class="docutils literal notranslate"><span class="pre">attm_db.h</span></code>, <code class="docutils literal notranslate"><span class="pre">attm_db_128.h</span></code> and
+<code class="docutils literal notranslate"><span class="pre">attm_util.h</span></code>.</p>
+</section>
+</section>
+<section id="ble-profiles">
+<span id="ble-profile"></span><h3><span class="section-number">2.4.4. </span>BLE Profiles<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#ble-profiles" title="Link to this heading"></a></h3>
+<p>The SDK provides implementations of various profiles each with its own
+profile specific API exposed to the application. Please check the Dialog
+support website for an updated list of the supported profiles from
+the SDK. There are two distinct roles: the server role and the client
+role. The server exposes a profile database on the local device. A
+client reads, writes and manages the database of a remote device.</p>
+<p>Every profile server implements generic and profile-specific
+functionality. The generic part includes:</p>
+<ul class="simple">
+<li><p>The profile database description, with all the services and
+attributes</p></li>
+<li><p>The profile initialization function to create the profile task</p></li>
+<li><p>The database creation handler that creates the database when the
+application task issues the relevant message</p></li>
+<li><p>The profile enable handler that enables the database when the
+application task issues the relevant message</p></li>
+<li><p>The profile disconnect handler that takes care of profile
+housekeeping operations when the connection drops</p></li>
+</ul>
+<p>Depending on the profile, the profile specific part may include update
+of specific attributes with or without notification and handling and
+verification of write attempts from peer devices.</p>
+<p>Similar principles apply for the client profile as well. The client will
+include a description of the services to expect, functions and message
+handlers to initialize, enable the client, housekeep the discovery
+results and handlers for errors and disconnections. Depending on the
+specific profile special handlers for read and write operation, and
+reception of notifications may exist, tied to specific attributes. For
+detailed information please see the available documents for every
+profile located in the support site, or browse through the
+<code class="docutils literal notranslate"><span class="pre">&lt;profile&gt;.h</span></code> and <code class="docutils literal notranslate"><span class="pre">&lt;profile&gt;_task.h</span></code> header files.</p>
+<p>The SDK provides a useful set of helper functions to access the GATT and
+ATTDB services. They are located in the <code class="docutils literal notranslate"><span class="pre">prf_utils.h</span></code> and are used
+frequently in the existing profile code. For detailed information, please
+see <code class="docutils literal notranslate"><span class="pre">prf_utils.h</span></code>.</p>
+<ul class="simple">
+<li><p>The source codes for the different BLE profiles can be found in the
+folder: <code class="docutils literal notranslate"><span class="pre">&lt;SDK_root&gt;sdk\ble_stack\profiles</span></code> of the SDK.</p></li>
+</ul>
+</section>
+<section id="le-data-packet-length-extension">
+<h3><span class="section-number">2.4.5. </span>LE Data Packet Length Extension<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#le-data-packet-length-extension" title="Link to this heading"></a></h3>
+<p>For Bluetooth Core versions 4.0 and 4.1 the maximum Data Physical Channel PDU
+size was 27 octets. Bluetooth Core version 4.2 introduced an important
+enhancement, namely LE Data Packet Length Extension, which allows for the Data
+Physical Channel PDU size to be anywhere between 27 and 251 octets. This means
+that, for example, the L2CAP layer can now fill up to 244 data octets
+of higher layer data packets in every L2CAP PDU compared to 20 octets
+with previous Bluetooth Core versions. This increase is more than 10 times
+higher. Therefore, the increase in amount of useful user data sent per
+packet allows devices to transfer data up to 2.5 times faster compared with
+previous versions. This will be of great benefit to applications that
+might require the transfer of large amounts of data. For example,
+Over-the-Air (OTA) firmware updates or the download of large data logs from
+sensors.</p>
+<p>For the default Data Physical Channel PDU size to be extended on an established
+connection, the Data Length Update procedure must be done. According to this
+control procedure, the LL_LENGTH_REQ and LL_LENGTH_RSP LL control PDUs must be
+exchanged by the connected devices so that each is notified of the peer
+device’s capabilities. After this exchange is done, the two controllers select
+the minimum exchanged values on their Rx and Tx data paths.</p>
+<p>All the DA1453x/DA1458x devices support the LE Data Length Extension feature. Its
+usefulness can be assessed by the SDK examples which can transfer big chunks of
+data when an OTA firmware update is taking place.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Not all the BLE peer devices will be capable of utilizing DLE. Please
+check the version installed in the peer devices. If the peer device does
+not support DLE, the default Data Physical Channel PDU size will be 27 octets
+on both sides.</p>
+</div>
+</section>
+</section>
+<section id="application-software">
+<h2><span class="section-number">2.5. </span>Application Software<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#application-software" title="Link to this heading"></a></h2>
+<p>Although the provided message API is powerful and complete, there are some
+restrictions on how fast and how easy one can build an application. To
+address this issue in the Software Development Kit (SDK), a new
+layer is introduced that is depicted as SDK Application, which collects part of the common
+functionality required to build an application in a library and exposes a
+number of APIs and helper functions. Care has been taken to hide the
+task management and message management as much as possible from the user
+and provide a function/callback-like API.</p>
+<section id="id3">
+<h3><span class="section-number">2.5.1. </span>Overview<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id3" title="Link to this heading"></a></h3>
+<p>Messages are generated from different layers of the BLE stack and the
+profile code, to signal events to the application task. The application
+on the other hand generates messages and sends the messages to the stack to
+begin numerous operations.</p>
+<p>There are two distinct directions for the messages.</p>
+<ul class="simple">
+<li><p>Messages from the stack and the profiles to the application task</p></li>
+<li><p>Messages from the application task to the stack and the profiles</p></li>
+</ul>
+<p>Although the provided message API is powerful and complete, there are some
+restrictions on how fast an application can be built. And the minimum
+amount of knowledge about the system required to build even a simple
+application. To address this issue in the SDK, part of the common
+functionality required to build an application has been collected in a
+library, which exposes a number of APIs and helper functions. Care has
+been taken to hide the task management and message management as much as
+possible from the user and to provide a function/callback like API.</p>
+<p>In addition, most of the parameters required to do operations have
+been turned into constants that are defined in the user space. A set of
+working constants are predefined for the user in the template project.</p>
+</section>
+<section id="api">
+<h3><span class="section-number">2.5.2. </span>API<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#api" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#application-architecture"><span class="std std-numref">Figure 12</span></a> shows a detailed diagram of the
+application architecture that consists of two parts:</p>
+<ul class="simple">
+<li><p><strong>SDK Application</strong>: This part is defined in the SDK and implements
+the library functionality.</p></li>
+<li><p><strong>User Application</strong>: This part contains configuration constants and
+callback definitions and is provided from the template. It configures
+the operation of the SDK application library. The source code of the
+actual user application resides here.</p></li>
+</ul>
+<figure class="align-center" id="application-architecture">
+<img alt="../_images/image51.png" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image51.png">
+<figcaption>
+<p><span class="caption-number">Figure 12 </span><span class="caption-text"><strong>Application Architecture</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#application-architecture" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>As mentioned earlier, there are two message directions. The API
+description starts with the possible ways the User Application can send
+messages toward the stack and the profiles. Next the
+available ways the User Application can get messages from other tasks
+and profiles are described.</p>
+</section>
+<section id="message-api">
+<h3><span class="section-number">2.5.3. </span>Message API<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#message-api" title="Link to this heading"></a></h3>
+<p>The standard and most versatile way to execute operations in the stack
+and profiles is when the message API is used. This includes the standard
+message allocation and message send functions of the kernel together
+with the message list supported from every task. The message list and
+the data structure of each message are usually defined in file
+<code class="docutils literal notranslate"><span class="pre">&lt;destination_task&gt;_task.h</span></code>. Please see the relevant documents of
+each task (gapm, gapc, gatt, etc.) for further details.</p>
+<p>Whenever a function is not provided from the <code class="docutils literal notranslate"><span class="pre">app_mid.h</span></code> and <code class="docutils literal notranslate"><span class="pre">app_easy.h</span></code>
+APIs, described later in this document, the user can use the message
+API.</p>
+<section id="mid-layer-api">
+<h4><span class="section-number">2.5.3.1. </span>Mid Layer API<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#mid-layer-api" title="Link to this heading"></a></h4>
+<p>The Mid Layer API is a light stateless set of macros to describe how the
+most common operations for the gap and security are done. It
+describes the generation of a specific message, how to fill the
+message with data and the dispatch of the message to the required task.
+The idea behind it is to provide a function API rather than a message
+API. The following pattern is used:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;message</span> <span class="pre">pointer*&gt;</span> <span class="pre">app_&lt;message_name&gt;_msg_create()</span></code>: Allocates a
+message and fills in the correct destination task.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">app_&lt;message_name&gt;_msg_send(&lt;message</span> <span class="pre">pointer*&gt;)</span></code>: Sends the
+message.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">&lt;operation&gt;_op(parameters)</span></code>: Does the complete operation. The
+<code class="docutils literal notranslate"><span class="pre">&lt;operation&gt;_op</span></code> function usually creates a message, fills the message
+with the required data as provided from the caller through the
+parameters, and dispatches the message.</p></li>
+</ul>
+<p>The complete Mid Layer API is described in the <code class="docutils literal notranslate"><span class="pre">app_mid.h</span></code> file in
+<code class="docutils literal notranslate"><span class="pre">&lt;sdk_root&gt;/sdk/app_modules/api</span> <span class="pre">folder</span></code>.</p>
+</section>
+<section id="easy-api">
+<span id="id4"></span><h4><span class="section-number">2.5.3.2. </span>Easy API<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#easy-api" title="Link to this heading"></a></h4>
+<p>The Easy API concept tries to reduce the burden of the application
+programmer for message handling, task handling and special
+sequences that are required to correctly do some actions in the
+stack or kernel.</p>
+<p>The Easy API also addresses the fact that the majority of the data used
+in the messages are constants at compile time. Asking the programmer to
+provide all of the constants when a function call is done, is
+cumbersome and produces larger code. Moreover, there are a lot of these
+constants that need to be defined even for the simplest of applications.
+This makes it challenging for a novice programmer to quickly bring his
+program into an operational state.</p>
+<p>For this reason most, if not all, of the constants are predefined in the
+user application space from the template and accessed from the Easy API
+at compile time. The programmer can quickly bring up his application and
+then alter the default behavior. Usually behavior alteration only
+requires the programmer to change the proper constant parameters and to recompile the
+code. As a plus, the small number of parameters used in the function
+calls of the Easy API provides better readable code and better
+visibility to the programmer.</p>
+<p>The design pattern used for the Easy API is shown in
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#easy-api-design-pattern"><span class="std std-numref">Figure 13</span></a>.</p>
+<figure class="align-center" id="easy-api-design-pattern">
+<img alt="../_images/image61.png" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image61.png">
+<figcaption>
+<p><span class="caption-number">Figure 13 </span><span class="caption-text"><strong>Easy API Design Pattern</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#easy-api-design-pattern" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Every <code class="docutils literal notranslate"><span class="pre">app_easy_&lt;operation&gt;</span></code> exposed to the user has a static
+<code class="docutils literal notranslate"><span class="pre">app_easy_&lt;operation&gt;_msg_create()</span></code> function and a pointer (<code class="docutils literal notranslate"><span class="pre">msg_pointer</span></code>).
+When the user calls the <code class="docutils literal notranslate"><span class="pre">app_easy_&lt;operation&gt;()</span></code> function, the relevant
+<code class="docutils literal notranslate"><span class="pre">msg_create()</span></code> function is called. The message create function will check if
+the <code class="docutils literal notranslate"><span class="pre">msg_pointer</span></code> points to a message that has already been created for
+this operation or not. If a message is already there, the
+existing message is returned to the <code class="docutils literal notranslate"><span class="pre">app_easy_&lt;operation&gt;()</span></code> function. If no message
+exists it will create a new message, fill the message with constant data provided
+from the user configuration data files and assign the message to the <code class="docutils literal notranslate"><span class="pre">msg_pointer</span></code>.
+The <code class="docutils literal notranslate"><span class="pre">app_easy_&lt;operation&gt;()</span></code> will send the message and clear the
+<code class="docutils literal notranslate"><span class="pre">msg_pointer</span></code>.</p>
+<p>This means that every time the <code class="docutils literal notranslate"><span class="pre">app_easy_&lt;operation&gt;()</span></code> either creates a new message
+or sends and automatically consumes an existing message.
+To support dynamic configuration of the messages the
+<code class="docutils literal notranslate"><span class="pre">app_easy_&lt;operation&gt;_get_active()</span></code> function is provided. This function will
+call the message create function and return the pointer to the active
+message. This way the user application can alter the message
+dynamically.</p>
+<p>To save memory space, there are operations that may share the
+<code class="docutils literal notranslate"><span class="pre">msg_pointer</span></code>, for example the different <code class="docutils literal notranslate"><span class="pre">app_easy_&lt;type&gt;_advertise()</span></code>
+operations.</p>
+<p><strong>Secure Storage: New Features Starting from SDK version 6.0.24</strong></p>
+<ul>
+<li><p>A new <code class="docutils literal notranslate"><span class="pre">app_easy_storage</span></code> layer has been added, with functions to open, save, and load data.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>It can be used by both the bond database and the user application.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>A new <code class="docutils literal notranslate"><span class="pre">app_easy_crypto</span></code> module has been added as a wrapper for the AES driver (handles init, encrypt, and decrypt).</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>It can be used directly by the application or by the storage layer.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>The encryption functions are passed through callbacks when setting up the storage.</p></li>
+<li><p>Each storage instance gets its own encryption/decryption key.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>By default, keys are created using the <code class="docutils literal notranslate"><span class="pre">default_app_generate_unique_key()</span></code> function.</p></li>
+<li><p>This function uses the SDK’s hash() and OTP trim values.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>This Storage and Encryption API is used in the <code class="docutils literal notranslate"><span class="pre">ble_app_security</span></code> project and has been tested on DA14531-01 and other 5xx devices.</p></li>
+</ul>
+<p>User Storage Example:</p>
+<ul>
+<li><p>A user storage instance is also included to demonstrate the API.</p>
+<blockquote>
+<div><ul>
+<li><p>The code is in <code class="docutils literal notranslate"><span class="pre">user_data_db.c</span></code>.</p></li>
+<li><p>User data is added by writing the value <code class="docutils literal notranslate"><span class="pre">0x01</span></code> to a custom profile control point.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Each write stores a new number and a <code class="docutils literal notranslate"><span class="pre">VBAT_HIGH</span></code> value in an internal array.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>You can choose whether to encrypt the stored data or not:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">BDB_ENCRYPTED</span></code> for bonding data.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">UDDB_ENCRYPTED</span></code> for user data.</p></li>
+<li><p>Both are set to true by default.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>Flash Storage Details:</p>
+<ul>
+<li><p>Bonding data is stored at flash offset 0x1E000, with a size of 0x1000.</p></li>
+<li><p>User data is stored at flash offset 0x1F000, with size set by the STORAGE_SLOTS_2_SZ() macro (enough for 3 data entries).</p></li>
+<li><p>Each stored entry has a start and end marker:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Bonding data: 0x1235 (start), 0x4322 (end)</p></li>
+<li><p>User data: 0x5678 (start), 0x8765 (end)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="app-profile-api">
+<h3><span class="section-number">2.5.4. </span>app_&lt;profile&gt; API<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#app-profile-api" title="Link to this heading"></a></h3>
+<p>For some of the profiles provided with the SDK an additional application
+layer exists, which exposes the create database, initialization and
+profile specific operation functions. Please see the relevant
+header file for the list of functions supported for each profile.</p>
+</section>
+<section id="app-entry-point-api">
+<h3><span class="section-number">2.5.5. </span>App Entry Point API<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#app-entry-point-api" title="Link to this heading"></a></h3>
+<p>In the SDK there is a piece of software that handles the
+messages that arrive in the application task. This module is called
+<code class="docutils literal notranslate"><span class="pre">app_entry_point.c</span></code>. The messages that arrive at the
+<code class="docutils literal notranslate"><span class="pre">app_entry_point_handler()</span></code> will be delivered to all the included
+application modules of the SDK until a module acknowledges that the
+message is handled, in which case the application entry point
+returns the state of the message, as it has been reported,
+to the kernel scheduler.</p>
+<p>In case a message has not been handled by any module, the message will be
+delivered to the application through the <code class="docutils literal notranslate"><span class="pre">app_process_catch_rest_cb()</span></code>
+function pointer where the user can hook his message handler. The
+messages that arrive at the user space are always considered consumed and
+cannot be saved or forwarded.</p>
+<p>Together with the <code class="docutils literal notranslate"><span class="pre">app_entry_point_handler()</span></code> and the
+<code class="docutils literal notranslate"><span class="pre">app_process_catch_rest_cb()</span></code> function pointer, the <code class="docutils literal notranslate"><span class="pre">app_entry_point.c</span></code>
+module also exposes a set of <code class="docutils literal notranslate"><span class="pre">EXCLUDE_DLG_&lt;MODULE&gt;</span></code> options defined in
+<code class="docutils literal notranslate"><span class="pre">user_modules_config.h</span></code>. These options can be used to disable specific
+message handlers of the SDK to receive the messages in the user
+application space via the <code class="docutils literal notranslate"><span class="pre">app_process_catch_rest_cb()</span></code>. This allows the
+user to override or extend the functionality of the existing SDK modules
+without the need to touch any SDK files.</p>
+</section>
+<section id="user-callback-api">
+<h3><span class="section-number">2.5.6. </span>User Callback API<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-callback-api" title="Link to this heading"></a></h3>
+<p>The SDK provides numerous modules that are hooked on the entry point to
+handle messages sent to the application task. The primary function of
+the modules is to transform the received messages into events, which are
+exposed to the user application space as function pointers with
+meaningful names and parameters. There are also modules that implement a
+lot of application functionality, such as the <code class="docutils literal notranslate"><span class="pre">app_suotar_task.c</span></code>. The
+modules that follow this pattern are the gap, security, and all the
+existing <code class="docutils literal notranslate"><span class="pre">app_&lt;profile&gt;_task.c</span></code> modules.</p>
+<p>The library looks for the value of the pointers in
+<code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code>. There the user can assign a new function of his
+application to be called upon a specific event. The GAP and Security related
+function pointers are grouped in the <code class="docutils literal notranslate"><span class="pre">user_app_callbacks</span></code> structure, while
+the profile related pointers (for profiles with an <code class="docutils literal notranslate"><span class="pre">app_&lt;profile&gt;_task.c</span></code>)
+are grouped in the <code class="docutils literal notranslate"><span class="pre">user_profile_callbacks</span></code> structure. For example, this
+structure may be initialized as follows:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell2"><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">app_callbacks</span><span class="w"> </span><span class="n">user_app_callbacks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_connection</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_connection</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_disconnect</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">user_app_on_disconnect</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_rejected</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_complete</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_set_dev_config_complete</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_set_dev_config_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_nonconn_complete</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_undirect_complete</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">app_advertise_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_direct_complete</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_db_init_complete</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_db_init_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_scanning_completed</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_report_ind</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_name</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_appearance</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_appearance</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_slv_pref_params</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_slv_pref_params</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_set_dev_info</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_set_dev_info</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_data_length_change</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_request</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_update_params_request</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_generate_static_random_addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_generate_static_random_addr</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_svc_changed_cfg_ind</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_peer_features</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="cp">#if (BLE_APP_SEC)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_pairing_request</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_pairing_request</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_tk_exch</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_tk_exch</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_irk_exch</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_csrk_exch</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ltk_exch</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_ltk_exch</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_pairing_succeeded</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_encrypt_ind</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_encrypt_req_ind</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_security_req_ind</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_addr_solved_ind</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_addr_resolve_failed</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_cmp_evt</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_size_ind</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_addr_ind</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="cp">#endif </span><span class="c1">// (BLE_APP_SEC)</span>
+<span class="p">};</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell2">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+</section>
+<section id="default-handlers">
+<h3><span class="section-number">2.5.7. </span>Default Handlers<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#default-handlers" title="Link to this heading"></a></h3>
+<p>Simple BLE peripheral applications to a large extent share common
+functionality. They should advertise and respond to specific requests
+from the central device to establish a connection. To minimize the
+amount of code that is required from an application programmer to start
+an application, a library of Default Handler functions is created.
+These functions are already hooked from the template project in the user
+callbacks, giving a working peripheral device without writing a single
+line of code. The programmer can then alter the functionality, and
+override the default functionality.</p>
+<p>The default handlers have their own configuration options and function
+hooks as well. The user can configure the advertise operation scenario
+or the security request scenario of the peripheral as implemented by the
+default handlers, in the <code class="docutils literal notranslate"><span class="pre">app_default_handlers.c</span></code> file. The user can also
+override the advertise operation entirely in the
+<code class="docutils literal notranslate"><span class="pre">user_default_app_operations</span></code> structure.</p>
+</section>
+<section id="user-configuration-description">
+<h3><span class="section-number">2.5.8. </span>User Configuration Description<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-configuration-description" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">user_config</span></code> folder for each project, contains all the necessary user
+configuration files to develop a BLE application.</p>
+<p>Folder <code class="docutils literal notranslate"><span class="pre">user_config</span></code> is located in:
+<code class="docutils literal notranslate"><span class="pre">&lt;sdk_root&gt;\projects\target_apps\ble_examples\&lt;ble-project&gt;\src\config</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">user_config</span></code> folder structure is shown in
+<a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-config-folder-structure-in-keil-projects"><span class="std std-numref">Figure 14</span></a>.</p>
+<figure class="align-center" id="user-config-folder-structure-in-keil-projects">
+<img alt="../_images/image71.png" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image71.png">
+<figcaption>
+<p><span class="caption-number">Figure 14 </span><span class="caption-text"><strong>user_config Folder Structure in Keil Projects</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-config-folder-structure-in-keil-projects" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="files-da1458x-config-basic-h-and-da1458x-config-advanced-h">
+<h4><span class="section-number">2.5.8.1. </span>Files da1458x_config_basic.h and da1458x_config_advanced.h<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#files-da1458x-config-basic-h-and-da1458x-config-advanced-h" title="Link to this heading"></a></h4>
+<p>These header files contain only macros definitions for the target device
+configuration based on the application needs. From SDK-6.0.22 and forth these
+configuration header file (basic and advanced) are distinguished per target
+device:</p>
+<ul class="simple">
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">da14585_config_basic.h</span></code> and <code class="docutils literal notranslate"><span class="pre">da14585_config_advanced.h</span></code> for DA1458x.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">da14531_config_basic.h</span></code> and <code class="docutils literal notranslate"><span class="pre">da14531_config_advanced.h</span></code> for DA14531-0x.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">da14535_config_basic.h</span></code> and <code class="docutils literal notranslate"><span class="pre">da14535_config_advanced.h</span></code> for DA14535.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>For any details regarding on the macros usage refer to the respective
+configuration header files, per SDK example and per target device. The
+configuration header files contain detailed information.</p>
+</div>
+</section>
+<section id="file-user-callback-config-h">
+<h4><span class="section-number">2.5.8.2. </span>File user_callback_config.h<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-callback-config-h" title="Link to this heading"></a></h4>
+<p>This header file holds callback functions that handle various events or
+operations.</p>
+<p>Several events can occur during the lifetime of the BLE application and
+these events need to be handled in a specific manner. Also, operations
+need to be served depending on the application scenario. It depends on
+the application itself to define which events and operations are handled
+and how. The SDK is flexible enough to either call a default handler or
+call the user-defined event or operation handler.</p>
+<p>The SDK mechanism that takes care of the above requirements, is the
+registration of callback functions for every event or operation. The C
+header file <code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code>, which resides in the user space,
+contains the registration of the callback functions.</p>
+<p><strong>Note</strong>: For reference, the <code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code> file of the
+<code class="docutils literal notranslate"><span class="pre">prox_reporter</span></code> BLE demo project is presented in the following sections.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">prox_reporter</span></code> BLE demo project registers the following callback
+functions:</p>
+<section id="callbacks-for-general-ble-events">
+<h5><span class="section-number">2.5.8.2.1. </span>Callbacks for General BLE Events<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#callbacks-for-general-ble-events" title="Link to this heading"></a></h5>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell3"><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">app_callbacks</span><span class="w"> </span><span class="n">user_app_callbacks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_connection</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_connection</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_disconnect</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="n">user_app_on_disconnect</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_rejected</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_complete</span><span class="w">      </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_set_dev_config_complete</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_set_dev_config_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_nonconn_complete</span><span class="w">        </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_undirect_complete</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">app_advertise_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_direct_complete</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_db_init_complete</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_db_init_complete</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_scanning_completed</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_adv_report_ind</span><span class="w">              </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_name</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_name</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_appearance</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_appearance</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_dev_slv_pref_params</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_get_dev_slv_pref_params</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_set_dev_info</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_set_dev_info</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_data_length_change</span><span class="w">          </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_update_params_request</span><span class="w">       </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_update_params_request</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_generate_static_random_addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_generate_static_random_addr</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_svc_changed_cfg_ind</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_get_peer_features</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="cp">#if (BLE_APP_SEC)</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_pairing_request</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_pairing_request</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_tk_exch</span><span class="w">                     </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_tk_exch</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_irk_exch</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_csrk_exch</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ltk_exch</span><span class="w">                    </span><span class="o">=</span><span class="w"> </span><span class="n">default_app_on_ltk_exch</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_pairing_succeeded</span><span class="w">           </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_encrypt_ind</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_encrypt_req_ind</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_security_req_ind</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_addr_solved_ind</span><span class="w">             </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_addr_resolve_failed</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_cmp_evt</span><span class="w">                 </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_size_ind</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_on_ral_addr_ind</span><span class="w">                </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="cp">#endif </span><span class="c1">// (BLE_APP_SEC)</span>
+<span class="p">};</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The above structure defines that a certain event is processed by a
+default handler or by a user-defined handler or it will not be processed
+at all (NULL entries).</p>
+</section>
+<section id="callbacks-for-system-specific-events">
+<h5><span class="section-number">2.5.8.2.2. </span>Callbacks for System Specific Events<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#callbacks-for-system-specific-events" title="Link to this heading"></a></h5>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell4"><span></span><span class="cp">#if (BLE_APP_SEC)</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">app_bond_db_callbacks</span><span class="w"> </span><span class="n">user_app_bond_db_callbacks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_init</span><span class="w">                       </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_get_size</span><span class="w">                   </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_add_entry</span><span class="w">                  </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_remove_entry</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_search_entry</span><span class="w">               </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_get_number_of_stored_irks</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_get_stored_irks</span><span class="w">            </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">app_bdb_get_device_info_from_slot</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="p">};</span>
+<span class="cp">#endif </span><span class="c1">// (BLE_APP_SEC)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The above structure defines that a certain event is processed
+by a default handler or by a user-defined handler, or will not be
+processed at all (NULL entries). By default, a bond database is
+implemented in <code class="docutils literal notranslate"><span class="pre">app_bond_db.c</span></code>. However, a user implementation of the
+bond database can be hooked to the above callback table.</p>
+</section>
+<section id="callbacks-for-ble-operations">
+<h5><span class="section-number">2.5.8.2.3. </span>Callbacks for BLE Operations<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#callbacks-for-ble-operations" title="Link to this heading"></a></h5>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell5"><span></span><span class="c1">// Default Handler Operations</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">default_app_operations</span><span class="w"> </span><span class="n">user_default_app_operations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">default_operation_adv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">default_advertise_operation</span><span class="p">,</span>
+<span class="p">};</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell5">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>The structure above defines that a certain operation is
+processed by a default handler or by a user-defined handler or
+will not be processed at all (NULL entries).</p>
+</section>
+<section id="callbacks-for-custom-profile-message-handling">
+<h5><span class="section-number">2.5.8.2.4. </span>Callbacks for Custom Profile Message Handling<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#callbacks-for-custom-profile-message-handling" title="Link to this heading"></a></h5>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell6"><span></span><span class="c1">//Put in this structure the app_&lt;profile&gt;_db_create and app_&lt;profile&gt;_enable functions</span>
+<span class="c1">//for SIG profiles that do not have this function already implemented in the SDK</span>
+<span class="c1">//or if you want to override the functionality. Check the prf_func array in the SDK</span>
+<span class="c1">//for your reference of which profiles are supported.</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">prf_func_callbacks</span><span class="w"> </span><span class="n">user_prf_funcs</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">{</span><span class="n">TASK_ID_INVALID</span><span class="p">,</span><span class="w">    </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">}</span><span class="w">   </span><span class="c1">// DO NOT MOVE. Must always be last</span>
+<span class="p">};</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell6">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p>Put in this structure the <code class="docutils literal notranslate"><span class="pre">app_&lt;profile&gt;_db_create()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">app_&lt;profile&gt;_enable()</span></code> functions for SIG profiles that do not have
+this function already implemented in the SDK or if you want to
+override the functionality. Check the <code class="docutils literal notranslate"><span class="pre">prf_func</span></code> array in the SDK for
+your reference of which profiles are supported.</p>
+</section>
+</section>
+<section id="file-user-config-h">
+<h4><span class="section-number">2.5.8.3. </span>File user_config.h<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-config-h" title="Link to this heading"></a></h4>
+<p>This file holds the user-defined parameters for:</p>
+<ul>
+<li><p>Security configuration:</p>
+<blockquote>
+<div><ul>
+<li><p>IO capability:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Display Only</p></li>
+<li><p>Display Yes No</p></li>
+<li><p>Keyboard Only</p></li>
+<li><p>No Input No Output</p></li>
+<li><p>Keyboard Display</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>OOB (Out of Band) support (only in Legacy Pairinig)</p></li>
+<li><p>Authentication requirements:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>No authentication</p></li>
+<li><p>Bonding</p></li>
+<li><p>MITM (Man in the Middle) protection</p></li>
+<li><p>Secure connection</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Encryption key size configuration</p></li>
+<li><p>Device security requirements:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>No security (no authentication and encryption)</p></li>
+<li><p>Unauthenticated pairing with encryption</p></li>
+<li><p>Authenticated pairing with encryption</p></li>
+<li><p>Authenticated LE Secure Connections pairing with encryption</p></li>
+<li><p>Unauthenticated pairing with data signing</p></li>
+<li><p>Authentication pairing with data signing</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Initiator key distribution (any combination of the below):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>No Keys to distribute</p></li>
+<li><p>LTK (Encryption key) in distribution</p></li>
+<li><p>IRK (ID key)in distribution</p></li>
+<li><p>CSRK (Signature key) in distribution</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Responder key distribution (any combination of the below):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>No Keys to distribute</p></li>
+<li><p>LTK (Encryption key) in distribution</p></li>
+<li><p>IRK (ID key)in distribution</p></li>
+<li><p>CSRK (Signature key) in distribution</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Sleep mode:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>No sleep</p></li>
+<li><p>Extended sleep without OTP copy on wake-up</p></li>
+<li><p>Extended sleep with OTP copy on wake-up</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The above sleep modes may be reconfigured during the
+DA1453x/DA1458x runtime, if the user calls the respective
+API function.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>DA1453x/DA1458x will enter the configured <strong>extended</strong>
+sleep mode if and only if specific requirements are met
+during the runtime, e.g. there is enough sleep time until
+the next programmed BLE event, etc.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>DA1453x/DA1458x can enter the <strong>deep</strong> sleep mode, if
+the user explicitly calls the respective API function.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>DA1453x can enter the <strong>hibernation</strong> mode, if
+the user explicitly calls the respective API function.</p>
+</div>
+<ul>
+<li><p>Advertising configuration:</p>
+<blockquote>
+<div><ul>
+<li><p>min-max advertising interval</p></li>
+<li><p>advertising channel map (channels 37, 38, 39)</p></li>
+<li><p>advertising mode:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Non discoverable mode</p></li>
+<li><p>General discoverable mode</p></li>
+<li><p>Limited discoverable mode</p></li>
+<li><p>Broadcaster mode</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>advertising filter policy</p></li>
+<li><p>address of peer device for connectable directed
+advertising (ADV_DIRECT_IND)</p></li>
+<li><p>address type (public or random) for connectable
+directed advertising (ADV_DIRECT_IND)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>advertising data</p></li>
+<li><p>device name (appended to advertising or scan response data if there
+is space left)</p></li>
+<li><p>device configuration:</p>
+<blockquote>
+<div><ul>
+<li><p>GAP role:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>central</p></li>
+<li><p>peripheral</p></li>
+<li><p>observer</p></li>
+<li><p>broadcaster</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>MTU size</p></li>
+<li><p>address type:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>public address</p></li>
+<li><p>static random address</p></li>
+<li><p>private random resolvable address</p></li>
+<li><p>private random non-resolvable address</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>Renewal duration for  private random address</p></li>
+<li><p>static ranodm address (can be configured automatically as well)</p></li>
+<li><p>IRK used for private random address generation</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>parameter update configuration (for L2CAP):</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>min-max suggested connection interval</p></li>
+<li><p>suggested slave latency</p></li>
+<li><p>suggested supervision timeout</p></li>
+<li><p>suggested min-max connection event duration</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>default handlers configuration:</p></li>
+<li><p>configuration parameters for central role:</p>
+<blockquote>
+<div><ul>
+<li><p>connection mode:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>direct connection operation</p></li>
+<li><p>automatic connection operation</p></li>
+<li><p>selective connection operation</p></li>
+<li><p>name request operation (requires to start a direct
+connection)</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>scan interval</p></li>
+<li><p>scan window</p></li>
+<li><p>min-max connection interval</p></li>
+<li><p>slave latency</p></li>
+<li><p>supervision timeout</p></li>
+<li><p>min-max connection event duration</p></li>
+<li><p>peer device information (address and type)</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+<section id="file-user-modules-config-h">
+<h4><span class="section-number">2.5.8.4. </span>File user_modules_config.h<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-modules-config-h" title="Link to this heading"></a></h4>
+<p>This header file defines which application modules are included or
+excluded from the user’s application. For example:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">#define</span> <span class="pre">EXCLUDE_DLG_DISS</span> <span class="pre">(0)</span></code> - the SDK takes care of the
+DISS application profile message handling. The DISS
+application profile is included, that is:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">app_diss_task.c</span></code> as provided by the SDK</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">#define</span> <span class="pre">EXCLUDE_DLG_DISS</span> <span class="pre">(1)</span></code> - the user application has to
+take care of the DISS application profile message handling</p></li>
+</ul>
+<section id="configuration-flags">
+<h5><span class="section-number">2.5.8.4.1. </span>Configuration Flags<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#configuration-flags" title="Link to this heading"></a></h5>
+<p>The define statements below enable to include or exclude a module in the
+user application code. When defined as:</p>
+<ul class="simple">
+<li><p>(0) - The module is included. The module’s messages are handled by
+the SDK</p></li>
+<li><p>(1) - The module is excluded. The user must handle the module’s
+messages</p></li>
+</ul>
+<p>The code snippet below show a user module configuration example.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell7"><span></span><span class="cp">#define EXCLUDE_DLG_GAP             (0)</span>
+<span class="cp">#define EXCLUDE_DLG_TIMER           (0)</span>
+<span class="cp">#define EXCLUDE_DLG_MSG             (1)</span>
+<span class="cp">#define EXCLUDE_DLG_SEC             (0)</span>
+<span class="cp">#define EXCLUDE_DLG_DISS            (0)</span>
+<span class="cp">#define EXCLUDE_DLG_PROXR           (1)</span>
+<span class="cp">#define EXCLUDE_DLG_BASS            (1)</span>
+<span class="cp">#define EXCLUDE_DLG_FINDL           (1)</span>
+<span class="cp">#define EXCLUDE_DLG_FINDT           (1)</span>
+<span class="cp">#define EXCLUDE_DLG_SUOTAR          (1)</span>
+<span class="cp">#define EXCLUDE_DLG_CUSTS1          (0)</span>
+<span class="cp">#define EXCLUDE_DLG_CUSTS2          (1)</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell7">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+</section>
+</section>
+<section id="file-user-periph-setup-h">
+<h4><span class="section-number">2.5.8.5. </span>File user_periph_setup.h<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-periph-setup-h" title="Link to this heading"></a></h4>
+<p>Configuration file for the peripherals that the application uses.</p>
+<p>This header file holds the port-pin mapping of the used
+peripherals per example, such as GPIOs, UART, SPI, I2C, etc. Apart from the
+port-pin mapping of the used peripherals the header file may contain configuration
+values for a peripheral itself, such as UART baudrate, SPI clock speed,
+I2C slave address, etc.</p>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-periph-setup-h-function-prototypes"><span class="std std-numref">Table 3</span></a> describes the
+functions that are defined in header file <cite>user_periph_setup.h</cite>.</p>
+<div class="wy-table-responsive"><table class="docutils align-left" id="user-periph-setup-h-function-prototypes">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text">user_periph_setup.h Function Prototypes</span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#user-periph-setup-h-function-prototypes" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>periph_init()</p></td>
+<td><p>Initializes the used peripherals.</p></td>
+</tr>
+<tr class="row-odd"><td><p>set_pad_functions()</p></td>
+<td><p>Configures the port-pin mapping
+of the used peripherals.</p></td>
+</tr>
+<tr class="row-even"><td><p>GPIO_reservations()</p></td>
+<td><p>Reserves the pins that the
+peripheral uses.</p></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<section id="file-user-profiles-config-h">
+<h4><span class="section-number">2.5.8.6. </span>File user_profiles_config.h<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#file-user-profiles-config-h" title="Link to this heading"></a></h4>
+<p>Configuration file for the BLE profiles used by the application.</p>
+<section id="id5">
+<h5><span class="section-number">2.5.8.6.1. </span>Configuration Flags<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#id5" title="Link to this heading"></a></h5>
+<p>The <cite>user_profiles_config.h</cite> file defines the required BLE
+profiles of the application. For example, if the application requires the</p>
+<p>DISS, PXPR, SUOTAR and BASS profiles, then the following must be
+defined in <cite>user_profiles_config.h</cite>:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre id="codecell8"><span></span><span class="cm">/*********************/</span>
+<span class="cm">/* Used BLE profiles */</span>
+<span class="cm">/*********************/</span>
+
+<span class="cp">#define CFG_PRF_DISS</span>
+<span class="cp">#define CFG_PRF_PXPR</span>
+<span class="cp">#define CFG_PRF_SUOTAR</span>
+<span class="cp">#define CFG_PRF_BASS</span>
+</pre><button class="copybtn o-tooltip--left" data-tooltip="Copy" data-clipboard-target="#codecell8">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copy" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <title>Copy to clipboard</title>
+  <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+  <rect x="8" y="8" width="12" height="12" rx="2"></rect>
+  <path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"></path>
+</svg>
+    </button></div>
+</div>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#supported-ble-profiles"><span class="std std-numref">Table 4</span></a> describes the SDK supported BLE
+profiles.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The supported profiles are defined in file <cite>rwprf_config.h</cite>.</p>
+</div>
+<div class="wy-table-responsive"><table class="docutils align-left" id="supported-ble-profiles">
+<caption><span class="caption-number">Table 4 </span><span class="caption-text">Supported BLE Profiles</span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#supported-ble-profiles" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p><strong>Flag</strong></p></th>
+<th class="head"><p><strong>Profile</strong></p></th>
+<th class="head"><p><strong>Description</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>CFG_PRF_PXPM</p></td>
+<td><p>Proximity Reporter</p></td>
+<td><p>If defined enables
+the Proximity Profile
+Monitor role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_PXPR</p></td>
+<td><p>Proximity Reporter</p></td>
+<td><p>If defined enables
+the Proximity Profile
+Reporter role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_FMPL</p></td>
+<td><p>Find Me Profile</p></td>
+<td><p>If defined enables
+the Find Me Profile
+Locator role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_FMPT</p></td>
+<td><p>Find Me Profile</p></td>
+<td><p>If defined enables
+the Find Me Profile
+Target role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_HTPC</p></td>
+<td><p>Health Thermometer</p></td>
+<td><p>If defined enables
+the Health
+Thermometer Profile
+Collector role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_HTPT</p></td>
+<td><p>Health Thermometer</p></td>
+<td><p>If defined enables
+the Health
+Thermometer Profile
+Thermometer role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_DISC</p></td>
+<td><p>Device Information
+Service</p></td>
+<td><p>If defined enables
+the Device
+Information Service
+Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_DISS</p></td>
+<td><p>Device Information
+Service</p></td>
+<td><p>If defined enables
+the Device
+Information Service
+Server role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_BLPC</p></td>
+<td><p>Blood Pressure</p></td>
+<td><p>If defined enables
+the Blood Pressure
+Profile Collector
+role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_BLPS</p></td>
+<td><p>Blood Pressure</p></td>
+<td><p>If defined enables
+the Blood Pressure
+Profile Sensor role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_TIPC</p></td>
+<td><p>Time</p></td>
+<td><p>If defined enables
+the Time Profile
+Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_TIPS</p></td>
+<td><p>Time</p></td>
+<td><p>If defined enables
+the Time Profile
+Server role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_HRPC</p></td>
+<td><p>Heart Rate</p></td>
+<td><p>If defined enables
+the Heart Rate
+Profile Collector
+role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_HRPS</p></td>
+<td><p>Heart Rate</p></td>
+<td><p>If defined enables
+the Heart Rate
+Profile Sensor role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_SCPPC</p></td>
+<td><p>Scan Parameter</p></td>
+<td><p>If defined enables
+the Scan Parameter
+Profile Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_SCPPS</p></td>
+<td><p>Scan Parameter</p></td>
+<td><p>If defined enables
+the Scan Parameter
+Profile Server role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_BASC</p></td>
+<td><p>Battery Service</p></td>
+<td><p>If defined enables
+the Battery Service
+Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_BASS</p></td>
+<td><p>Battery Service</p></td>
+<td><p>If defined enables
+the Battery Service
+Server role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_HOGPD</p></td>
+<td><p>HID</p></td>
+<td><p>If defined enables
+the HID Device role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_HOGPBH</p></td>
+<td><p>HID</p></td>
+<td><p>If defined enables
+the HID Boot Host
+role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_HOGPRH</p></td>
+<td><p>HID</p></td>
+<td><p>If defined enables
+the HID Report Host
+role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_GLPC</p></td>
+<td><p>Glucose</p></td>
+<td><p>If defined enables
+the Glucose Profile
+Collector role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_GLPS</p></td>
+<td><p>Glucose</p></td>
+<td><p>If defined enables
+the Glucose Profile
+Sensor role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_RSCPC</p></td>
+<td><p>Running Speed and
+Cadence</p></td>
+<td><p>If defined enables
+the Running Speed and
+Cadence Profile
+Collector role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_RSCPS</p></td>
+<td><p>Running Speed and
+Cadence</p></td>
+<td><p>If defined enables
+the Running Speed and
+Cadence Profile
+Server role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_CSCPC</p></td>
+<td><p>Cycling Speed and
+Cadence</p></td>
+<td><p>If defined enables
+the Cycling Speed and
+Cadence Profile
+Collector role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_CSCPS</p></td>
+<td><p>Cycling Speed and
+Cadence</p></td>
+<td><p>If defined enables
+the Cycling Speed and
+Cadence Profile
+Server role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_CPPC</p></td>
+<td><p>Cycling Power</p></td>
+<td><p>If defined enables
+the Cycling Power
+Profile Collector
+role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_CPPS</p></td>
+<td><p>Cycling Power</p></td>
+<td><p>If defined enables
+the Cycling Power
+Profile Server role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_LANC</p></td>
+<td><p>Location and
+Navigation</p></td>
+<td><p>If defined enables
+the Location and
+Navigation Profile
+Collector role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_LANS</p></td>
+<td><p>Location and
+Navigation</p></td>
+<td><p>If defined enables
+the Location and
+Navigation Profile
+Server role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_ANPC</p></td>
+<td><p>Alert Notification
+Profile</p></td>
+<td><p>If defined enables
+the Alert
+Notification Profile
+Client role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_ANPS</p></td>
+<td><p>Alert Notification
+Profile</p></td>
+<td><p>If defined enables
+the Alert
+Notification Profile
+Server role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_PASPC</p></td>
+<td><p>Phone Alert Status</p></td>
+<td><p>If defined enables
+the Phone Alert
+Status Profile Client
+role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_PASPS</p></td>
+<td><p>Phone Alert Status</p></td>
+<td><p>If defined enables
+the Phone Alert
+Status Profile Server
+role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_BMSC</p></td>
+<td><p>Bond Management
+Service</p></td>
+<td><p>If defined enables
+the Bond Management
+Service Client role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_BMSS</p></td>
+<td><p>Bond Management
+Service</p></td>
+<td><p>If defined enables
+the Bond Management
+Service Server role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_ANCC</p></td>
+<td><p>Apple Notification
+Center Service</p></td>
+<td><p>If defined
+enables the Apple
+Notification Center
+Service Client role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_BCSC</p></td>
+<td><p>Body Composition
+Service</p></td>
+<td><p>If defined enables
+the Body Management
+Service Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_BCSS</p></td>
+<td><p>Body Composition
+Service</p></td>
+<td><p>If defined enables
+the Body Management
+Service Server role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_WSSC</p></td>
+<td><p>Weight Scale
+Service</p></td>
+<td><p>If defined enables
+the Weight Scale
+Service Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_WSSS</p></td>
+<td><p>Weight Scale
+Service</p></td>
+<td><p>If defined enables
+the Weight Scale
+Service Server role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_UDSC</p></td>
+<td><p>User Data
+Service</p></td>
+<td><p>If defined enables
+the User Data
+Service Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_UDSS</p></td>
+<td><p>User Data
+Service</p></td>
+<td><p>If defined enables
+the User Data
+Service Server role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_GATTC</p></td>
+<td><p>Generic Attribute
+Profile Service</p></td>
+<td><p>If defined enables
+the Generic Attribute
+Profile Service
+Client role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_SUOTAR</p></td>
+<td><p>Software Patching
+Over the Air</p></td>
+<td><p>If defined enables
+the Software Patching
+Over the Air Receiver
+role</p></td>
+</tr>
+<tr class="row-even"><td><p>CFG_PRF_CUST1</p></td>
+<td><p>Custom1 Profile</p></td>
+<td><p>If defined enables
+the Custom1 Profile
+Service Server role</p></td>
+</tr>
+<tr class="row-odd"><td><p>CFG_PRF_CUST2</p></td>
+<td><p>Custom2 Profile</p></td>
+<td><p>If defined enables
+the Custom2 Profile
+Service Server role</p></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+</section>
+</section>
+</section>
+<section id="supported-hardware-configurations">
+<h2><span class="section-number">2.6. </span>Supported Hardware Configurations<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#supported-hardware-configurations" title="Link to this heading"></a></h2>
+<section id="integrated-processor">
+<h3><span class="section-number">2.6.1. </span>Integrated Processor<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#integrated-processor" title="Link to this heading"></a></h3>
+<p>The straightforward approach to develop an application with the DA1453x/DA1458x
+family is the integrated processor configuration. All SW components,
+lower layers (controller), higher layers (host), profiles and the
+complete application run on the DA1453x/DA1458x as a single chip solution.
+This configuration is well suited for many low to mid complexity
+applications. Please check the complete list of reference designs
+provided by Dialog on the <a class="reference external" href="https://community.renesas.com/wireles-connectivity/f/bluetooth-low-energy">Customer
+Support</a> site to
+understand the complexity of the applications that can be supported.</p>
+<figure class="align-center" id="integrated-processor-hw-configuration">
+<img alt="../_images/image21.png" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image21.png">
+<figcaption>
+<p><span class="caption-number">Figure 15 </span><span class="caption-text"><strong>Integrated Processor HW Configuration</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#integrated-processor-hw-configuration" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="external-processor">
+<h3><span class="section-number">2.6.2. </span>External Processor<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#external-processor" title="Link to this heading"></a></h3>
+<p>In cases where an external processor is present or in mid and high
+complexity applications, the DA1453x/DA1458x can be used as a BLE interface
+controlled from an external processor via a proprietary protocol called
+Generic Transport Layer (GTL). The DA1453x/DA1458x can accommodate the link
+layer, the host protocols and the profiles, and the external processor
+will implement the application functionality. The two components will
+communicate via GTL over a serial link which can be either UART or SPI.</p>
+<figure class="align-center" id="external-processor-hw-configuration">
+<img alt="../_images/image31.png" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/image31.png">
+<figcaption>
+<p><span class="caption-number">Figure 16 </span><span class="caption-text"><strong>External Processor HW Configuration</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#external-processor-hw-configuration" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="software-development-environment">
+<h2><span class="section-number">2.7. </span>Software Development Environment<a class="headerlink" href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Software_Platform_Overview/Software_Platform_Overview.html#software-development-environment" title="Link to this heading"></a></h2>
+<p>Software development on DA1453x/DA1458x is done with a Software
+Development Kit (SDK) that is supported by a number of other tools, which
+aim at assisting the designers and programmers to develop a new application
+for the DA1453x/DA1458x family of devices. The projects are based on, and
+supported by, the Arm® Keil® µVision® IDE/Debugger, Arm C/C++ Compiler and
+essential middleware components, Keil IDE and the Keil build tools. The
+DA1453x/DA1458x can be interfaced with Arm Segger JTAG cables, which is something that
+is fully supported by the Keil environment.</p>
+<p>To assist with the quick evaluation and programming of the DA1453x/DA1458x
+chip, Dialog provides a powerful graphical software tool called SmartSnippets
+Toolbox. SmartSnippets Toolbox provides a connection to the DA1453x/DA1458x
+devices via UART or JTAG, to program the on-chip OTP or even external
+Flash/EEPROM. A very powerful tool that is included in the SmartSnippets
+Toolbox, to use with the standard Dialog development kits is the Power
+profiler. The user can track power consumption of the
+board in realtime, and set a software marker and correlate board consumption with events
+happening during the execution of the software.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/Introduction/Introduction.html" class="btn btn-neutral float-left" title="1. Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/UM-B-119_DA14585-DA14531_SW_Platform_Reference/BLE%20Development%20Environment%20and%20first%20Application/BLE%20Development%20Environment%20and%20first%20Application.html" class="btn btn-neutral float-right" title="3. BLE Development Environment and First Application" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./2. Software Platform Overview — UM-B-119_ DA1453x_DA1458x SW Platform Reference Manual_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

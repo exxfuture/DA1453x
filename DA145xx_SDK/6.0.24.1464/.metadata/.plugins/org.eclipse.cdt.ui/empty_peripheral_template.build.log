@@ -1,0 +1,11 @@
+12:29:22 **** Build of configuration DA14585 for project empty_peripheral_template ****
+make all 
+make generate_ldscripts PRE_BUILD_EXTRA_DEFS="-D__DA14585__" CC="clang" LDSCRIPT_INCLUDE_DIR="../../src/config ../../../../../../sdk/common_project_files" LDSCRIPT_PATH="../../../../../../sdk/common_project_files/ldscripts" LDSCRIPT_FILES="ldscript_DA14585_586.lds"
+"clang"  -I "../../src/config"  -I "../../../../../../sdk/common_project_files" -D__DA14585__  -E -P -c "../../../../../../sdk/common_project_files/ldscripts/ldscript_DA14585_586_e2s.lds.S" -o "ldscript_DA14585_586.lds"
+ 
+make[1]: *** No rule to make target `empty_peripheral_template.elf', needed by `main-build'.  Stop.
+make: *** [all] Error 2
+"make all" terminated with exit code 2. Build might be incomplete.
+
+12:29:53 Build Failed. 2 errors, 0 warnings. (took 30s.642ms)
+

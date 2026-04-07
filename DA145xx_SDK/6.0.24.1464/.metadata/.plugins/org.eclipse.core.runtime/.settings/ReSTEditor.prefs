@@ -1,0 +1,13 @@
+eclipse.preferences.version=1
+org.isandlatech.plugins.rest.theme.bullet=101,122,129
+org.isandlatech.plugins.rest.theme.default=101,122,129
+org.isandlatech.plugins.rest.theme.directive=181,137,0
+org.isandlatech.plugins.rest.theme.inline.emphasis=42,161,152
+org.isandlatech.plugins.rest.theme.inline.literal=147,161,161
+org.isandlatech.plugins.rest.theme.link=211,1,2
+org.isandlatech.plugins.rest.theme.literal=88,110,117
+org.isandlatech.plugins.rest.theme.section=101,122,129
+org.isandlatech.plugins.rest.theme.source=88,110,117
+org.isandlatech.plugins.rest.theme.table=101,122,129
+spellingEnabled=true
+spellingEngine=com.lorands.hunspell4eclipse.spellingengineimpl

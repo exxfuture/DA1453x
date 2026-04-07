@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<list key="installedFeatures">
+		<item value="gnu.io.rxtx.sdk:2.1.7.4_v20071016-417C7DP1Bh_eEaQJBrHBHg"/>
+		<item value="gnu.io.rxtx:2.1.7.4_v20071016-7B57e7UAXMAAqGAGf"/>
+		<item value="org.eclipse.cdt.build.crossgcc:10.5.0.202109270023"/>
+		<item value="org.eclipse.cdt.debug.gdbjtag:10.5.0.202111041518"/>
+		<item value="org.eclipse.cdt.debug.standalone:10.5.0.202109270023"/>
+		<item value="org.eclipse.cdt.debug.ui.memory:10.5.0.202110140133"/>
+		<item value="org.eclipse.cdt.gdb.source:10.5.0.202109270023"/>
+		<item value="org.eclipse.cdt.gdb:10.5.0.202109270023"/>
+		<item value="org.eclipse.cdt.gnu.build.source:10.5.0.202110181930"/>
+		<item value="org.eclipse.cdt.gnu.build:10.5.0.202110181930"/>
+		<item value="org.eclipse.cdt.gnu.debug.source:10.5.0.202109270023"/>
+		<item value="org.eclipse.cdt.gnu.debug:10.5.0.202109270023"/>
+		<item value="org.eclipse.cdt.gnu.dsf.source:10.5.0.202111041518"/>
+		<item value="org.eclipse.cdt.gnu.dsf:10.5.0.202111041518"/>
+		<item value="org.eclipse.cdt.native.source:10.5.0.202112012329"/>
+		<item value="org.eclipse.cdt.native:10.5.0.202112012329"/>
+		<item value="org.eclipse.cdt.platform.source:10.5.0.202112012329"/>
+		<item value="org.eclipse.cdt.platform:10.5.0.202112012329"/>
+		<item value="org.eclipse.cdt.sdk:10.5.0.202112012329"/>
+		<item value="org.eclipse.cdt:10.5.0.202112012329"/>
+		<item value="org.eclipse.embedcdt.debug.gdbjtag.jlink:6.1.2.202102181132"/>
+		<item value="org.eclipse.embedcdt.debug.gdbjtag:6.1.2.202102181132"/>
+		<item value="org.eclipse.embedcdt.doc.user:6.1.2.202102181132"/>
+		<item value="org.eclipse.embedcdt.managedbuild.cross.arm:6.1.2.202102181132"/>
+		<item value="org.eclipse.embedcdt.packs:6.1.2.202102181132"/>
+		<item value="org.eclipse.embedcdt.templates.cortexm:6.1.2.202102181132"/>
+		<item value="org.eclipse.emf.common:2.24.0.v20210924-1718"/>
+		<item value="org.eclipse.emf.ecore:2.26.0.v20210924-1718"/>
+		<item value="org.eclipse.epp.mpc:1.9.2.v20210826-0851"/>
+		<item value="org.eclipse.help:2.3.800.v20211124-1800"/>
+		<item value="org.eclipse.platform:4.22.0.v20211124-1800"/>
+		<item value="org.eclipse.rcp:4.22.0.v20211124-1800"/>
+		<item value="org.eclipse.tm.terminal.connector.ssh.feature:10.5.0.202109270023"/>
+		<item value="org.eclipse.tm.terminal.control.feature:10.5.0.202109270023"/>
+		<item value="org.eclipse.tm.terminal.feature:10.5.0.202109270023"/>
+		<item value="org.eclipse.tm.terminal.view.feature:10.5.0.202110140133"/>
+		<item value="org.eclipse.userstorage:1.2.0.v20210517-0327"/>
+		<item value="org.gna.eclox.feature:0.13.0.v20191027-1934"/>
+		<item value="org.python.pydev.feature:9.3.0.202203051235"/>
+		<item value="templates.smartbond_feature:3.0.20.4058"/>
+	</list>
+	<section name="ExternalProjectImportWizard">
+		<item key="WizardProjectsImportPage.STORE_NESTED_PROJECTS" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_COPY_PROJECT_ID" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_ARCHIVE_SELECTED" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_CLOSE_CREATED_PROJECTS_ID" value="false"/>
+		<item key="WizardProjectsImportPage.STORE_HIDE_CONFLICTING_PROJECTS_ID" value="false"/>
+		<list key="WizardProjectsImportPage.STORE_DIRECTORIES">
+			<item value="/Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer"/>
+			<item value="/Users/alexv/projects/teodor/6.0.24.1464/projects/target_apps/ble_examples/empty_peripheral_template"/>
+			<item value="/Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/"/>
+			<item value="/Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/prox_reporter"/>
+		</list>
+		<list key="WizardProjectsImportPage.STORE_ARCHIVES">
+			<item value=""/>
+		</list>
+	</section>
+</section>

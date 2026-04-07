@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<!-- saved from url=(0057)https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="7. General Purpose Output" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">
+    <link rel="prev" title="5. The Bluetooth® Device Address" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>6. The Bluetooth® Device Name</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#bluetooth-device-name-at-runtime">6.1. Bluetooth® Device Name at runtime</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">6. </span>The Bluetooth® Device Name</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="the-bluetooth-device-name">
+<span id="bd-device-name"></span><h1><span class="section-number">6. </span>The Bluetooth® Device Name<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#the-bluetooth-device-name" title="Link to this heading"></a></h1>
+<p>As we observed in the previous section, our device currently advertises the name <strong>DIALOG-TMPL</strong>. Chances are that you would like to use some other name for your product,</p>
+<dl>
+<dt>so let’s change it following these steps:</dt><dd><ol class="arabic">
+<li><p>Open up the <strong>user_config.h</strong> file</p></li>
+<li><p>Scroll down and change the definition of <code class="docutils literal notranslate"><span class="pre">USER_DEVICE_NAME</span></code> from <code class="docutils literal notranslate"><span class="pre">DIALOG-TMPL</span></code> to <code class="docutils literal notranslate"><span class="pre">My</span> <span class="pre">Product</span></code>:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Device name</span>
+<span class="cp">#define USER_DEVICE_NAME        "My Product"</span>
+</pre></div>
+</div>
+</li>
+<li><p>Build the project (<code class="docutils literal notranslate"><span class="pre">F7</span></code>)</p></li>
+<li><p>Start and stop the debugger (press <code class="docutils literal notranslate"><span class="pre">Ctrl</span></code> + <code class="docutils literal notranslate"><span class="pre">F5</span></code> twice) and use your BLE explorer app to verify that the device name has changed as intended</p></li>
+</ol>
+</dd>
+</dl>
+<div class="warning admonition">
+<p class="admonition-title">Show changed BD name in iOS</p>
+<p>If you’re using a BLE explorer app on an iOS device, you may not immediately see the changed name due to iOS caching. To refresh and display the updated name, connect and disconnect from the device using the BLE explorer app. After scanning again, the new name should appear.</p>
+</div>
+<div class="hint admonition">
+<p class="admonition-title">Add Unicode Emojis to Your Device Name!</p>
+<p>The device name can contain <strong>Unicode emojis</strong>.
+Using colorful emojis in the device name can make it much easier to quickly identify your device in a scan list.</p>
+<ul>
+<li><dl>
+<dt>Now, change the device name to <code class="docutils literal notranslate"><span class="pre">\xF0\x9F\x98\x8E</span></code></dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Device name</span>
+<span class="cp">#define USER_DEVICE_NAME        "\xF0\x9F\x98\x8E"</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>Build the project and load it to target. You should be able to see the emoji as shown below (remember to clear the cache as described above if you are using an iOS based device):</dt><dd><figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/smartbond-app-smiley.jpg"><img alt="_images/smartbond-app-smiley.jpg" src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/smartbond-app-smiley.jpg" style="width: 60%;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 13 </span><span class="caption-text">Screen shot of the SmartBond app</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</dd>
+</dl>
+</li>
+</ul>
+<p>You can find a bunch more emojis here: <a class="reference external" href="https://apps.timwhitlock.info/emoji/tables/unicode">https://apps.timwhitlock.info/emoji/tables/unicode</a></p>
+</div>
+<section id="bluetooth-device-name-at-runtime">
+<h2><span class="section-number">6.1. </span>Bluetooth® Device Name at runtime<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#bluetooth-device-name-at-runtime" title="Link to this heading"></a></h2>
+<p>Sometimes, you might want to create the device name during <strong>runtime</strong>. For example, if you wish to include a serial number in the advertised device name, you can dynamically construct it. In this example, we’ll keep things simple and hard-code a number, as reading from OTP is beyond the scope of this tutorial</p>
+<dl class="simple">
+<dt>A little bit of information on advertising data is appropriate at this time.Advertising data consists of a number of data segments each consisting of:</dt><dd><ul class="simple">
+<li><p>A one octet length field that contains the numbers of octets in the segment including the type, but excluding the length itself.</p></li>
+<li><p>A one octet type field that specifies the type of data contained in the segment. The type options are listed in the <strong>gap.h</strong> file of the SDK as the enumeration <code class="docutils literal notranslate"><span class="pre">gap_ad_type</span></code>. The BD name type we used in the previous example was <code class="docutils literal notranslate"><span class="pre">GAP_AD_TYPE_COMPLETE_NAME</span></code> or <code class="docutils literal notranslate"><span class="pre">0x09</span></code></p></li>
+<li><p>Any number of data bytes depending on the type field</p></li>
+</ul>
+</dd>
+</dl>
+<p>The advertising data can contain multiple individual data segments that must all follow the rules listed above.
+The advertising data is limited to 31 octets and must <a class="footnote-reference brackets" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#f1" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> contain the flags (<code class="docutils literal notranslate"><span class="pre">GAP_AD_TYPE_FLAGS</span></code>) segment which leaves 28 octets for other usage.
+SDK6 automatically populates the flags segment.</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/adv_data_format.png"><img alt="_images/adv_data_format.png" src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/adv_data_format.png" style="width: 800px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 14 </span><span class="caption-text">The format of a single segment in the BLE advertising data</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<hr class="docutils">
+<p>A scan response of 31 octets can be used to provide additional information to a Bluetooth® scanner. The scan response must also observe the rules listed above.
+Scan responses are returned to the scanner upon the reception of a scan request.</p>
+<p>Now, back to changing the BD name at runtime. First, we will have to prevent the default construction of the advertising data by the SDK, and instead construct our own.</p>
+<dl>
+<dt>We do this by re-routing the callback from the default advertise operation to our user space:</dt><dd><ul>
+<li><dl>
+<dt>In <strong>user_callback_config.h</strong>,  modify:</dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">default_app_operations</span><span class="w"> </span><span class="n">user_default_app_operations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">.</span><span class="n">default_operation_adv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">default_advertise_operation</span><span class="p">,</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+<dl>
+<dt>to this:</dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">default_app_operations</span><span class="w"> </span><span class="n">user_default_app_operations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="hll"><span class="w">   </span><span class="p">.</span><span class="n">default_operation_adv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_advertise_operation</span><span class="p">,</span>
+</span><span class="p">};</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd>
+</dl>
+<ul>
+<li><dl>
+<dt>Re-routing to user space, requires that we put a prototype for this function in <strong>user_empty_peripheral_template.h</strong>:</dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_advertise_operation</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+<p>We are now ready to implement our own function. We will retrieve the settings from the configuration file so that we only have to manage our desired changes.</p>
+<ul>
+<li><dl>
+<dt>In <strong>user_empty_peripheral_template.c</strong> implement our function as shown here:</dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_advertise_operation</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// Copy the current default advertising data specified in user_config.h</span>
+<span class="w">   </span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="o">*</span><span class="w"> </span><span class="n">adv_cmd</span><span class="p">;</span><span class="w"> </span><span class="c1">// Retained version</span>
+<span class="w">   </span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="o">*</span><span class="w"> </span><span class="n">cmd</span><span class="p">;</span><span class="w">     </span><span class="c1">// Version we send</span>
+<span class="w">   </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_advertise_start_msg_create</span><span class="p">();</span><span class="w">   </span><span class="c1">// Create an empty advertise start command</span>
+
+<span class="w">   </span><span class="c1">// Get the advertising properties from the app_easy function</span>
+<span class="w">   </span><span class="n">adv_cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_easy_gap_undirected_advertise_get_active</span><span class="p">();</span>
+<span class="w">   </span><span class="c1">// Make a copy of the advertising properties</span>
+<span class="w">   </span><span class="n">memcpy</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span><span class="w"> </span><span class="n">adv_cmd</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="p">));</span>
+
+<span class="w">   </span><span class="c1">// Specify the advertise data (we are just changing the BD name)</span>
+<span class="w">   </span><span class="c1">// Adv. data segment with length of 0x05, type is BD name and name is a Lady Bug emoji</span>
+<span class="w">   </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">adv_data</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mh">0x05</span><span class="p">,</span><span class="w"> </span><span class="n">GAP_AD_TYPE_COMPLETE_NAME</span><span class="p">,</span><span class="w"> </span><span class="mh">0xF0</span><span class="p">,</span><span class="w"> </span><span class="mh">0x9F</span><span class="p">,</span><span class="w"> </span><span class="mh">0x90</span><span class="p">,</span><span class="w"> </span><span class="mh">0x9E</span><span class="p">};</span>
+<span class="w">   </span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">info</span><span class="p">.</span><span class="n">host</span><span class="p">.</span><span class="n">adv_data_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">adv_data</span><span class="p">);</span>
+<span class="w">   </span><span class="n">memcpy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">info</span><span class="p">.</span><span class="n">host</span><span class="p">.</span><span class="n">adv_data</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">adv_data</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">adv_data</span><span class="p">));</span>
+
+<span class="w">   </span><span class="c1">// Send message to GAP task</span>
+<span class="w">   </span><span class="n">ke_msg_send</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span>
+
+<span class="w">   </span><span class="c1">// We are now connectable</span>
+<span class="w">   </span><span class="n">ke_state_set</span><span class="p">(</span><span class="n">TASK_APP</span><span class="p">,</span><span class="w"> </span><span class="n">APP_CONNECTABLE</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>Build the project and load it onto target</p></li>
+<li><p>Use your BLE explorer app to see if the device now advertises its Bluetooth® device name as a lady bug emoji</p></li>
+</ul>
+<p>When connecting with the SmartBond app on an iOS device, the name on the info tab will be cached and still displays the <strong>smiley with shades</strong> emoji.
+This is because Bluetooth® peripherals expose their device name in 2 different contexts:</p>
+<ol class="arabic simple">
+<li><p>The advertised <strong>local BD name</strong>. This can either be the full name or a shortened version of the full name the SmartBond app will show this name in the scan list</p></li>
+<li><p>The <strong>full local BD name</strong> which can be accessed during a Bluetooth® connection. This name field can be up to 248 characters long. The SmartBond app will show this on the info tab when connected</p></li>
+</ol>
+<p>The changes we made above only affected the <strong>advertised device name</strong>. The full name has not been affected. To change the full name, we will need to do a little more work:</p>
+<ul>
+<li><dl>
+<dt>At the bottom of our newly implemented <code class="docutils literal notranslate"><span class="pre">user_advertise_operation</span></code> function in <strong>empty_peripheral_template.c</strong>, add the following code which will copy the relevant data into the full BD name:</dt><dd><div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="c1">// Copy the BD name from the advertising data (ignore the size and the type fields)</span>
+<span class="n">device_info</span><span class="p">.</span><span class="n">dev_name</span><span class="p">.</span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="k">sizeof</span><span class="p">(</span><span class="n">adv_data</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">2</span><span class="p">;</span>
+<span class="n">memcpy</span><span class="p">(</span><span class="n">device_info</span><span class="p">.</span><span class="n">dev_name</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">adv_data</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="n">device_info</span><span class="p">.</span><span class="n">dev_name</span><span class="p">.</span><span class="n">length</span><span class="p">);</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><p>Build the project and load it to target. You should see the lady bug emoji show up correctly in any BLE explorer app at this time.</p></li>
+</ul>
+<div class="error admonition">
+<p class="admonition-title">BLE Explorer issues</p>
+<p>You will notice that the various BLE Explorer apps have different issues when it comes to distinguishing between the advertised BD name and the full BD name. None of the apps make it clear what BD name they are displaying, and it is also unclear whether the displayed name is cached or not.</p>
+</div>
+<p class="rubric">Footnotes:</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html#id1">1</a><span class="fn-bracket">]</span></span>
+<p>The flags segment, <code class="docutils literal notranslate"><span class="pre">GAP_AD_TYPE_FLAGS</span></code>, is only mandatory in the advertising data when a BLE peripheral is connectable. This leaves 31 octets available in non-connectable implementations</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html" class="btn btn-neutral float-left" title="5. The Bluetooth® Device Address" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html" class="btn btn-neutral float-right" title="7. General Purpose Output" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./6. The Bluetooth® Device Name — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<!-- saved from url=(0065)https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4. Initial Project — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="5. The Bluetooth® Device Address" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">
+    <link rel="prev" title="3. SDK Architecture" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>4. Initial Project</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#user-configuration-modules">4.1. User configuration modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#preparing-the-project">4.2. Preparing the Project</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">4. </span>Initial Project</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="initial-project">
+<h1><span class="section-number">4. </span>Initial Project<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#initial-project" title="Link to this heading"></a></h1>
+<div class="hint admonition">
+<p class="admonition-title">Starting Point</p>
+<p>In this tutorial, we’ll kick off our exploration using the SDK6 with a sample project known as <strong>empty_peripheral_template</strong>. This project will serve as our launchpad, providing a solid foundation to delve into the intricacies of SDK6 and its capabilities.</p>
+</div>
+<dl class="simple">
+<dt>Let’s get started by following these steps:</dt><dd><ul class="simple">
+<li><p>Navigate to the directory where you’ve downloaded and extracted SDK6.</p></li>
+<li><p>Locate and open the project file named <strong>empty_peripheral_template.uvprojx</strong>. You can find this project within the directory path: <code class="docutils literal notranslate"><span class="pre">...\projects\target_apps\template\empty_peripheral_template\Keil_5</span></code></p></li>
+<li><p>Upon opening the project file, Keil µVision will launch, providing access to the empty_peripheral_template project for further exploration.”</p></li>
+</ul>
+</dd>
+</dl>
+<div class="warning admonition">
+<p class="admonition-title">SDK6 &amp; User files</p>
+<p>The project window is organized with folders that facilitate easy differentiation between user files and SDK files, as indicated by the naming convention: <strong>user_xxx</strong> for user files and <strong>sdk_xxx</strong> for SDK files.</p>
+</div>
+<section id="user-configuration-modules">
+<span id="id1"></span><h2><span class="section-number">4.1. </span>User configuration modules<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#user-configuration-modules" title="Link to this heading"></a></h2>
+<dl>
+<dt>There are 4 user folders (expanded in the screen shot below). We will be doing all of our work within files from just 3 of these 4 user folders:</dt><dd><ol class="arabic simple">
+<li><p>The custom profile folder, <code class="docutils literal notranslate"><span class="pre">user_custom_profile</span></code> contains two modules for <a class="reference external" href="https://lpccs-docs.renesas.com/tutorial-custom-profile-DA145xx/index.html">creating BLE custum profiles</a>.</p></li>
+<li><p>The hardware setup folder, <code class="docutils literal notranslate"><span class="pre">user_platform</span></code></p></li>
+<li><p>The user application folder, <code class="docutils literal notranslate"><span class="pre">user_app</span></code></p></li>
+<li><p>The configuration folder, <code class="docutils literal notranslate"><span class="pre">user_config</span></code>. If you open this folder you can see 7 header files, here we explain briefly each one:</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">da1458x_config_advanced.h</span></code> includes specific configuration files (<strong>…_config_advanced.h</strong> based on the target device.You can find these files are located in <strong>da14535_config</strong> , <strong>da14531_config</strong> or <strong>da14585-6_config</strong> folders considering the build target.</dt><dd><p>The C header file which are in these folders configures various parameters for the DA1453x/DA1458x devices, including <strong>sleep durations</strong> , <strong>BLE settings</strong>, and <strong>memory configurations</strong>. It allows developers to customize the behavior of their applications by adjusting these parameters.</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">da1458x_config_basic.h</span></code> is exactly similar to the advanced config file in shape. This C header file (<code class="docutils literal notranslate"><span class="pre">.._config_basic.h</span></code>) configures basic settings for the DA1453x/DA1458x device, including <strong>processor mode</strong> (integrated or external), <strong>BLE security</strong>, <strong>WatchDog timer</strong>, <strong>maximum concurrent connections</strong>, <strong>development/debug mode</strong>, and <strong>UART console print</strong>. It provides flexibility in selecting options such as external memory type, DMA support for various interfaces, and fixed power mode. The file is crucial for tailoring fundamental parameters in DA1453x/DA1458x application development.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code> defines callback functions and configurations for a Bluetooth Low Energy (BLE) application on the Renesas DA1453x/DA1458x platform. It includes function declarations for events such as advertising completion and SUOTAR (Software Update Over The Air) status changes. Additionally, it provides callback structures for Battery Service (BASS), Find Me Target (FINDT), Proximity Reporter (PROXR), and SUOTAR, as well as general application callbacks.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_config.h</span></code> for user-specific settings: privacy/addressing, sleep mode, advertising, device name, GAPM, connection parameters, default handlers, and security configurations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_modules_config.h</span></code> defines module inclusion/exclusion for a Renesas DA1453x/DA1458x BLE application. Modules include GAP, Timer, Message, Security, DIS Service, Proximity Reporter, Battery Service, Find Me Locator/Target, SUOTAR, and two custom services.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_periph_setup.h</span></code> configure peripherals (UART,SPI,ADC,I2C,GPIO pin configurations)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">user_profiles_config.h</span></code> is a configuration file for BLE profiles used in a Renesas application. It defines configurations for the Device Information Service (DISS) profile, including features, manufacturer information, model number, system ID, and more.</p></li>
+</ul>
+</li>
+</ol>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/keil_project_window.png"><img alt="_images/keil_project_window.png" src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/keil_project_window.png" style="width: 300px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 9 </span><span class="caption-text">The project structure of <strong>empty_peripheral_template</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</dd>
+</dl>
+</section>
+<section id="preparing-the-project">
+<h2><span class="section-number">4.2. </span>Preparing the Project<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#preparing-the-project" title="Link to this heading"></a></h2>
+<dl>
+<dt>Before we can build the project, we need to select the applicable SmartBond™ device. Use the drop-down menu to select the SmartBond™ device you are using (DA14585, DA14586 or DA1453x) as shown below:</dt><dd><figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/keil_soc_selection.png"><img alt="_images/keil_soc_selection.png" src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/keil_soc_selection.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 10 </span><span class="caption-text">SmartBond™ device selection. This will change according to your desired target</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</dd>
+<dt>Before we start modifying the project, we will build it and load it onto the development kit to see what the project does:</dt><dd><ul class="simple">
+<li><p>Build the <strong>empty_peripheral_template</strong> project  (<strong>Project-&gt;Build Target</strong> or <code class="docutils literal notranslate"><span class="pre">F7</span></code>)</p></li>
+<li><p>Start the debugger (<strong>Debug-&gt;Start/Stop Debug Session</strong> or <code class="docutils literal notranslate"><span class="pre">Ctrl+F5</span></code>)</p></li>
+<li><p>To start the project either run it (<strong>Debug-&gt;Run</strong> or <code class="docutils literal notranslate"><span class="pre">F5</span></code>) or immediately stop the debugger (<strong>Debug-&gt;Start/Stop Debug Session</strong> or <code class="docutils literal notranslate"><span class="pre">Ctrl+F5</span></code>)</p></li>
+<li><p>The <strong>empty_peripheral_template</strong> project should now be running on the target (DA1453x or DA1458x)</p></li>
+<li><p>Using the Bluetooth® Explorer tool (i.e. the SmartBond app or the Chrome tool) you should be able to see the advertisement as <strong>DIALOG-TMPL</strong> when you scan for the devices.</p></li>
+</ul>
+</dd>
+</dl>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/smartbond-app-dialog-tmpl.jpg"><img alt="_images/smartbond-app-dialog-tmpl.jpg" src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/smartbond-app-dialog-tmpl.jpg" style="width: 300px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 11 </span><span class="caption-text">Screen shot (from iOS version) of the SmartBond app. The device name shows <strong>DIALOG-TMPL</strong></span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>If you managed to do the steps above without any issues, it means your hardware and tools are good to go. Now, let’s jump in and Play with the project!</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html" class="btn btn-neutral float-left" title="3. SDK Architecture" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html" class="btn btn-neutral float-right" title="5. The Bluetooth® Device Address" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./4. Initial Project — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

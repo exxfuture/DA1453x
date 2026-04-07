@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DA14531 Temperature Monitor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌡️ DA14531 Temperature Monitor</h1>
+            <p>Web Bluetooth interface for DLG_TEMPR device</p>
+        </header>
+
+        <main>
+            <!-- Connection Section -->
+            <section class="connection-section">
+                <div class="status-indicator">
+                    <div class="status-dot" id="statusDot"></div>
+                    <span id="connectionStatus">Disconnected</span>
+                </div>
+                <button id="connectBtn" class="primary-btn">Scan & Connect</button>
+                <button id="disconnectBtn" class="secondary-btn" disabled>Disconnect</button>
+            </section>
+
+            <!-- Temperature Display Section -->
+            <section class="temperature-section">
+                <div class="temperature-card">
+                    <h2>Current Temperature</h2>
+                    <div class="temperature-display">
+                        <span id="temperatureValue">--.-</span>
+                        <span class="unit">°C</span>
+                    </div>
+                    <div class="temperature-info">
+                        <div class="info-item">
+                            <span class="label">Last Updated:</span>
+                            <span id="lastUpdated">Never</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Temperature Type:</span>
+                            <span id="temperatureType">Body</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Battery Level Section -->
+            <section class="battery-section">
+                <div class="battery-card">
+                    <h2>Battery Level</h2>
+                    <div class="battery-display">
+                        <div class="battery-icon">
+                            <div class="battery-shell">
+                                <div id="batteryFill" class="battery-fill"></div>
+                            </div>
+                            <div class="battery-tip"></div>
+                        </div>
+                        <div class="battery-info">
+                            <span id="batteryValue">--%</span>
+                            <span class="battery-status" id="batteryStatus">Unknown</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Measurement Interval Section -->
+            <section class="interval-section">
+                <div class="interval-card">
+                    <h2>Measurement Interval</h2>
+                    <div class="interval-controls">
+                        <div class="current-interval">
+                            <span class="label">Current Interval:</span>
+                            <span id="currentInterval">-- seconds</span>
+                        </div>
+                        <div class="interval-input">
+                            <label for="intervalSlider">Set New Interval (1-60 seconds):</label>
+                            <div class="slider-container">
+                                <input type="range" id="intervalSlider" min="1" max="60" value="5" step="1">
+                                <span id="sliderValue">5</span> seconds
+                            </div>
+                            <button id="setIntervalBtn" class="primary-btn" disabled>Update Interval</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Log Section -->
+            <section class="log-section">
+                <div class="log-card">
+                    <h2>Connection Log</h2>
+                    <div id="logContainer" class="log-container">
+                        <div class="log-entry info">Ready to connect to DA14531 device...</div>
+                    </div>
+                    <button id="clearLogBtn" class="secondary-btn">Clear Log</button>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Compatible with Chrome, Edge, and other Chromium-based browsers</p>
+            <p>Make sure your DA14531 device is powered on and advertising</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

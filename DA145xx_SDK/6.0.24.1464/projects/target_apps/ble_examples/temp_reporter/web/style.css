@@ -1,0 +1,412 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header */
+header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: white;
+}
+
+header h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Main sections */
+main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+section {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.log-section {
+    grid-column: 1 / -1;
+}
+
+/* Connection Section */
+.connection-section {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #dc3545;
+    transition: background-color 0.3s ease;
+}
+
+.status-dot.connected {
+    background: #28a745;
+}
+
+.status-dot.connecting {
+    background: #ffc107;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* Buttons */
+.primary-btn, .secondary-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.primary-btn {
+    background: #007bff;
+    color: white;
+}
+
+.primary-btn:hover:not(:disabled) {
+    background: #0056b3;
+    transform: translateY(-2px);
+}
+
+.primary-btn:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.secondary-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.secondary-btn:hover:not(:disabled) {
+    background: #545b62;
+}
+
+.secondary-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Temperature Section */
+.temperature-card h2 {
+    margin-bottom: 20px;
+    color: #495057;
+}
+
+.temperature-display {
+    text-align: center;
+    margin: 30px 0;
+}
+
+#temperatureValue {
+    font-size: 4rem;
+    font-weight: 300;
+    color: #007bff;
+}
+
+.unit {
+    font-size: 2rem;
+    color: #6c757d;
+    margin-left: 8px;
+}
+
+.temperature-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.label {
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Interval Section */
+.interval-card h2 {
+    margin-bottom: 20px;
+    color: #495057;
+}
+
+.interval-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.current-interval {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.interval-input label {
+    display: block;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+#intervalSlider {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+#intervalSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+}
+
+#intervalSlider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #007bff;
+    cursor: pointer;
+    border: none;
+}
+
+#sliderValue {
+    font-weight: 600;
+    color: #007bff;
+    min-width: 20px;
+}
+
+/* Log Section */
+.log-card h2 {
+    margin-bottom: 16px;
+    color: #495057;
+}
+
+.log-container {
+    height: 200px;
+    overflow-y: auto;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 12px;
+    background: #f8f9fa;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+.log-entry {
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.log-entry.info {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.log-entry.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.log-entry.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.log-entry.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    color: white;
+    opacity: 0.8;
+}
+
+footer p {
+    margin-bottom: 8px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr;
+    }
+    
+    header h1 {
+        font-size: 2rem;
+    }
+    
+    #temperatureValue {
+        font-size: 3rem;
+    }
+    
+    .container {
+        padding: 16px;
+    }
+}
+
+/* Battery Section */
+.battery-section {
+    grid-column: span 1;
+}
+
+.battery-card {
+    padding: 24px;
+}
+
+.battery-card h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+}
+
+.battery-display {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.battery-icon {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.battery-shell {
+    width: 60px;
+    height: 30px;
+    border: 2px solid #333;
+    border-radius: 4px;
+    position: relative;
+    background: #f0f0f0;
+    overflow: hidden;
+}
+
+.battery-fill {
+    height: 100%;
+    width: 0%;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    border-radius: 2px;
+}
+
+.battery-fill.battery-high {
+    background: linear-gradient(90deg, #4CAF50, #66BB6A);
+}
+
+.battery-fill.battery-medium {
+    background: linear-gradient(90deg, #FF9800, #FFB74D);
+}
+
+.battery-fill.battery-low {
+    background: linear-gradient(90deg, #FF5722, #FF7043);
+}
+
+.battery-fill.battery-critical {
+    background: linear-gradient(90deg, #F44336, #EF5350);
+    animation: battery-blink 1s infinite;
+}
+
+.battery-tip {
+    width: 4px;
+    height: 16px;
+    background: #333;
+    border-radius: 0 2px 2px 0;
+}
+
+.battery-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#batteryValue {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.battery-status {
+    font-size: 0.9rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+@keyframes battery-blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0.3; }
+}

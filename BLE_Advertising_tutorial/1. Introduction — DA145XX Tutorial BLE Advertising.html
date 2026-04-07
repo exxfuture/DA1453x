@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>1. Introduction — DA145XX Tutorial BLE Advertising</title>
+      <link rel="stylesheet" type="text/css" href="./1. Introduction — DA145XX Tutorial BLE Advertising_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./1. Introduction — DA145XX Tutorial BLE Advertising_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/_static/favicon.ico">
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script type="text/javascript" async="" src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/js"></script><script src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/jquery.js"></script>
+        <script src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/documentation_options.js"></script>
+        <script src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/doctools.js"></script>
+        <script src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/sphinx_highlight.js"></script>
+    <script src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html">
+    <link rel="next" title="2. Setting the Bluetooth Device Address and Device Name" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html">
+    <link rel="prev" title="DA1453x / DA1458x Tutorial BLE Advertising" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">
+            
+              <img src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>1. Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#before-you-start">1.1. Before You Start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#bluetooth-low-energy-protocol"><button class="toctree-expand" title="Open/close menu"></button>1.2. Bluetooth Low Energy Protocol</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#ble-link-layer-states">1.2.1. BLE Link-Layer States</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#advertising-state"><button class="toctree-expand" title="Open/close menu"></button>1.3. Advertising State</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#packet-format">1.3.1. Packet Format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#payload-format">1.3.2. Payload Format</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html">2. Setting the Bluetooth Device Address and Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html">3. Changing Advertising Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html">4. Verify Your Advertiser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/next.html">5. What’s Next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/termanddefinition.html">6. Terms and Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/disclaimer.html">7. Revision History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">DA145XX Tutorial BLE Advertising</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">1. </span>Introduction</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="introduction">
+<h1><span class="section-number">1. </span>Introduction<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#introduction" title="Link to this heading"></a></h1>
+<section id="before-you-start">
+<h2><span class="section-number">1.1. </span>Before You Start<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#before-you-start" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt>Before you start you need to:</dt><dd><ul class="simple">
+<li><p>Install the latest SmartSnippets Studio</p></li>
+<li><p>Download the <a class="reference external" href="https://www.renesas.com/us/en/document/swo/sdk60201338-da1453x-da145856">latest SDK version</a> .</p></li>
+</ul>
+</dd>
+</dl>
+<p>These can be downloaded from the <a class="reference external" href="https://community.renesas.com/wireles-connectivity/">Renesas Engineering community portal</a>. Additionally, for this tutorial, either a DA14531/DA1453x <a class="reference external" href="https://www.renesas.com/eu/en/products/wireless-connectivity/bluetooth-low-energy/da14531-00fxdevkt-p-smartbond-tiny-da14531-bluetooth-low-energy-51-system-chip-development-kit-pro">Pro</a> or <a class="reference external" href="https://www.renesas.com/eu/en/products/wireless-connectivity/bluetooth-low-energy/da14531-00fxdevkt-u-smartbond-tiny-da14531-bluetooth-low-energy-51-system-chip-usb-development-kit">USB</a> Devkits is required.</p>
+<p>The goal of this tutorial is not to cover every detail related to advertising but to:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Provide a basic understanding of the Bluetooth Low Energy <cite>advertising concepts</cite></p></li>
+<li><p>Explain how to change the advertising contents and connection parameters using the Renesas SDK</p></li>
+<li><p>Verify the correct functionality of the Bluetooth Low Energy device using the SmartSnippets Toolbox (integrated in the SmartSnippets Studio)</p></li>
+</ul>
+</div></blockquote>
+<ul>
+<li><p>DA1453x is referring to DA14531-00, DA14531-01, DA14530, DA14535 and DA14533</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>The DA14531-00 is the main DA14531 device. The -00 is just a new naming to introduce the variant DA14531-01. The DA14531-01 is a ROM variant of the main DA14531-00.</p></li>
+<li><p>The DA14535 is a DA14531 upgrade.</p></li>
+<li><p>The DA14533 is optimized for automotive and industrial applications at higher temperatures, and it is rated as operating up to 105 ºC and compliant with the AEC-Q100 (Grade 2) standard.</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>DA1458x is referring to DA14585 and DA14586.</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This document is applicable to both the SDK 5.0.x (DA14580/1/2/3) and SDK 6.0.x
+(DA14585/6 and DA1453x) if it is not mentioned specifically for a particular application.</p>
+</div>
+</section>
+<section id="bluetooth-low-energy-protocol">
+<span id="id1"></span><h2><span class="section-number">1.2. </span>Bluetooth Low Energy Protocol<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#bluetooth-low-energy-protocol" title="Link to this heading"></a></h2>
+<figure class="align-center" id="id4">
+<img alt="Bluetooth Low Energy protocol stack" src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/Figure1.svg"><figcaption>
+<p><span class="caption-number">Figure 1 </span><span class="caption-text"><em>Bluetooth Low Energy Protocol Stack</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="ble-link-layer-states">
+<h3><span class="section-number">1.2.1. </span>BLE Link-Layer States<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#ble-link-layer-states" title="Link to this heading"></a></h3>
+<div class="wy-table-responsive"><table class="docutils align-center" id="id2">
+<caption><span class="caption-number">Table 1 </span><span class="caption-text">BLE Link-Layer States</span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#id2" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>State</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Standby</p></td>
+<td><p>Does not transmit or receive packets</p></td>
+</tr>
+<tr class="row-odd"><td><p>Advertising</p></td>
+<td><p>Broadcasts advertisements in advertising channels</p></td>
+</tr>
+<tr class="row-even"><td><p>Scanning</p></td>
+<td><p>Looks for Advertisers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Initiating</p></td>
+<td><p>Initiates connection to Advertiser</p></td>
+</tr>
+<tr class="row-even"><td><p>Connection : Master Role</p></td>
+<td><p>Communicates with device in the Slave role,</p>
+<p>defines timings of transmissions</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>Connection : Slave Role</p></td>
+<td><p>Communicates with a single device in Master Role</p></td>
+</tr>
+</tbody>
+</table></div>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="./1. Introduction — DA145XX Tutorial BLE Advertising_files/Figure3.svg"><img alt="BLE Link-Layer States" height="600" src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/Figure3.svg" width="600"></a>
+<figcaption>
+<p><span class="caption-number">Figure 2 </span><span class="caption-text"><em>BLE Link-Layer States</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="advertising-state">
+<span id="id3"></span><h2><span class="section-number">1.3. </span>Advertising State<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#advertising-state" title="Link to this heading"></a></h2>
+<p>When a Bluetooth Low Energy device wants to communicate its presence to other devices in the area, it broadcasts small packets of data which are called <em>advertising packets</em> or <em>advertisements</em>.</p>
+<dl class="simple">
+<dt>An advertising packet can be used to:</dt><dd><ul class="simple">
+<li><p>Indicate to other devices, either publicly or targeted, that the device is ready to accept a request for connection.</p></li>
+<li><p>Broadcast information to devices nearby.</p></li>
+</ul>
+</dd>
+</dl>
+<p>An advertising packet is small and has a well-defined format. As a result, only a restricted amount of user data can be carried. To work around this restriction,
+the Advertising State also supports, upon request, the transmission of a secondary <em>Scan Response packet</em> which contains additional data. These data can be requested
+by a potential client using a <em>Scan Request</em> without establishing a permanent connection to the device.</p>
+<dl class="simple">
+<dt>An advertising packet is made up of a number of fields which typically includes:</dt><dd><ul class="simple">
+<li><p>The name of the device</p></li>
+<li><p>Some or all of the services supported by the device</p></li>
+</ul>
+</dd>
+</dl>
+<p>Advertising packets may also contain proprietary manufacturer-specific data and flags declaring the capabilities of the device. This is explained in detail in the <a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-advertising-data"><span class="std std-ref">Changing the Advertising Data</span></a> section.</p>
+<section id="packet-format">
+<span id="advertising-with-respect-to-bluetooth-low-energy-part-1"></span><h3><span class="section-number">1.3.1. </span>Packet Format<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#packet-format" title="Link to this heading"></a></h3>
+<p>Bluetooth Low Energy implements only one link-layer packet format, which is illustrated in the following figure:</p>
+<figure class="align-center" id="bluetooth-low-energy-data-payload">
+<span id="advertising-with-respect-to-bluetooth-low-energy-part-2"></span><a class="reference internal image-reference" href="./1. Introduction — DA145XX Tutorial BLE Advertising_files/Figure2.svg"><img alt="&#39;Bluetooth Low Energy data payload&#39;" height="400px" src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/Figure2.svg"></a>
+<figcaption>
+<p><span class="caption-number">Figure 3 </span><span class="caption-text"><em>BLE Packet Format</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#bluetooth-low-energy-data-payload" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p><strong>A packet can be 80 to 376 bits in length, and has the following fields:</strong></p>
+<dl class="simple">
+<dt>Preamble:</dt><dd><p>This field is used for synchronization purposes and it’s always an alternating sequence of 0s and 1s, i.e. <code class="docutils literal notranslate"><span class="pre">0xAA</span></code> or <code class="docutils literal notranslate"><span class="pre">0x55</span></code>.</p>
+</dd>
+<dt>Access Address:</dt><dd><p>This field is always <code class="docutils literal notranslate"><span class="pre">0x8E89BED6</span></code> for advertising packets. It serves as a correlation mechanism between transmitting and receiving devices.</p>
+</dd>
+<dt>PDU:</dt><dd><p>There are two <em>Protocol Data Unit</em> (PDU) formats, one for advertising packets and one for data packets. The
+Advertising PDU consists of the 16-bit PDU header and the payload. If the advertising mode allows it, the active Scanner (via a Scan Request) may request up to 31 bytes of additional
+information from the Advertiser. This means that a sizeable portion of data can be received from the advertising device even without establishing a connection.</p>
+</dd>
+</dl>
+<p>The first field of the PDU header is the <em>PDU Type</em>. <a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#advertising-pdu-types"><span class="std std-numref">Table 2</span></a> shows the seven advertising PDU Types.</p>
+<div class="wy-table-responsive"><table class="docutils align-default" id="advertising-pdu-types">
+<caption><span class="caption-number">Table 2 </span><span class="caption-text"><em>Advertising Packets</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#advertising-pdu-types" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Packet</p></th>
+<th class="head"><p>Usage</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ADV_IND</p></td>
+<td><p>Connectable undirected advertising event</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADV_DIRECT_IND</p></td>
+<td><p>Connectable directed advertising event</p></td>
+</tr>
+<tr class="row-even"><td><p>ADV_NONCONN_IND</p></td>
+<td><p>Non-connectable undirected advertising event</p></td>
+</tr>
+<tr class="row-odd"><td><p>ADV_SCAN_IND</p></td>
+<td><p>Scannable undirected advertising event</p></td>
+</tr>
+<tr class="row-even"><td><p>SCAN_RSP</p></td>
+<td><p>Response to Scan Request from Scanner</p></td>
+</tr>
+<tr class="row-odd"><td><p>CONNECT_REQ</p></td>
+<td><p>Connect Request by Initiator</p></td>
+</tr>
+<tr class="row-even"><td><p>SCAN_REQ</p></td>
+<td><p>Scan Request for further information from Advertiser</p></td>
+</tr>
+</tbody>
+</table></div>
+<p>The first distinction that we can make, is that some devices may wish to make their presence and connection availability known only to a particular device.
+For this purpose they could use the <strong>ADV_DIRECT_IND</strong> type and include in their payload both their address and the Initiator’s. When an Advertiser sends
+an <strong>ADV_DIRECT_IND</strong> type packet, it can only accept a <em>Connect Request</em> by the designated device. Any Scan Requests will be ignored.</p>
+<p>For some application purposes the Advertiser doesn’t want to allow any connections to it by other devices. This is especially the case for BLE Beacons, which
+advertise data like temperature or other sensor measurements, and setting a connection link with other devices wouldn’t be efficient. The <strong>ADV_NONCONN_IND</strong>
+type serves this purpose.</p>
+<p>In the previous case, the Advertiser doesn’t allow any connections or requests to it, but in some instances there may be additional data
+that won’t fit in the remaining available payload or this would consume more power on average. Setting the <strong>ADV_SCAN_IND</strong> would allow any interested device
+to ask for more information by means of a Scan Request.</p>
+<p>If a scanning device wants to request more information, for the cases of ADV_IND or ADV_SCAN_IND packets, then it has to set the PDU type of the request packet to
+<strong>SCAN_REQ</strong>. The Advertiser will then answer with a <strong>SCAN_RSP</strong> packet type and the additional data. If the Scanner wants to connect to the Advertiser, it will
+do it with a <strong>CONNECT_REQ</strong> packet type.</p>
+<p>For more details, you can refer to table 2.3 in the Bluetooth 5.0 spec (Vol 6, Part B, section 2.3).</p>
+</section>
+<section id="payload-format">
+<h3><span class="section-number">1.3.2. </span>Payload Format<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#payload-format" title="Link to this heading"></a></h3>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#bluetooth-low-energy-data-payload"><span class="std std-numref">Figure 3</span></a> shows the payload of an <strong>ADV_IND</strong> packet. The total size of the advertising payload is between 0 and 37 bytes long. This payload has an advertisement address of 6 bytes and a variable number of advertisement data structures (0 to 31 bytes).</p>
+<div class="wy-table-responsive"><table class="docutils align-default" id="payload">
+<caption><span class="caption-number">Table 3 </span><span class="caption-text"><em>Payload</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#payload" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head" colspan="2"><p>Payload</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Advertisement Address (AdvA)  (6 Bytes)</p></td>
+<td><p>Advertisement Data (AdvData)  (0 to 31 Bytes)</p></td>
+</tr>
+</tbody>
+</table></div>
+<p><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#payload"><span class="std std-numref">Table 3</span></a> shows the fields of the PDU. You can see the possible advertising data type (AD Type) values listed in the <a class="reference external" href="https://www.bluetooth.com/specifications/assigned-numbers/generic-access-profile">Bluetooth SIG website</a> (not in the Core Specification document).</p>
+<figure class="align-center" id="advertising-data-format">
+<a class="reference internal image-reference" href="./1. Introduction — DA145XX Tutorial BLE Advertising_files/data_format.svg"><img alt="&#39;Advertising Data Format&#39;" height="200px" src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/data_format.svg"></a>
+<figcaption>
+<p><span class="caption-number">Figure 4 </span><span class="caption-text"><em>Advertising Data Format</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#advertising-data-format" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The following example shows the decoding of the Advertising Data sent by the DA14585/DA14586 or DA1453x device using a barebone example.</p>
+<figure class="align-center" id="advertising-data-format-example">
+<a class="reference internal image-reference" href="./1. Introduction — DA145XX Tutorial BLE Advertising_files/data_format_2.svg"><img alt="&#39;Advertising Data Format Example&#39;" height="600px" src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/data_format_2.svg" width="10000"></a>
+<figcaption>
+<p><span class="caption-number">Figure 5 </span><span class="caption-text"><em>Advertising Data Format example</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html#advertising-data-format-example" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>In this example, we can identify four AD elements (AD0, AD1, AD2, and AD3). Their respective data types are:</p>
+<ul class="simple">
+<li><p><strong>0x01</strong> = <em>flags</em>: Multiple one-bit boolean flags. The AD0 flags value is <code class="docutils literal notranslate"><span class="pre">0x06</span></code> (00000110); that means that two flags are set on Bit 1 and Bit 2. According to table 18.1 (Flags) on the Core specification these flags are:</p>
+<ul>
+<li><p>Bit 1: LE General Discoverable Mode</p></li>
+<li><p>Bit 2: BR/EDR Not Supported</p></li>
+</ul>
+</li>
+<li><p><strong>0x03</strong> = <em>Complete List of 16-bit Service Class UUIDs</em>: A list of one or more UUIDs indicating which services are supported. In this example, the AD1 value is 0x180A which corresponds to <em>Device Information Service</em>.
+The <a class="reference external" href="https://www.bluetooth.com/specifications/gatt/services">Bluetooth website</a> provides a complete list of the adopted service UUIDs values.</p></li>
+<li><p><strong>0x09</strong> = <em>Complete Local Name</em>: Contains the human-readable device name that is discovered by the Central. The AD2 value is DLG-TUTORIAL.</p></li>
+<li><p><strong>0xff</strong> = <em>Manufacturer specific</em>: A specific AD Type reserved for proprietary data.</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html" class="btn btn-neutral float-left" title="DA1453x / DA1458x Tutorial BLE Advertising" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html" class="btn btn-neutral float-right" title="2. Setting the Bluetooth Device Address and Device Name" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./1. Introduction — DA145XX Tutorial BLE Advertising_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

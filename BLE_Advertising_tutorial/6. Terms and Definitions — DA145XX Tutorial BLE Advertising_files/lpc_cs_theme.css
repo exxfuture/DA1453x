@@ -1,0 +1,44 @@
+@import 'theme.css';
+.wy-side-nav-search,
+.wy-nav-top {
+    background: #2A289D;
+}
+
+.wy-nav-side {
+    color: #2A289D;
+    background: #E8E8E8;
+}
+
+.wy-menu-vertical a {
+    color: #333333;
+}
+
+.wy-menu-vertical a:hover,
+.wy-menu a:hover {
+    background-color: #2A289D;
+    color: #E8E8E8;
+}
+
+h1 {
+    font-family: "Oswald", "Open Sans", Helvetica, Arial, "Lucida Grande", "Nimbus Sans L", "sans-serif";
+}
+
+h2,
+h3,
+h4,
+p {
+    font-family: "Open Sans", Helvetica, Arial, "Lucida Grande", "Nimbus Sans L", "sans-serif";
+}
+
+.strike {
+    text-decoration: line-through;
+  }
+    
+.docutils caption {
+    caption-side: bottom;
+    font-family: "Open Sans", Helvetica, Arial, "Lucida Grande", "Nimbus Sans L", "sans-serif";
+  }
+
+p:not(figure > figcaption > p) {
+    text-align:justify;
+}

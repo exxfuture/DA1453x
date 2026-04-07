@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<!-- saved from url=(0096)https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising</title>
+      <link rel="stylesheet" type="text/css" href="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/_static/favicon.ico">
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script type="text/javascript" async="" src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/js"></script><script src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/jquery.js"></script>
+        <script src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/documentation_options.js"></script>
+        <script src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/doctools.js"></script>
+        <script src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/sphinx_highlight.js"></script>
+    <script src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html">
+    <link rel="next" title="4. Verify Your Advertiser" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html">
+    <link rel="prev" title="2. Setting the Bluetooth Device Address and Device Name" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">
+            
+              <img src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html">2. Setting the Bluetooth Device Address and Device Name</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>3. Changing Advertising Parameters</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-data">3.1. Changing the Advertising Data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-interval">3.2. Changing the Advertising Interval</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-channel-map">3.3. Changing the Advertising Channel Map</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-mode">3.4. Changing the Advertising Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-data-on-the-fly">3.5. Changing the Advertising Data On the Fly</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html">4. Verify Your Advertiser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/next.html">5. What’s Next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/termanddefinition.html">6. Terms and Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/disclaimer.html">7. Revision History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">DA145XX Tutorial BLE Advertising</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">3. </span>Changing Advertising Parameters</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="changing-advertising-parameters">
+<span id="advertising-content"></span><h1><span class="section-number">3. </span>Changing Advertising Parameters<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-advertising-parameters" title="Link to this heading"></a></h1>
+<p>This section describes how to change the advertising parameters on a DA14585/86 or DA1453x device. It covers all the
+key elements related to advertising, specifically dealing with advertising data and advertising
+intervals, as well as the advertising channel Map and advertising mode.</p>
+<section id="changing-the-advertising-data">
+<span id="changing-advertising-data"></span><h2><span class="section-number">3.1. </span>Changing the Advertising Data<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-data" title="Link to this heading"></a></h2>
+<p>To see or change the advertising data from default mode you need to open <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code>:</p>
+<ol class="arabic">
+<li><p>In <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code>, change the contents of the existing <code class="docutils literal notranslate"><span class="pre">USER_ADVERTISE_DATA</span></code> macro to the desired Advertising Data.</p>
+<p>In the following code block we shows how to change the Advertising Data.
+Since the advertising string should have a specific format, you could use the <code class="docutils literal notranslate"><span class="pre">ADV_TYPE_MANUFACTURER_SPECIFIC_DATA</span></code>
+macro to add any custom data you wish into the advertising packets, as further explained in step 2.</p>
+</li>
+</ol>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- ADV_TYPE_COMPLETE_LIST_16BIT_SERVICE_IDS</span>
+<span class="gi">+ ADV_TYPE_MANUFACTURER_SPECIFIC_DATA</span>
+</pre></div>
+</div>
+<p>The following sample code demonstrates setting some custom Advertising Data. It sets the full device name to <code class="docutils literal notranslate"><span class="pre">THIS-IS-RENESAS</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w">  </span><span class="c1">/// Advertising data</span>
+<span class="cp">#define USER_ADVERTISE_DATA      "\x11"\</span>
+<span class="cp">                                  ADV_TYPE_MANUFACTURER_SPECIFIC_DATA\</span>
+<span class="cp">                                  ADV_DIALOG_MANUFACTURER_CODE\</span>
+<span class="cp">                                  "THIS-IS-RENESAS"</span>
+</pre></div>
+</div>
+<p>2. Commonly, the Advertising Data includes some manufacturer specific data. These data are fully customizable in the header file <code class="docutils literal notranslate"><span class="pre">user_barebone.h</span></code>,
+as illustrated below:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Manufacturer specific data constants */</span>
+<span class="cp">#define APP_AD_MSD_COMPANY_ID               (0xFEDE)</span>
+<span class="cp">#define APP_AD_MSD_COMPANY_ID_LEN           (2)</span>
+<span class="cp">#define APP_AD_MSD_DATA_LEN                 (sizeof(uint16_t))</span>
+</pre></div>
+</div>
+<p>We can change the company data to <code class="docutils literal notranslate"><span class="pre">FEDE</span></code> as shown in <a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#manufacturer-specific-data-constants"><span class="std std-numref">Figure 8</span></a> (screenshot from a BLE Scanner).</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Manufacturer specific data constants */</span>
+<span class="cp">#define APP_AD_MSD_COMPANY_ID               (0xFEDE)</span>
+</pre></div>
+</div>
+<figure class="align-center" id="manufacturer-specific-data-constants">
+<a class="reference internal image-reference" href="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/Picture6.jpg"><img alt="_images/Picture6.jpg" src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/Picture6.jpg" style="height: 700px;"></a>
+<figcaption>
+<p><span class="caption-number">Figure 8 </span><span class="caption-text"><em>Manufacturer Specific Data Constants</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#manufacturer-specific-data-constants" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>When the device is ready to start advertising, it calls <code class="docutils literal notranslate"><span class="pre">mnf_data_init()</span></code> in <code class="docutils literal notranslate"><span class="pre">user_app_init()</span></code>. This function sets some standard parameters so that the device will publicly broadcast its Advertising
+Data. The data to be advertised are copied from the struct <code class="docutils literal notranslate"><span class="pre">mnf_specific_data_ad_structure</span></code>.
+Finally, the device is asked to start advertising based on this configuration.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_app_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">app_param_update_request_timer_used</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EASY_TIMER_INVALID_TIMER</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Initialize Manufacturer Specific Data</span>
+<span class="w">    </span><span class="n">mnf_data_init</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Initialize Advertising and Scan Response Data</span>
+<span class="w">    </span><span class="n">memcpy</span><span class="p">(</span><span class="n">stored_adv_data</span><span class="p">,</span><span class="w"> </span><span class="n">USER_ADVERTISE_DATA</span><span class="p">,</span><span class="w"> </span><span class="n">USER_ADVERTISE_DATA_LEN</span><span class="p">);</span>
+<span class="w">    </span><span class="n">stored_adv_data_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">USER_ADVERTISE_DATA_LEN</span><span class="p">;</span>
+<span class="w">    </span><span class="n">memcpy</span><span class="p">(</span><span class="n">stored_scan_rsp_data</span><span class="p">,</span><span class="w"> </span><span class="n">USER_ADVERTISE_SCAN_RESPONSE_DATA</span><span class="p">,</span><span class="w"> </span><span class="n">USER_ADVERTISE_SCAN_RESPONSE_DATA_LEN</span><span class="p">);</span>
+<span class="w">    </span><span class="n">stored_scan_rsp_data_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">USER_ADVERTISE_SCAN_RESPONSE_DATA_LEN</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">default_app_on_init</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> * @brief Initialize Manufacturer Specific Data</span>
+<span class="cm"> * @return void</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mnf_data_init</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">ad_structure_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">mnf_specific_data_ad_structure</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">uint8_t</span><span class="p">);</span>
+<span class="w">                                                </span><span class="c1">// minus the size of the ad_structure_size field</span>
+<span class="w">    </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">ad_structure_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GAP_AD_TYPE_MANU_SPECIFIC_DATA</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">company_id</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">APP_AD_MSD_COMPANY_ID</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">;</span><span class="w"> </span><span class="c1">// LSB</span>
+<span class="w">    </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">company_id</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">APP_AD_MSD_COMPANY_ID</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">)</span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">;</span><span class="w"> </span><span class="c1">// MSB</span>
+<span class="w">    </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When the device is ready for advertising, we may want it to call a custom function to handle the Advertising Data. The barebone example periodically updates the Advertising Data
+and it demonstrates how the advertising contents can be handled using a user-defined function. In this case, we have to modify the appropriate callback function in <code class="docutils literal notranslate"><span class="pre">user_callback_config.h</span></code>,
+as in the code example below which uses the function <code class="docutils literal notranslate"><span class="pre">user_app_adv_start</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">user_app_adv_start()</span></code> is a user defined function in the user application layer and does the following:</p>
+<ul class="simple">
+<li><p>Starts an application timer with timeout <code class="docutils literal notranslate"><span class="pre">APP_ADV_DATA_UPDATE_TO</span></code>.</p></li>
+<li><p>Updates the Manufacturer Data included in the Advertising Data, see <a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-advertising-data"><span class="std std-ref">Changing the Advertising Data</span></a>.</p></li>
+<li><p>Starts the Advertising.</p></li>
+</ul>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Default Handler Operations</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">default_app_operations</span><span class="w"> </span><span class="n">user_default_app_operations</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">default_operation_adv</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_app_adv_start</span><span class="p">,</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>The DA1458x and DA1453x devices may receive Scan Requests from the Central device in order to transmit additional user data by means of a Scan Response.
+The Scan Response usually has more data than the advertising packets and can vary in length from 8 to 39 bytes, because the Advertising Data
+is typically chosen to be very short to minimize power consumption. For more information, we recommend reading about Scan Response packets
+in the <a class="reference external" href="https://www.bluetooth.com/specifications">SIG core specification</a>.</p>
+</div>
+</section>
+<section id="changing-the-advertising-interval">
+<span id="changing-advertising-interval"></span><h2><span class="section-number">3.2. </span>Changing the Advertising Interval<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-interval" title="Link to this heading"></a></h2>
+<p>The Advertising Interval is the period between two consecutive advertisements of a Bluetooth Low Energy peripheral.</p>
+<p>This interval can be customized in the file <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code>. The default value is set to <code class="docutils literal notranslate"><span class="pre">687.5ms</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">advertise_configuration</span><span class="w"> </span><span class="n">user_adv_conf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="p">.</span><span class="n">addr_src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">APP_CFG_ADDR_SRC</span><span class="p">(</span><span class="n">USER_CFG_ADDRESS_MODE</span><span class="p">),</span>
+
+<span class="w">    </span><span class="c1">/// Minimum interval for advertising</span>
+<span class="w">    </span><span class="p">.</span><span class="n">intv_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MS_TO_BLESLOTS</span><span class="p">(</span><span class="mf">687.5</span><span class="p">),</span><span class="w">                    </span><span class="c1">// 687.5 ms</span>
+
+<span class="w">    </span><span class="c1">/// Maximum interval for advertising</span>
+<span class="w">    </span><span class="p">.</span><span class="n">intv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MS_TO_BLESLOTS</span><span class="p">(</span><span class="mf">687.5</span><span class="p">),</span><span class="w">                    </span><span class="c1">// 687.5 ms</span>
+<span class="w">   </span><span class="p">....</span>
+</pre></div>
+</div>
+<p>The following example changes the update timer to 1500ms.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">/// Minimum interval for advertising</span>
+<span class="p">.</span><span class="n">intv_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MS_TO_BLESLOTS</span><span class="p">(</span><span class="mi">1500</span><span class="p">),</span><span class="w">                    </span><span class="c1">// 1500 ms</span>
+
+<span class="c1">/// Maximum interval for advertising</span>
+<span class="p">.</span><span class="n">intv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MS_TO_BLESLOTS</span><span class="p">(</span><span class="mi">1500</span><span class="p">),</span><span class="w">                    </span><span class="c1">// 1500 ms</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>From the Bluetooth Specification (Vol 6, Part B, section 4.4.2.2.1 Advertising Interval) The <code class="docutils literal notranslate"><span class="pre">advInterval</span></code> shall be an integer <strong>multiple of 0.625ms</strong> in the range of <strong>20ms to 10.24s</strong>.</p>
+</div>
+</section>
+<section id="changing-the-advertising-channel-map">
+<span id="changing-advertising-channel-map"></span><h2><span class="section-number">3.3. </span>Changing the Advertising Channel Map<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-channel-map" title="Link to this heading"></a></h2>
+<p>The band defined in the <a class="reference external" href="https://www.bluetooth.com/specifications/bluetooth-core-specification">Bluetooth Core Specification</a> consists of 37 data communication channels and three advertising
+channels for Device Discovery. The latter are allocated in non-consecutive parts of the spectrum to prevent interference from
+concurrent activities in the <a class="reference external" href="https://en.wikipedia.org/wiki/ISM_band">ISM Band</a>. Specifically, a Bluetooth Low Energy device can advertise on channels 37,
+38, and 39 which correspond to frequencies of 2.402 MHz, 2.2426 MHz, and 2.480 MHz respectively. SmartBond™
+devices advertise successively on all enabled channels.</p>
+<p>By default, all channels are enabled with the assigement <code class="docutils literal notranslate"><span class="pre">.channel_map</span> <span class="pre">=</span> <span class="pre">ADV_ALL_CHNLS_EN</span></code>. To force the
+Bluetooth Low Energy device to use only one channel, for example channel 37, use the assignment <code class="docutils literal notranslate"><span class="pre">.channel_map</span> <span class="pre">=</span> <span class="pre">ADV_CHNL_37_EN</span></code>.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">advertise_configuration</span><span class="w"> </span><span class="n">user_adv_conf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">.....</span>
+
+<span class="w">    </span><span class="cm">/**</span>
+<span class="cm">     *  Advertising channels map:</span>
+<span class="cm">     * - ADV_CHNL_37_EN:   Advertising channel map for channel 37.</span>
+<span class="cm">     * - ADV_CHNL_38_EN:   Advertising channel map for channel 38.</span>
+<span class="cm">     * - ADV_CHNL_39_EN:   Advertising channel map for channel 39.</span>
+<span class="cm">     * - ADV_ALL_CHNLS_EN: Advertising channel map for channel 37, 38, and 39.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="p">.</span><span class="n">channel_map</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ADV_CHNL_37_EN</span><span class="p">,</span>
+</pre></div>
+</div>
+<div class="wy-table-responsive"><table class="docutils align-default" id="advertising-channels">
+<caption><span class="caption-number">Table 4 </span><span class="caption-text"><em>Advertising Channels</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#advertising-channels" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Enumeration Name</p></th>
+<th class="head"><p>Value</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ADV_CHNL_37_EN</span></code></p></td>
+<td><p>0x01</p></td>
+<td><p>Select channel 37 for advertising</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ADV_CHNL_38_EN</span></code></p></td>
+<td><p>0x02</p></td>
+<td><p>Select channel 38 for advertising</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ADV_CHNL_39_EN</span></code></p></td>
+<td><p>0x04</p></td>
+<td><p>Select channel 39 for advertising</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ADV_ALL_CHNLS_EN</span></code></p></td>
+<td><p>0x07</p></td>
+<td><p>Select all channels (37, 38, and 39) for advertising</p></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<section id="changing-the-advertising-mode">
+<span id="changing-advertising-mode"></span><h2><span class="section-number">3.4. </span>Changing the Advertising Mode<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-mode" title="Link to this heading"></a></h2>
+<p>The Advertising Mode is customizable by calling one of these API functions in <code class="docutils literal notranslate"><span class="pre">sdk/app_modules/src/app_common/app.c</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">app_easy_gap_undirected_advertise_start()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">app_easy_gap_directed_advertise_start(uint8_t</span> <span class="pre">ldc_enable)</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">app_easy_gap_non_connectable_advertise_start(void)</span></code></p></li>
+</ul>
+<p>To start advertising, use the <code class="docutils literal notranslate"><span class="pre">GAPM_START_ADVERTISE_CMD</span></code> definition and
+send it to the GAP manager layer (GAPM). A message is allocated using the <code class="docutils literal notranslate"><span class="pre">KE_MSG_ALLOC</span></code> macro.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> * @brief Create a start advertise message.</span>
+<span class="cm"> * @return The pointer to the created message.</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> */</span>
+<span class="n">__INLINE</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="o">*</span><span class="w"> </span><span class="n">app_advertise_start_msg_create</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="o">*</span><span class="w"> </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">KE_MSG_ALLOC</span><span class="p">(</span><span class="n">GAPM_START_ADVERTISE_CMD</span><span class="p">,</span>
+<span class="w">                                                        </span><span class="n">TASK_GAPM</span><span class="p">,</span>
+<span class="w">                                                        </span><span class="n">TASK_APP</span><span class="p">,</span>
+<span class="w">                                                        </span><span class="n">gapm_start_advertise_cmd</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">cmd</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To start an <strong>undirected</strong> <code class="docutils literal notranslate"><span class="pre">GAPM_ADV_UNDIRECT</span></code> advertising operation, fill the message with the necessary data: <code class="docutils literal notranslate"><span class="pre">cmd</span> <span class="pre">=</span> <span class="pre">app_easy_gap_undirected_advertise_start_create_msg();</span></code></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">app_easy_gap_undirected_advertise_start</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="o">*</span><span class="w"> </span><span class="n">cmd</span><span class="p">;</span>
+<span class="w">    </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_easy_gap_undirected_advertise_start_create_msg</span><span class="p">();</span>
+
+<span class="w">    </span><span class="c1">// Send the message</span>
+<span class="w">    </span><span class="n">app_advertise_start_msg_send</span><span class="p">(</span><span class="n">cmd</span><span class="p">);</span>
+<span class="w">    </span><span class="n">adv_cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="w"> </span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// We are now connectable</span>
+<span class="w">    </span><span class="n">ke_state_set</span><span class="p">(</span><span class="n">TASK_APP</span><span class="p">,</span><span class="w"> </span><span class="n">APP_CONNECTABLE</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> * @brief Create advertising message for connectable undirected event (ADV_IND).</span>
+<span class="cm"> * @return gapm_start_advertise_cmd Pointer to the advertising message</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="o">*</span><span class="w"> </span><span class="n">app_easy_gap_undirected_advertise_start_create_msg</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="p">.....</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">gapm_start_advertise_cmd</span><span class="w"> </span><span class="o">*</span><span class="n">cmd</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_advertise_start_msg_create</span><span class="p">();</span>
+<span class="w">        </span><span class="n">adv_cmd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cmd</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">op</span><span class="p">.</span><span class="n">code</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GAPM_ADV_UNDIRECT</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">op</span><span class="p">.</span><span class="n">addr_src</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_adv_conf</span><span class="p">.</span><span class="n">addr_src</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">intv_min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_adv_conf</span><span class="p">.</span><span class="n">intv_min</span><span class="p">;</span>
+<span class="w">        </span><span class="n">cmd</span><span class="o">-&gt;</span><span class="n">intv_max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_adv_conf</span><span class="p">.</span><span class="n">intv_max</span><span class="p">;</span>
+<span class="w">        </span><span class="p">.....</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Then send it to the GAPM task, from the <code class="docutils literal notranslate"><span class="pre">user_barebone.c</span></code>. The application layer is informed by calling the <code class="docutils literal notranslate"><span class="pre">app_easy_gap_undirected_advertise_start()</span></code> in <code class="docutils literal notranslate"><span class="pre">user_app_adv_start</span></code>. The other advertising modes are described in <a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#advertising-modes"><span class="std std-numref">Table 5</span></a>.</p>
+<div class="wy-table-responsive"><table class="docutils align-default" id="advertising-modes">
+<caption><span class="caption-number">Table 5 </span><span class="caption-text"><em>Advertising Modes</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#advertising-modes" title="Link to this table"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>Enumeration Name</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GAPM_ADV_NON_CONN</span></code></p></td>
+<td><p>The Bluetooth Low Energy device advertises without permitting a connection to another central device.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GAPM_ADV_UNDIRECT</span></code></p></td>
+<td><p>The Bluetooth Low Energy device advertises towards all devices regardless of their BD address</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GAPM_ADV_DIRECT</span></code></p></td>
+<td><p>The Bluetooth Low Energy device advertises towards a device with a specific BD address.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">GAPM_ADV_DIRECT_LDC</span></code></p></td>
+<td><p>The Bluetooth Low Energy device advertises towards a device with a specific BD address using Low Duty Cycle.</p></td>
+</tr>
+</tbody>
+</table></div>
+</section>
+<section id="changing-the-advertising-data-on-the-fly">
+<h2><span class="section-number">3.5. </span>Changing the Advertising Data On the Fly<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html#changing-the-advertising-data-on-the-fly" title="Link to this heading"></a></h2>
+<p>The barebone example updates the Advertising Data, and more specifically the Manufacturer Specific Data, while the device is operating. The function that updates
+the Manufacturer Specific Data can be seen below:</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> * @brief Update Manufacturer Specific Data</span>
+<span class="cm"> * @return void</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">mnf_data_update</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+
+<span class="w">   </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p">(</span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;&lt;</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+<span class="w">   </span><span class="n">data</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">;</span>
+<span class="w">   </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="w"> </span><span class="o">&gt;&gt;</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0xFF</span><span class="p">;</span>
+
+<span class="w">   </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">data</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mh">0xFFFF</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">      </span><span class="n">mnf_data</span><span class="p">.</span><span class="n">proprietary_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>This function is called each time a periodic timer fires. This function reads and increments the value of counter, wrapping when the counter reaches the value 0xFFFF.
+The update takes place in the <code class="docutils literal notranslate"><span class="pre">adv_data_update_timer_cb()</span></code> callback function.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm">****************************************************************************************</span>
+<span class="cm">* @brief Advertisement data update timer callback function.</span>
+<span class="cm">* @return void</span>
+<span class="cm">****************************************************************************************</span>
+<span class="cm">*/</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">adv_data_update_timer_cb</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="c1">// If mnd_data_index has MSB set, manufacturer data is stored in scan response</span>
+<span class="w">   </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">mnf_data_storage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mnf_data_index</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x80</span><span class="p">)</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">stored_scan_rsp_data</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">stored_adv_data</span><span class="p">;</span>
+
+<span class="w">   </span><span class="c1">// Update manufacturer data</span>
+<span class="w">   </span><span class="n">mnf_data_update</span><span class="p">();</span>
+
+<span class="w">   </span><span class="c1">// Update the selected fields of the advertising data (manufacturer data)</span>
+<span class="w">   </span><span class="n">memcpy</span><span class="p">(</span><span class="n">mnf_data_storage</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">mnf_data_index</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="mh">0x7F</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">mnf_data</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">mnf_specific_data_ad_structure</span><span class="p">));</span>
+
+<span class="w">   </span><span class="c1">// Update advertising data on the fly</span>
+<span class="w">   </span><span class="n">app_easy_gap_update_adv_data</span><span class="p">(</span><span class="n">stored_adv_data</span><span class="p">,</span><span class="w"> </span><span class="n">stored_adv_data_len</span><span class="p">,</span><span class="w"> </span><span class="n">stored_scan_rsp_data</span><span class="p">,</span><span class="w"> </span><span class="n">stored_scan_rsp_data_len</span><span class="p">);</span>
+
+<span class="w">   </span><span class="c1">// Restart timer for the next advertising update</span>
+<span class="w">   </span><span class="n">app_adv_data_update_timer_used</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">app_easy_timer</span><span class="p">(</span><span class="n">APP_ADV_DATA_UPDATE_TO</span><span class="p">,</span><span class="w"> </span><span class="n">adv_data_update_timer_cb</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>When we have updated the data, we have to call the <code class="docutils literal notranslate"><span class="pre">app_easy_gap_update_adv_data()</span></code> function. This code informs the BLE layer that there are updated advertising
+data and queues the update at the next available opportunity.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html" class="btn btn-neutral float-left" title="2. Setting the Bluetooth Device Address and Device Name" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html" class="btn btn-neutral float-right" title="4. Verify Your Advertiser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./3. Changing Advertising Parameters — DA145XX Tutorial BLE Advertising_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

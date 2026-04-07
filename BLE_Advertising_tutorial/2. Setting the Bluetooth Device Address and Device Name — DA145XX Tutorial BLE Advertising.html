@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<!-- saved from url=(0103)https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising</title>
+      <link rel="stylesheet" type="text/css" href="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/_static/favicon.ico">
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script type="text/javascript" async="" src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/js"></script><script src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/jquery.js"></script>
+        <script src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/documentation_options.js"></script>
+        <script src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/doctools.js"></script>
+        <script src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/sphinx_highlight.js"></script>
+    <script src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html">
+    <link rel="next" title="3. Changing Advertising Parameters" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html">
+    <link rel="prev" title="1. Introduction" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">
+            
+              <img src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>2. Setting the Bluetooth Device Address and Device Name</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#setting-the-bd-address">2.1. Setting the BD Address</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#setting-the-advertised-device-name">2.2. Setting the Advertised Device Name</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html">3. Changing Advertising Parameters</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html">4. Verify Your Advertiser</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/next.html">5. What’s Next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/termanddefinition.html">6. Terms and Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/disclaimer.html">7. Revision History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">DA145XX Tutorial BLE Advertising</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">2. </span>Setting the Bluetooth Device Address and Device Name</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="setting-the-bluetooth-device-address-and-device-name">
+<h1><span class="section-number">2. </span>Setting the Bluetooth Device Address and Device Name<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#setting-the-bluetooth-device-address-and-device-name" title="Link to this heading"></a></h1>
+<p>Each SmartBond™ device software example uses a default <em>Bluetooth Device (BD) Address</em>, if the developer has not assigned a different one.
+This section provides a step-by-step description of how to change the BD Address and Device Name to make it suitable for your application needs.</p>
+<section id="setting-the-bd-address">
+<span id="bd-address"></span><h2><span class="section-number">2.1. </span>Setting the BD Address<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#setting-the-bd-address" title="Link to this heading"></a></h2>
+<p>There are two types of Bluetooth Device Addresses, which are called <em>Public Device Address</em> and <em>Random Device Address</em>.</p>
+<p>A Public Device Address is a globally unique 48-bit identifier, which consists of two fields:</p>
+<ul class="simple">
+<li><p>The 24 most significant bits are called the Organizational Unique Identifier, and its purpose is to identify each company. It is administered by the IEEE Registration Authority.</p></li>
+<li><p>The 24 least significant bits are assigned by the company, and they serve the purpose of identifying each device.</p></li>
+</ul>
+<p>A Random Device Address is a privacy feature of the BLE protocol, and it helps to prevent tracking of a device. BLE provides a resolution mechanism so that
+only a device which holds the connection link key can identify the device.</p>
+<p>The public address of the device is set in the <code class="docutils literal notranslate"><span class="pre">CFG_NVDS_TAG_BD_ADDRESS</span></code> macro in <code class="docutils literal notranslate"><span class="pre">da1458x_config_advanced.h</span></code>.
+Considering this address : <code class="docutils literal notranslate"><span class="pre">{0x02,</span> <span class="pre">0x00,</span> <span class="pre">0x70,</span> <span class="pre">0xCA,</span> <span class="pre">0xEA,</span> <span class="pre">0x80}</span></code>.</p>
+<p><em>Code snippet:</em></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/******************************************************************************************/</span>
+<span class="cm">/* NVDS configuration                                                                     */</span>
+<span class="cm">/* - CFG_NVDS_TAG_BD_ADDRESS   Default bdaddress. If bdaddress is written in OTP header   */</span>
+<span class="cm">/*                             this value is ignored                                      */</span>
+<span class="cm">/******************************************************************************************/</span>
+<span class="cp">#define CFG_NVDS_TAG_BD_ADDRESS             {0x02, 0x00, 0x70, 0xCA, 0xEA, 0x80}</span>
+</pre></div>
+</div>
+<p>To change the BD Address you only have to change this define. For instance, you can set it to:</p>
+<p><em>Code snippet:</em></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define CFG_NVDS_TAG_BD_ADDRESS             {0x01, 0x02, 0x03, 0x04, 0x05, 0x06}</span>
+</pre></div>
+</div>
+<p>A new device with <code class="docutils literal notranslate"><span class="pre">{0x01,</span> <span class="pre">0x02,</span> <span class="pre">0x03,</span> <span class="pre">0x04,</span> <span class="pre">0x05,</span> <span class="pre">0x06}</span></code> as the BD Address will then show up in the list of discovered devices as shown in <a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#id1"><span class="std std-numref">Figure 6</span></a> (screenshot from a BLE Scanner application).</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/Figure3.jpg"><img alt="_images/Figure3.jpg" src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/Figure3.jpg" style="height: 150px;"></a>
+<figcaption>
+<p><span class="caption-number">Figure 6 </span><span class="caption-text"><em>Setting the BD Address</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="setting-the-advertised-device-name">
+<span id="device-name"></span><h2><span class="section-number">2.2. </span>Setting the Advertised Device Name<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#setting-the-advertised-device-name" title="Link to this heading"></a></h2>
+<p>Since it would be quite difficult for a user to identify a device using only its BD Address, BLE provides the <em>Device Name</em> property, which is a human-friendly
+name used to tag a device. This is assigned with the <code class="docutils literal notranslate"><span class="pre">USER_DEVICE_NAME</span></code> macro, which can be customized in <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code>.</p>
+<p>This example demonstrates how to change the advertised Device Name based on the barebone example: <code class="docutils literal notranslate"><span class="pre">projects/target_apps/ble_examples/ble_app_barebone</span></code>.
+Section “Build a DA1453x Application” of the <a class="reference external" href="https://www.dialog-semiconductor.com/da14531-getting-started">UM-B-117: DA14531 Getting Started Guide with the PRO-Development Kit</a> and <a class="reference external" href="https://www.dialog-semiconductor.com/da14531-getting-started">UM-B-165: DA14535 Getting Started Guide with the PRO-Development Kit</a> demonstrate a BLE advertising procedure. Refer to these for more details.</p>
+<p>The barebone example demonstrates a simple barebone project which advertises its presence with customized data.
+<a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#ble-connection-with-pro-dk"><span class="std std-numref">Figure 7</span></a> shows an example where a smartphone operates as a Central and a DA1458x or DA1453x device as a Peripheral.</p>
+<p><em>Code snippet:</em></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> *</span>
+<span class="cm"> * Device name.</span>
+<span class="cm"> *</span>
+<span class="cm"> * - If there is space left in the advertising or scan response data, the device name</span>
+<span class="cm"> *   is copied there. The device name can be read at anytime by a connected peer, if</span>
+<span class="cm"> *   the application supports it.</span>
+<span class="cm"> * - The Bluetooth device name can be up to 248 bytes.</span>
+<span class="cm"> *</span>
+<span class="cm"> ****************************************************************************************</span>
+<span class="cm"> */</span>
+<span class="c1">/// Device name</span>
+<span class="cp">#define USER_DEVICE_NAME        "DLG-BRBN"</span>
+
+<span class="c1">/// Device name length</span>
+<span class="cp">#define USER_DEVICE_NAME_LEN    (sizeof(USER_DEVICE_NAME)-1)</span>
+</pre></div>
+</div>
+<figure class="align-center" id="ble-connection-with-pro-dk">
+<a class="reference internal image-reference" href="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/Figure12.svg"><img alt="BLE connection with Pro DK" height="600px" src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/Figure12.svg"></a>
+<figcaption>
+<p><span class="caption-number">Figure 7 </span><span class="caption-text"><em>BLE Connection with Pro DK</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html#ble-connection-with-pro-dk" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>To customize the advertised device name, change the macro definition as required:</p>
+<p><em>Code snippet:</em></p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define USER_DEVICE_NAME        "DLG-TUTORIAL"</span>
+</pre></div>
+</div>
+<p>Then compile and download the barebone example again to see that your device name has changed.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html" class="btn btn-neutral float-left" title="1. Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html" class="btn btn-neutral float-right" title="3. Changing Advertising Parameters" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./2. Setting the Bluetooth Device Address and Device Name — DA145XX Tutorial BLE Advertising_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

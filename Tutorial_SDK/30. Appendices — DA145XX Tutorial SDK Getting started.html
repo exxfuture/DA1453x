@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>30. Appendices — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="31. Revision history" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">
+    <link rel="prev" title="29. Conclusion" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>30. Appendices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#eclipse-and-gcc"><button class="toctree-expand" title="Open/close menu"></button>30.1. Eclipse and GCC</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#using-the-eclipse-ide-and-gcc-toolchain"><button class="toctree-expand" title="Open/close menu"></button>30.1.1. Using the Eclipse IDE and GCC Toolchain</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#building-the-example">30.1.1.1. Building the Example</a></li>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#debugging-the-example">30.1.1.2. Debugging the Example</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">30. </span>Appendices</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="appendices">
+<h1><span class="section-number">30. </span>Appendices<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#appendices" title="Link to this heading"></a></h1>
+<section id="eclipse-and-gcc">
+<h2><span class="section-number">30.1. </span>Eclipse and GCC<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#eclipse-and-gcc" title="Link to this heading"></a></h2>
+<p>In addition to the Keil toolchain, SDK6 also supports the use of <strong>GCC</strong> in conjunction with the Eclipse IDE.</p>
+<dl class="simple">
+<dt>The SmartSnippets™ Studio development platform contains the Eclipse CDT IDE and GCC toolchain, and should be installed before proceeding:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://www.renesas.com/eu/en/software-tool/smartbond-development-tools">Download for Windows/Linux/macOS OS</a></p></li>
+</ul>
+</dd>
+</dl>
+<section id="using-the-eclipse-ide-and-gcc-toolchain">
+<h3><span class="section-number">30.1.1. </span>Using the Eclipse IDE and GCC Toolchain<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#using-the-eclipse-ide-and-gcc-toolchain" title="Link to this heading"></a></h3>
+<p>The SDK6 contains a sample application which has an <strong>Eclipse</strong> project file, allowing it to be built using the <strong>GCC</strong> toolchain.</p>
+<dl class="simple">
+<dt>This project can be found in the following folder:</dt><dd><p><code class="docutils literal notranslate"><span class="pre">&lt;sdk_root_directory&gt;/projects/target_apps/ble_examples/prox_reporter/Eclipse</span></code></p>
+</dd>
+</dl>
+<p>The instructions below describe how to build and run this sample application using the Eclipse IDE and GCC toolchain.</p>
+<section id="building-the-example">
+<h4><span class="section-number">30.1.1.1. </span>Building the Example<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#building-the-example" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p>Start SmartSnippets Studio, and when prompted set the workspace location to be the sdk root directory, then press “Launch”.</p></li>
+</ol>
+<blockquote>
+<div><figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-workspace.PNG"><img alt="_images/eclipse-workspace.PNG" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-workspace.PNG" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 103 </span><span class="caption-text">Select the Eclipse Workspace</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li><p>Start the Eclipse IDE by clicking on the icon highlighted in the diagram below.</p></li>
+</ol>
+<blockquote>
+<div><figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-ide.png"><img alt="_images/eclipse-ide.png" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-ide.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 104 </span><span class="caption-text">Start the Eclipse IDE</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</div></blockquote>
+<ol class="arabic simple" start="3">
+<li><p>Now import the <code class="docutils literal notranslate"><span class="pre">prox_reporter</span></code> project. To do this, click on the <strong>Import Projects</strong> link in the Project Explorer window, select the <strong>Existing Projects into Workspace</strong> option, and then press Next.</p></li>
+</ol>
+<blockquote>
+<div><figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-import1.PNG"><img alt="_images/eclipse-import1.PNG" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-import1.PNG" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 105 </span><span class="caption-text">Import the Project</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</div></blockquote>
+<ol class="arabic simple" start="4">
+<li><p>Next, use the Browse button to navigate to the  <code class="docutils literal notranslate"><span class="pre">sdk_root_directory&gt;/projects/target_apps/ble_examples/prox_reporter/Eclipse</span></code>  . Finally, press the Finish button to import the project into the <strong>Eclipse IDE</strong>.</p></li>
+</ol>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-import2.PNG"><img alt="_images/eclipse-import2.PNG" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-import2.PNG" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 106 </span><span class="caption-text">Select the Project</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="5">
+<li><p>To build the <code class="docutils literal notranslate"><span class="pre">prox_reporter</span></code> project, click on the arrow next to the build icon and select the appropriate target (DA1453x, DA14585 or DA14586).</p></li>
+</ol>
+<blockquote>
+<div><figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-build1.png"><img alt="_images/eclipse-build1.png" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-build1.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 107 </span><span class="caption-text">Building the Project</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</div></blockquote>
+<ol class="arabic simple" start="6">
+<li><p>Once the build is complete the following output will be displayed in the console window.</p></li>
+</ol>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-build2.png"><img alt="_images/eclipse-build2.png" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-build2.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 108 </span><span class="caption-text">Build Output</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="debugging-the-example">
+<h4><span class="section-number">30.1.1.2. </span>Debugging the Example<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#debugging-the-example" title="Link to this heading"></a></h4>
+<p>Once the build is complete the sample application can be loaded into RAM, and executed under the control of the debugger, as follows:</p>
+<ol class="arabic simple">
+<li><p>To start the debugger, click on the arrow next to the debugger icon and select appropriate target.</p></li>
+</ol>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug1.png"><img alt="_images/eclipse-debug1.png" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug1.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 109 </span><span class="caption-text">Start the Debugger</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="2">
+<li><p>If you get the following error message, jump to step 5, otherwise continue to step 3.</p></li>
+</ol>
+<figure class="align-center" id="id8">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug2.PNG"><img alt="_images/eclipse-debug2.PNG" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug2.PNG" style="width: 400px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 110 </span><span class="caption-text">Debugger Error Message</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id8" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="3">
+<li><p>When prompted, switch to the Debug perspective by pressing the Switch button.</p></li>
+</ol>
+<figure class="align-center" id="id9">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug5.PNG"><img alt="_images/eclipse-debug5.PNG" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug5.PNG" style="width: 400px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 111 </span><span class="caption-text">Switch Perspective</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id9" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="4">
+<li><p>Finally, start execution of the <code class="docutils literal notranslate"><span class="pre">prox_reporter</span></code> sample application by pressing the Resume button.</p></li>
+</ol>
+<figure class="align-center" id="id10">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug6.png"><img alt="_images/eclipse-debug6.png" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug6.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 112 </span><span class="caption-text">Start Application Execution</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id10" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="5">
+<li><p>In some versions of SDK6 there is an error with <code class="docutils literal notranslate"><span class="pre">prox_reporter</span></code> project configuration. The debugger is expecting a file named <code class="docutils literal notranslate"><span class="pre">prox_reporter.elf</span></code>, however the output of the build is a file containing the target within the name i.e. <code class="docutils literal notranslate"><span class="pre">prox_reporter_531.elf</span></code>. To resolve this issue we must change the build output to match the debugger configuration. To do this, right click on the <code class="docutils literal notranslate"><span class="pre">prox_reporter</span></code> folder in the Project Explorer window and select Properties.</p></li>
+</ol>
+<figure class="align-center" id="id11">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug3.png"><img alt="_images/eclipse-debug3.png" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug3.png" style="width: 400px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 113 </span><span class="caption-text">Project Properties</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id11" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="6">
+<li><p>Next, expand the <strong>C/C++ Build</strong> tab and select the <strong>Settings</strong> option. Select the <strong>Build Aritfact</strong> tab and remove the target extension from Artifact name, in this case we are removing the <code class="docutils literal notranslate"><span class="pre">_531</span></code> extension. Press the Apply and Close button to apply the changes, rebuild the example and then restart the debugger as described in step 1.</p></li>
+</ol>
+<figure class="align-center" id="id12">
+<a class="reference internal image-reference" href="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug4.PNG"><img alt="_images/eclipse-debug4.PNG" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/eclipse-debug4.PNG" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 114 </span><span class="caption-text">Build Output Modification</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html#id12" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html" class="btn btn-neutral float-left" title="29. Conclusion" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html" class="btn btn-neutral float-right" title="31. Revision history" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./30. Appendices — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

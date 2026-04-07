@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<!-- saved from url=(0072)https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>12. Hibernate Mode — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="13. Dynamic Advertising Data" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">
+    <link rel="prev" title="11. Sleep Mode" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>12. Hibernate Mode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#hardware-setup">12.1. Hardware Setup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#shipping-mode"><button class="toctree-expand" title="Open/close menu"></button>12.2. Shipping Mode</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#uart-transmit-output">12.2.1. UART Transmit Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#spi-flash-power-down">12.2.2. SPI Flash Power Down</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#entering-ship-mode">12.2.3. Entering Ship Mode</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#sw2-gpio-configuration">12.2.4. SW2 GPIO Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#detecting-reset-status">12.2.5. Detecting Reset Status</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#putting-it-all-together">12.2.6. Putting it all Together</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#testing">12.2.7. Testing</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#retaining-data">12.3. Retaining Data</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">12. </span>Hibernate Mode</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="hibernate-mode">
+<h1><span class="section-number">12. </span>Hibernate Mode<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#hibernate-mode" title="Link to this heading"></a></h1>
+<p>The DA1453x supports a number of lower power modes; sleep, extended sleep, deep sleep and hibernate. Hibernate mode provides the lowest power operation as no internal clocks are running and the RAM is not retained (although there is an option to retain it if required).</p>
+<p>The DA1453x contains a Clockless Wakeup Controller which allows the device to be woken from hibernate mode by a change of state on a GPIO. The following section details how to use the driver provided within SDK6 to put the DA1453x into Hibernate mode and how to handle wakeup events.</p>
+<p>See the <a class="reference external" href="https://www.renesas.com/us/en/document/dst/da14531-datasheet">DA14531 Datasheet</a> or <a class="reference external" href="https://www.renesas.com/us/en/document/dst/da14533-datasheet">DA14533 Datasheet</a> or <a class="reference external" href="https://rstage.renesas-dev.com/us/en/document/dst/da14535-datasheet">DA14535 Datasheet</a>  for a complete description of the Clockless Wakeup Controller and all of the available sleep modes.</p>
+<section id="hardware-setup">
+<h2><span class="section-number">12.1. </span>Hardware Setup<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#hardware-setup" title="Link to this heading"></a></h2>
+<p>When operating in Hibernate mode the DA1453x can only be woken by a change of state on pins <code class="docutils literal notranslate"><span class="pre">P0_1</span></code>, <code class="docutils literal notranslate"><span class="pre">P0_2</span></code>, <code class="docutils literal notranslate"><span class="pre">P0_3</span></code>, <code class="docutils literal notranslate"><span class="pre">P0_4</span></code> or <code class="docutils literal notranslate"><span class="pre">P0_5</span></code>. Pins <code class="docutils literal notranslate"><span class="pre">P0_1</span></code>, <code class="docutils literal notranslate"><span class="pre">P0_3</span></code> and <code class="docutils literal notranslate"><span class="pre">P0_4</span></code> are used to connect to the external SPI flash in which our application is stored. Pin <code class="docutils literal notranslate"><span class="pre">P0_2</span></code> is used as the Serial Debug Clock signal (SWCLK) and therefore we will use <code class="docutils literal notranslate"><span class="pre">P0_5</span></code> to wake the device. However, <code class="docutils literal notranslate"><span class="pre">P0_5</span></code> is also used as the UART transmit signal (which is used by our application to output serial debug information) and so we will move the UART TX to <code class="docutils literal notranslate"><span class="pre">P0_6</span></code>. To do this remove the URX, UTX and RxTx jumpers on J1 and connect a jumper wire from pin <code class="docutils literal notranslate"><span class="pre">17</span></code> on J1 to pin <code class="docutils literal notranslate"><span class="pre">27</span></code> on J2 (which is labelled as <code class="docutils literal notranslate"><span class="pre">P26</span></code> on the silkscreen). Finally, the jumper connecting pins 2 and 3 on J19 should be removed and, a wire should be connected from pin 26 on J2 to pin 2 on J19 (this will connect P0_5 to button SW2). This hardware setup is summarized in the following diagram.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/da14531_pro_tx.svg"><img alt="_images/da14531_pro_tx.svg" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/da14531_pro_tx.svg" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 20 </span><span class="caption-text">Hibernate mode hardware setup(da1453x) on DA14531-00FXDEVKT-P</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/da1453x_pro_tx.svg"><img alt="_images/da1453x_pro_tx.svg" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/da1453x_pro_tx.svg" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 21 </span><span class="caption-text">Hibernate mode hardware setup(da1453x) on DA14535-00FXDEVKT-P</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="shipping-mode">
+<h2><span class="section-number">12.2. </span>Shipping Mode<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#shipping-mode" title="Link to this heading"></a></h2>
+<p>Hibernate mode is frequently used to implement shipping mode in products where the battery is permanently connected to the DA1453x (i.e. products that do not contain an on/off switch that physically disconnects the battery from the DA1453x).</p>
+<p>There are a number of ways to implement a shipping mode with the DA1453x. In this example, once factory programming and testing of the DA1453x has been completed, we want it to enter shipping (hibernate) mode. One way to achieve this is to reset the device using a hardware or power-on reset. The application firmware can then detect the cause of the reset and put the device into hibernate mode. When pin P0_5 is then pulled low (by pressing SW2) the device will wake from shipping mode and operate as normal (start advertising etc.).</p>
+<p>The following section describes how to modify the <strong>empty_peripheral_template</strong> example project to implement such a low power shipping mode.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To achieve the lowest possible power consumption, RAM will not be retained and the application will be programmed into external SPI flash.</p>
+</div>
+<section id="uart-transmit-output">
+<h3><span class="section-number">12.2.1. </span>UART Transmit Output<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#uart-transmit-output" title="Link to this heading"></a></h3>
+<p>We will use serial debug output to confirm the example is working. However, as described above, we will use P0_6 instead of P0_5 as the UART output and therefore must change the UART2_TX_PIN definition found in the <strong>user_periph_setup.h</strong> file to the following:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#define UART2_TX_PIN            GPIO_PIN_6</span>
+</pre></div>
+</div>
+</section>
+<section id="spi-flash-power-down">
+<h3><span class="section-number">12.2.2. </span>SPI Flash Power Down<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#spi-flash-power-down" title="Link to this heading"></a></h3>
+<p>The application firmware that implements shipping mode is stored in external SPI flash and loaded into internal RAM by the ROM based bootloader. Once this process is complete we must put the flash into power down mode to achieve the lowest possible system current consumption. To do this, add the following function to the <strong>user_empty_peripheral_template.c</strong> before the <code class="docutils literal notranslate"><span class="pre">user_app_on_init</span></code> function:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">flash_power_down</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Default SPI configuration */</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">spi_cfg_t</span><span class="w"> </span><span class="n">spi_cfg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">spi_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_MS_MODE_MASTER</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">spi_cp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_CP_MODE_0</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">spi_speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_SPEED_MODE_4MHz</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">spi_wsz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_MODE_8BIT</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">spi_cs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_CS_0</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">cs_pad</span><span class="p">.</span><span class="n">port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_EN_PORT</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">cs_pad</span><span class="p">.</span><span class="n">pin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_EN_PIN</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">spi_capture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SPI_MASTER_EDGE_CAPTURE</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="cm">/* Initialize interface to SPI flash */</span>
+<span class="w">    </span><span class="n">spi_initialize</span><span class="p">(</span><span class="o">&amp;</span><span class="n">spi_cfg</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Disable HW RST on P0_0 so it can be used as SPI MOSI */</span>
+<span class="w">    </span><span class="n">GPIO_Disable_HW_Reset</span><span class="p">();</span>
+<span class="w">    </span><span class="n">spi_flash_power_down</span><span class="p">();</span>
+
+<span class="w">    </span><span class="cm">/* Re-enable HW reset input (must be disabled if/when further operations on</span>
+<span class="cm">       external flash are performed) - must set as input first! */</span>
+<span class="w">    </span><span class="n">GPIO_ConfigurePin</span><span class="p">(</span><span class="n">SPI_DO_PORT</span><span class="p">,</span><span class="w"> </span><span class="n">SPI_DO_PIN</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT_PULLDOWN</span><span class="p">,</span><span class="w"> </span><span class="n">PID_GPIO</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+<span class="w">    </span><span class="n">GPIO_Enable_HW_Reset</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>The following include files must also be added to the <strong>user_empty_peripheral_template.c</strong> file:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"spi.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"spi_flash.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"user_periph_setup.h"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"arch_hibernation.h"</span>
+</pre></div>
+</div>
+</section>
+<section id="entering-ship-mode">
+<h3><span class="section-number">12.2.3. </span>Entering Ship Mode<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#entering-ship-mode" title="Link to this heading"></a></h3>
+<p>Now add the following <code class="docutils literal notranslate"><span class="pre">enter_ship_mode</span></code> function to the start of the <strong>user_empty_peripheral_template.c</strong> file, before the <code class="docutils literal notranslate"><span class="pre">user_on_init</span></code> function:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">enter_ship_mode</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">arch_printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s">%s"</span><span class="p">,</span><span class="w"> </span><span class="n">__FUNCTION__</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Ensure all debug output is complete before entering ship mode */</span>
+<span class="w">    </span><span class="n">arch_printf_process</span><span class="p">();</span>
+<span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">GetBits32</span><span class="p">(</span><span class="n">UART2_USR_REG</span><span class="p">,</span><span class="w"> </span><span class="n">UART_BUSY</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Put device into hibernation mode with no RAM retained (cold boot on wakeup)</span>
+<span class="cm">       function DOES NOT RETURN */</span>
+<span class="w">    </span><span class="n">arch_set_hibernation</span><span class="p">(</span><span class="mh">0x20</span><span class="p">,</span><span class="w"> </span><span class="cm">/* P0_5 */</span>
+<span class="w">                         </span><span class="n">PD_SYS_DOWN_RAM_OFF</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">PD_SYS_DOWN_RAM_OFF</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">PD_SYS_DOWN_RAM_OFF</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">REMAP_ADDR0_TO_ROM</span><span class="p">,</span>
+<span class="w">                         </span><span class="nb">false</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="sw2-gpio-configuration">
+<h3><span class="section-number">12.2.4. </span>SW2 GPIO Configuration<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#sw2-gpio-configuration" title="Link to this heading"></a></h3>
+<p>The GPIO (<code class="docutils literal notranslate"><span class="pre">P0_5</span></code>) that we connected to SW2 must be configured as an input with the internal pull-up enabled (pressing SW2 will connect P0_5 to ground). To do this, we must first add the following definitions to the <strong>user_periph_setup.h</strong> file:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#define SW2_PORT                    GPIO_PORT_0</span>
+<span class="cp">#define SW2_PIN                     GPIO_PIN_5</span>
+</pre></div>
+</div>
+<p>Next we will reserve P0_5 by adding the following to the <code class="docutils literal notranslate"><span class="pre">GPIO_reservations</span></code> function that can be found in the <strong>user_periph_setup.c</strong> file:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">RESERVE_GPIO</span><span class="p">(</span><span class="n">SW2</span><span class="p">,</span><span class="w"> </span><span class="n">SW2_PORT</span><span class="p">,</span><span class="w"> </span><span class="n">SW2_PIN</span><span class="p">,</span><span class="w"> </span><span class="n">PID_GPIO</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Finally, we will configure P0_5 to act as an input with pull-up enabled by adding the following to the <code class="docutils literal notranslate"><span class="pre">set_pad_functions</span></code> function that can also be found in the <strong>user_periph_setup.c</strong> file:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">GPIO_ConfigurePin</span><span class="p">(</span><span class="n">SW2_PORT</span><span class="p">,</span><span class="w"> </span><span class="n">SW2_PIN</span><span class="p">,</span><span class="w"> </span><span class="n">INPUT_PULLUP</span><span class="p">,</span><span class="w"> </span><span class="n">PID_GPIO</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="detecting-reset-status">
+<h3><span class="section-number">12.2.5. </span>Detecting Reset Status<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#detecting-reset-status" title="Link to this heading"></a></h3>
+<p>We are not retaining the contents of RAM and so the DA1453x will perform a full boot cycle following a reset (hardware or power-on) or a wake from hibernate mode. Because of this we need to be able to detect why the device booted when the application starts running (if due to a reset we can enter hibernate mode, if not then it must be a wake event and we can start advertising).</p>
+<p>The reason for booting can be determined using the reset status provided by the SDK. To do this we must first add a variable in which the reset status can be stored to the <strong>user_empty_peripheral_template.c</strong> file as follows:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">reset_status</span><span class="w"> </span><span class="n">__SECTION_ZERO</span><span class="p">(</span><span class="s">"retention_mem_area0"</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Next we must implement a callback that will be called by the SDK when the device boots and will store the reset status in the variable we declared above. To do this add the following function to the <strong>user_empty_peripheral_template.c</strong> file:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">reset_indication</span><span class="p">(</span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">reset_stat</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">reset_status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">reset_stat</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="putting-it-all-together">
+<h3><span class="section-number">12.2.6. </span>Putting it all Together<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#putting-it-all-together" title="Link to this heading"></a></h3>
+<p>When the application firmware starts executing, we will first put the flash into power down mode to ensure system level current consumption is at a minimum. We will then read the <code class="docutils literal notranslate"><span class="pre">reset_status</span></code> variable to determine if a reset or wake from hibernate has occured. To do this add the following code to the <code class="docutils literal notranslate"><span class="pre">user_app_on_init</span></code> function in the file <strong>user_empty_peripheral_template.c</strong>, just before the <code class="docutils literal notranslate"><span class="pre">default_app_on_init</span></code> function call:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">arch_printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s">reset_status: 0x%04x"</span><span class="p">,</span><span class="w"> </span><span class="n">reset_status</span><span class="p">);</span>
+
+<span class="cm">/* Boot from flash complete so put it into lowest power mode */</span>
+<span class="n">flash_power_down</span><span class="p">();</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">reset_status</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PORESET_STAT</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">reset_status</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">HWRESET_STAT</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Following function does not return */</span>
+<span class="w">    </span><span class="n">enter_ship_mode</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="testing">
+<h3><span class="section-number">12.2.7. </span>Testing<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#testing" title="Link to this heading"></a></h3>
+<p>When it comes to testing the ship mode example it first has to be built and then programmed into flash using the procedure detail in the <a class="reference external" href="http://lpccs-docs.dialog-semiconductor.com/Tutorial_SDK6/flash_prog.html">Flash Programming section of the Getting Started with SDK6 Tutorial</a>.</p>
+<p>Once the flash has been programmed configure your Terminal Emulator as follows:</p>
+<ul class="simple">
+<li><p>Baud Rate: 115200</p></li>
+<li><p>Data: 8 bits</p></li>
+<li><p>Parity: None</p></li>
+<li><p>Stop Bits: 1</p></li>
+<li><p>Flow Control: None</p></li>
+</ul>
+<p>Now when the reset button (SW1) on the PRO development kit board is pressed you should see the following displayed by your Terminal Emulator:</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_enter_ship.png"><img alt="_images/hib_enter_ship.png" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_enter_ship.png" style="width: 250px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 22 </span><span class="caption-text">Serial debug output on entering ship mode</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>The DA1453x is now in ship (or hibernate) mode and is consuming very little current. Pressing SW2 on the PRO development kit will wake the device and cause it to start advertising. When this happens you will see the following displayed by your Terminal Emulator:</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_wake.png"><img alt="_images/hib_wake.png" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_wake.png" style="width: 250px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 23 </span><span class="caption-text">Serial debug output on exiting ship mode</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Pressing the reset button (SW1) again will return the device to ship (hibernate) mode.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>You can also confirm the example is working by monitoring the current consumption of the DA1453x using the Power Profiler found in the <a class="reference external" href="http://lpccs-docs.dialog-semiconductor.com/SmartSnippetsToolbox5.0.8_UM/index.html">SmartSnippets™ Toolbox</a>.</p>
+</div>
+</section>
+</section>
+<section id="retaining-data">
+<h2><span class="section-number">12.3. </span>Retaining Data<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#retaining-data" title="Link to this heading"></a></h2>
+<p>It is possible to retain application data while the device is in hibernate mode. To do this, the RAM must be retained and the data to be stored must be placed in the correct memory section (so that it is not initialized when the device wakes).</p>
+<p>To do this, add a variable to the <strong>user_empty_peripheral_template.c</strong> file that will be used to store the data we want to retain while the device is in hibernate mode:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">retained_data</span><span class="w"> </span><span class="n">__SECTION</span><span class="p">(</span><span class="s">"retention_mem_area_uninit"</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Now add the following to the start of the <code class="docutils literal notranslate"><span class="pre">user_app_on_init</span></code> function so we can observe that the data is retained correctly:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">arch_printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s">retained_data: 0x%08x"</span><span class="p">,</span><span class="w"> </span><span class="n">retained_data</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Next we need to set the value of the <code class="docutils literal notranslate"><span class="pre">retained_data</span></code> variable when the device is reset, but not when it wakes from hibernate mode. To do this, we initialize the variable inside the <code class="docutils literal notranslate"><span class="pre">if</span></code> statement contained within the <code class="docutils literal notranslate"><span class="pre">user_app_on_init</span></code> function as follows:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">reset_status</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PORESET_STAT</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">reset_status</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">HWRESET_STAT</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">retained_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x1BADCAFE</span><span class="p">;</span>
+<span class="w">    </span><span class="cm">/* Following function does not return */</span>
+<span class="w">    </span><span class="n">enter_ship_mode</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We need to ensure the contents of RAM are retained while the device is in hibernation mode. To do this, we change the parameters passed to the <code class="docutils literal notranslate"><span class="pre">arch_set_hibernation</span></code> function (that is called from the <code class="docutils literal notranslate"><span class="pre">enter_ship_mode</span></code> function) as follows:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">arch_set_hibernation</span><span class="p">(</span><span class="mh">0x20</span><span class="p">,</span><span class="w"> </span><span class="cm">/* P0_5 */</span>
+<span class="w">                     </span><span class="n">PD_SYS_DOWN_RAM_ON</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">PD_SYS_DOWN_RAM_ON</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">PD_SYS_DOWN_RAM_ON</span><span class="p">,</span>
+<span class="w">                     </span><span class="n">REMAP_ADDR0_TO_RAM1</span><span class="p">,</span>
+<span class="w">                     </span><span class="nb">false</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>Because we are retaining RAM, the ROM based bootloader no longer needs to load the application when the devices wakes from hibernation mode. This means we now only need to put the flash into sleep mode when the device is reset, and not when it wakes from hibernate mode. To implement this change simply move the call to the <code class="docutils literal notranslate"><span class="pre">flash_power_down</span></code> function that is found within <code class="docutils literal notranslate"><span class="pre">user_on_init</span></code> so that it is inside the <code class="docutils literal notranslate"><span class="pre">if</span></code> statement.</p>
+<p>Once all of these changes have been implemented your <code class="docutils literal notranslate"><span class="pre">user_on_init</span></code> and <code class="docutils literal notranslate"><span class="pre">enter_ship_mode</span></code> functions should be as follows:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_on_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">arch_printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s">%s"</span><span class="p">,</span><span class="w"> </span><span class="n">__FUNCTION__</span><span class="p">);</span>
+<span class="w">    </span><span class="n">arch_printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s">reset_status: 0x%04x"</span><span class="p">,</span><span class="w"> </span><span class="n">reset_status</span><span class="p">);</span>
+<span class="w">    </span><span class="n">arch_printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s">retained_data: 0x%08x"</span><span class="p">,</span><span class="w"> </span><span class="n">retained_data</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">reset_status</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">PORESET_STAT</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">reset_status</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">HWRESET_STAT</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">retained_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0x1BADCAFE</span><span class="p">;</span>
+<span class="w">        </span><span class="n">flash_power_down</span><span class="p">();</span>
+
+<span class="w">        </span><span class="cm">/* Following function does not return */</span>
+<span class="w">        </span><span class="n">enter_ship_mode</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">default_app_on_init</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">enter_ship_mode</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">arch_printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n\r</span><span class="s">%s"</span><span class="p">,</span><span class="w"> </span><span class="n">__FUNCTION__</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Ensure all debug output is complete before entering ship mode */</span>
+<span class="w">    </span><span class="n">arch_printf_process</span><span class="p">();</span>
+<span class="w">    </span><span class="k">while</span><span class="p">(</span><span class="n">GetBits32</span><span class="p">(</span><span class="n">UART2_USR_REG</span><span class="p">,</span><span class="w"> </span><span class="n">UART_BUSY</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Put device into hibernation mode with RAM retained</span>
+<span class="cm">       function DOES NOT RETURN */</span>
+<span class="w">    </span><span class="n">arch_set_hibernation</span><span class="p">(</span><span class="mh">0x20</span><span class="p">,</span><span class="w"> </span><span class="cm">/* P0_5 */</span>
+<span class="w">                        </span><span class="n">PD_SYS_DOWN_RAM_ON</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">PD_SYS_DOWN_RAM_ON</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">PD_SYS_DOWN_RAM_ON</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">REMAP_ADDR0_TO_RAM1</span><span class="p">,</span>
+<span class="w">                        </span><span class="nb">false</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>To test these changes the application must be compiled and then programmed into external flash memory. When the device is reset the value of the <code class="docutils literal notranslate"><span class="pre">retained_data</span></code> variable will be zero and will then be set to <code class="docutils literal notranslate"><span class="pre">0x1BADCAFE</span></code>, just before the device enters hibernation mode. When the device is then woken, by pressed SW2, the value of the <code class="docutils literal notranslate"><span class="pre">retained_data</span></code> variable will still be <code class="docutils literal notranslate"><span class="pre">0x1BADCAFE</span></code>, proving it has been retained. This functionality can be observed by monitoring the serial debug output generated when the device is reset and when it wakes from hibernation mode, see below:</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_enter_ship_ret.PNG"><img alt="_images/hib_enter_ship_ret.PNG" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_enter_ship_ret.PNG" style="width: 250px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 24 </span><span class="caption-text">Serial debug output on entering ship mode with data retained</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_wake_ret.PNG"><img alt="_images/hib_wake_ret.PNG" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/hib_wake_ret.PNG" style="width: 250px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 25 </span><span class="caption-text">Serial debug output on exiting ship mode with data retained</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html" class="btn btn-neutral float-left" title="11. Sleep Mode" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html" class="btn btn-neutral float-right" title="13. Dynamic Advertising Data" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./12. Hibernate Mode — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

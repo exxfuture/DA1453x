@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<!-- saved from url=(0072)https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising</title>
+      <link rel="stylesheet" type="text/css" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/_static/favicon.ico">
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script type="text/javascript" async="" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/js"></script><script src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/jquery.js"></script>
+        <script src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/documentation_options.js"></script>
+        <script src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/doctools.js"></script>
+        <script src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/sphinx_highlight.js"></script>
+    <script src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html">
+    <link rel="next" title="5. What’s Next?" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/next.html">
+    <link rel="prev" title="3. Changing Advertising Parameters" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">
+            
+              <img src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/setting_the_BD_address_and_device_name.html">2. Setting the Bluetooth Device Address and Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html">3. Changing Advertising Parameters</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>4. Verify Your Advertiser</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#advertised-data-over-the-air">4.1. Advertised Data Over the Air</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#initializing-the-smartsnippets-toolbox"><button class="toctree-expand" title="Open/close menu"></button>4.2. Initializing the SmartSnippets Toolbox</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#using-the-smartsnippets-toolbox">4.2.1. Using the SmartSnippets Toolbox</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/next.html">5. What’s Next?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/termanddefinition.html">6. Terms and Definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/disclaimer.html">7. Revision History</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html">DA145XX Tutorial BLE Advertising</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">4. </span>Verify Your Advertiser</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="verify-your-advertiser">
+<h1><span class="section-number">4. </span>Verify Your Advertiser<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#verify-your-advertiser" title="Link to this heading"></a></h1>
+<p>This section suggests some useful tools that can be used to verify that your SmartBond™ device is behaving as expected.
+It describes how to initialize the various tools and use them to verify the procedures described in previous sections of
+this document.</p>
+<section id="advertised-data-over-the-air">
+<h2><span class="section-number">4.1. </span>Advertised Data Over the Air<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#advertised-data-over-the-air" title="Link to this heading"></a></h2>
+<p>When the project starts running, the Bluetooth Low Energy device will be shown on the Bluetooth Low Energy scanner on your cell phone.
+In our case study (Android application), the following results were captured:</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/BLE3.svg"><img alt="&#39;Output 1&#39;" height="600px" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/BLE3.svg" width="600px"></a>
+<figcaption>
+<p><span class="caption-number">Figure 9 </span><span class="caption-text"><em>Verifying the Bluetooth Low Energy Device Output Using a Scanner App</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#id1" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/BLE1.svg"><img alt="&#39;Output 2&#39;" height="600px" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/BLE1.svg" width="600px"></a>
+<figcaption>
+<p><span class="caption-number">Figure 10 </span><span class="caption-text"><em>Exploring the Various Services after Connecting to a Remote Peer</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When using iOS and, if the advertising name has been changed and you no longer want your device (for example, iPhone, iPad) to connect to it, you can make your device <strong>forget</strong> it.
+Follow the steps in the <a class="reference external" href="https://discussions.apple.com/welcome">Apple Support Communities</a> and your iPhone won’t remember your Bluetooth device. If you change your mind, don’t worry,
+you can pair the device as though it were new.</p>
+</div>
+</section>
+<section id="initializing-the-smartsnippets-toolbox">
+<h2><span class="section-number">4.2. </span>Initializing the SmartSnippets Toolbox<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#initializing-the-smartsnippets-toolbox" title="Link to this heading"></a></h2>
+<p>Another useful tool that can be used both for debugging and measurement purposes is the <a class="reference external" href="https://lpccs-docs.renesas.com/UM-B-083/index.html">SmartSnippets Toolbox</a>
+bundled with the SmartSnippets Studio.
+By oppenning the SmartSnippets Studio , on the the right upper corner you can see <strong>Board</strong> and select from the options here we use DA14531 (you can choose other options like DA14535/DA14533).</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/ss_toolbox_setup.png"><img alt="&#39;Output 3&#39;" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/ss_toolbox_setup.png" style="width: 908px; height: 480px;"></a>
+<figcaption>
+<p><span class="caption-number">Figure 11 </span><span class="caption-text"><em>Initializing the SmartSnippets Toolbox</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<section id="using-the-smartsnippets-toolbox">
+<h3><span class="section-number">4.2.1. </span>Using the SmartSnippets Toolbox<a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#using-the-smartsnippets-toolbox" title="Link to this heading"></a></h3>
+<p>We will use the power profiler to check that the advertising interval value is 687.5ms and what is the energy consumption of our device.</p>
+<ol class="arabic simple">
+<li><p>Click on the Power Profiler button on the SmartSnippets ribbon.</p></li>
+</ol>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_pwr_prof_ribbon.png"><img alt="&#39;SmartSnippets Toolbox ribbon&#39;" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_pwr_prof_ribbon.png" style="width: 883px; height: 149px;"></a>
+<figcaption>
+<p><span class="caption-number">Figure 12 </span><span class="caption-text"><em>SmartSnippets Toolbox Ribbon</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="2">
+<li><p>Press the Initialize button. If the connection could be set, the Start button will be enabled. Press the Start button to start a measurement. When the measurements you wanted to collect have been
+collected, press the Stop button.</p></li>
+</ol>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_pwr_prof_init.png"><img alt="&#39;Initialize Power Profiler&#39;" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_pwr_prof_init.png" style="width: 200px; height: 200px;"></a>
+<figcaption>
+<p><span class="caption-number">Figure 13 </span><span class="caption-text"><em>Initialize Power Profiler</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="3">
+<li><p>In the Power Profiler tab, press <strong>Tools</strong> and choose the Add Time Marker button. This will allow you to insert a time marker at a specified time point.</p></li>
+</ol>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_pwr_prof_ribbon_mark.png"><img alt="&#39;Adding a Time Marker&#39;" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_pwr_prof_ribbon_mark.png" style="width: 200px; height: 200px;"></a>
+<figcaption>
+<p><span class="caption-number">Figure 14 </span><span class="caption-text"><em>Adding a Time Marker</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<ol class="arabic simple" start="4">
+<li><p>As  can be seen in the figure we can measure the inter val between the two peaks of the advertisement by marking them and choosing measure option. Here the measure difference value is 692ms considering the defined value of 688ms.
+Choose the end of an advertising event as a first point and the end of the next advertising event as the next point. The Power Profiler will display the energy,
+average current and electric charge that was consumed by the device. It will also display the time interval between the two marks and the peak-to-peak current difference. Please be advised that these
+measurements serve as a first check, and more accurate measurements could be acquired by the use of specialized hardware equipment.</p></li>
+</ol>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_meas_pwr_prof.png"><img alt="&#39;Measuring the Advertising Interval&#39;" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/adv_interv_meas_pwr_prof.png" style="width: 960px; height: 700px;"></a>
+<figcaption>
+<p><span class="caption-number">Figure 15 </span><span class="caption-text"><em>Measuring the Advertising Interval</em></span><a class="headerlink" href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/results.html#id7" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The above measurements were taken on a DA14531 device configured to use Extended Sleep. To enable this you must set the <code class="docutils literal notranslate"><span class="pre">app_default_sleep_mode</span></code> variable in <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code> to the value <code class="docutils literal notranslate"><span class="pre">ARCH_EXT_SLEEP_ON</span></code>
+and load the executable file to the SPI flash. For more details you can refer to <a class="reference external" href="https://lpccs-docs.renesas.com/UM-B-083/programmer_oper/common_oper/flash_data/flash_data.html">UM-B-083: Section 3.4: SPI Flash Memory Example</a> .</p>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/changing_advertising_parameters.html" class="btn btn-neutral float-left" title="3. Changing Advertising Parameters" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/DA145xx_Advertising_Tutorial/next.html" class="btn btn-neutral float-right" title="5. What’s Next?" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./4. Verify Your Advertiser — DA145XX Tutorial BLE Advertising_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

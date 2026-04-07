@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<!-- saved from url=(0058)https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>17. OTP Programming — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="18. CodeLess™ AT Commands" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">
+    <link rel="prev" title="16. Flash Programming" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html">11. Sleep Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>17. OTP Programming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#preparing-the-application">17.1. Preparing the Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-memory"><button class="toctree-expand" title="Open/close menu"></button>17.2. Programming OTP Memory</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-image">17.2.1. Programming OTP Image</a></li>
+<li class="toctree-l3"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-header"><button class="toctree-expand" title="Open/close menu"></button>17.2.2. Programming OTP Header</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-bd-address-da1453x">17.2.2.1. Programming OTP BD Address (DA1453x)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#production-programming-otp">17.3. Production Programming OTP</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">17. </span>OTP Programming</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="otp-programming">
+<span id="id1"></span><h1><span class="section-number">17. </span>OTP Programming<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#otp-programming" title="Link to this heading"></a></h1>
+<p>In earlier stages, we developed and executed our application by loading it directly into the device’s RAM using the debugger—an approach suitable for development. However, for production, our application will be stored in OTP, external SPI flash, or loaded via I2C/UART interfaces by the ROM-based bootloader present in all DA1453x, DA14585/DA14586 devices. This ensures a more reliable and efficient deployment.</p>
+<dl class="simple">
+<dt>Refer to the following documents for more details about the boot options available on DA1453x,DA14585/DA14586 devices:</dt><dd><ul class="simple">
+<li><p><a class="reference external" href="https://lpccs-docs.renesas.com/DA14535/AN-B-072-DA14531-Booting-from-serial-interfaces/index.html">DA1453x</a></p></li>
+<li><p><a class="reference external" href="https://www.renesas.com/us/en/document/apn/b-055-da14585-interfacing-external-memory">DA14585</a></p></li>
+</ul>
+</dd>
+</dl>
+<p>This section covers preparing and programming your application into the OTP memory of DA1453x, DA14585/DA14586 devices. After programming, upon a hardware or power-on reset, the ROM-based bootloader loads the application from <strong>OTP</strong> into <strong>RAM</strong> and executes it.</p>
+<div class="error admonition">
+<p class="admonition-title">SWD access after OTP programming</p>
+<p>The ROM-based bootloader on the DA1453x does not activate the SWD ( <a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html#serial-wire-debug"><span class="std std-ref">Serial Wire Debug Probe</span></a>) interface during the OTP-to-RAM loading process. Consequently, once you program your application into OTP on the DA14531, SWD interface access to the device is <strong>no longer possible</strong>. Additionally, it’s crucial to exercise caution when programming OTP on the DA14585/86, as incorrect programming can render the device <strong>unusable</strong>. Follow these instructions <strong>meticulously</strong> to ensure proper execution.</p>
+</div>
+<section id="preparing-the-application">
+<h2><span class="section-number">17.1. </span>Preparing the Application<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#preparing-the-application" title="Link to this heading"></a></h2>
+<p>Some minor modifications are required to optimize an application before it is programmed into OTP.</p>
+<dl>
+<dt>First, change the code location macro found in the <code class="docutils literal notranslate"><span class="pre">..._config_advanced.h</span></code> files (considering the target) as follows:</dt><dd><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- #define CFG_CODE_LOCATION_EXT</span>
+<span class="gi">+ #undef CFG_CODE_LOCATION_EXT</span>
+
+<span class="gd">- #undef CFG_CODE_LOCATION_OTP</span>
+<span class="gi">+ #define CFG_CODE_LOCATION_OTP</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>This enables the linker to check that the application will fit in the available OTP memory.</p>
+<dl>
+<dt>Next, in the <code class="docutils literal notranslate"><span class="pre">..._config_basic.h</span></code> files (considering the target), disable development mode by changing the <code class="docutils literal notranslate"><span class="pre">CFG_DEVELOPMENT_DEBUG</span></code>  macro as follows:</dt><dd><div class="highlight-diff notranslate"><div class="highlight"><pre><span></span><span class="gd">- #define CFG_DEVELOPMENT_DEBUG</span>
+<span class="gi">+ #undef CFG_DEVELOPMENT_DEBUG</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<p>This prevents the DA1453x , DA14585/DA14586 from emulating an OTP copy (as it is now doing it for real) and also turns off a number of development debug features.</p>
+<p>Finally, rebuild the application and you then have a binary file that is ready to be programmed into OTP memory.</p>
+</section>
+<section id="programming-otp-memory">
+<h2><span class="section-number">17.2. </span>Programming OTP Memory<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-memory" title="Link to this heading"></a></h2>
+<p>Once you have prepared your application firmware you can the use the OTP Programmer tool contained within the SmartSnippets™ Toolbox to program your application into the DA145xx OTP memory. If you’re not already familiar with the SmartSnippets™ Toolbox then it is <strong>strongly recommended</strong> that you review the Getting Started section of the <a class="reference external" href="http://lpccs-docs.dialog-semiconductor.com/SmartSnippetsToolbox5.0.8_UM/getting_started/getting_started.html">User Manual</a>.</p>
+<p>Start the SmartSnippets Toolbox, connect to the development kit board using the JTAG option and select the OTP Programmer from the tools menu. The programming process involves two steps: programming the image and programming the header.</p>
+<section id="programming-otp-image">
+<h3><span class="section-number">17.2.1. </span>Programming OTP Image<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-image" title="Link to this heading"></a></h3>
+<p>Select the <strong>OTP Image</strong> tab and choose the application you want to program using the <strong>Browse</strong> button.</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_prog_file.png"><img alt="_images/otp_prog_file.png" src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_prog_file.png" style="width: 1200px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 35 </span><span class="caption-text">Select a file to program into OTP memory</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<div class="note admonition">
+<p class="admonition-title">Programming OTP: Hex and Binary File Options</p>
+<p>To program the OTP, you have the flexibility to use either a hex file or a binary file with the provided tool. For the <strong>empty_peripheral_template</strong> project, these files can be located in the following directory: <code class="docutils literal notranslate"><span class="pre">empty_peripheral_template\Keil_5\out_DA145xx\Objects</span></code>.</p>
+</div>
+<p>Once the application image has been selected, make a note of its size as this will be required when programming the OTP header. This information will be displayed in the log window, in this example the application image size is 19480 bytes.</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_img_size.png"><img alt="_images/otp_img_size.png" src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_img_size.png" style="width: 1200px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 36 </span><span class="caption-text">Application Image Size</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Program this image into OTP by pressing the <strong>Connect</strong> button and then the <strong>Burn</strong> button. When prompted, press <strong>Yes</strong> to complete the programming process. When complete you’ll see a message saying “Memory burning completed successfully” in the Log window.</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/prog_otp.png"><img alt="_images/prog_otp.png" src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/prog_otp.png" style="width: 1200px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 37 </span><span class="caption-text">Program a file into OTP memory</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="programming-otp-header">
+<h3><span class="section-number">17.2.2. </span>Programming OTP Header<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-header" title="Link to this heading"></a></h3>
+<p>Once the image has been programmed, the OTP header has to be updated to tell the ROM based bootloader to load and execute this image following a power-on or hardware reset. To do this, select the <strong>System Parameters</strong> tab and then press the <strong>Connect</strong> button. Set both of the <strong>Application Flag</strong> fields to <strong>Yes</strong> and set the <strong>OTP DMA Length</strong> field to the size of the application image divided by four (in hexadecimal format). In this example the OTP image size (noted in the previous step) was 19480 and so the field is set to 0x1306.</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_hdr.png"><img alt="_images/otp_hdr.png" src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_hdr.png" style="width: 1200px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 38 </span><span class="caption-text">OTP Header Configuration</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+<p>Program these changes into OTP by pressing the <strong>Burn</strong> button.</p>
+<p>Finally, press the reset button on the development kit board (or cycle the power) and the application will be loaded from OTP into RAM by the ROM based bootloader and will start executing.</p>
+<section id="programming-otp-bd-address-da1453x">
+<h4><span class="section-number">17.2.2.1. </span>Programming OTP BD Address (DA1453x)<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#programming-otp-bd-address-da1453x" title="Link to this heading"></a></h4>
+<p>If you are using a public BD address and want to program it into OTP then it should be written to the Bluetooth Device Address field in the OTP Header. This field is 8-bytes long and the BD address should be stored in the byte order shown below (in this example an address of <strong>80:EA:CA:A0:02:A2</strong> is written to the OTP):</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_bd_addr.png"><img alt="_images/otp_bd_addr.png" src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/otp_bd_addr.png" style="width: 1200px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 39 </span><span class="caption-text">Program a BD Address into into OTP memory</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#id6" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+<section id="production-programming-otp">
+<h2><span class="section-number">17.3. </span>Production Programming OTP<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html#production-programming-otp" title="Link to this heading"></a></h2>
+<p>The method discussed above is ideal for programming a small number of devices, such as when building prototypes. When it comes to production it is <strong>strongly recommended</strong> that the Dialog Production Line Tool (PLT) is used for programming OTP. This tool can also be used to test the radio and trim the crystal etc. Further details about the PLT can be found here:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.renesas.com/us/en/products/interface-connectivity/wireless-communications/bluetooth-low-energy/da14580prodtlkt-bluetooth-low-energy-soc-16-site-production-line-tool-kit">Production Line Tool</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html" class="btn btn-neutral float-left" title="16. Flash Programming" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html" class="btn btn-neutral float-right" title="18. CodeLess™ AT Commands" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./17. OTP Programming — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html -->
+<html class="writer-html5" lang="en" data-content_root="./"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style data-merge-styles="true"></style>
+  <style data-merge-styles="true"></style><style data-merge-styles="true"></style><meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>11. Sleep Mode — DA145XX Tutorial SDK Getting started</title>
+      <link rel="stylesheet" type="text/css" href="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/pygments.css">
+      <link rel="stylesheet" type="text/css" href="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/lpc_cs_theme.css">
+
+  
+    <link rel="shortcut icon" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/_static/favicon.ico">
+      <script type="text/javascript" async="" src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/js"></script><script src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/jquery.js"></script>
+      <script src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/_sphinx_javascript_frameworks_compat.js"></script>
+      <script src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/documentation_options.js"></script>
+      <script src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/doctools.js"></script>
+      <script src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/sphinx_highlight.js"></script>
+    <script src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/theme.js"></script>
+    <link rel="index" title="Index" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/genindex.html">
+    <link rel="search" title="Search" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html">
+    <link rel="next" title="12. Hibernate Mode" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">
+    <link rel="prev" title="10. Debugging via Serial Port" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html"> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+
+          
+          
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">
+            
+              <img src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/V-Reverse.png" class="logo" alt="Logo">
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="https://lpccs-docs.renesas.com/Tutorial_SDK6/search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" spellcheck="false" data-ms-editor="true">
+    <input type="hidden" name="check_keywords" value="yes">
+    <input type="hidden" name="area" value="default">
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current" aria-expanded="true">
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/introduction.html">1. Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/preparing.html">2. Preparing the development kit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sdk_architecture.html">3. SDK Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/initial_project.html">4. Initial Project</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_address.html">5. The Bluetooth® Device Address</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/bd_name.html">6. The Bluetooth® Device Name</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_out.html">7. General Purpose Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/digital_in.html">8. General Purpose Input</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/timer.html">9. Implementing a Timer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html">10. Debugging via Serial Port</a></li>
+<li class="toctree-l1 current" aria-expanded="true"><a class="reference internal current" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#" aria-expanded="true"><button class="toctree-expand" title="Open/close menu"></button>11. Sleep Mode</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#enabling-sleep-mode">11.1. Enabling Sleep Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#waking-up-from-sleep">11.2. Waking up From Sleep</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html">12. Hibernate Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_data.html">13. Dynamic Advertising Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/adv_interval.html">14. Advertising Interval</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sw_cursor.html">15. The Software Cursor</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/flash_prog.html">16. Flash Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/otp_prog.html">17. OTP Programming</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/codeless.html">18. CodeLess™ AT Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/debug_probe.html">19. Serial Wire Debug Probe</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/heap_usage.html">20. Heap Memory Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/hci_mode.html">21. HCI Mode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html">22. SUOTA Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_overview.html#cybersecurity-mechanism-in-sdk-6-0-24-for-secure-boot-and-suota">23. Cybersecurity Mechanism in SDK 6.0.24 for Secure Boot and SUOTA</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_demo.html">24. SUOTA Demonstration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_memory.html">25. SUOTA Memory Layout</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_bootloader.html">26. SUOTA Secondary Bootloader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_app_dev.html">27. SUOTA Application Development</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/suota_mem_size.html">28. SUOTA Memory Size Modifications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/outro.html">29. Conclusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Appendices.html">30. Appendices</a></li>
+<li class="toctree-l1"><a class="reference internal" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/Revision_history.html">31. Revision history</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html">DA145XX Tutorial SDK Getting started</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active"><span class="section-number">11. </span>Sleep Mode</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="sleep-mode">
+<span id="id1"></span><h1><span class="section-number">11. </span>Sleep Mode<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#sleep-mode" title="Link to this heading"></a></h1>
+<p>Before we start working with sleep mode, we will take a look at the <strong>power consumption</strong> of our implementation.
+The <strong>Power Profiler tool</strong> of the SmartSnippets™ Toolbox will allow us to observe how power is consumed in real time.</p>
+<div class="hint admonition">
+<p class="admonition-title">Power Profiler</p>
+<p>The Power Profiler is available on the PRO development kits, and you can see how to use it <a class="reference external" href="http://lpccs-docs.renesas.com/UM-B-083/power_profiler/powerProfiler.html">here</a>. The DA1453x USB kit and the DA14585/6 BASIC kits do not support the Toolbox Power Profiler.</p>
+</div>
+<dl>
+<dt>Running our firmware at its current state should expose an advertisement event looking something like this :</dt><dd><figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/ss_initial.png"><img alt="_images/ss_initial.png" src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/ss_initial.png" style="width: 800px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 16 </span><span class="caption-text">Power consumption of our current implementation (DA14531 in buck mode).You can stop the Power Profiler and use the scroll wheel of your mouse to zoom in on a single event</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#id2" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</dd>
+</dl>
+<p>What we observe here is an idle current of approximately <strong>0.25mA</strong>.
+We can also see an advertisement on three channels, each consisting of one <strong>TX</strong> pulse (approximately <strong>3.5mA</strong>) and one <strong>RX</strong> pulse (approximately <strong>2.2mA</strong>).</p>
+<div class="warning admonition">
+<p class="admonition-title">Why enabling Sleep mode?</p>
+<p>Between advertising events, the device really isn’t doing anything other than burning power, so we should enable sleep mode and thereby save a lot of power.</p>
+</div>
+<section id="enabling-sleep-mode">
+<h2><span class="section-number">11.1. </span>Enabling Sleep Mode<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#enabling-sleep-mode" title="Link to this heading"></a></h2>
+<p>As mentioned in the introduction, sleep mode functionality is fully managed by the SDK.</p>
+<p>All we have to do to enable this functionality is to change the default sleep mode in <code class="docutils literal notranslate"><span class="pre">user_config.h</span></code> from:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>/******************************************
+* Default sleep mode. Possible values are:
+*
+* - ARCH_SLEEP_OFF
+* - ARCH_EXT_SLEEP_ON
+* - ARCH_EXT_SLEEP_OTP_COPY_ON
+*
+******************************************
+*/
+
+<span class="gd">- static const sleep_state_t app_default_sleep_mode = ARCH_SLEEP_OFF;</span>
+<span class="gi">+ static const sleep_state_t app_default_sleep_mode = ARCH_EXT_SLEEP_ON;</span>
+</pre></div>
+</div>
+<dl>
+<dt>If we build the project and run it again (<strong>F7</strong> then twice <strong>Ctrl+F5</strong>), we will see the following in the Power Profiler:</dt><dd><figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/ss_sleep.png"><img alt="_images/ss_sleep.png" src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/ss_sleep.png" style="width: 800px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 17 </span><span class="caption-text">Our implementation with sleep enabled (DA14531 in buck mode)</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#id3" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</dd>
+</dl>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Chip wont go to sleep mode with the debugger attached.</p>
+</div>
+<p>The <strong>current</strong> has been <strong>reduced</strong> dramatically between the advertising events.
+In fact, the current has dropped <strong>from</strong> the <strong>0.25mA</strong> we observed previously to as little as <strong>1.2uA</strong>.
+We can also see that the device knows when to wake up for the next advertising event, and this is all completely handled by the SDK6.
+All we did was enabling sleep.</p>
+<p>Using the DA14531 or DA1453x DevkitP, you may have noticed that you have to physically reset target to attach the debugger after you enabled sleep. You can get around this by lowering the J-Link clock speed to <strong>2MHz</strong>. Open the <strong>Debug</strong> tab in <strong>Options for Target</strong> (<code class="docutils literal notranslate"><span class="pre">Alt</span></code> + <code class="docutils literal notranslate"><span class="pre">F7</span></code>) and change the <code class="docutils literal notranslate"><span class="pre">Max</span> <span class="pre">Clock</span></code> setting</p>
+<dl>
+<dt>as shown below:</dt><dd><figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/531_clock_2mhz.png"><img alt="_images/531_clock_2mhz.png" src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/531_clock_2mhz.png" style="width: 600px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 18 </span><span class="caption-text">Change the J-Link clock setting when using the DA14531 PRO kit</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#id4" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</dd>
+</dl>
+<div class="admonition hint">
+<p class="admonition-title">Hint</p>
+<p>You can find a lot more information about sleep mode in the <a class="reference external" href="http://lpccs-docs.renesas.com/tutorial_da145xx_sleep_modes/index.html">DA1453x Sleep Mode Tutorial</a>.</p>
+</div>
+</section>
+<section id="waking-up-from-sleep">
+<span id="gpio-issue"></span><h2><span class="section-number">11.2. </span>Waking up From Sleep<a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#waking-up-from-sleep" title="Link to this heading"></a></h2>
+<p>When the device wakes back up from sleep, it attempts to re-initialize the GPIOs and other peripherals.
+This is achieved by calling the <code class="docutils literal notranslate"><span class="pre">periph_init()</span></code> function in <strong>user_periph_setup.c</strong> right after waking up.
+For digital output pins, this presents an issue because the re-configuration of the output pin also sets the output state.</p>
+<p>If you establish a BLE connection with our device, you might notice an issue. The LED, initially programmed to stay on for <strong>2 seconds</strong>, now only briefly flashes after enabling sleep.</p>
+<dl>
+<dt>By using the Power Profiler, you can observe the expected behavior:</dt><dd><figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/ss_led-off.png"><img alt="_images/ss_led-off.png" src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/ss_led-off.png" style="width: 800px;">
+</a>
+<figcaption>
+<p><span class="caption-number">Figure 19 </span><span class="caption-text">The LED turns off when the device wakes up from sleep (DA14531 in buck mode)</span><a class="headerlink" href="https://lpccs-docs.renesas.com/Tutorial_SDK6/sleep_mode.html#id5" title="Link to this image"></a></p>
+</figcaption>
+</figure>
+</dd>
+</dl>
+<p>The LED turns on when the connection is established but turns off as soon as we wake up for the next connection event.</p>
+<dl>
+<dt>In the following we will fix this issue, by retaining the desired state of the LED in a variable and configure the digital output depending on the state of this variable.</dt><dd><ol class="arabic">
+<li><p>First we will declare a boolean in such a way that it will be retained during sleep. In <strong>user_peripheral_template.c</strong>, right after the include statements at the top, declare a retained global boolean as shown below:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">bool</span><span class="w"> </span><span class="n">my_led_state</span><span class="w"> </span><span class="n">__SECTION_ZERO</span><span class="p">(</span><span class="s">"retention_mem_area0"</span><span class="p">);</span><span class="w"> </span><span class="c1">// @RETENTION MEMORY</span>
+</pre></div>
+</div>
+</li>
+<li><p>We will then re-route the <code class="docutils literal notranslate"><span class="pre">app_on_init</span></code> callback to user space. This will provide us a place where we can initialize the <code class="docutils literal notranslate"><span class="pre">my_led_state</span></code> boolean. In <strong>user_callback_config.h</strong> locate the code snippet below:</p>
+<div class="highlight-diff notranslate"><div class="highlight"><pre><span></span>static const struct arch_main_loop_callbacks user_app_main_loop_callbacks = {
+<span class="gd">-   .app_on_init         = default_app_on_init,</span>
+<span class="gi">+   .app_on_init         = user_app_on_init,</span>
+<span class="w"> </span>  ~
+</pre></div>
+</div>
+</li>
+<li><p>Now, add a prototype to this function in <strong>user_peripheral_template.h</strong>:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_app_on_init</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>This gives us a function that we can use for initialization of our global variable. In <strong>user_peripheral_template.c</strong> add the following code:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">user_app_on_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="n">my_led_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">   </span><span class="n">default_app_on_init</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>We have implemented control of the LED in <strong>user_empty_peripheral_template.c</strong>.We must now make sure that our global boolean, <code class="docutils literal notranslate"><span class="pre">my_led_state</span></code>, is set accordingly.</p>
+</li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">control_LED()</span></code> function, as a last statement, add the following:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">my_led_state</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">state</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>At this point we can rely on <code class="docutils literal notranslate"><span class="pre">my_led_state</span></code> to retain the desired LED state during sleep.</p></li>
+</ul>
+</li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">set_pad_functions()</span></code> of <strong>user_periph_setup.c</strong>, replace the GPIO configuration of our LED pin with the following:</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">extern</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">my_led_state</span><span class="p">;</span>
+<span class="n">GPIO_ConfigurePin</span><span class="p">(</span><span class="n">LED_PORT</span><span class="p">,</span><span class="w"> </span><span class="n">LED_PIN</span><span class="p">,</span><span class="w"> </span><span class="n">OUTPUT</span><span class="p">,</span><span class="w"> </span><span class="n">PID_GPIO</span><span class="p">,</span><span class="w"> </span><span class="n">my_led_state</span><span class="p">);</span>
+</pre></div>
+</div>
+</li>
+<li><p>Build the project and run it again to ensure that the LED remains on for <strong>2 seconds</strong> after a BLE connection is established.</p></li>
+</ol>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/serial_port.html" class="btn btn-neutral float-left" title="10. Debugging via Serial Port" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="https://lpccs-docs.renesas.com/Tutorial_SDK6/da1453x_hibernate_mode.html" class="btn btn-neutral float-right" title="12. Hibernate Mode" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr>
+
+  <div role="contentinfo">
+    <p>© Copyright 2025, Renesas Electronics Corporation.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async="" src="./11. Sleep Mode — DA145XX Tutorial SDK Getting started_files/js(1)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-ZXND4SB7CL', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+
+</body><editor-card style="position:absolute;top:0px;left:0px;z-index:auto;display: block !important"><div dir="ltr" style="all: initial;"><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"><div style="all: initial;"><template shadowrootmode="open"></template></div></div><div style="color-scheme: initial; forced-color-adjust: initial; mask: initial; math-depth: initial; position: absolute; position-anchor: initial; text-size-adjust: initial; appearance: initial; color: initial; font: initial; font-palette: initial; font-synthesis: initial; position-area: initial; text-orientation: initial; text-rendering: initial; text-spacing-trim: initial; -webkit-font-smoothing: initial; -webkit-locale: initial; -webkit-text-orientation: initial; -webkit-writing-mode: initial; writing-mode: initial; zoom: initial; accent-color: initial; place-content: initial; place-items: initial; place-self: initial; alignment-baseline: initial; anchor-name: initial; anchor-scope: initial; animation-composition: initial; animation: initial; app-region: initial; aspect-ratio: initial; backdrop-filter: initial; backface-visibility: initial; background: initial; background-blend-mode: initial; baseline-shift: initial; baseline-source: initial; block-size: initial; border-block: initial; border: initial; border-radius: initial; border-collapse: initial; border-end-end-radius: initial; border-end-start-radius: initial; border-inline: initial; border-start-end-radius: initial; border-start-start-radius: initial; inset: initial; box-decoration-break: initial; box-shadow: initial; box-sizing: initial; break-after: initial; break-before: initial; break-inside: initial; buffered-rendering: initial; caption-side: initial; caret-color: initial; clear: initial; clip: initial; clip-path: initial; clip-rule: initial; color-interpolation: initial; color-interpolation-filters: initial; color-rendering: initial; columns: initial; column-fill: initial; gap: initial; column-rule: initial; column-span: initial; contain: initial; contain-intrinsic-block-size: initial; contain-intrinsic-size: initial; contain-intrinsic-inline-size: initial; container: initial; content: initial; content-visibility: initial; corner-shape: initial; corner-block-end-shape: initial; corner-block-start-shape: initial; counter-increment: initial; counter-reset: initial; counter-set: initial; cursor: initial; cx: initial; cy: initial; d: initial; display: initial; dominant-baseline: initial; dynamic-range-limit: initial; empty-cells: initial; field-sizing: initial; fill: initial; fill-opacity: initial; fill-rule: initial; filter: initial; flex: initial; flex-flow: initial; float: initial; flood-color: initial; flood-opacity: initial; grid: initial; grid-area: initial; height: initial; hyphenate-character: initial; hyphenate-limit-chars: initial; hyphens: initial; image-orientation: initial; image-rendering: initial; initial-letter: initial; inline-size: initial; inset-block: initial; inset-inline: initial; interpolate-size: initial; isolation: initial; letter-spacing: initial; lighting-color: initial; line-break: initial; list-style: initial; margin-block: initial; margin: initial; margin-inline: initial; marker: initial; mask-type: initial; math-shift: initial; math-style: initial; max-block-size: initial; max-height: initial; max-inline-size: initial; max-width: initial; min-block-size: initial; min-height: initial; min-inline-size: initial; min-width: initial; mix-blend-mode: initial; object-fit: initial; object-position: initial; object-view-box: initial; offset: initial; opacity: initial; order: initial; orphans: initial; outline: initial; outline-offset: initial; overflow-anchor: initial; overflow-block: initial; overflow-clip-margin: initial; overflow-inline: initial; overflow-wrap: initial; overflow: initial; overlay: initial; overscroll-behavior-block: initial; overscroll-behavior-inline: initial; overscroll-behavior: initial; padding-block: initial; padding: initial; padding-inline: initial; page: initial; page-orientation: initial; paint-order: initial; perspective: initial; perspective-origin: initial; pointer-events: initial; position-try: initial; position-visibility: initial; print-color-adjust: initial; quotes: initial; r: initial; reading-flow: initial; reading-order: initial; resize: initial; rotate: initial; ruby-align: initial; ruby-position: initial; rx: initial; ry: initial; scale: initial; scroll-behavior: initial; scroll-initial-target: initial; scroll-margin-block: initial; scroll-margin: initial; scroll-margin-inline: initial; scroll-marker-group: initial; scroll-padding-block: initial; scroll-padding: initial; scroll-padding-inline: initial; scroll-snap-align: initial; scroll-snap-stop: initial; scroll-snap-type: initial; scroll-timeline: initial; scrollbar-color: initial; scrollbar-gutter: initial; scrollbar-width: initial; shape-image-threshold: initial; shape-margin: initial; shape-outside: initial; shape-rendering: initial; size: initial; speak: initial; stop-color: initial; stop-opacity: initial; stroke: initial; stroke-dasharray: initial; stroke-dashoffset: initial; stroke-linecap: initial; stroke-linejoin: initial; stroke-miterlimit: initial; stroke-opacity: initial; stroke-width: initial; tab-size: initial; table-layout: initial; text-align: initial; text-align-last: initial; text-anchor: initial; text-box: initial; text-combine-upright: initial; text-decoration: initial; text-decoration-skip-ink: initial; text-emphasis: initial; text-emphasis-position: initial; text-indent: initial; text-overflow: initial; text-shadow: initial; text-transform: initial; text-underline-offset: initial; text-underline-position: initial; text-wrap: initial; timeline-scope: initial; touch-action: initial; transform: initial; transform-box: initial; transform-origin: initial; transform-style: initial; transition: initial; translate: initial; user-select: initial; vector-effect: initial; vertical-align: initial; view-timeline: initial; view-transition-class: initial; view-transition-name: initial; visibility: initial; border-spacing: initial; -webkit-box-align: initial; -webkit-box-decoration-break: initial; -webkit-box-direction: initial; -webkit-box-flex: initial; -webkit-box-ordinal-group: initial; -webkit-box-orient: initial; -webkit-box-pack: initial; -webkit-box-reflect: initial; -webkit-line-break: initial; -webkit-line-clamp: initial; -webkit-mask-box-image: initial; -webkit-rtl-ordering: initial; -webkit-ruby-position: initial; -webkit-tap-highlight-color: initial; -webkit-text-combine: initial; -webkit-text-decorations-in-effect: initial; -webkit-text-fill-color: initial; -webkit-text-security: initial; -webkit-text-stroke: initial; -webkit-user-drag: initial; white-space-collapse: initial; widows: initial; width: initial; will-change: initial; word-break: initial; word-spacing: initial; x: initial; y: initial; z-index: 2147483647;"><link rel="stylesheet" href="chrome-extension://gpaiobkfhnonedkhhfjpmhdalgeoebfa/fonts/fabric-icons.css"></div></div></editor-card></html>

@@ -1,0 +1,12 @@
+CLEARED_WORKBENCH_2.0.20=true
+DEBUGGER_EXECUTABLE=Ozone.app
+DEBUGGER_PATH=/Applications/SEGGER/Ozone_3.28e
+FAMILY=DA1453x
+SDK_TYPE=6.0.20
+SYSTEMVIEW_EXECUTABLE=SystemView.app
+SYSTEMVIEW_PATH=/Applications/SEGGER/SystemView_2.42
+eclipse.preferences.version=1
+skip_segger_jlink=false
+skip_segger_ozone=false
+skip_segger_systemview=false
+skip_toolchain=false

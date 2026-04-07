@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Bluetooth Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🔬 Web Bluetooth API Test</h1>
+    
+    <div class="test-card">
+        <h2>Browser Support Test</h2>
+        <button onclick="testWebBluetoothSupport()">Test Web Bluetooth Support</button>
+        <div id="supportResult" class="result"></div>
+    </div>
+    
+    <div class="test-card">
+        <h2>Device Scan Test</h2>
+        <button onclick="testDeviceScan()">Scan for DA14531 Device</button>
+        <div id="scanResult" class="result"></div>
+    </div>
+    
+    <div class="test-card">
+        <h2>Service Discovery Test</h2>
+        <button onclick="testServiceDiscovery()">Test Service Discovery</button>
+        <div id="serviceResult" class="result"></div>
+    </div>
+
+    <script>
+        let testDevice = null;
+        let testServer = null;
+
+        function log(elementId, message, type = 'info') {
+            const element = document.getElementById(elementId);
+            element.className = `result ${type}`;
+            element.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        }
+
+        function testWebBluetoothSupport() {
+            if (!navigator.bluetooth) {
+                log('supportResult', 'Web Bluetooth API is NOT supported in this browser', 'error');
+                return;
+            }
+            
+            log('supportResult', 'Web Bluetooth API is supported! ✅', 'success');
+        }
+
+        async function testDeviceScan() {
+            try {
+                log('scanResult', 'Scanning for devices...', 'info');
+                
+                const device = await navigator.bluetooth.requestDevice({
+                    filters: [
+                        { name: 'DLG_TEMPR' }
+                    ],
+                    optionalServices: [0x1809] // Health Thermometer Service
+                });
+                
+                testDevice = device;
+                log('scanResult', `Found device: ${device.name} (${device.id})`, 'success');
+                
+            } catch (error) {
+                log('scanResult', `Scan failed: ${error.message}`, 'error');
+            }
+        }
+
+        async function testServiceDiscovery() {
+            if (!testDevice) {
+                log('serviceResult', 'Please scan for a device first', 'error');
+                return;
+            }
+
+            try {
+                log('serviceResult', 'Connecting to GATT server...', 'info');
+                testServer = await testDevice.gatt.connect();
+                
+                log('serviceResult', 'Getting Health Thermometer service...', 'info');
+                const service = await testServer.getPrimaryService(0x1809);
+                
+                log('serviceResult', 'Getting characteristics...', 'info');
+                const characteristics = await service.getCharacteristics();
+                
+                let charInfo = `Found ${characteristics.length} characteristics:\n`;
+                for (const char of characteristics) {
+                    charInfo += `- ${char.uuid}\n`;
+                }
+                
+                log('serviceResult', charInfo, 'success');
+                
+            } catch (error) {
+                log('serviceResult', `Service discovery failed: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<main class="page">
+
+  <header>
+    <h1>BLE Thermometer</h1>
+    <p class="subtitle">DA14535 · DLG_THRM · Health Thermometer Profile</p>
+  </header>
+
+  @if (!bluetoothSupported) {
+    <div class="card alert">
+      <span class="icon">⚠️</span>
+      Web Bluetooth is not supported in this browser.<br>
+      Please use <strong>Chrome</strong> or <strong>Edge</strong> on macOS.
+    </div>
+  }
+
+  @if (bluetoothSupported) {
+
+    @switch (status) {
+
+      @case ('idle') {
+        <div class="card">
+          <p class="hint">Press the button to scan and connect to the thermometer.</p>
+          <button class="btn primary" (click)="connect()">
+            Connect to DLG_THRM
+          </button>
+        </div>
+      }
+
+      @case ('connecting') {
+        <div class="card">
+          <div class="spinner"></div>
+          <p class="hint">Scanning for DLG_THRM…</p>
+        </div>
+      }
+
+      @case ('connected') {
+        <div class="card connected">
+          <div class="status-row">
+            <span class="status-dot"></span>
+            <span class="status-label">Connected</span>
+          </div>
+
+          @if (temperature !== null) {
+            <div class="temp-display">
+              <span class="temp-value">{{ temperature | number:(rawCelsiusMode ? '1.0-0' : '1.2-2') }}</span>
+              <span class="temp-unit">°C</span>
+            </div>
+          } @else {
+            <p class="hint">Waiting for first reading…</p>
+          }
+
+          <button class="btn secondary" (click)="disconnect()">
+            Disconnect
+          </button>
+        </div>
+      }
+
+      @case ('error') {
+        <div class="card alert">
+          <p class="error-msg">{{ errorMessage }}</p>
+          <button class="btn primary" (click)="connect()">
+            Try Again
+          </button>
+        </div>
+      }
+
+    }
+
+    <div class="card settings">
+      <label class="toggle-row">
+        <div class="toggle-text">
+          <span class="toggle-label">Raw Celsius mode</span>
+          <span class="toggle-desc">
+            @if (rawCelsiusMode) {
+              Firmware built with <code>CFG_TEMP_RAW_CELSIUS</code> — mantissa used directly as °C
+            } @else {
+              Standard IEEE&#8209;11073 decode — mantissa&nbsp;×&nbsp;10<sup>exponent</sup>
+            }
+          </span>
+        </div>
+        <button
+          class="toggle-btn"
+          [class.on]="rawCelsiusMode"
+          (click)="toggleRawCelsius()"
+          [attr.aria-pressed]="rawCelsiusMode"
+          aria-label="Toggle raw Celsius mode">
+          <span class="toggle-thumb"></span>
+        </button>
+      </label>
+    </div>
+
+  }
+
+  <footer>
+    <small>Requires Chrome or Edge — Web Bluetooth API</small>
+  </footer>
+
+</main>
