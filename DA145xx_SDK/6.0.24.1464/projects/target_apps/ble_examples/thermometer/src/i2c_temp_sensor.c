@@ -20,9 +20,10 @@
  *    3.  On any I2C error          -> callback: cb(false)
  *
  *  Read phase  (i2c_temp_sensor_read):
- *    1. Read 6 data bytes from AHT20 (async).
- *    2. Decode temperature and humidity.
- *    3. callback: cb(success, temp_x100, humi_x100)
+ *    1. Read 7 bytes from AHT20 (async): status + 5 data bytes + CRC.
+ *    2. Verify the CRC-8 over the first 6 bytes.
+ *    3. Decode temperature and humidity.
+ *    4. callback: cb(success, temp_x100, humi_x100)
  *
  * Callbacks fire from I2C ISR context.  Only IRQ-safe SDK calls are made from
  * within this file (none -- we just fire the user callback and let the caller
@@ -51,7 +52,7 @@
  */
 static uint8_t s_status_buf;        ///< 1-byte status read buffer
 static uint8_t s_cmd_buf[3];        ///< 3-byte command write buffer
-static uint8_t s_rx_buf[6];         ///< 6-byte sensor data read buffer
+static uint8_t s_rx_buf[7];         ///< status + 5 data bytes + CRC read buffer
 
 /*
  * Saved application callbacks.
@@ -173,18 +174,38 @@ void i2c_temp_sensor_read(i2c_temp_read_cb_t cb)
     build_i2c_cfg(&cfg);
     i2c_init(&cfg);
 
-    i2c_master_receive_buffer_async(s_rx_buf, 6,
+    i2c_master_receive_buffer_async(s_rx_buf, 7,
                                     on_data_read, NULL, 0);
 }
 
-/* Called from I2C ISR when the 6-byte data read completes */
+/*
+ * AHT20 CRC-8: polynomial x^8 + x^5 + x^4 + 1 (0x31), init 0xFF, MSB first,
+ * computed over the status byte and the 5 data bytes.
+ */
+static uint8_t aht20_crc8(const uint8_t *data, uint8_t len)
+{
+    uint8_t crc = 0xFF;
+
+    for (uint8_t i = 0; i < len; i++)
+    {
+        crc ^= data[i];
+        for (uint8_t bit = 0; bit < 8; bit++)
+        {
+            crc = (crc & 0x80) ? (uint8_t)((crc << 1) ^ 0x31)
+                               : (uint8_t)(crc << 1);
+        }
+    }
+    return crc;
+}
+
+/* Called from I2C ISR when the 7-byte data read completes */
 static void on_data_read(void *cb_data, uint16_t len, bool success)
 {
     (void)cb_data;
 
     i2c_release();
 
-    if (!success || len != 6)
+    if (!success || len != 7)
     {
         if (s_read_cb) s_read_cb(false, 0, 0);
         return;
@@ -193,6 +214,13 @@ static void on_data_read(void *cb_data, uint16_t len, bool success)
     if (s_rx_buf[0] & AHT20_STATUS_BUSY)
     {
         /* Conversion not yet complete */
+        if (s_read_cb) s_read_cb(false, 0, 0);
+        return;
+    }
+
+    if (aht20_crc8(s_rx_buf, 6) != s_rx_buf[6])
+    {
+        /* Corrupted transfer -- discard this sample */
         if (s_read_cb) s_read_cb(false, 0, 0);
         return;
     }

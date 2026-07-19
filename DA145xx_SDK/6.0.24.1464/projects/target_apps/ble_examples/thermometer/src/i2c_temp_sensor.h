@@ -90,8 +90,8 @@ void i2c_temp_sensor_trigger(i2c_temp_trig_cb_t cb);
  *
  * Must be called AHT20_CONVERSION_MS after i2c_temp_sensor_trigger().
  * Initiates the I2C transaction non-blocking.  The supplied callback is called
- * from the I2C interrupt handler when the 6-byte result is received or an
- * error occurs.
+ * from the I2C interrupt handler when the 7-byte result (status + data + CRC)
+ * is received and CRC-validated, or an error occurs.
  *
  * @param cb  Completion callback (must not be NULL).
  */

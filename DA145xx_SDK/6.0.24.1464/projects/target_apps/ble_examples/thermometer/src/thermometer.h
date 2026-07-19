@@ -67,8 +67,6 @@ void user_app_on_db_init_complete(void);
 void user_app_on_connection(uint8_t conidx, struct gapc_connection_req_ind const *param);
 void user_app_on_disconnect(struct gapc_disconnect_ind const *param);
 
-arch_main_loop_callback_ret_t user_on_ble_powered(void);
-
 void user_catch_rest_hndl(ke_msg_id_t const msgid,
                           void const *param,
                           ke_task_id_t const dest_id,

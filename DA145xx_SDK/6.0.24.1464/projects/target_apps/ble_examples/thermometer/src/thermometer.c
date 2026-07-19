@@ -11,7 +11,8 @@
  *   Power on  -> start undirected connectable advertising (pairing mode)
  *   Pairing mode:
  *     - LED blinks 1 s on / 1 s off (100 timer units per toggle)
- *     - Advertising stops after 3 minutes; button press or power-cycle restarts it
+ *     - Advertising stops after user_default_hnd_conf.advertise_period (1 min);
+ *       button press or power-cycle restarts it
  *   Connected:
  *     - LED solid on
  *     - When collector enables HTP indications, temperature timer starts
@@ -223,8 +224,13 @@ static void on_trigger_done(bool triggered)
         return;
     }
 
-    /* Start the conversion wait window -- app_easy_timer is IRQ-safe */
-    aht20_read_timer = app_easy_timer((AHT20_CONVERSION_MS / 10), aht20_read_cb);
+    /* Start the conversion wait window -- app_easy_timer is IRQ-safe.
+     * Skip if a previous conversion window is still open so the handle of a
+     * live timer is never overwritten (would leak a timer pool slot). */
+    if (aht20_read_timer == EASY_TIMER_INVALID_TIMER)
+    {
+        aht20_read_timer = app_easy_timer((AHT20_CONVERSION_MS / 10), aht20_read_cb);
+    }
 }
 
 /* BLE event loop callback — fires AHT20_CONVERSION_MS after the trigger */
@@ -365,7 +371,20 @@ static void stop_temp_timer(void)
  ****************************************************************************************
  */
 
-static void app_button_press_wakeup_cb(void)
+/* Main-loop callback, invoked via app_easy_wakeup() after a button press.
+ * BLE API calls (disconnect) must be made here, not in the WKUPCT ISR. */
+static void app_button_wakeup_cb(void)
+{
+    if (therm_state == APP_STATE_CONNECTED && current_conidx != GAP_INVALID_CONIDX)
+    {
+        app_easy_gap_disconnect(current_conidx);
+    }
+}
+
+/* WKUPCT ISR callback -- fires on the button press edge.  The wakeup IRQ is
+ * one-shot; periph_init() (always executed on DA1453x) re-arms it through
+ * app_button_enable(). */
+static void app_button_press_cb(void)
 {
 #if defined (__DA14531__)
     periph_init();
@@ -381,18 +400,21 @@ static void app_button_press_wakeup_cb(void)
         arch_set_sleep_mode(app_default_sleep_mode);
         arch_ble_force_wakeup();
         arch_ble_ext_wakeup_off();
-        app_easy_wakeup();
     }
 
-    if (therm_state == APP_STATE_CONNECTED && current_conidx != GAP_INVALID_CONIDX)
-    {
-        app_easy_gap_disconnect(current_conidx);
-    }
+    /* Bounce to the BLE event loop for the disconnect action */
+    app_easy_wakeup();
 }
 
 void app_button_enable(void)
 {
-    app_easy_wakeup_set(app_button_press_wakeup_cb);
+    app_easy_wakeup_set(app_button_wakeup_cb);
+    wkupct_register_callback(app_button_press_cb);
+    wkupct_enable_irq(WKUPCT_PIN_SELECT(GPIO_BUTTON_PORT, GPIO_BUTTON_PIN),
+                      WKUPCT_PIN_POLARITY(GPIO_BUTTON_PORT, GPIO_BUTTON_PIN,
+                                          WKUPCT_PIN_POLARITY_LOW),
+                      1,     /* 1 event */
+                      40);   /* debounce time in ms */
 }
 
 /*
@@ -448,6 +470,10 @@ void app_advertise_complete(const uint8_t status)
 {
     if (status == GAP_ERR_CANCELED)
     {
+        /* Advertising timed out.  Turn the LED off and cancel the blink timer
+         * so the LED pad is not latched high for the whole deep sleep. */
+        stop_led_blink();
+
         /* Configure the wakeup controller for the button (P0_11) before
          * entering deep sleep, so a button press can wake the system. */
         app_button_enable();
@@ -489,8 +515,6 @@ void user_app_on_db_init_complete(void)
 {
     default_app_on_db_init_complete();
 
-    app_htpt_set_initial_measurement_ind_cfg(true);
-
     app_htpt_create_db();
     app_batt_init();
     app_bass_create_db();
@@ -527,16 +551,6 @@ void user_app_on_disconnect(struct gapc_disconnect_ind const *param)
     start_led_blink();
 
     default_app_on_disconnect(param);
-}
-
-/*
- * MAIN LOOP CALLBACK
- ****************************************************************************************
- */
-
-arch_main_loop_callback_ret_t user_on_ble_powered(void)
-{
-    return GOTO_SLEEP;
 }
 
 /*
