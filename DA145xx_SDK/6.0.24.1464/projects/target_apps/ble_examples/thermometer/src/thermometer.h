@@ -27,6 +27,32 @@
 /// Default temperature measurement interval in seconds
 #define TEMP_MEAS_INTERVAL_DEFAULT_SEC  5
 
+/// Samples taken per measurement cycle (1..3). 3 -> median, 2 -> mean, 1 -> raw.
+#define TEMP_SAMPLES_PER_MEASUREMENT    3
+
+/// Gap between samples within one cycle, in 10 ms timer ticks (10 = 100 ms)
+#define TEMP_SAMPLE_GAP_TICKS           10
+
+/**
+ * Calibration offset added to every reported temperature, in 0.01 degC units
+ * (e.g. -30 = report 0.30 degC lower).  Compensates a fixed skin-to-sensor
+ * offset; 0 = no correction.
+ */
+#define CFG_TEMP_OFFSET_X100            0
+
+/// Consecutive fully-failed measurement cycles before an AHT20 soft reset
+#define AHT20_FAILS_BEFORE_SOFT_RESET   5
+
+/// Consecutive fully-failed cycles before SCL bus recovery (multiple of the above)
+#define AHT20_FAILS_BEFORE_BUS_RECOVERY 10
+
+/**
+ * BLE transmit power level (rf_tx_pwr_lvl_t, applied in periph_init).
+ * RF_TX_PWR_LVL_0d0 = 0 dBm — ample for bedside range and cheaper than the
+ * +2.5 dBm maximum.  Comment out to keep the SDK default (maximum).
+ */
+#define CFG_TX_POWER_LEVEL              RF_TX_PWR_LVL_0d0
+
 /**
  * CFG_TEMP_RAW_CELSIUS — temperature encoding selector
  *

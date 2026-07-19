@@ -38,14 +38,14 @@
 #include "i2c_temp_sensor.h"
 #include "i2c.h"
 #include "user_periph_setup.h"
+#include "codec.h"
 
 /*
- * AHT20 command bytes
+ * AHT20 command bytes (status flags live in codec.h)
  */
 #define AHT20_CMD_INIT          (0xBE)
 #define AHT20_CMD_TRIGGER       (0xAC)
-#define AHT20_STATUS_BUSY       (0x80)
-#define AHT20_STATUS_CALIBRATED (0x08)
+#define AHT20_CMD_SOFT_RESET    (0xBA)
 
 /*
  * Static I2C buffers -- must remain valid for the lifetime of an async transfer.
@@ -67,6 +67,7 @@ static void on_status_read(void *cb_data, uint16_t len, bool success);
 static void on_init_sent  (void *cb_data, uint16_t len, bool success);
 static void on_trigger_sent(void *cb_data, uint16_t len, bool success);
 static void on_data_read  (void *cb_data, uint16_t len, bool success);
+static void on_reset_sent (void *cb_data, uint16_t len, bool success);
 
 /*
  * ─── I2C CONFIGURATION ──────────────────────────────────────────────────────
@@ -178,68 +179,50 @@ void i2c_temp_sensor_read(i2c_temp_read_cb_t cb)
                                     on_data_read, NULL, 0);
 }
 
-/*
- * AHT20 CRC-8: polynomial x^8 + x^5 + x^4 + 1 (0x31), init 0xFF, MSB first,
- * computed over the status byte and the 5 data bytes.
- */
-static uint8_t aht20_crc8(const uint8_t *data, uint8_t len)
-{
-    uint8_t crc = 0xFF;
-
-    for (uint8_t i = 0; i < len; i++)
-    {
-        crc ^= data[i];
-        for (uint8_t bit = 0; bit < 8; bit++)
-        {
-            crc = (crc & 0x80) ? (uint8_t)((crc << 1) ^ 0x31)
-                               : (uint8_t)(crc << 1);
-        }
-    }
-    return crc;
-}
-
 /* Called from I2C ISR when the 7-byte data read completes */
 static void on_data_read(void *cb_data, uint16_t len, bool success)
 {
+    aht20_sample_t sample;
+
     (void)cb_data;
 
     i2c_release();
 
-    if (!success || len != 7)
+    if (!success || len != 7 || !aht20_decode(s_rx_buf, &sample))
     {
+        /* Transfer failed, sensor still busy, or CRC mismatch */
         if (s_read_cb) s_read_cb(false, 0, 0);
         return;
     }
 
-    if (s_rx_buf[0] & AHT20_STATUS_BUSY)
-    {
-        /* Conversion not yet complete */
-        if (s_read_cb) s_read_cb(false, 0, 0);
-        return;
-    }
+    if (s_read_cb) s_read_cb(true, sample.temp_x100, sample.humi_x100);
+}
 
-    if (aht20_crc8(s_rx_buf, 6) != s_rx_buf[6])
-    {
-        /* Corrupted transfer -- discard this sample */
-        if (s_read_cb) s_read_cb(false, 0, 0);
-        return;
-    }
+/*
+ * ─── SOFT RESET ─────────────────────────────────────────────────────────────
+ */
 
-    /* Decode AHT20 raw values */
-    uint32_t raw_hum  = ((uint32_t)s_rx_buf[1] << 12)
-                      | ((uint32_t)s_rx_buf[2] <<  4)
-                      | ((uint32_t)s_rx_buf[3] >>  4);
+void i2c_temp_sensor_soft_reset(void)
+{
+    i2c_cfg_t cfg;
 
-    uint32_t raw_temp = ((uint32_t)(s_rx_buf[3] & 0x0F) << 16)
-                      | ((uint32_t)s_rx_buf[4] <<  8)
-                      |  (uint32_t)s_rx_buf[5];
+    build_i2c_cfg(&cfg);
+    i2c_init(&cfg);
 
-    /* raw_temp * 20000 / 1048576 == raw_temp * 625 / 32768
-     * Use the reduced fraction to stay within 32-bit range:
-     * max raw_temp (2^20-1) * 625 = 655,359,375 which fits in uint32_t. */
-    int16_t  temp_x100 = (int16_t)((int32_t)((raw_temp * 625UL) / 32768UL) - 5000);
-    uint32_t h         = (raw_hum * 10000UL) / 1048576UL;
-    uint16_t humi_x100 = (uint16_t)(h > 10000UL ? 10000UL : h);
+    /* Single-byte soft reset command; sensor restarts within 20 ms and
+     * re-runs its power-on calibration. */
+    s_cmd_buf[0] = AHT20_CMD_SOFT_RESET;
+    i2c_master_transmit_buffer_async(s_cmd_buf, 1,
+                                     on_reset_sent, NULL,
+                                     I2C_F_WAIT_FOR_STOP);
+}
 
-    if (s_read_cb) s_read_cb(true, temp_x100, humi_x100);
+/* Called from I2C ISR when the soft reset write completes (or aborts) */
+static void on_reset_sent(void *cb_data, uint16_t len, bool success)
+{
+    (void)cb_data;
+    (void)len;
+    (void)success;
+
+    i2c_release();
 }

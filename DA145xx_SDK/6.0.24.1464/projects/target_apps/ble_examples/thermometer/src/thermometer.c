@@ -10,13 +10,18 @@
  * State machine:
  *   Power on  -> start undirected connectable advertising (pairing mode)
  *   Pairing mode:
- *     - LED blinks 1 s on / 1 s off (100 timer units per toggle)
+ *     - LED flashes 50 ms every 2 s (short duty cycle to save battery)
  *     - Advertising stops after user_default_hnd_conf.advertise_period (1 min);
  *       button press or power-cycle restarts it
  *   Connected:
  *     - LED solid on
  *     - When collector enables HTP indications, temperature timer starts
- *     - Temperature is read from AHT20 via I2C and sent every INTERVAL seconds
+ *     - Each cycle takes up to TEMP_SAMPLES_PER_MEASUREMENT AHT20 readings
+ *       100 ms apart and sends the median (3), mean (2) or single value,
+ *       plus CFG_TEMP_OFFSET_X100, every INTERVAL seconds
+ *     - After AHT20_FAILS_BEFORE_SOFT_RESET consecutive dead cycles the AHT20
+ *       is soft-reset; after AHT20_FAILS_BEFORE_BUS_RECOVERY the I2C bus is
+ *       manually recovered first (repeats every 5 further failures)
  *     - Button press -> disconnect and return to pairing mode
  *   Disconnected:
  *     - LED off
@@ -65,6 +70,7 @@
 #include "app_easy_timer.h"
 #include "app_default_handlers.h"
 #include "i2c_temp_sensor.h"
+#include "codec.h"
 
 #if defined (__DA14531__)
 #include "timer1.h"
@@ -108,9 +114,20 @@ static timer_hnd send_ind_timer = EASY_TIMER_INVALID_TIMER;
 /// Timer handle for LED blink while advertising
 static timer_hnd led_blink_timer = EASY_TIMER_INVALID_TIMER;
 
+/// Timer handle for the gap between samples within one measurement cycle
+static timer_hnd sample_gap_timer = EASY_TIMER_INVALID_TIMER;
+
 /// Pending measurement result (written from I2C ISR, read in BLE event loop).
 static int16_t s_pending_temp_x100;
 static bool    s_measurement_pending;
+
+/// Samples collected in the current measurement cycle (ISR-written)
+static int16_t s_samples[TEMP_SAMPLES_PER_MEASUREMENT];
+static uint8_t s_sample_count;
+static uint8_t s_sample_attempts;
+
+/// Consecutive measurement cycles that yielded zero valid samples
+static uint8_t s_consecutive_fail_cycles;
 
 /// Current LED state used by the blink routine
 static bool led_state = false;
@@ -129,6 +146,9 @@ static void aht20_read_cb(void);
 static void send_indication_cb(void);
 static void on_trigger_done(bool triggered);
 static void on_read_done(bool success, int16_t temp_x100, uint16_t humi_x100);
+static void start_sample(void);
+static void sample_gap_cb(void);
+static void handle_sample_done(bool ok, int16_t temp_x100);
 static void led_blink_cb(void);
 static void start_led_blink(void);
 static void stop_led_blink(void);
@@ -152,6 +172,11 @@ static void led_set(bool on)
     led_state = on;
 }
 
+/* 50 ms flash every 2 s: ~2.5 % duty cycle — the LED is the largest single
+ * consumer while advertising, so keep it lit as briefly as visibility allows. */
+#define LED_BLINK_ON_TICKS   5     /* 50 ms   */
+#define LED_BLINK_OFF_TICKS  195   /* 1950 ms */
+
 static void led_blink_cb(void)
 {
     led_blink_timer = EASY_TIMER_INVALID_TIMER;
@@ -163,15 +188,16 @@ static void led_blink_cb(void)
 
     led_set(!led_state);
 
-    /* Reschedule: 100 ticks = 1000 ms */
-    led_blink_timer = app_easy_timer(100, led_blink_cb);
+    led_blink_timer = app_easy_timer(led_state ? LED_BLINK_ON_TICKS
+                                               : LED_BLINK_OFF_TICKS,
+                                     led_blink_cb);
 }
 
 static void start_led_blink(void)
 {
     stop_led_blink();
     led_set(true);
-    led_blink_timer = app_easy_timer(100, led_blink_cb);
+    led_blink_timer = app_easy_timer(LED_BLINK_ON_TICKS, led_blink_cb);
 }
 
 static void stop_led_blink(void)
@@ -219,8 +245,15 @@ static void stop_led_blink(void)
  */
 static void on_trigger_done(bool triggered)
 {
-    if (!triggered || current_conidx == GAP_INVALID_CONIDX || !indications_enabled)
+    if (current_conidx == GAP_INVALID_CONIDX || !indications_enabled)
     {
+        return;  /* cycle abandoned (disconnect / unsubscribe) */
+    }
+
+    if (!triggered)
+    {
+        /* Trigger failed (I2C error or sensor still calibrating) */
+        handle_sample_done(false, 0);
         return;
     }
 
@@ -249,18 +282,58 @@ static void aht20_read_cb(void)
 
 /*
  * I2C ISR callback — fires when the read phase completes.
- * Store the result and bounce to the BLE event loop for the BLE call.
  */
 static void on_read_done(bool success, int16_t temp_x100, uint16_t humi_x100)
 {
     (void)humi_x100;
 
-    if (!success || current_conidx == GAP_INVALID_CONIDX || !indications_enabled)
+    if (current_conidx == GAP_INVALID_CONIDX || !indications_enabled)
     {
+        return;  /* cycle abandoned */
+    }
+
+    handle_sample_done(success, temp_x100);
+}
+
+/*
+ * Per-sample completion — called from I2C ISR context (only IRQ-safe SDK
+ * calls: counters and app_easy_timer).  Collects up to
+ * TEMP_SAMPLES_PER_MEASUREMENT samples 100 ms apart, then aggregates and
+ * bounces the result to the BLE event loop.
+ */
+static void handle_sample_done(bool ok, int16_t temp_x100)
+{
+    s_sample_attempts++;
+
+    if (ok && s_sample_count < TEMP_SAMPLES_PER_MEASUREMENT)
+    {
+        s_samples[s_sample_count++] = temp_x100;
+    }
+
+    if (s_sample_attempts < TEMP_SAMPLES_PER_MEASUREMENT)
+    {
+        /* More samples to take this cycle */
+        if (sample_gap_timer == EASY_TIMER_INVALID_TIMER)
+        {
+            sample_gap_timer = app_easy_timer(TEMP_SAMPLE_GAP_TICKS, sample_gap_cb);
+        }
         return;
     }
 
-    s_pending_temp_x100  = temp_x100;
+    /* Cycle complete */
+    if (s_sample_count == 0)
+    {
+        if (s_consecutive_fail_cycles < UINT8_MAX)
+        {
+            s_consecutive_fail_cycles++;
+        }
+        return;
+    }
+
+    s_consecutive_fail_cycles = 0;
+    s_pending_temp_x100 = apply_offset_i16(
+        aggregate_samples_i16(s_samples, s_sample_count),
+        CFG_TEMP_OFFSET_X100);
     s_measurement_pending = true;
 
     /* Post to BLE event loop -- app_easy_timer(ke_timer_set) is IRQ-safe */
@@ -268,6 +341,25 @@ static void on_read_done(bool success, int16_t temp_x100, uint16_t humi_x100)
     {
         send_ind_timer = app_easy_timer(1, send_indication_cb);
     }
+}
+
+/* BLE event loop callback — starts the next sample of the current cycle */
+static void sample_gap_cb(void)
+{
+    sample_gap_timer = EASY_TIMER_INVALID_TIMER;
+
+    if (current_conidx == GAP_INVALID_CONIDX || !indications_enabled)
+    {
+        return;
+    }
+
+    start_sample();
+}
+
+static void start_sample(void)
+{
+    /* Async trigger -- returns immediately; on_trigger_done runs in ISR */
+    i2c_temp_sensor_trigger(on_trigger_done);
 }
 
 /* BLE event loop callback — sends the HTP indication safely */
@@ -285,31 +377,13 @@ static void send_indication_cb(void)
     s_measurement_pending = false;
 
     /*
-     * Encode as IEEE-11073 FLOAT (required by HTP profile):
-     *   bits[31:24] = exponent (signed 8-bit)
-     *   bits[23:0]  = mantissa (signed 24-bit)
-     *   value = mantissa x 10^exponent  (degrees Celsius)
-     *
-     * CFG_TEMP_RAW_CELSIUS: exponent=0, mantissa=integer °C.
-     *   The Renesas SmartBond iOS app ignores the exponent and reads the
-     *   mantissa directly as °C -- this encoding makes SmartBond display
-     *   the correct (integer) temperature.  Resolution: 1 °C.
-     *
-     * Default: exponent=-2, mantissa=temp_x100.
-     *   Standards-compliant 0.01 °C resolution.  Decoded correctly by any
-     *   HTP collector that applies the exponent (e.g. the Angular FE app).
-     *   SmartBond will show temp_x100 (e.g. 2715) rather than 27.15.
+     * IEEE-11073 FLOAT encoding lives in codec.h.  CFG_TEMP_RAW_CELSIUS
+     * selects the SmartBond-compatible integer-degC form (see thermometer.h).
      */
 #if defined(CFG_TEMP_RAW_CELSIUS)
-    /* Round temp_x100 to nearest integer degree */
-    int32_t temp_rounded = ((int32_t)s_pending_temp_x100 >= 0)
-                         ? ((int32_t)s_pending_temp_x100 + 50) / 100
-                         : ((int32_t)s_pending_temp_x100 - 50) / 100;
-    uint32_t ieee_float = (0x00UL << 24)                                    /* exponent = 0 */
-                        | ((uint32_t)(temp_rounded & 0x00FFFFFF));          /* mantissa = °C */
+    uint32_t ieee_float = ieee11073_encode_temp(s_pending_temp_x100, true);
 #else
-    uint32_t ieee_float = ((uint32_t)(uint8_t)(-2) << 24)                  /* exponent = -2 */
-                        | ((uint32_t)((int32_t)s_pending_temp_x100 & 0x00FFFFFF)); /* mantissa = temp×100 */
+    uint32_t ieee_float = ieee11073_encode_temp(s_pending_temp_x100, false);
 #endif
 
     struct htp_temp_meas meas;
@@ -330,11 +404,32 @@ static void temp_timer_cb(void)
         return;
     }
 
-    /* Start async trigger -- returns immediately; on_trigger_done called from ISR */
-    i2c_temp_sensor_trigger(on_trigger_done);
-
-    /* Schedule the next measurement cycle regardless of trigger outcome */
+    /* Schedule the next measurement cycle regardless of this cycle's outcome */
     temp_timer = app_easy_timer(temp_interval_ticks, temp_timer_cb);
+
+    /* Recovery ladder: after AHT20_FAILS_BEFORE_SOFT_RESET consecutive dead
+     * cycles soft-reset the AHT20; every AHT20_FAILS_BEFORE_BUS_RECOVERY,
+     * manually recover the I2C bus first.  The recovery replaces this
+     * cycle's measurement so it never overlaps another I2C transaction. */
+    if (s_consecutive_fail_cycles >= AHT20_FAILS_BEFORE_SOFT_RESET &&
+        (s_consecutive_fail_cycles % AHT20_FAILS_BEFORE_SOFT_RESET) == 0)
+    {
+        if ((s_consecutive_fail_cycles % AHT20_FAILS_BEFORE_BUS_RECOVERY) == 0)
+        {
+            i2c_bus_recover();
+        }
+        i2c_temp_sensor_soft_reset();
+
+        if (s_consecutive_fail_cycles < UINT8_MAX)
+        {
+            s_consecutive_fail_cycles++;  /* count the skipped cycle too */
+        }
+        return;
+    }
+
+    s_sample_count    = 0;
+    s_sample_attempts = 0;
+    start_sample();
 }
 
 static void start_temp_timer(void)
@@ -363,7 +458,15 @@ static void stop_temp_timer(void)
         app_easy_timer_cancel(send_ind_timer);
         send_ind_timer = EASY_TIMER_INVALID_TIMER;
     }
-    s_measurement_pending = false;
+    if (sample_gap_timer != EASY_TIMER_INVALID_TIMER)
+    {
+        app_easy_timer_cancel(sample_gap_timer);
+        sample_gap_timer = EASY_TIMER_INVALID_TIMER;
+    }
+    s_measurement_pending     = false;
+    s_sample_count            = 0;
+    s_sample_attempts         = 0;
+    s_consecutive_fail_cycles = 0;
 }
 
 /*
@@ -499,16 +602,20 @@ void user_app_on_init(void)
 {
     default_app_on_init();
 
-    current_conidx        = GAP_INVALID_CONIDX;
-    indications_enabled   = false;
-    temp_timer            = EASY_TIMER_INVALID_TIMER;
-    aht20_read_timer      = EASY_TIMER_INVALID_TIMER;
-    send_ind_timer        = EASY_TIMER_INVALID_TIMER;
-    led_blink_timer       = EASY_TIMER_INVALID_TIMER;
-    therm_state           = APP_STATE_ADVERTISING;
-    temp_interval_ticks   = (uint32_t)(TEMP_MEAS_INTERVAL_DEFAULT_SEC) * 100UL;
-    s_measurement_pending = false;
-    s_pending_temp_x100   = 0;
+    current_conidx            = GAP_INVALID_CONIDX;
+    indications_enabled       = false;
+    temp_timer                = EASY_TIMER_INVALID_TIMER;
+    aht20_read_timer          = EASY_TIMER_INVALID_TIMER;
+    send_ind_timer            = EASY_TIMER_INVALID_TIMER;
+    led_blink_timer           = EASY_TIMER_INVALID_TIMER;
+    sample_gap_timer          = EASY_TIMER_INVALID_TIMER;
+    therm_state               = APP_STATE_ADVERTISING;
+    temp_interval_ticks       = (uint32_t)(TEMP_MEAS_INTERVAL_DEFAULT_SEC) * 100UL;
+    s_measurement_pending     = false;
+    s_pending_temp_x100       = 0;
+    s_sample_count            = 0;
+    s_sample_attempts         = 0;
+    s_consecutive_fail_cycles = 0;
 }
 
 void user_app_on_db_init_complete(void)

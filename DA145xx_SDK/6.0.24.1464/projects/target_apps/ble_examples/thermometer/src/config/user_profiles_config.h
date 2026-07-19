@@ -55,7 +55,7 @@
 /* Used BLE profiles (used by "rwprf_config.h").                                       */
 /***************************************************************************************/
 
-//#define CFG_PRF_DISS  // Device Information Service - Disabled to save memory
+#define CFG_PRF_DISS  // Device Information Service (model, firmware/software revision)
 #define CFG_PRF_HTPT
 //#define CFG_PRF_SUOTAR  // Software Update Over The Air - Disabled due to include path issues
 #define CFG_PRF_BASS  // Battery Service Server
@@ -132,8 +132,8 @@
 #define APP_DIS_FIRM_REV_STR            SDK_VERSION
 #define APP_DIS_FIRM_REV_STR_LEN        (sizeof(APP_DIS_FIRM_REV_STR) - 1)
 
-/// Software Revision String
-#define APP_DIS_SW_REV_STR              SDK_VERSION
+/// Software Revision String — the application firmware version
+#define APP_DIS_SW_REV_STR              ("1.1.0")
 #define APP_DIS_SW_REV_STR_LEN          (sizeof(APP_DIS_SW_REV_STR) - 1)
 
 /// IEEE
@@ -174,7 +174,7 @@
 #define APP_HTPT_TEMP_TYPE              HTP_TYPE_BODY
 #define APP_HTPT_MEAS_INTERVAL          5       // 5 seconds default
 #define APP_HTPT_VALID_RANGE_MIN        1       // 1 second minimum
-#define APP_HTPT_VALID_RANGE_MAX        60      // 60 seconds maximum
+#define APP_HTPT_VALID_RANGE_MAX        300     // 5 minutes maximum (overnight monitoring)
 
 /*
  ****************************************************************************************

@@ -19,6 +19,11 @@
 #include "uart.h"
 #include "syscntl.h"
 #include "thermometer.h"
+#include "arch.h"
+
+#if defined (__DA14531__)
+#include "rf_531.h"
+#endif
 
 #if BLE_BATT_SERVER
 #include "app_bass.h"
@@ -122,5 +127,42 @@ void periph_init(void)
     app_batt_port_reinit();
 #endif
 
+#if defined (__DA14531__) && defined (CFG_TX_POWER_LEVEL)
+    rf_pa_pwr_set(CFG_TX_POWER_LEVEL);
+#endif
+
     GPIO_set_pad_latch_en(true);
+}
+
+void i2c_bus_recover(void)
+{
+    /* A slave stuck mid-transaction can hold SDA low forever, wedging the
+     * bus.  Standard recovery: drive SCL manually for up to 9 clocks until
+     * the slave releases SDA, then generate a STOP condition and hand the
+     * pins back to the I2C peripheral. */
+
+    GPIO_ConfigurePin(I2C_SCL_PORT, I2C_SCL_PIN, OUTPUT, PID_GPIO, true);
+    GPIO_ConfigurePin(I2C_SDA_PORT, I2C_SDA_PIN, INPUT,  PID_GPIO, false);
+
+    for (int i = 0; i < 9; i++)
+    {
+        if (GPIO_GetPinStatus(I2C_SDA_PORT, I2C_SDA_PIN))
+        {
+            break;  /* SDA released */
+        }
+        GPIO_SetInactive(I2C_SCL_PORT, I2C_SCL_PIN);
+        arch_asm_delay_us(5);
+        GPIO_SetActive(I2C_SCL_PORT, I2C_SCL_PIN);
+        arch_asm_delay_us(5);
+    }
+
+    /* STOP condition: SDA low -> high while SCL is high */
+    GPIO_ConfigurePin(I2C_SDA_PORT, I2C_SDA_PIN, OUTPUT, PID_GPIO, false);
+    arch_asm_delay_us(5);
+    GPIO_SetActive(I2C_SDA_PORT, I2C_SDA_PIN);
+    arch_asm_delay_us(5);
+
+    /* Restore the pads to the I2C peripheral */
+    GPIO_ConfigurePin(I2C_SCL_PORT, I2C_SCL_PIN, INPUT, PID_I2C_SCL, false);
+    GPIO_ConfigurePin(I2C_SDA_PORT, I2C_SDA_PIN, INPUT, PID_I2C_SDA, false);
 }

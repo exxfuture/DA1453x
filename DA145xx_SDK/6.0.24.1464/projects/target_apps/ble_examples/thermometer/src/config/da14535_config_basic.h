@@ -82,7 +82,11 @@
 /*      -   Enables Debug module and sets code execution in breakpoint in Hardfault and NMI (Watchdog) handlers.*/
 /*          It allows developer to hot attach debugger and get debug information                                */
 /****************************************************************************************************************/
+/* Defined unless building the production image (bash build.sh release,
+ * which passes -DCFG_PRODUCTION). */
+#if !defined (CFG_PRODUCTION)
 #define CFG_DEVELOPMENT_DEBUG
+#endif
 
 /****************************************************************************************************************/
 /* UART Console Print. If CFG_PRINTF is defined, serial interface logging mechanism will be enabled.            */

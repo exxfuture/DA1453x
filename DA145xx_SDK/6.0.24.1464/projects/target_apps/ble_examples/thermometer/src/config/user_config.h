@@ -300,18 +300,23 @@ static const struct gapm_configuration user_gapm_conf = {
 static const struct connection_param_configuration user_connection_param_conf = {
     /// Connection interval minimum measured in ble double slots (1.25ms)
     /// use the macro MS_TO_DOUBLESLOTS to convert from milliseconds (ms) to double slots
-    .intv_min = MS_TO_DOUBLESLOTS(10),
+    /// Measurements are seconds apart, so a long interval with slave latency
+    /// cuts connected-mode radio wakeups by an order of magnitude.
+    .intv_min = MS_TO_DOUBLESLOTS(90),
 
     /// Connection interval maximum measured in ble double slots (1.25ms)
     /// use the macro MS_TO_DOUBLESLOTS to convert from milliseconds (ms) to double slots
-    .intv_max = MS_TO_DOUBLESLOTS(20),
+    .intv_max = MS_TO_DOUBLESLOTS(110),
 
     /// Latency measured in connection events
-    .latency = 0,
+    /// Effective wakeup period = interval x (latency+1) = ~550 ms worst case,
+    /// within Apple's <= 2 s accessory guideline.
+    .latency = 4,
 
     /// Supervision timeout measured in timer units (10 ms)
     /// use the macro MS_TO_TIMERUNITS to convert from milliseconds (ms) to timer units
-    .time_out = MS_TO_TIMERUNITS(1250),
+    /// Must exceed (latency+1) x intv_max x 3 = ~1.65 s.
+    .time_out = MS_TO_TIMERUNITS(3000),
 
     /// Minimum Connection Event Duration measured in ble double slots (1.25ms)
     /// use the macro MS_TO_DOUBLESLOTS to convert from milliseconds (ms) to double slots

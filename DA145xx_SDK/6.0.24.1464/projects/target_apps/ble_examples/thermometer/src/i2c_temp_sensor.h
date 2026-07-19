@@ -97,4 +97,13 @@ void i2c_temp_sensor_trigger(i2c_temp_trig_cb_t cb);
  */
 void i2c_temp_sensor_read(i2c_temp_read_cb_t cb);
 
+/**
+ * @brief Send the AHT20 soft reset command (0xBA), async, fire-and-forget.
+ *
+ * The sensor restarts and re-runs its power-on calibration within 20 ms.
+ * Must not be called while another transaction on this driver is in flight —
+ * the application calls it in place of a measurement cycle.
+ */
+void i2c_temp_sensor_soft_reset(void);
+
 #endif // _I2C_TEMP_SENSOR_H_

@@ -5,8 +5,13 @@
 # Toolchain: arm-none-eabi-gcc (ARM GNU Toolchain 11.3+)
 #
 # Usage:
-#   bash build.sh          # build
-#   bash build.sh clean    # clean build output
+#   bash build.sh          # development build (CFG_DEVELOPMENT_DEBUG on)
+#   bash build.sh release  # production build  (-DCFG_PRODUCTION, debug off)
+#   bash build.sh clean    # clean build output (all modes)
+#
+# Incremental: unchanged sources are skipped via GCC .d dependency files.
+# A change to this script's flags forces a full rebuild automatically.
+# Also generates compile_commands.json for clangd.
 # ============================================================
 
 set -euo pipefail
@@ -14,7 +19,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SDK_ROOT="${SCRIPT_DIR}/../../../.."
 SRC="${SCRIPT_DIR}/src"
-BUILD="${SCRIPT_DIR}/build/DA14535"
 
 export PATH="/Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin:${PATH}"
 CC="arm-none-eabi-gcc"
@@ -22,11 +26,21 @@ OBJCOPY="arm-none-eabi-objcopy"
 TARGET="DA14535"
 DEFINE="-D__DA14531__ -D__DA14535__"
 
+MODE="${1:-dev}"
+
 # ---- CLEAN -------------------------------------------------------
-if [[ "${1:-}" == "clean" ]]; then
+if [[ "${MODE}" == "clean" ]]; then
     rm -rf "${SCRIPT_DIR}/build"
     echo "Clean done."
     exit 0
+fi
+
+if [[ "${MODE}" == "release" ]]; then
+    DEFINE="${DEFINE} -DCFG_PRODUCTION"
+    BUILD="${SCRIPT_DIR}/build/DA14535-release"
+    echo "=== RELEASE build (CFG_DEVELOPMENT_DEBUG disabled) ==="
+else
+    BUILD="${SCRIPT_DIR}/build/DA14535"
 fi
 
 mkdir -p "${BUILD}"
@@ -143,6 +157,7 @@ CFLAGS=(
     ${DEFINE}
     -std=gnu99
     -Wno-int-conversion -Wno-unused-variable
+    -MMD -MP
     -include"${SRC}/config/da1458x_config_basic.h"
     -include"${SRC}/config/da1458x_config_advanced.h"
     -include"${SRC}/config/user_config.h"
@@ -174,6 +189,8 @@ SDK_APP_SRCS=(
     "${SDK}/app_modules/src/app_common/app.c"
     "${SDK}/app_modules/src/app_bass/app_bass.c"
     "${SDK}/app_modules/src/app_bass/app_bass_task.c"
+    "${SDK}/app_modules/src/app_diss/app_diss.c"
+    "${SDK}/app_modules/src/app_diss/app_diss_task.c"
     "${SDK}/app_modules/src/app_bond_db/app_bond_db.c"
     "${SDK}/app_modules/src/app_default_hnd/app_default_handlers.c"
     "${SDK}/app_modules/src/app_easy/app_easy_crypto.c"
@@ -241,6 +258,8 @@ SDK_DRIVER_SRCS=(
 SDK_PROFILE_SRCS=(
     "${SDK}/ble_stack/profiles/bas/bass/src/bass.c"
     "${SDK}/ble_stack/profiles/bas/bass/src/bass_task.c"
+    "${SDK}/ble_stack/profiles/dis/diss/src/diss.c"
+    "${SDK}/ble_stack/profiles/dis/diss/src/diss_task.c"
     "${SDK}/ble_stack/profiles/htp/htpt/src/htpt.c"
     "${SDK}/ble_stack/profiles/htp/htpt/src/htpt_task.c"
     "${SDK}/ble_stack/profiles/prf.c"
@@ -263,6 +282,41 @@ ALL_SRCS=(
     "${USER_SRCS[@]}"
 )
 
+# ---- CONFIG HASH (flag change -> full rebuild) ------------------
+CONFIG_HASH=$(printf '%s' "${CFLAGS[*]} ${INCLUDES[*]}" | cksum | cut -d' ' -f1)
+HASH_FILE="${BUILD}/_config_hash"
+if [[ ! -f "${HASH_FILE}" || "$(cat "${HASH_FILE}")" != "${CONFIG_HASH}" ]]; then
+    rm -f "${BUILD}"/*.o "${BUILD}"/*.d
+    printf '%s' "${CONFIG_HASH}" > "${HASH_FILE}"
+fi
+
+# ---- COMPILE_COMMANDS.JSON (for clangd) -------------------------
+CCDB="${SCRIPT_DIR}/compile_commands.json"
+{
+    echo "["
+    first=1
+    for src in "${ALL_SRCS[@]}"; do
+        [[ ${first} -eq 0 ]] && echo ","
+        first=0
+        printf '  {"directory": "%s", "file": "%s", "command": "%s %s %s -c %s"}' \
+            "${SCRIPT_DIR}" "${src}" "${CC}" "${CFLAGS[*]}" "${INCLUDES[*]}" "${src}"
+    done
+    echo ""
+    echo "]"
+} > "${CCDB}"
+
+# ---- INCREMENTAL CHECK ------------------------------------------
+# An object is up to date when it exists and no file in its .d dependency
+# list (source + every header it includes) is newer.
+needs_compile() {
+    local obj="$1" dep="${1%.o}.d" f
+    [[ -f "${obj}" && -f "${dep}" ]] || return 0
+    while IFS= read -r f; do
+        [[ -n "${f}" && "${f}" -nt "${obj}" ]] && return 0
+    done < <(sed -e 's/\\$//' -e 's/^[^:]*: *//' "${dep}" | tr ' ' '\n' | sed '/^$/d')
+    return 1
+}
+
 # ---- COMPILE (parallel) -----------------------------------------
 OBJS=()
 PIDS=()
@@ -270,12 +324,25 @@ FAIL_FLAG="${BUILD}/_build_failed"
 rm -f "${FAIL_FLAG}"
 JOBS=$(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)
 
-echo "Compiling ${#ALL_SRCS[@]} source files (${JOBS} jobs)..."
-
+SKIPPED=0
+TO_COMPILE=()
 for src in "${ALL_SRCS[@]}"; do
     # Flatten path -> unique object name
     obj="${BUILD}/$(echo "${src}" | sed 's|/|_|g; s|^_||; s|\.c$|.o|')"
     OBJS+=("${obj}")
+    if needs_compile "${obj}"; then
+        TO_COMPILE+=("${src}|${obj}")
+    else
+        SKIPPED=$((SKIPPED + 1))
+    fi
+done
+
+echo "Compiling $(( ${#ALL_SRCS[@]} - SKIPPED )) of ${#ALL_SRCS[@]} source files (${SKIPPED} up to date, ${JOBS} jobs)..."
+
+for entry in "${TO_COMPILE[@]:-}"; do
+    [[ -z "${entry}" ]] && continue
+    src="${entry%%|*}"
+    obj="${entry##*|}"
     (
         # Disable pipefail here: without it, the pipeline exit status is grep's
         # exit status, which leaves PIPESTATUS[0] as gcc's actual exit code even
@@ -291,7 +358,7 @@ for src in "${ALL_SRCS[@]}"; do
     while [[ $(jobs -rp | wc -l) -ge ${JOBS} ]]; do sleep 0.05; done
 done
 
-for pid in "${PIDS[@]}"; do wait "${pid}" 2>/dev/null || true; done
+for pid in "${PIDS[@]:-}"; do [[ -n "${pid}" ]] && wait "${pid}" 2>/dev/null || true; done
 
 if [[ -f "${FAIL_FLAG}" ]]; then
     echo "ERROR: One or more compilation units failed." >&2

@@ -122,4 +122,11 @@ void periph_init(void);
 void GPIO_reservations(void);
 void set_pad_functions(void);
 
+/**
+ * @brief Manually clock SCL to release a slave holding SDA low, then issue a
+ *        STOP and restore the pads to the I2C peripheral.  Call from the main
+ *        loop only, never while an I2C transfer is in flight.
+ */
+void i2c_bus_recover(void);
+
 #endif // _USER_PERIPH_SETUP_H_
