@@ -1,0 +1,235 @@
+@import '@fontsource-variable/fraunces/wght.css';
+@import '@fontsource/public-sans/400.css';
+@import '@fontsource/public-sans/500.css';
+@import '@fontsource/public-sans/600.css';
+@import '@fontsource/public-sans/700.css';
+@import '@fontsource/ibm-plex-mono/400.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens ("Pine & Ember"). Semantic/role tokens below (page, surface,
+ * ink, border, success/warning/danger/info, temp.*) are theme-aware CSS
+ * variables consumed by tailwind.config.js — flipping `data-theme` on <html>
+ * is the single source of truth for light/dark. The primary/sand/ember
+ * numeric ramps are NOT here: they're static hex in tailwind.config.js and
+ * components reach light/dark contrast for them via explicit `dark:`
+ * variants (see Button/Input/Table).
+ */
+:root {
+  color-scheme: light;
+
+  --color-page: 250 249 246;
+  --color-surface-1: 255 255 255;
+  --color-surface-2: 245 243 238;
+  --color-surface-3: 255 255 255;
+  --color-ink-primary: 39 35 31;
+  --color-ink-secondary: 110 101 82;
+  --color-ink-muted: 116 107 87;
+  --color-border: 222 218 205;
+
+  --color-success-text: 35 122 59;
+  --color-success-tint: 220 243 225;
+  --color-success-border: 187 221 195;
+  --color-warning-text: 184 78 16;
+  --color-warning-tint: 255 244 236;
+  --color-warning-border: 242 214 196;
+  --color-danger-text: 184 52 31;
+  --color-danger-tint: 253 237 234;
+  --color-danger-border: 241 204 197;
+  --color-info-text: 37 104 200;
+  --color-info-tint: 234 242 253;
+  --color-info-border: 199 217 243;
+
+  --color-temp-low-text: 29 95 166;
+  --color-temp-low-tint: 228 240 252;
+  --color-temp-low-border: 185 217 245;
+  --color-temp-normal-text: 31 122 106;
+  --color-temp-normal-tint: 231 245 241;
+  --color-temp-normal-border: 191 230 218;
+  --color-temp-elevated-text: 150 87 15;
+  --color-temp-elevated-tint: 255 241 222;
+  --color-temp-elevated-border: 245 214 163;
+  --color-temp-fever-text: 178 61 25;
+  --color-temp-fever-tint: 253 231 221;
+  --color-temp-fever-border: 244 191 166;
+  --color-temp-high-fever-text: 166 35 28;
+  --color-temp-high-fever-tint: 251 219 216;
+  --color-temp-high-fever-border: 239 169 163;
+
+  --shadow-xs: 0 1px 2px rgba(23, 20, 15, 0.04);
+  --shadow-sm: 0 1px 3px rgba(23, 20, 15, 0.06), 0 1px 2px rgba(23, 20, 15, 0.04);
+  --shadow-md: 0 4px 12px rgba(23, 20, 15, 0.08), 0 2px 4px rgba(23, 20, 15, 0.04);
+  --shadow-lg: 0 12px 32px rgba(23, 20, 15, 0.12), 0 4px 8px rgba(23, 20, 15, 0.04);
+  --shadow-focus: 0 0 0 3px rgba(31, 122, 106, 0.35);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --color-page: 18 20 18;
+  --color-surface-1: 27 30 27;
+  --color-surface-2: 36 40 36;
+  --color-surface-3: 44 48 43;
+  --color-ink-primary: 255 255 255;
+  --color-ink-secondary: 199 193 175;
+  --color-ink-muted: 167 158 136;
+  --color-border: 255 255 255; /* used with a low alpha modifier, e.g. border-border-hairline/[0.08] */
+
+  --color-success-text: 85 195 119;
+  --color-success-tint: 22 50 31;
+  --color-success-border: 33 76 47;
+  --color-warning-text: 249 138 60;
+  --color-warning-tint: 58 42 17;
+  --color-warning-border: 92 59 25;
+  --color-danger-text: 240 112 90;
+  --color-danger-tint: 58 22 20;
+  --color-danger-border: 91 38 33;
+  --color-info-text: 111 163 238;
+  --color-info-tint: 20 40 61;
+  --color-info-border: 36 62 93;
+
+  --color-temp-low-text: 123 180 240;
+  --color-temp-low-tint: 20 40 61;
+  --color-temp-low-border: 42 74 107;
+  --color-temp-normal-text: 111 203 176;
+  --color-temp-normal-tint: 18 48 42;
+  --color-temp-normal-border: 31 74 64;
+  --color-temp-elevated-text: 240 177 92;
+  --color-temp-elevated-tint: 58 42 17;
+  --color-temp-elevated-border: 92 68 25;
+  --color-temp-fever-text: 245 143 93;
+  --color-temp-fever-tint: 59 32 19;
+  --color-temp-fever-border: 107 58 34;
+  --color-temp-high-fever-text: 241 113 103;
+  --color-temp-high-fever-tint: 58 22 20;
+  --color-temp-high-fever-border: 100 36 32;
+
+  /* xs/sm/md shadows aren't used in dark mode — components swap to a
+     hairline border instead (shadows barely read on a near-black surface). */
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-focus: 0 0 0 3px rgba(127, 203, 180, 0.35);
+}
+
+/* OS-level dark preference applies before the user ever touches the
+   in-app toggle; an explicit data-theme (set by the toggle) always wins. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']):not([data-theme='dark']) {
+    color-scheme: dark;
+    --color-page: 18 20 18;
+    --color-surface-1: 27 30 27;
+    --color-surface-2: 36 40 36;
+    --color-surface-3: 44 48 43;
+    --color-ink-primary: 255 255 255;
+    --color-ink-secondary: 199 193 175;
+    --color-ink-muted: 167 158 136;
+    --color-border: 255 255 255;
+
+    --color-success-text: 85 195 119;
+    --color-success-tint: 22 50 31;
+    --color-success-border: 33 76 47;
+    --color-warning-text: 249 138 60;
+    --color-warning-tint: 58 42 17;
+    --color-warning-border: 92 59 25;
+    --color-danger-text: 240 112 90;
+    --color-danger-tint: 58 22 20;
+    --color-danger-border: 91 38 33;
+    --color-info-text: 111 163 238;
+    --color-info-tint: 20 40 61;
+    --color-info-border: 36 62 93;
+
+    --color-temp-low-text: 123 180 240;
+    --color-temp-low-tint: 20 40 61;
+    --color-temp-low-border: 42 74 107;
+    --color-temp-normal-text: 111 203 176;
+    --color-temp-normal-tint: 18 48 42;
+    --color-temp-normal-border: 31 74 64;
+    --color-temp-elevated-text: 240 177 92;
+    --color-temp-elevated-tint: 58 42 17;
+    --color-temp-elevated-border: 92 68 25;
+    --color-temp-fever-text: 245 143 93;
+    --color-temp-fever-tint: 59 32 19;
+    --color-temp-fever-border: 107 58 34;
+    --color-temp-high-fever-text: 241 113 103;
+    --color-temp-high-fever-tint: 58 22 20;
+    --color-temp-high-fever-border: 100 36 32;
+
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-focus: 0 0 0 3px rgba(127, 203, 180, 0.35);
+  }
+}
+
+@layer base {
+  html {
+    font-family: theme('fontFamily.sans');
+  }
+  body {
+    @apply bg-page text-ink-primary antialiased;
+  }
+  .font-tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Print. Only the doctor's clinical report (pages/PatientReportPage.tsx) is a
+ * document; it tags <body> with `report-print-mode` while mounted, so the
+ * chrome-hiding rules below never affect an ad-hoc print of another page.
+ *
+ * The token overrides list every :root variant on purpose — a bare `:root`
+ * would lose to `:root[data-theme='dark']` on specificity, and a dark-theme
+ * user would print white text onto white paper.
+ */
+@media print {
+  :root,
+  :root[data-theme='light'],
+  :root[data-theme='dark'] {
+    color-scheme: light;
+
+    --color-page: 255 255 255;
+    --color-surface-1: 255 255 255;
+    --color-surface-2: 255 255 255;
+    --color-surface-3: 255 255 255;
+    --color-ink-primary: 23 20 15;
+    --color-ink-secondary: 68 62 52;
+    --color-ink-muted: 90 83 70;
+    --color-border: 180 175 162;
+
+    --shadow-xs: none;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+  }
+
+  body.report-print-mode nav,
+  .no-print {
+    display: none !important;
+  }
+
+  body.report-print-mode main {
+    padding-bottom: 0;
+  }
+
+  /* Tier bands and status pills carry meaning — keep their fills on paper. */
+  body.report-print-mode * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print-avoid-break {
+    break-inside: avoid;
+  }
+}

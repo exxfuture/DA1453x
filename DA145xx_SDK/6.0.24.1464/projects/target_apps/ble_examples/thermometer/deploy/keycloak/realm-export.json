@@ -1,0 +1,105 @@
+{
+  "realm": "thermometer",
+  "enabled": true,
+  "displayName": "Thermometer",
+  "displayNameHtml": "<span>Thermometer</span>",
+  "loginTheme": "thermometer",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "resetPasswordAllowed": true,
+  "passwordPolicy": "length(8) and digits(1) and lowerCase(1) and upperCase(1) and specialChars(1) and notUsername and notEmail",
+  "bruteForceProtected": true,
+  "smtpServer": {
+    "host": "mailpit",
+    "port": "1025",
+    "from": "no-reply@thermometer.local",
+    "fromDisplayName": "Thermometer (local dev)",
+    "auth": "false",
+    "ssl": "false",
+    "starttls": "false"
+  },
+  "roles": {
+    "realm": [
+      { "name": "customer", "description": "Owns thermometer devices and their own measurement history" },
+      { "name": "doctor", "description": "Reads measurements of consenting patients (architecture v3 FR-4)" },
+      { "name": "admin", "description": "Manages the device fleet, users, and firmware rollouts (FR-5/FR-6)" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "thermometer-web",
+      "enabled": true,
+      "publicClient": true,
+      "protocol": "openid-connect",
+      "redirectUris": ["http://localhost:5173/*", "http://localhost:8090/*"],
+      "webOrigins": ["http://localhost:5173", "http://localhost:8090"],
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256",
+        "post.logout.redirect.uris": "+"
+      },
+      "protocolMappers": [
+        {
+          "name": "realm-roles-in-id-token",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "config": {
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "customer1",
+      "email": "customer1@example.test",
+      "firstName": "Demo",
+      "lastName": "Customer",
+      "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "credentials": [{ "type": "password", "value": "Customer1!", "temporary": false }],
+      "realmRoles": ["customer"]
+    },
+    {
+      "username": "customer2",
+      "email": "customer2@example.test",
+      "firstName": "Demo",
+      "lastName": "Customer 2",
+      "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "credentials": [{ "type": "password", "value": "Customer2!", "temporary": false }],
+      "realmRoles": ["customer"]
+    },
+    {
+      "username": "doctor1",
+      "email": "doctor1@example.test",
+      "firstName": "Demo",
+      "lastName": "Doctor",
+      "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "credentials": [{ "type": "password", "value": "Doctor1!", "temporary": false }],
+      "realmRoles": ["doctor"]
+    },
+    {
+      "username": "admin1",
+      "email": "admin1@example.test",
+      "firstName": "Demo",
+      "lastName": "Admin",
+      "enabled": true,
+      "emailVerified": true,
+      "requiredActions": [],
+      "credentials": [{ "type": "password", "value": "Admin123!", "temporary": false }],
+      "realmRoles": ["admin"]
+    }
+  ]
+}

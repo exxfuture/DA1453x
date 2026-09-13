@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thermometer — System Architecture</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1f27;
+    --muted: #5a6472;
+    --line: #d9dee5;
+    --accent: #0b6e6e;
+    --accent-soft: #e3f2f2;
+    --warn-soft: #fdf3e3;
+    --warn-line: #e0b96a;
+    --box: #f5f7f9;
+    --code-bg: #f0f2f5;
+    --tier-device: #e8f1fb;
+    --tier-collector: #e3f2f2;
+    --tier-backend: #f0ebf8;
+    --tier-users: #fdf3e3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14181d;
+      --fg: #e4e8ec;
+      --muted: #9aa5b1;
+      --line: #333c46;
+      --accent: #4fc3c3;
+      --accent-soft: #12333322;
+      --warn-soft: #33290f;
+      --warn-line: #8a713a;
+      --box: #1b2129;
+      --code-bg: #20262e;
+      --tier-device: #16222f;
+      --tier-collector: #12302d;
+      --tier-backend: #241f31;
+      --tier-users: #2f2817;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .3rem; }
+  .subtitle { color: var(--muted); margin: 0 0 2rem; }
+  h2 {
+    font-size: 1.45rem; margin: 3rem 0 1rem;
+    padding-bottom: .35rem; border-bottom: 2px solid var(--line);
+  }
+  h3 { font-size: 1.12rem; margin: 2rem 0 .6rem; }
+  h4 { font-size: 1rem; margin: 1.4rem 0 .4rem; }
+  p { margin: .6rem 0; }
+  a { color: var(--accent); }
+  code {
+    background: var(--code-bg); border-radius: 4px;
+    padding: .1em .35em; font-size: .875em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: .9rem 1.1rem; overflow-x: auto; font-size: .85rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+  .table-wrap { overflow-x: auto; }
+  th, td { border: 1px solid var(--line); padding: .45rem .7rem; text-align: left; vertical-align: top; }
+  th { background: var(--box); }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .25rem 0; }
+  .toc {
+    background: var(--box); border: 1px solid var(--line); border-radius: 10px;
+    padding: 1rem 1.4rem; margin: 1.5rem 0;
+  }
+  .toc ol { margin: .4rem 0; }
+  .callout {
+    border-left: 4px solid var(--accent); background: var(--accent-soft);
+    border-radius: 0 8px 8px 0; padding: .7rem 1rem; margin: 1rem 0;
+  }
+  .callout.warn { border-left-color: var(--warn-line); background: var(--warn-soft); }
+  .req-id {
+    display: inline-block; min-width: 3.4em; font-weight: 700;
+    color: var(--accent); font-family: ui-monospace, Menlo, monospace; font-size: .85em;
+  }
+  .pill {
+    display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .03em;
+    border-radius: 999px; padding: .1em .7em; vertical-align: middle;
+    border: 1px solid var(--line); background: var(--box); color: var(--muted);
+  }
+  .pill.done { color: var(--accent); border-color: var(--accent); }
+  /* ---- diagrams ---- */
+  .diagram {
+    border: 1px solid var(--line); border-radius: 12px; background: var(--box);
+    padding: 1.2rem; margin: 1.2rem 0; overflow-x: auto;
+  }
+  .diagram-title {
+    font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin-bottom: 1rem;
+  }
+  .tier { display: flex; gap: .8rem; align-items: stretch; margin: .5rem 0; min-width: 640px; }
+  .tier-label {
+    flex: 0 0 108px; display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--muted); text-align: center; border-right: 2px solid var(--line);
+    padding-right: .6rem;
+  }
+  .tier-body { display: flex; gap: .8rem; flex: 1; flex-wrap: wrap; }
+  .node {
+    border: 1.5px solid var(--line); border-radius: 8px; padding: .5rem .8rem;
+    background: var(--bg); flex: 1; min-width: 130px;
+    font-size: .85rem; line-height: 1.35;
+  }
+  .node b { display: block; font-size: .9rem; }
+  .node small { color: var(--muted); }
+  .node.device { background: var(--tier-device); }
+  .node.collector { background: var(--tier-collector); }
+  .node.backend { background: var(--tier-backend); }
+  .node.users { background: var(--tier-users); }
+  .flow-arrow {
+    text-align: center; color: var(--muted); font-size: .8rem;
+    margin: .15rem 0 .15rem 116px; min-width: 640px;
+  }
+  .flow-arrow b { color: var(--fg); }
+  .seq { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .82rem; line-height: 1.55; }
+  footer { margin-top: 4rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Thermometer — System Architecture</h1>
+<p class="subtitle">
+  End-to-end architecture for the BLE thermometer product: embedded sensor →
+  BLE collectors (mobile / web / gateway) → self-hosted data platform →
+  customer, doctor and admin access — with the reverse path used for
+  over-the-air firmware updates. Companion to
+  <code>README.md</code> (firmware), <code>PACKAGING_CONCEPT.md</code> (product concept)
+  and <code>proposals.md</code> (firmware backlog).
+</p>
+
+<div class="callout warn">
+  <b>Superseded by <code>ARCHITECTURE_V2.html</code>.</b> This v1 document is
+  kept as the historical record of the initial proposal — the current design
+  (same requirements, cheaper/simpler/faster technical choices after a
+  cost/complexity review) lives in <code>ARCHITECTURE_V2.html</code>.
+</div>
+
+<div class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#requirements">Requirements — what we are building</a></li>
+    <li><a href="#current">Current state and gap analysis</a></li>
+    <li><a href="#overview">System overview</a></li>
+    <li><a href="#device">Device tier — embedded firmware</a></li>
+    <li><a href="#collector">Collector tier — mobile, web and gateway apps</a></li>
+    <li><a href="#pipeline">Data pipeline — ingestion, processing, storage</a></li>
+    <li><a href="#identity">Identity, profiles and access control</a></li>
+    <li><a href="#ota">Firmware update pipeline (reverse flow)</a></li>
+    <li><a href="#security">Security model</a></li>
+    <li><a href="#scale">Scalability and sizing</a></li>
+    <li><a href="#extensibility">Extensibility — beyond temperature</a></li>
+    <li><a href="#deployment">Deployment, operations and cost</a></li>
+    <li><a href="#roadmap">Phased roadmap</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="requirements">1. Requirements — what we are building</h2>
+
+<p>
+  The features below are the product definition. Everything in the architecture
+  sections that follow exists to satisfy one or more of these requirements.
+</p>
+
+<h3>1.1 Functional requirements</h3>
+
+<div class="table-wrap"><table>
+  <tr><th style="width:4.5em">ID</th><th>Requirement</th><th>Detail</th></tr>
+  <tr>
+    <td><span class="req-id">FR-1</span></td>
+    <td>Measure temperature on the embedded device</td>
+    <td>The DA14535-based device samples an AHT20 sensor, aggregates samples
+        (median of 3), applies calibration and encodes readings as standard
+        Health Thermometer Profile (HTP) indications. <span class="pill done">implemented</span></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-2</span></td>
+    <td>Push measurements to a connected BLE collector</td>
+    <td>Any BLE central that connects and subscribes (enables HTP indications)
+        receives readings at a configurable interval (1–300 s). Collectors can be
+        phones, tablets, laptops or dedicated gateways. <span class="pill done">implemented</span></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-3</span></td>
+    <td>Publish measurements to the customer's online profile</td>
+    <td>The collector forwards each reading to the backend, where it is stored
+        against the customer's account and the originating device. Readings taken
+        while offline are buffered on the collector and uploaded later
+        (store-and-forward, no data loss). <span class="pill">planned</span></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-4</span></td>
+    <td>Doctor ↔ patient profile linking</td>
+    <td>A customer can grant a doctor access to their measurements. The link is
+        consent-based, revocable, and audited. A doctor sees the live and
+        historical data of every patient who granted access — and nothing else.
+        <span class="pill">planned</span></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-5</span></td>
+    <td>Admin access</td>
+    <td>Administrators manage the device fleet, user accounts, and firmware
+        releases, and can access measurement data for support/operations under
+        audit. <span class="pill">planned</span></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-6</span></td>
+    <td>Over-the-air firmware updates (reverse flow)</td>
+    <td>An admin publishes a signed firmware image; the backend rolls it out in
+        controlled stages; collectors (mobile app, web app, gateways) download
+        the image and update the embedded device over BLE using SUOTA; update
+        status is reported back per device. Failed updates roll back
+        automatically (dual-image flash). <span class="pill">planned</span></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-7</span></td>
+    <td>Web app for BLE-capable computers</td>
+    <td>Laptops and desktops (macOS, Windows, Linux, ChromeOS) with Bluetooth
+        can connect to the device directly from the browser via Web Bluetooth —
+        no install required. The existing Angular 17 FE
+        (<code>renesas/thermometer_fe/</code>) is the seed of this app.
+        <span class="pill done">partially implemented</span> (local-only today)</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-8</span></td>
+    <td>Cross-platform mobile app</td>
+    <td>One codebase compiling to both Android and iOS (evaluated in
+        §<a href="#collector">5</a>). Acts as BLE collector, uploader, live
+        viewer, and SUOTA updater. <span class="pill">planned</span></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-9</span></td>
+    <td>Extensible measurement types</td>
+    <td>Temperature is the first data type, not the only one. The pipeline,
+        storage schema and APIs must accept new measurement types (humidity,
+        heart rate, SpO₂, battery, device diagnostics…) without redesign.
+        <span class="pill">planned</span></td>
+  </tr>
+</table></div>
+
+<h3>1.2 Non-functional requirements</h3>
+
+<div class="table-wrap"><table>
+  <tr><th style="width:4.5em">ID</th><th>Requirement</th><th>Detail</th></tr>
+  <tr>
+    <td><span class="req-id">NFR-1</span></td>
+    <td>Scale</td>
+    <td>The pipeline must be designed for <b>millions of devices</b> and their
+        collectors publishing concurrently, and scale down to a single cheap
+        server for early deployments. Horizontal scaling must not require
+        re-architecture.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">NFR-2</span></td>
+    <td>Free and open-source stack</td>
+    <td>Every server-side component must be free, open-source and self-hostable.
+        No managed cloud services (AWS IoT, Firebase, etc.); no per-message or
+        per-device licensing. Hosting on commodity VPS / bare metal.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">NFR-3</span></td>
+    <td>Cheap to run</td>
+    <td>An MVP deployment must fit on one small VPS (~€5–15/month). Costs must
+        grow roughly linearly (or better, thanks to compression and batching)
+        with fleet size.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">NFR-4</span></td>
+    <td>Security &amp; privacy</td>
+    <td>Body-temperature series are health data. TLS everywhere, per-device and
+        per-user credentials, role-based access with least privilege,
+        consent-based sharing, encryption at rest, signed firmware, full audit
+        trail. GDPR-compatible by design (export, erasure, pseudonymization).</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">NFR-5</span></td>
+    <td>Robustness</td>
+    <td>No single lost reading under normal failure modes: collectors buffer
+        offline, the broker persists in-flight messages, the pipeline is
+        at-least-once with idempotent writes (dedup on
+        <code>device_id + timestamp + type</code>). Backpressure instead of
+        collapse under load spikes.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">NFR-6</span></td>
+    <td>Performance</td>
+    <td>Live readings visible to the customer/doctor within ~1–2 s of
+        measurement when online; dashboard queries over months of history in
+        &lt;1 s (continuous aggregates, not raw scans).</td>
+  </tr>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="current">2. Current state and gap analysis</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Component</th><th>Today</th><th>Gap to target</th></tr>
+  <tr>
+    <td>Firmware (this folder)</td>
+    <td>DA14535 HTP thermometer: AHT20 over async I2C, median-of-3 sampling,
+        IEEE&nbsp;11073 encoding, extended sleep, LED/button UX, Battery +
+        Device Information services, host-tested codec, CI builds.</td>
+    <td>No SUOTA yet — <code>proposals.md</code> item 3.4 (deferred: needs
+        flash partitioning + secondary bootloader + hardware in hand). No bond
+        persistence. Single connection only.</td>
+  </tr>
+  <tr>
+    <td>Web frontend (<code>renesas/thermometer_fe/</code>)</td>
+    <td>Angular 17 + Web Bluetooth collector: connects, subscribes to HTP
+        indications, decodes IEEE&nbsp;11073 correctly (0.01&nbsp;°C).</td>
+    <td>Local-only: no backend upload, no accounts, no offline buffering, no
+        SUOTA client.</td>
+  </tr>
+  <tr>
+    <td>Mobile app</td>
+    <td>None (Renesas SmartBond app usable for debugging only — misdecodes the
+        exponent, see README).</td>
+    <td>Entire app (FR-8).</td>
+  </tr>
+  <tr>
+    <td>Backend / data platform</td>
+    <td>None.</td>
+    <td>Everything in §6–§12 (FR-3…FR-6, FR-9).</td>
+  </tr>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="overview">3. System overview</h2>
+
+<p>
+  Four tiers. Measurements flow upward (device → collector → platform → people);
+  firmware updates flow downward along the same path. The embedded device only
+  ever speaks BLE; collectors bridge BLE to the internet; the platform is a
+  single self-hosted stack.
+</p>
+
+<div class="diagram">
+  <div class="diagram-title">System context — data up, updates down</div>
+
+  <div class="tier">
+    <div class="tier-label">Users</div>
+    <div class="tier-body">
+      <div class="node users"><b>Customer</b><small>own live + historical data, device management, sharing consent</small></div>
+      <div class="node users"><b>Doctor</b><small>data of consenting patients, alerts, notes</small></div>
+      <div class="node users"><b>Admin</b><small>fleet &amp; user management, firmware rollouts, ops dashboards</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▲ HTTPS (REST + WebSocket live feed) — OIDC login ▼</div>
+
+  <div class="tier">
+    <div class="tier-label">Platform<br>(self-hosted FOSS)</div>
+    <div class="tier-body">
+      <div class="node backend"><b>EMQX</b><small>MQTT broker (TLS / WSS), millions of connections</small></div>
+      <div class="node backend"><b>NATS JetStream</b><small>durable stream, at-least-once, consumer groups</small></div>
+      <div class="node backend"><b>API service</b><small>Go/NestJS — REST, WebSocket, RBAC enforcement</small></div>
+      <div class="node backend"><b>PostgreSQL + TimescaleDB</b><small>profiles, registry, measurement hypertables</small></div>
+      <div class="node backend"><b>Keycloak</b><small>OIDC identity, roles, consent links</small></div>
+      <div class="node backend"><b>hawkBit + MinIO</b><small>rollout management + firmware image store</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    ▲ measurements: MQTT/TLS (mobile, gateway) or WSS/HTTPS (web) —
+    <b>firmware images + rollout commands ▼</b>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Collectors<br>(BLE ↔ internet)</div>
+    <div class="tier-body">
+      <div class="node collector"><b>Mobile app</b><small>one codebase → Android + iOS; buffer, upload, SUOTA client</small></div>
+      <div class="node collector"><b>Web app</b><small>Angular + Web Bluetooth; Chrome/Edge on desktop</small></div>
+      <div class="node collector"><b>Gateway</b><small>optional: RPi/BlueZ headless collector for unattended sites</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▲ HTP indications over BLE — <b>SUOTA over BLE ▼</b></div>
+
+  <div class="tier">
+    <div class="tier-label">Device</div>
+    <div class="tier-body">
+      <div class="node device"><b>DA14535 thermometer</b><small>AHT20 sensor · HTP/BAS/DIS · extended sleep · SUOTA + dual-image SPI flash (planned)</small></div>
+      <div class="node device" style="flex:0 1 220px"><b>Future sensors</b><small>same pattern, other GATT profiles / custom service (FR-9)</small></div>
+    </div>
+  </div>
+</div>
+
+<p>Key architectural decisions, justified in the following sections:</p>
+<ul>
+  <li><b>MQTT at the edge, stream inside.</b> Collectors publish over MQTT
+      (native or WebSocket) — the de-facto IoT protocol with tiny overhead,
+      QoS 1 delivery and broker-side buffering. Inside the platform, messages
+      are bridged into a durable stream (NATS JetStream) that decouples
+      ingestion from processing (NFR-1, NFR-5).</li>
+  <li><b>One relational database, two workloads.</b> PostgreSQL holds accounts,
+      devices and consent links; the TimescaleDB extension turns the same
+      database into a first-class time-series store (compression, retention,
+      continuous aggregates). One system to operate and back up (NFR-2, NFR-3).</li>
+  <li><b>Identity is delegated, not hand-rolled.</b> Keycloak issues OIDC
+      tokens for users and (via client-credential grants) for gateways; the API
+      service only verifies and enforces (NFR-4).</li>
+  <li><b>OTA is a first-class pipeline, not a file download.</b> Eclipse
+      hawkBit manages rollouts (groups, phased deployment, abort, per-device
+      status); collectors are its delivery arm; SUOTA is the last hop (FR-6).</li>
+  <li><b>Everything runs from one <code>docker-compose</code> on day one</b>
+      and the same images scale out under k3s/Kubernetes later — the
+      architecture does not change, only the replica counts (NFR-1, NFR-3).</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="device">4. Device tier — embedded firmware</h2>
+
+<p>
+  The firmware is documented in detail in <code>README.md</code>; from the
+  system's point of view the device is deliberately dumb and low-power:
+</p>
+<ul>
+  <li><b>Standard GATT services.</b> HTP (0x1809) indications carry
+      IEEE&nbsp;11073 FLOAT temperatures; Battery Service reports charge; Device
+      Information Service exposes model, application version and SDK version —
+      the version fields are what the update pipeline reads to decide whether a
+      device needs an update.</li>
+  <li><b>No knowledge of the internet.</b> The device never holds Wi-Fi or
+      cloud credentials; its attack surface is the BLE link only. Timestamps
+      are assigned by the collector at reception (the device has no RTC worth
+      trusting), with the sequence preserved by the 5&nbsp;s cadence.</li>
+  <li><b>Pairing.</b> LE Secure Connections (ECDH) pairing is already enabled
+      (<code>CFG_ENABLE_SMP_SECURE</code>). Bond persistence (proposal 2.4) is
+      required before doctor-grade deployments so a reboot does not silently
+      drop encryption.</li>
+</ul>
+
+<h3>4.1 SUOTA readiness (firmware work for FR-6)</h3>
+<p>
+  The SDK ships the complete machinery (the <code>ble_app_ota</code> example,
+  the secondary bootloader project, SUOTA chapters in the Tutorial SDK). The
+  firmware changes, tracked as <code>proposals.md</code> item 3.4:
+</p>
+<ol>
+  <li><b>Flash layout:</b> SPI flash partitioned into product header + two
+      image banks; the secondary bootloader boots the newest valid image and
+      falls back to the other bank if validation fails — this is the rollback
+      guarantee.</li>
+  <li><b>SUOTA receiver service</b> (<code>CFG_PRF_SUOTAR</code>) added next to
+      HTP; the collector writes the new image into the inactive bank over GATT,
+      the device validates CRC and reboots into it.</li>
+  <li><b>Image signing:</b> images are signed (Ed25519) at build time in CI;
+      collectors verify the signature <em>before</em> transfer, and the version
+      in DIS is compared after reboot to confirm success (the DA14531/35
+      bootloader itself does not verify signatures — verification lives in the
+      pipeline, §<a href="#ota">8</a>).</li>
+</ol>
+
+<!-- ================================================================ -->
+<h2 id="collector">5. Collector tier — mobile, web and gateway apps</h2>
+
+<p>
+  Collectors are the bridge: BLE-facing on one side (subscribe to HTP
+  indications, drive SUOTA) and platform-facing on the other (authenticated
+  MQTT/HTTPS). All collectors share the same responsibilities:
+</p>
+<ul>
+  <li>Scan/connect to <code>DLG_THRM</code> devices, enable indications, decode
+      IEEE&nbsp;11073, attach a UTC timestamp at reception.</li>
+  <li><b>Store-and-forward:</b> every reading is written to local storage first
+      (SQLite on mobile/gateway, IndexedDB in the browser), then uploaded and
+      marked acknowledged. Offline operation is therefore free, and uploads are
+      idempotent (<code>device_id + ts + type</code> key) so retries never
+      duplicate (NFR-5).</li>
+  <li>Register/claim devices to the customer's account (first-connect claiming
+      by BD address + proof of physical access, e.g. button press).</li>
+  <li>Act as the SUOTA delivery arm of the update pipeline (§<a href="#ota">8</a>).</li>
+</ul>
+
+<h3>5.1 Cross-platform mobile framework (FR-8) — evaluation</h3>
+
+<div class="table-wrap"><table>
+  <tr><th>Option</th><th>BLE central support</th><th>Pros</th><th>Cons</th></tr>
+  <tr>
+    <td><b>Capacitor + Angular</b> (Ionic ecosystem)</td>
+    <td><code>@capacitor-community/bluetooth-le</code> — native CoreBluetooth /
+        Android BLE under a Web-Bluetooth-like API</td>
+    <td>Reuses the existing Angular 17 FE and team skills; <b>one codebase
+        builds the web app, the Android app and the iOS app</b> (FR-7 + FR-8
+        from a single project); plugin API mirrors Web Bluetooth so the BLE
+        service layer is written once against a thin interface.</td>
+    <td>WebView UI (fine for dashboards/forms); background BLE collection is
+        more constrained than fully native, needs the native plugin's
+        background modes.</td>
+  </tr>
+  <tr>
+    <td><b>Flutter</b></td>
+    <td><code>flutter_blue_plus</code> / <code>flutter_reactive_ble</code> —
+        mature, widely deployed</td>
+    <td>Compiled UI, excellent performance and tooling; strong BLE libraries;
+        good background support.</td>
+    <td>Dart — zero reuse of the Angular codebase; the web app would remain a
+        separate project (Flutter Web cannot do Web Bluetooth reliably).</td>
+  </tr>
+  <tr>
+    <td><b>React Native</b></td>
+    <td><code>react-native-ble-plx</code> — mature</td>
+    <td>Large ecosystem, native UI components.</td>
+    <td>Different framework from the existing FE (React vs Angular); web story
+        (react-native-web) does not cover Web Bluetooth; more native-build
+        friction.</td>
+  </tr>
+  <tr>
+    <td><b>PWA only</b> (no store app)</td>
+    <td>Web Bluetooth</td>
+    <td>Zero extra codebases.</td>
+    <td><b>Not viable for iOS:</b> WebKit does not implement Web Bluetooth, and
+        all iOS browsers must use WebKit — iPhones would be unsupported.
+        Chrome on Android does support it, but background collection is poor.</td>
+  </tr>
+</table></div>
+
+<div class="callout">
+  <b>Recommendation: Capacitor.</b> It is the only option where FR-7 (web app)
+  and FR-8 (Android + iOS) are the <em>same Angular codebase</em>: the app is
+  written against a small <code>BleTransport</code> interface with two
+  implementations — Web Bluetooth (browser) and
+  <code>@capacitor-community/bluetooth-le</code> (native shells). Everything
+  else (decoding, buffering, upload, SUOTA logic, UI) is shared. Flutter is the
+  fallback if native background-collection requirements outgrow what Capacitor's
+  plugin can deliver — the platform-facing protocol (§6) is identical either way.
+</div>
+
+<h3>5.2 Web app (FR-7)</h3>
+<ul>
+  <li>The Angular FE evolves into the hosted web app: login (OIDC redirect to
+      Keycloak), live BLE collection via Web Bluetooth, history dashboards from
+      the API, and the browser-side SUOTA updater.</li>
+  <li><b>Browser support:</b> Web Bluetooth works in Chrome, Edge and other
+      Chromium browsers on macOS, Windows, Linux and ChromeOS (and Chrome on
+      Android). Safari and Firefox do not implement it — on those, the web app
+      still serves dashboards, account, doctor and admin views; only live BLE
+      collection needs Chrome/Edge or the mobile app. Web Bluetooth requires
+      HTTPS, which the deployment provides anyway.</li>
+  <li>Uploads use MQTT-over-WebSocket (EMQX listens on WSS) or plain HTTPS
+      batch POST as fallback — both authenticated with the user's OIDC token.</li>
+</ul>
+
+<h3>5.3 Dedicated gateways (optional, unattended sites)</h3>
+<p>
+  Wards, nursing homes, or households without a resident phone use a headless
+  gateway: a Raspberry Pi (or any Linux SBC) running a small Go/Python service
+  on BlueZ that performs the same collector duties for many devices at once.
+  Gateways authenticate with mTLS client certificates + Keycloak
+  client-credentials, and are the preferred SUOTA arm for mass fleet updates
+  because they don't depend on a user opening an app.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="pipeline">6. Data pipeline — ingestion, processing, storage</h2>
+
+<div class="diagram">
+  <div class="diagram-title">Measurement path (all components FOSS, self-hosted)</div>
+  <pre class="seq" style="border:none;background:none;margin:0;padding:0">
+device ──BLE HTP──▶ collector
+                      │  local queue (SQLite / IndexedDB) — survives offline
+                      ▼
+                MQTT publish, QoS 1, TLS
+                topic: v1/{tenant}/{user_id}/{device_id}/measurement/temperature
+                      │
+                      ▼
+        ┌──────── EMQX cluster ────────┐   auth: OIDC JWT (users/apps),
+        │  connection fan-in, ACLs,    │   mTLS (gateways); topic ACL =
+        │  per-client rate limits      │   client may publish only its own ids
+        └──────────────┬───────────────┘
+                       ▼  bridge/rule → stream
+        ┌────── NATS JetStream ────────┐   durable, replicated, replayable;
+        │  subject: meas.{type}        │   absorbs bursts (backpressure here,
+        └──────────────┬───────────────┘   not in the broker or the DB)
+                       ▼  consumer group "ingest" (N replicas)
+        ┌────── ingest workers ────────┐   validate envelope → authz check →
+        │  batch INSERT .. ON CONFLICT │   idempotent write → publish
+        │  DO NOTHING (dedup)          │   "live" event for WebSocket fan-out
+        └──────────────┬───────────────┘
+                       ▼
+        PostgreSQL + TimescaleDB hypertable  (compressed, auto-retention,
+        continuous aggregates: 1 min / 1 h / 1 day rollups)
+  </pre>
+</div>
+
+<h3>6.1 Why these components</h3>
+<div class="table-wrap"><table>
+  <tr><th>Concern</th><th>Choice</th><th>Rationale (and FOSS status)</th></tr>
+  <tr>
+    <td>Edge protocol</td>
+    <td><b>MQTT 5 (QoS 1)</b>, native + WebSocket</td>
+    <td>Minimal overhead for battery/mobile clients, built-in acknowledged
+        delivery and offline sessions; WSS variant works from browsers. Open
+        standard.</td>
+  </tr>
+  <tr>
+    <td>Broker</td>
+    <td><b>EMQX</b> (Apache-2.0) — or Mosquitto for the MVP single node</td>
+    <td>EMQX clusters horizontally and is benchmarked to millions of concurrent
+        connections; fine-grained ACLs and JWT auth built in. Mosquitto
+        (EPL/EDL) is lighter and perfect until ~100k connections.</td>
+  </tr>
+  <tr>
+    <td>Durable stream</td>
+    <td><b>NATS JetStream</b> (Apache-2.0)</td>
+    <td>Decouples ingestion from processing with replay, consumer groups and
+        exactly-once-per-consumer windows, at a fraction of Kafka's operational
+        weight (single small binary, clusters of 3 for HA). Apache Kafka
+        remains the drop-in alternative if throughput ever demands it — the
+        envelope format doesn't change.</td>
+  </tr>
+  <tr>
+    <td>Time-series storage</td>
+    <td><b>TimescaleDB</b> (Apache-2.0 core) on PostgreSQL</td>
+    <td>Hypertables give ~90%+ native compression on regular telemetry,
+        automatic retention policies, and continuous aggregates for fast
+        dashboards — while staying plain SQL in the <em>same database</em> as
+        profiles and consent links, so access control joins are trivial.
+        (Alternatives: ClickHouse for extreme analytics scale; VictoriaMetrics
+        for metrics-shaped data.)</td>
+  </tr>
+  <tr>
+    <td>Live updates to viewers</td>
+    <td>WebSocket/SSE fan-out from the API service</td>
+    <td>Ingest workers publish accepted measurements onto a
+        <code>live.{user_id}</code> subject; the API service forwards to
+        authorized connected dashboards (customer's own page, doctor watching a
+        patient) — NFR-6's 1–2 s freshness.</td>
+  </tr>
+</table></div>
+
+<h3>6.2 Message envelope (FR-9 extensibility)</h3>
+<p>
+  Every payload — today's temperature and any future type — uses one envelope,
+  so brokers, streams, workers and storage never need to learn new shapes:
+</p>
+<pre><code>{
+  "v": 1,                      // envelope version
+  "device_id": "48:23:35:F4:00:10",
+  "collector_id": "app-7f3a…", // which phone/browser/gateway relayed it
+  "ts": "2026-07-26T12:34:56.789Z",   // collector reception time, UTC
+  "type": "temperature",       // measurement type registry key
+  "payload": { "celsius": 27.15 },    // type-specific, JSON-schema validated
+  "meta": { "fw": "1.4.0", "battery_pct": 87, "rssi": -61 }
+}</code></pre>
+<p>
+  New types register a name + JSON Schema + storage mapping (§<a href="#extensibility">11</a>);
+  unknown types are quarantined to a dead-letter subject, never dropped silently.
+</p>
+
+<h3>6.3 Storage schema (core tables)</h3>
+<pre><code>users(id, keycloak_sub, display_name, …)
+devices(id, bd_addr, model, hw_rev, fw_version, owner_user_id, claimed_at, …)
+consent_links(patient_id, doctor_id, scope, granted_at, revoked_at)   -- FR-4
+measurement_types(key, json_schema, unit, version)                    -- FR-9
+measurements(                                    -- TimescaleDB hypertable
+  ts timestamptz, device_id, type, value_num, payload jsonb,
+  collector_id, PRIMARY KEY (device_id, type, ts))                    -- dedup
+audit_log(actor_id, action, subject, at, detail jsonb)                -- NFR-4
+firmware_images(id, version, chip, sha256, signature, minio_url, …)   -- FR-6
+</code></pre>
+<p>
+  <code>value_num</code> carries the primary scalar (fast aggregates);
+  <code>payload</code> keeps the full typed document. Continuous aggregates
+  (min/max/avg per minute/hour/day) back the dashboards; raw rows compress
+  after 7 days and expire per retention policy (configurable per tenant).
+</p>
+
+<!-- ================================================================ -->
+<h2 id="identity">7. Identity, profiles and access control</h2>
+
+<ul>
+  <li><b>Keycloak</b> (Apache-2.0) is the single identity provider. Users
+      (customers, doctors, admins) log in via OIDC from web and mobile;
+      gateways use the client-credentials grant plus mTLS. Tokens are short-lived
+      JWTs carrying realm roles.</li>
+  <li><b>Roles:</b>
+    <ul>
+      <li><code>customer</code> — full access to <em>own</em> profile, devices
+          and measurements; may grant/revoke doctor links (FR-4); may trigger
+          updates on own devices.</li>
+      <li><code>doctor</code> — read access to measurements of patients with an
+          active, unrevoked <code>consent_link</code>; may annotate; sees
+          nothing outside the link's scope.</li>
+      <li><code>admin</code> — user/fleet management, firmware release and
+          rollout control (FR-5, FR-6); data access is break-glass style and
+          always audited.</li>
+    </ul>
+  </li>
+  <li><b>Enforcement lives in the API service and the database</b>, not the
+      client: every query is scoped by the authenticated subject, with
+      PostgreSQL row-level-security policies as a second net (a doctor's
+      session literally cannot select rows of non-consenting patients).</li>
+  <li><b>Consent is data, not configuration:</b> links carry scope (which
+      measurement types, which time range) and revocation is immediate — the
+      next query and the live feed both respect it.</li>
+  <li><b>Privacy mechanics (NFR-4):</b> measurement rows reference opaque
+      device/user ids, never names; personal data lives in one small table,
+      which makes GDPR export/erasure a bounded operation (erasure keeps
+      anonymized series if the customer opts in to research use, else cascades).</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="ota">8. Firmware update pipeline (reverse flow — FR-6)</h2>
+
+<p>
+  Updates traverse the same tiers as measurements, downward. The orchestrator is
+  <b>Eclipse hawkBit</b> (EPL — a purpose-built, open-source IoT rollout
+  manager), with <b>MinIO</b> (AGPL) storing the signed images.
+</p>
+
+<div class="diagram">
+  <div class="diagram-title">Update rollout — admin to device and status back</div>
+  <pre class="seq" style="border:none;background:none;margin:0;padding:0">
+1  CI builds thermometer.img ──▶ signs (Ed25519, offline key) ──▶ MinIO
+2  Admin creates hawkBit rollout: target filter (model, current fw ≤ X),
+   groups (canary 1% → 10% → 100%), success/abort thresholds
+3  hawkBit assigns the update to each target device
+        │
+        ▼  collectors learn about it two ways:
+   · gateways poll hawkBit DDI API directly (device-management federation)
+   · mobile/web apps ask our API "pending update for devices I own?"
+     → customer sees a consent prompt (or auto-applies if policy allows)
+        │
+        ▼
+4  Collector downloads image over HTTPS, verifies signature + SHA-256
+5  Collector connects to the device ──▶ SUOTA transfer into inactive
+   flash bank ──▶ device validates CRC ──▶ reboots into new image
+6  Collector reads DIS software-revision ──▶ confirms version
+7  Status (success / error + code) reported to hawkBit per device;
+   rollout auto-pauses if the error threshold in any group is exceeded
+   Rollback: bootloader falls back to the previous bank on invalid image;
+   hawkBit can also ship the previous version as a new rollout.
+  </pre>
+</div>
+
+<ul>
+  <li><b>Safety rails:</b> phased groups with automatic pause, signature
+      verification <em>before</em> any bytes cross BLE, dual-bank rollback on
+      the device, and a minimum-battery gate checked by the collector before
+      starting a transfer.</li>
+  <li><b>Consent:</b> customer-owned devices update only after in-app consent
+      (or a customer-enabled auto-update policy); gateway-managed fleets follow
+      the admin's rollout policy.</li>
+  <li><b>Extensible payloads:</b> hawkBit distributes arbitrary artifacts —
+      the same pipeline later carries configuration bundles or models for other
+      device types (FR-9 symmetry).</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="security">9. Security model</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Hop / layer</th><th>Mechanism</th></tr>
+  <tr><td>Device ↔ collector (BLE)</td>
+      <td>LE Secure Connections pairing (ECDH, already enabled in firmware);
+          bond persistence added with proposal 2.4; device holds no internet
+          credentials at all.</td></tr>
+  <tr><td>Collector ↔ platform</td>
+      <td>TLS 1.3 everywhere (MQTT/TLS, WSS, HTTPS). Users: short-lived OIDC
+          JWTs with refresh. Gateways: mTLS client certificates + client
+          credentials. MQTT topic ACLs pin every client to its own id space —
+          a compromised phone can publish only as itself.</td></tr>
+  <tr><td>Inside the platform</td>
+      <td>Private network between services (WireGuard/VPC); NATS and Postgres
+          not exposed publicly; secrets in the orchestrator's secret store;
+          per-service least-privilege DB roles.</td></tr>
+  <tr><td>Data at rest</td>
+      <td>Full-disk / volume encryption (LUKS) + encrypted backups
+          (pgBackRest + restic to off-site storage); PII isolated in one table
+          (§7); row-level security as defense in depth.</td></tr>
+  <tr><td>Firmware</td>
+      <td>Ed25519-signed images, signature verified by collectors before SUOTA;
+          hash pinned in hawkBit metadata; release keys kept offline; version
+          monotonicity enforced (no silent downgrades outside an explicit
+          rollback rollout).</td></tr>
+  <tr><td>Accountability</td>
+      <td>Append-only <code>audit_log</code> for logins, consent changes, admin
+          data access, and rollout actions; Loki-retained service logs.</td></tr>
+  <tr><td>Abuse resistance</td>
+      <td>Per-client rate limits at EMQX and the API gateway; payload JSON-schema
+          validation at ingest; dead-letter quarantine for malformed input —
+          garbage cannot reach storage or dashboards.</td></tr>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="scale">10. Scalability and sizing</h2>
+
+<p>
+  The load is gentler than it first sounds: a thermometer at a 5&nbsp;s interval
+  produces 0.2 msg/s <em>while actively collected</em>, and most of a
+  million-device fleet is not connected at any given moment (fever episodes,
+  nightly wear). Design targets:
+</p>
+
+<div class="table-wrap"><table>
+  <tr><th>Stage</th><th>Fleet</th><th>Sustained load (est.)</th><th>Deployment</th></tr>
+  <tr><td>MVP</td><td>≤ 5k devices</td><td>&lt; 200 msg/s</td>
+      <td>1 small VPS (2 vCPU / 4 GB): docker-compose with Mosquitto, NATS,
+          API, Postgres+Timescale, Keycloak, hawkBit, MinIO, Caddy.</td></tr>
+  <tr><td>Growth</td><td>≤ 200k devices</td><td>~2–8k msg/s</td>
+      <td>3-node k3s: EMQX replaces Mosquitto, NATS ×3, ingest workers scale by
+          consumer group, Postgres with a streaming replica.</td></tr>
+  <tr><td>Scale</td><td>millions</td><td>tens of thousands msg/s</td>
+      <td>EMQX cluster (connection fan-in is its benchmarked strength),
+          JetStream or Kafka partitioned by <code>device_id</code>, N ingest
+          workers batching inserts (TimescaleDB sustains 100k+ rows/s on
+          modest hardware with batched writes), Timescale multi-node or
+          ClickHouse for the analytics tail if ever needed.</td></tr>
+</table></div>
+
+<ul>
+  <li><b>Every horizontal path is already in the design:</b> broker clustering,
+      stream partitioning, stateless API/ingest replicas — scaling is replica
+      counts, not redesign (NFR-1).</li>
+  <li><b>Batching everywhere:</b> collectors upload buffered readings in
+      batches after offline periods; ingest workers write in batched
+      transactions; compression turns years of per-device history into
+      megabytes (NFR-3).</li>
+  <li><b>Backpressure by design:</b> spikes (e.g. a flu wave) queue in
+      JetStream, not in the database; collectors additionally hold their local
+      buffer if the broker applies flow control — data is delayed, never lost
+      (NFR-5).</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="extensibility">11. Extensibility — beyond temperature (FR-9)</h2>
+
+<p>Adding a new measurement type (say, humidity — the AHT20 already measures it — or heart rate from a future device) touches no pipeline plumbing:</p>
+<ol>
+  <li>Register the type: one row in <code>measurement_types</code> with a JSON
+      Schema and unit; ingest workers hot-load the registry.</li>
+  <li>Device side: expose it as a standard GATT characteristic (or a custom
+      service for non-standard data) — the SDK's profile machinery is the same
+      pattern as HTP.</li>
+  <li>Collector side: map the characteristic to the envelope
+      <code>type</code>/<code>payload</code> — one decoder function behind the
+      shared <code>BleTransport</code> interface.</li>
+  <li>Storage and dashboards: the hypertable and aggregates are type-keyed
+      already; a new dashboard panel selects the new type.</li>
+</ol>
+<p>
+  The same symmetry applies downward: hawkBit artifacts are opaque, so new
+  device classes reuse the whole update pipeline with a different last-hop
+  updater. Multi-tenancy (clinics, resellers) is a <code>tenant</code> column +
+  topic prefix already present in the schema and topic scheme.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="deployment">12. Deployment, operations and cost</h2>
+
+<ul>
+  <li><b>Packaging:</b> every component ships as an OCI container; one
+      <code>docker-compose.yml</code> for the MVP, the same images under
+      <b>k3s</b> (lightweight Kubernetes) from the growth stage on. Caddy (or
+      Traefik) terminates TLS with automatic Let's Encrypt certificates.</li>
+  <li><b>Observability:</b> Prometheus (metrics for broker, stream, DB, API),
+      Grafana (ops + optional admin analytics dashboards), Loki (logs),
+      Alertmanager (rollout failures, ingest lag, disk pressure) — all FOSS.</li>
+  <li><b>Backups:</b> nightly pgBackRest base + WAL archiving; MinIO versioned
+      buckets replicated off-site with restic. Restore drills are part of the
+      runbook, not an afterthought.</li>
+  <li><b>CI/CD:</b> the existing GitHub Actions workflow grows two lanes:
+      firmware (build, host tests, sign, publish image to MinIO/hawkBit —
+      already half-built today) and platform (build containers, integration
+      tests against a compose stack, deploy).</li>
+  <li><b>Cost sketch (NFR-3):</b> MVP ≈ one €10/month VPS + domain. Growth ≈
+      3 × €20–40 nodes + off-site backup storage. At millions of devices the
+      dominant cost is a handful of dedicated servers (broker + DB + stream),
+      still far below per-message managed-cloud pricing — and with zero
+      license fees by construction (NFR-2).</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="roadmap">13. Phased roadmap</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Phase</th><th>Delivers</th><th>Requirements closed</th></tr>
+  <tr>
+    <td><b>1 — Connected MVP</b></td>
+    <td>Compose stack (Mosquitto/NATS/Postgres+Timescale/Keycloak/API/Caddy);
+        Angular FE gains login, upload with IndexedDB buffering, and history
+        dashboard.</td>
+    <td>FR-3, FR-7; foundations for NFR-1…6</td>
+  </tr>
+  <tr>
+    <td><b>2 — Mobile</b></td>
+    <td>Capacitor shell around the shared Angular codebase; native BLE plugin
+        behind the <code>BleTransport</code> interface; Android + iOS store
+        builds; background collection.</td>
+    <td>FR-8</td>
+  </tr>
+  <tr>
+    <td><b>3 — Care circle</b></td>
+    <td>Doctor role, consent links, live shared views, audit surface; admin
+        console v1.</td>
+    <td>FR-4, FR-5</td>
+  </tr>
+  <tr>
+    <td><b>4 — OTA</b></td>
+    <td>Firmware SUOTA + dual-bank bootloader (proposals 3.4 + 2.3/2.4
+        prerequisites); hawkBit + MinIO; signed CI images; collector-side
+        updater in web, mobile and gateway.</td>
+    <td>FR-6</td>
+  </tr>
+  <tr>
+    <td><b>5 — Scale-out &amp; new types</b></td>
+    <td>EMQX + k3s migration, measurement-type registry UI, gateway reference
+        image, second measurement type (humidity) end-to-end as the
+        extensibility proof.</td>
+    <td>FR-9, NFR-1 at full depth</td>
+  </tr>
+</table></div>
+
+<footer>
+  Thermometer project · architecture v1 · 2026-07-26 ·
+  lives at <code>projects/target_apps/ble_examples/thermometer/ARCHITECTURE.html</code> —
+  keep in sync with <code>README.md</code>, <code>PACKAGING_CONCEPT.md</code> and <code>proposals.md</code>.
+</footer>
+
+</main>
+</body>
+</html>

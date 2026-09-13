@@ -1,10 +1,17 @@
 # Proposals — Improvements, Optimizations, New Features
 
-Candidate changes for the thermometer firmware (and, where noted, the Angular
-FE in `renesas/thermometer_fe/`). Grounded in the current implementation;
-file references point at where each change would land.
+Candidate changes for the thermometer. Grounded in the current
+implementation; file references point at where each change would land.
+
+- **Part 1 (§1–4)** — the **firmware** (`src/`, `build.sh`, `tests/`).
+- **Part 2 (§5–10)** — the **platform**: the Spring Boot backend
+  (`backend/`) and the React web app (`fe/`). Added 2026-08-07.
 
 Effort scale: **S** (hours), **M** (a day or two), **L** (a week+).
+
+---
+
+# Part 1 — Firmware
 
 ## Implementation status (2026-07-20)
 
@@ -219,3 +226,894 @@ A GitHub Actions job installing the ARM toolchain and running `bash build.sh`
 3. **3.3 offline buffering** once 2.4 provides reconnect persistence.
 4. **3.4 SUOTA** and **1.4 beacon mode** last — both need hardware in hand
    (flash/bootloader work and RF/privacy validation respectively).
+
+---
+
+# Part 2 — Platform (backend + web app)
+
+A security/performance audit plus a role-experience pass over the MVP
+platform. Three roles each gained ten capabilities; the chart was rewritten;
+four authorization/robustness gaps found during the audit were fixed in the
+same pass rather than logged. A second, independent security review of the
+finished platform then found three more (5.7–5.9), fixed the same way.
+
+## Implementation status (2026-08-07)
+
+| # | Proposal | Status |
+|---|----------|--------|
+| 5.1 | OTA collector endpoints had no authentication | ✅ Implemented (shared `X-Device-Token`) |
+| 5.2 | `/actuator/info` + `/actuator/prometheus` open to any authenticated user | ✅ Implemented (JWT realm-role converter + `ROLE_ADMIN`) |
+| 5.3 | Unbounded admin/audit list endpoints | ✅ Implemented (`PageResponse<T>` on 7 endpoints) |
+| 5.4 | No rate limiting anywhere | ✅ Implemented (Bucket4j + Caffeine, two buckets) |
+| 5.5 | Missing `devices.owner_user_id` index | ✅ Implemented (`V4`) |
+| 5.6 | 403s invisible to operators | ✅ Implemented (`access.denied` audit rows) |
+| 5.7 | `POST /api/measurements` had no authorization check | ✅ Implemented (owner-only ingest via `DeviceAccessGuard`) |
+| 5.8 | Rate limiting bypassable via spoofed `X-Forwarded-For` | ✅ Implemented (`trust-forwarded-for` now defaults to `false`) |
+| 5.9 | `ConsentController.revoke()` leaked id existence via 403-vs-404 | ✅ Implemented (owner-scoped lookup → 404) |
+| 5.10 | Backend didn't start at all under the `docker` profile | ✅ Implemented (`JwtAuthenticationConverter` replaces a raw lambda) |
+| 5.11 | JIT user-provisioning had an insert-race condition | ✅ Implemented (`findExistingOrProvision` retry) |
+| 6.1 | Chart: horizontal time scroll + per-window vertical auto-scale | ✅ Implemented (`TemperatureChart.tsx`) |
+| 6.2 | Design-system audit ("colors sprinkled everywhere") | ✅ Implemented — **premise was false**, one file needed fixing |
+| 6.3 | Shared components to keep 30 features from duplicating UI | ✅ Implemented (`Timeline`, `ThresholdEditor`, `NoteThread`, `Pagination`, `ProgressBar`, `TrendChart`, `utils/csv.ts`, `utils/time.ts`) |
+| 7.1 | Customer: trend + daily-digest insight card | ✅ Implemented |
+| 7.2 | Customer: fever-episode history | ✅ Implemented (`/history`) |
+| 7.3 | Customer: multi-device overlay comparison | ✅ Implemented |
+| 7.4 | Customer: CSV export of history | ✅ Implemented |
+| 7.5 | Customer: personal alert thresholds | ✅ Implemented |
+| 7.6 | Customer: notes anchored to a reading | ✅ Implemented |
+| 7.7 | Customer: device health / staleness widget | ✅ Implemented — battery-trend sub-part descoped, see 10.2 |
+| 7.8 | Customer: doctor-access transparency | ✅ Implemented |
+| 7.9 | Customer: onboarding checklist | ✅ Implemented |
+| 8.1 | Doctor: risk ranking + sort | ✅ Implemented |
+| 8.2 | Doctor: fleet-wide fever-episode feed | ✅ Implemented (`/events`) |
+| 8.3 | Doctor: variability + trend direction per patient | ✅ Implemented |
+| 8.4 | Doctor: printable clinical report | ✅ Implemented (`/patients/:patientId/report`) |
+| 8.5 | Doctor: consent-activity view | ✅ Implemented (`/audit`) — see 10.5 for the data caveat |
+| 8.6 | Doctor: care notes per patient | ✅ Implemented — doctor-private by design, see 10.6 |
+| 8.7 | Doctor: multi-patient overlay compare | ✅ Implemented |
+| 8.8 | Doctor: per-patient threshold override | ✅ Implemented |
+| 8.9 | Doctor: own audit trail | ✅ Implemented (`/audit`) |
+| 8.10 | Doctor: device-reliability panel (server-computed staleness) | ✅ Implemented |
+| 9.1 | Admin: ingest/system health | ✅ Implemented (`/admin/health`) |
+| 9.2 | Admin: device inventory stats | ✅ Implemented |
+| 9.3 | Admin: OTA rollout list + detail | ✅ Implemented (`/admin/rollouts[/:id]`) |
+| 9.4 | Admin: user growth stats | ✅ Implemented |
+| 9.5 | Admin: filterable audit-log viewer | ✅ Implemented (`/admin/audit`) |
+| 9.6 | Admin: consent-integrity warnings | ✅ Implemented |
+| 9.7 | Admin: user search/filter + role correction | ✅ Implemented — local registry only, see 10.4 |
+| 9.8 | Admin: system-default thresholds | ✅ Implemented |
+| 9.9 | Admin: storage/retention insight | ✅ Implemented (`/admin/retention`) |
+| 9.10 | Admin: security-anomaly summary | ✅ Implemented (folded into `/admin/audit`) |
+| 10.1 | Per-device OTA credentials (real fix for 5.1's shared secret) | ⏸ Deferred — needs device-provisioning infrastructure that doesn't exist yet |
+| 10.2 | Battery telemetry pipeline (`type=battery` end to end) | ⏸ Deferred — collector/gateway work, not FE work |
+| 10.3 | Frontend bundle code-splitting | ⏸ Deferred — 1.26 MB single chunk, no user-visible symptom yet |
+| 10.4 | Propagate admin role changes to Keycloak | ⏸ Deferred — needs the Keycloak Admin API + a service account |
+| 10.5 | Make `GET /api/doctor/consent-activity` return something | ⏸ Deferred — needs an audit-log shape change, not a query fix |
+| 10.6 | Patient-visible care notes | ⏸ Deferred — product/clinical sign-off, not an engineering blocker |
+| 10.7 | `useDevices()` live polling for the staleness widget | ⏸ Deferred — refreshes on mount/focus/mutation today |
+| 10.8 | Live-feed identity keying (`sub` vs. local `id`) | ✅ Implemented — `subscribeLive()` now takes `useMe()`'s `id`; surfaced (and verified) by the e2e suite failing after a Keycloak restart |
+| 10.9 | No test boots the full `docker`-profile Spring context | ⏸ Deferred — would have caught 5.10 before a running stack did |
+| 10.10 | `CurrentUserService`'s insert-race retry has no dedicated test | ⏸ Deferred — only indirectly exercised today |
+| 11.1 | Remembered device selection across pages | ✅ Implemented (`uiStore.ts`) |
+| 11.2 | Customer-set device names replacing BD addresses | ✅ Implemented end to end (`V2__device_label.sql`, `PATCH /api/devices/{bdAddr}/label`) |
+| 11.3 | Custom DeviceList component for the Devices page | ✅ Implemented (`components/ui/DeviceList.tsx`) |
+| 11.4 | UI/UX & accessibility pass (contrast, focus, aria) | ✅ Implemented — ink-muted light token was 4.49:1 on surface-2, fixed to 4.75:1; NavBar drawer/tab focus rings; select hover/focus consistency |
+
+> Note: as in Part 1, sections marked ✅ keep their original problem
+> statements as the historical rationale ("today X…" describes the state
+> *before* the change). `backend/README.md` and `fe/README.md` document the
+> current behavior; ⏸ sections are still-open ideas and are accurate as
+> written.
+
+---
+
+## 5. Security & performance audit
+
+Findings from a read of the whole backend surface, all fixed in the same pass
+except where a follow-up is called out. **5.1–5.6** came from the original
+audit; **5.7–5.9** from a second, independent security review of the finished
+platform (2026-08-07) and were fixed in their own pass.
+
+### ✅ 5.1 OTA collector endpoints were completely unauthenticated (M)
+`GET /api/rollouts/pending` and `POST /api/rollouts/{id}/status` sat behind
+`permitAll()` with no compensating check of any kind. Two concrete abuses:
+any authenticated browser user (or any anonymous caller — the endpoints
+needed no token at all) could enumerate **firmware metadata for any device**
+by BD address, and could POST fabricated `failed` statuses until a rollout
+tripped its own auto-abort threshold, DoS-ing someone else's update.
+
+Fixed with a fleet-wide shared secret in an `X-Device-Token` header, compared
+with `MessageDigest.isEqual` (constant-time) and returning an
+indistinguishable 401 on both "missing" and "wrong". The check is inside the
+controller, not the filter chain, so it stays in force under the `local`
+profile too — where `thermometer.security.enabled=false` disables everything
+else.
+
+**Explicit tradeoff:** this is a *shared* bearer secret, not per-device
+credentials. Every collector holds the same token, so one extraction
+compromises the fleet's OTA read path, and revocation is all-or-nothing. It
+matches the seam the Go gateway already had (`gateway/internal/auth/token.go`'s
+`StaticTokenProvider`) and is a large improvement over "no auth", but the real
+fix is 10.1.
+*Where:* `RolloutController.requireCollectorToken()`,
+`thermometer.device.collector-token` in `application*.yml`; tightened further
+by 5.4's collector bucket.
+
+### ✅ 5.2 Actuator was readable by any authenticated user (S)
+`/actuator/info` and `/actuator/prometheus` only required *authentication*, so
+any customer's token could read operational metrics — request volumes, JVM
+internals, build metadata. The reason it wasn't locked down earlier is that no
+JWT→authority mapping existed, so `hasRole("ADMIN")` had nothing to match: the
+app's convention is explicit in-controller role checks (see `backend/README.md`
+"Roles & identity" for why), which don't help a path Spring Security handles
+before any controller.
+
+Fixed by adding a Keycloak `realm_access.roles` → `ROLE_*`
+`SimpleGrantedAuthority` converter wired **only** into `securedFilterChain`,
+then `/actuator/**` → `hasRole("ADMIN")` with `/actuator/health` (and its
+sub-paths) left open for probes. The open `local`-profile chain is untouched,
+so nothing about local curl testing changes.
+*Where:* `config/SecurityConfig.java` (`keycloakRealmRoleConverter`).
+
+### ✅ 5.3 Unbounded list endpoints (S)
+`GET /api/admin/users` and `GET /api/admin/consents` returned every row, and
+the new audit-log/rollout views would have done the same. Added `Pageable`
+support returning a `PageResponse<T>` envelope — `{content, page, size,
+totalElements, totalPages}` — deliberately a small record rather than Spring's
+`Page<T>`, whose serialized shape is unstable across Boot versions and leaks
+`Pageable`/`Sort` internals into the client contract.
+
+Note the *non*-change: `GET /api/measurements/{deviceId}`'s existing
+`from`/`to`/`limit` shape is the right one for a time series and was left
+alone; low-volume user-authored tables (annotations, care notes) use the same
+bounded-`limit` style rather than pages.
+*Where:* `api/dto/PageResponse.java`; used by `/api/admin/users`,
+`/api/admin/consents`, `/api/admin/audit-log`, `/api/consents/access-history`,
+`/api/doctor/consent-activity`, `/api/doctor/audit-log`, `GET /api/rollouts`.
+
+### ✅ 5.4 No rate limiting anywhere (M)
+Nothing capped request volume, so a single client could saturate the ingest
+path or brute-force device ids. Added Bucket4j token buckets in Caffeine
+caches, keyed by caller IP: a blanket bucket (240 req/min sustained, 80
+back-to-back) plus a tighter one (10 req/min) on 5.1's two collector
+endpoints, since a leaked shared token is the one credential that still buys
+useful access. The filter is registered at servlet order −110, ahead of Spring
+Security's −100, so floods are rejected before JWT validation or any database
+work — which is also why it writes the configured CORS headers onto its own
+429 by hand.
+
+The blanket budget started at 60/min and was raised to 240 after measuring
+against the new overlay features: a single tab's baseline is ~24 req/min, but
+multi-device/multi-patient overlay fans that out per selected series (5 series
+at 5 s = 60 req/min from one feature), and several tabs — or several users
+behind one NAT address — share the bucket.
+
+In-memory state is correct *here* (one backend instance, no replicas in
+`docker-compose.yml`); running N instances silently turns the limit into
+`limit × N`, and that — not traffic growth — is the trigger for moving to
+Redis.
+*Where:* `config/RateLimitFilter.java`, `config/RateLimitConfig.java`,
+`thermometer.ratelimit.*`.
+
+### ✅ 5.5 Missing index on `devices.owner_user_id` (S)
+Every consent-scoped device lookup, the doctor fleet summary, and the
+role-branched device listing filter on `owner_user_id`, which had no index —
+a sequential scan on the one table every authenticated page hits. Added as a
+partial index (`WHERE owner_user_id IS NOT NULL`), since unclaimed devices are
+never looked up this way.
+*Where:* `idx_devices_owner` in `backend/src/main/resources/db/migration/V1__init.sql`.
+
+### ✅ 5.6 Denied requests left no trace (S)
+The audit log only recorded *successful* state changes, so "someone is
+probing device ids" was invisible — and the new admin security panel would
+have had nothing to show. Added an observer that records an `access.denied`
+row on every 403.
+
+Implemented as a `HandlerExceptionResolver` that observes and returns `null`
+(i.e. "not handled, carry on") rather than a `@ControllerAdvice`
+`@ExceptionHandler`, which would have had to produce the response itself and
+would therefore have changed the error body the frontend parses.
+*Where:* `security/AccessDeniedAuditor.java`.
+
+### ✅ 5.7 `POST /api/measurements` had no authorization check at all (M)
+*Found by a follow-up security review, 2026-08-07.*
+
+The REST upload path took no caller identity and checked nothing: **any**
+authenticated user — customer, doctor or admin — could POST a fabricated
+reading tagged with **any** device's `bd_addr`, including devices they don't
+own. That was survivable when the table only backed a chart. It isn't now:
+readings feed `TemperatureEventService` episode detection and the doctor
+dashboard's `riskScore`/`riskTier` triage, so an injected 41 °C on another
+patient's device misdirects a doctor's attention — a clinical-safety issue,
+not just a data-integrity one.
+
+Fixed with **caller identity + ownership**, not with 5.1's shared
+`X-Device-Token`, because of who actually calls this endpoint: its only
+non-test caller is the browser collector (`fe/src/pages/ConnectPage.tsx`)
+uploading its own Web Bluetooth readings with the user's Keycloak JWT
+attached. The Go gateway and `tools/simulate-device.sh` publish over MQTT and
+never touch it. Giving it the token treatment would have meant shipping the
+fleet-wide secret into every browser — strictly worse than an ownership check,
+and it would have broken the one real caller. `SecurityConfig` therefore needs
+no change: the endpoint stays under `.anyRequest().authenticated()` and gained
+`DeviceAccessGuard.requireIngestAccess` inside the controller.
+
+The rule: a **customer** may upload for a device they own, or for one nobody
+owns yet; **doctor and admin are rejected outright** (a reading is something a
+device produced — nobody submits one on a patient's behalf, and consent must
+not turn a read grant into a write path).
+
+**Explicit tradeoff — unclaimed devices stay writable.** Requiring ownership
+unconditionally would deadlock discovery: `MeasurementIngestService`
+auto-registers an unknown `bd_addr` on its first reading, which is what makes
+it appear in `GET /api/devices/available` to be claimed, and the browser
+uploads from the moment it connects, before the user clicks "claim". So a
+customer can still seed readings for an address nobody has claimed — visible
+to no doctor and to no user but an admin while it stays unclaimed, and a
+nuisance only for whoever later claims that exact address. Restricting
+unclaimed posts to admin was the alternative and was rejected for breaking
+every real onboarding. The real close is collectors authenticating **as the
+device** — the same per-device credentials as 10.1.
+*Where:* `security/DeviceAccessGuard.requireIngestAccess()`,
+`api/MeasurementController#ingest`, covered by `RbacIT`.
+
+### ✅ 5.8 Rate limiting was bypassable via spoofed `X-Forwarded-For` (S)
+*Found by a follow-up security review, 2026-08-07.*
+
+5.4 keyed its buckets on `X-Forwarded-For`'s first entry with
+`trust-forwarded-for` defaulting to `true` — but `docker-compose.yml`
+publishes `backend` on `8080:8080` with **no reverse proxy in front of it**,
+so that header is pure client input on the topology this repo actually ships.
+Any caller could rotate it for a fresh bucket per request, defeating both the
+blanket limiter and the tighter collector bucket that exists specifically to
+blunt a leaked `X-Device-Token` — or set a victim's real address to drain
+*their* bucket, a DoS-by-framing.
+
+Flipped the default to `false` (also in `RateLimitConfig`'s `@Value`
+fallback, so an omitted property is safe rather than silently trusting client
+input). The property and its behavior are unchanged: a deployment that adds a
+trusted reverse proxy sets `thermometer.ratelimit.trust-forwarded-for=true`
+and must, since behind an ingress every request otherwise shares one socket
+address and therefore one bucket.
+*Where:* `thermometer.ratelimit.trust-forwarded-for` in `application.yml`,
+`config/RateLimitConfig.java`, `config/RateLimitFilter.callerKey()`.
+
+### ✅ 5.9 `ConsentController.revoke()` leaked consent-id existence (S)
+*Found by a follow-up security review, 2026-08-07.*
+
+`AnnotationController` and `CareNoteController` scope edit/delete lookups by
+owner **in the query** (`findByIdAndUserId`, `findByIdAndDoctorUserId`), so a
+non-owner gets 404 and can't confirm the row exists. `revoke()` did an
+unconditional `findById` and then threw 403, which distinguishes "someone
+else's consent link" from "no such id" — a probe oracle over the consent
+table, and an inconsistency with the codebase's own convention.
+
+Aligned it: non-admins go through a new
+`findByIdAndPatientUserId`, admins keep the unscoped lookup. Everyone who may
+not revoke — including the doctor the link points at — now gets 404, and the
+explicit role check disappears because the query *is* the authorization.
+*Where:* `ConsentController#revoke`,
+`domain/ConsentLinkRepository.findByIdAndPatientUserId`, covered by `RbacIT`.
+
+### ✅ 5.10 Backend failed to start under the `docker` profile at all (L)
+*Found by actually running `docker compose up` after 5.2's fix, 2026-08-07 —
+no unit or integration test caught this; `mvn verify` uses a narrower Spring
+context that never triggers the code path that broke.*
+
+5.2's `keycloakRealmRoleConverter()` bean was a lambda implementing the
+generic `Converter<Jwt, AbstractAuthenticationToken>` interface. Spring Boot's
+`WebMvcAutoConfiguration` scans every `Converter` bean in the context to
+register it as an MVC data-binding converter, and a lambda's synthetic class
+doesn't expose its generic type arguments to that reflection-based scan — the
+whole application context failed to start, with `Unable to determine source
+type <S> and target type <T> for your Converter... does the class parameterize
+those types?`. Every endpoint this pass built would have been unreachable in
+the deployment profile that matters.
+
+Replaced the lambda with a concrete `JwtAuthenticationConverter` (Spring
+Security's own class, configured with a custom
+`setJwtGrantedAuthoritiesConverter`) — a real `implements` clause survives the
+same reflection that a lambda's synthetic class doesn't. Caught only by
+starting the real `docker compose` stack and reading `/actuator/health`;
+flagging the gap this leaves (no test boots the full `docker` profile's
+context) in §10.
+*Where:* `config/SecurityConfig.java#keycloakRealmRoleConverter`.
+
+### ✅ 5.11 JIT user-provisioning had a startup-adjacent race condition (M)
+*Found by `npm run test:e2e` against the live stack, 2026-08-07 — the
+`Connect (Simulated Device)` → claim → live-feed flow fires several API calls
+in quick succession right after a brand-new user's first sign-in.*
+
+`CurrentUserService.provisionFromJwt` did `findById(id).or(() ->
+findByUsername(...)).orElseGet(() -> new User(...))` then `save()`. Two
+concurrent requests from the very same never-seen-before user could both miss
+the lookup and race to insert the same row; the loser's flush threw
+`duplicate key value violates unique constraint "users_pkey"` — a 500 on
+whichever request lost. This predates this pass, but 5.7's ownership check
+added a `CurrentUserService.resolve()` call to the ingest endpoint, which is
+hit immediately after connecting a device — making the race meaningfully more
+likely to trigger in exactly the flow a brand-new customer would hit first.
+
+Extracted the find-or-create into `findExistingOrProvision`, which attempts
+the insert via `saveAndFlush` (so a constraint violation surfaces immediately,
+scoped to just that call rather than a longer-lived transaction) and on
+`DataIntegrityViolationException` re-reads instead of failing — Postgres
+blocks a conflicting concurrent insert until the other transaction resolves,
+so by the time the violation surfaces the winner has already committed and a
+retry read always finds it. Applied the same pattern to
+`provisionLocalDevUser` for consistency. Deliberately removed the outer
+`@Transactional` from `resolve()`: catching a failed flush's exception inside
+the transaction that produced it leaves Hibernate's session unusable for
+anything after it, so each attempt needs its own transaction, which requires
+not sharing one across the retry.
+*Where:* `security/CurrentUserService.java#findExistingOrProvision`. Not yet
+covered by an automated test (see §10) — verified by re-running the full e2e
+suite against a freshly-reset stack.
+
+### Deliberately not changed
+`myPatientsSummary`'s three-queries-per-patient and the rollout
+`findAll()`-then-filter are pre-existing N+1s with the original code's own
+"fine at this MVP's scale" note. Neither was worsened by this pass — every
+new multi-subject path is batched (`AlertThresholdService.resolveBatch` is 3
+queries regardless of patient count; `TemperatureEventService.detectBatch` is
+one `IN` query for a whole fleet; rollout progress is a grouped count) — and
+fixing them was out of scope.
+
+## 6. Platform foundations
+
+### ✅ 6.1 Temperature chart: scrollable time window + auto-scaling axis (L)
+The old chart plotted a whole fixed range against a fixed Y axis, which
+flattened exactly the thing the product exists to show: a 1.5 °C fever spike
+is visually negligible on an axis wide enough to hold every reading of the
+week.
+
+Rewritten as `TemperatureChart` with (a) a recharts `Brush` for horizontal
+scrolling plus unconditional Earlier/Later step buttons — a `Brush` traveller
+is awkward on touch and unreachable by keyboard; (b) a Y domain recomputed
+from the **visible window's** min/max on every render, with a padding floor so
+a flat window doesn't zoom into sensor noise; (c) all five clinical tiers as
+`ReferenceArea` bands, clipped for free to the moving domain; (d) multi-series
+overlay via one `<Line>` per series, needed by 7.3 and 8.7.
+
+**The correctness-critical detail** is that window state is a `[start, end]`
+**timestamp** pair re-resolved to array indices each render, never raw `Brush`
+indices. `useMeasurementHistory` refetches a rolling range every 5 s, so index
+0 is a different instant on every tick — an index-only Brush drifts silently
+within a minute of live use. This is pinned by unit tests
+(`components/temperatureWindow.test.ts`) precisely because it's the kind of
+thing a future refactor would "simplify" away.
+*Where:* `fe/src/components/TemperatureChart.tsx`,
+`fe/src/components/temperatureWindow.ts`, `fe/src/theme/temperature.ts`
+(`TEMPERATURE_TIER_BANDS` — cut points declared once instead of duplicated
+between chart and badges).
+
+### ✅ 6.2 Design-system audit — the premise didn't hold (S)
+The starting complaint was that colors were "randomly sprinkled" through the
+app and needed a systemic cleanup. A grep of `fe/src/` for raw Tailwind color
+utilities found **exactly one** offender: `RequireRole.tsx`'s hand-rolled
+`amber-*` denial banner. Everything else already went through the "Pine &
+Ember" token system.
+
+The fix was therefore one line — swap that div for the existing
+`Alert status="warning"` component, which also picks up the right type scale
+and `role="status"` for free — not a redesign. Recorded here so the same
+false premise isn't re-raised later.
+
+One genuine duplication surfaced in passing: `relativeTime()` existed twice
+(`StatCard.tsx` and `DoctorDashboardPage.tsx`) with different granularity;
+hoisted to `utils/time.ts` and now shared by both plus the staleness widgets.
+The four semantic tokens (success/warning/danger/info) and five temperature
+tiers covered every new feature — no new tokens were needed for 30 features,
+which is the real evidence the system was already sound.
+*Where:* `fe/src/components/RequireRole.tsx`, `fe/src/utils/time.ts`.
+
+### ✅ 6.3 Shared components before features (M)
+Thirty features across three roles is exactly the situation that produces
+three near-identical timeline implementations. Built first, then reused:
+`Timeline` (6 uses), `ThresholdEditor` (3 — customer/doctor/admin scopes off
+one component), `NoteThread` (2 — annotations and care notes), `Pagination`,
+`ProgressBar`, `TrendChart`, `utils/csv.ts`, `utils/time.ts`. On the backend
+the same principle produced `DeviceAccessGuard` — the ownership/consent check
+extracted out of `MeasurementController` so the new event and annotation
+endpoints couldn't drift from it.
+*Where:* `fe/src/components/`, `fe/src/components/ui/`,
+`backend/.../security/DeviceAccessGuard.java`.
+
+## 7. Customer features
+
+Ten requested capabilities, shipped as nine surfaces — the trend insight and
+the daily digest are one card (7.1) rather than two stacked cards saying
+similar things about the same numbers.
+
+### ✅ 7.1 Trend + digest insight card (M)
+The dashboard showed the latest reading and a chart, but never said what they
+*meant*. Adds a plain-sentence comparison against the previous equal-length
+window ("your average is 0.4 °C higher than the previous 24 hours") plus
+highest/lowest and a normal-day streak. Computed client-side from data already
+fetched — no extra request.
+*Where:* `fe/src/components/TrendInsightCard.tsx`,
+`fe/src/components/trendInsight.ts` (+ tests).
+
+### ✅ 7.2 Fever-episode history (M)
+A chart answers "what is my temperature", not "how many times have I run a
+fever this week". Adds a `/history` route listing threshold-crossing episodes
+over 24 h/7 d/30 d with tier, peak, duration and reading count. Episodes are
+derived **on read** from the existing `measurements` hypertable — no events
+table to keep consistent, and re-tiering after a threshold change is
+automatic.
+*Where:* `fe/src/pages/HistoryPage.tsx`; backend
+`event/TemperatureEventService.java`, `GET /api/events/device/{bdAddr}`.
+
+### ✅ 7.3 Multi-device overlay comparison (M)
+A customer owning several devices could only look at one at a time. Adds a
+compare mode overlaying up to 5 devices as separate series with a validated
+categorical palette and a text legend (identity is never carried by color
+alone).
+*Where:* `fe/src/pages/DashboardPage.tsx`,
+`fe/src/api/useMeasurementHistories.ts`, `fe/src/theme/chartColors.ts`
+(`seriesPalette`).
+
+### ✅ 7.4 CSV export (S)
+Nothing could leave the app. Adds an export of the selected range —
+oldest-first `ts,device,celsius,value,unit`. `utils/csv.ts` does RFC-4180
+quoting and prefixes `= + - @` cells with `'` (spreadsheet formula-injection
+guard), which matters precisely because this file is meant to be opened in
+Excel.
+*Where:* `fe/src/utils/csv.ts`, `fe/src/pages/DashboardPage.tsx`.
+
+### ✅ 7.5 Personal alert thresholds (M)
+The five tier boundaries were hardcoded in the frontend, so "normal" meant
+the same thing for a newborn and an adult. Adds a stored per-user scale with
+whole-row precedence — doctor override → personal → system default →
+built-in fallback — resolved server-side so the chart, badges, episodes and
+report all agree. Fields are `normalStartC`/`elevatedStartC`/`feverStartC`/
+`highFeverStartC` — each named after the tier it turns **on** at ("Elevated
+starts at 37.5 °C"), not the tier below the boundary — after the original
+"below X °C" phrasing (e.g. a field literally named "Fever" that actually
+gated High Fever) proved confusing/negated to set up.
+*Where:* `fe/src/components/ThresholdEditor.tsx`,
+`fe/src/pages/SettingsPage.tsx`; backend `threshold/AlertThresholdService.java`,
+`alert_thresholds` in `V1__init.sql`, `/api/thresholds/*`.
+
+### ✅ 7.6 Notes anchored to a reading (M)
+"38.2 °C at 14:05" is not clinically useful without "just came back from a
+run". Adds click-a-point-on-the-chart annotation with a note thread scoped to
+the visible range, plus a small marker on the chart itself at each note's
+anchor instant (clicking the marker behaves like clicking that point on the
+line) — so a note's location doesn't have to be hunted for in the side list.
+Owner-only write, but readable by anyone who can already read the readings
+(consenting doctor, admin) — the note is context for the data, and hiding it
+would make the data more misleading, not less.
+*Where:* `fe/src/components/ReadingNotes.tsx`, `fe/src/components/NoteThread.tsx`,
+`fe/src/components/TemperatureChart.tsx` (`annotations` prop); backend
+`annotation/AnnotationController.java`, `measurement_annotations` in
+`V1__init.sql`.
+
+### ✅ 7.7 Device health / staleness widget (S)
+The Devices page listed devices but not whether they were still working, so a
+dead battery looked identical to a stable temperature. Adds per-device
+Reporting / No recent readings (>15 min) / Offline (>6 h) / No readings yet
+badges plus last-reading time and type, backed by `devices.last_seen_at` so
+this costs one column read rather than an N-device fan-out.
+
+The requested **battery-trend** sub-part was descoped: no battery telemetry
+reaches the backend today (see 10.2). Shipping a permanently empty battery
+chart would have been worse than not shipping it.
+*Where:* `fe/src/pages/DevicesPage.tsx`; backend `devices.last_seen_at`/
+`last_seen_type` in `V1__init.sql`, `MeasurementIngestService`.
+
+### ✅ 7.8 Doctor-access transparency (S)
+A customer could see *which* doctors had access but not when access was
+granted or revoked. Adds a paginated history of their own consent events, with
+explicit copy that individual **reads are not tracked** — the honest statement
+of what the audit log actually contains, rather than implying a per-view
+access trail that doesn't exist.
+*Where:* `fe/src/pages/SettingsPage.tsx`;
+backend `GET /api/consents/access-history`.
+
+### ✅ 7.9 Onboarding checklist (S)
+A new account landed on an empty dashboard with no next step. Adds a
+three-step card (claim a device → take a first reading → share with a doctor)
+derived from already-cached queries, dismissible and auto-hiding at 3/3.
+*Where:* `fe/src/components/OnboardingChecklist.tsx`.
+
+## 8. Doctor features
+
+### ✅ 8.1 Risk ranking and sort (M)
+The patient list was alphabetical, which is the one ordering that carries no
+clinical information. Adds a server-computed risk score/tier and a sort
+control (Risk / Most sick / Most recent / Name), with risk as the default so
+the top of the list is the patient to look at first.
+*Where:* `fe/src/pages/DoctorDashboardPage.tsx`,
+`fe/src/components/PatientTriage.tsx`; backend
+`GET /api/doctor/patients/summary`.
+
+### ✅ 8.2 Fleet-wide fever-episode feed (M)
+7.2's per-device episodes, but across every consenting patient — a `/events`
+route with tier filter, search, affected-patient chips and incremental
+paging. One batched query across all patient devices, not one per patient.
+*Where:* `fe/src/pages/EventsPage.tsx`; backend `GET /api/events/patients`,
+`TemperatureEventService.detectBatch`.
+
+### ✅ 8.3 Variability and trend direction (S)
+An average hides whether a patient is stable or swinging. Adds a ± standard
+deviation column and a rising/falling/steady arrow against the period average.
+The stddev comes from one added `STDDEV_POP` in the existing summary query —
+no extra round trip.
+*Where:* `fe/src/components/PatientTriage.tsx`; backend
+`ConsentController#myPatientsSummary`.
+
+### ✅ 8.4 Printable clinical report (M)
+Nothing could leave a consultation on paper. Adds
+`/patients/:patientId/report`: header block (patient, device, readings,
+prepared-by, generated-at, **the alert scale in effect and where it came
+from**), summary tiles, a bucketed readings table, and the care-notes
+appendix — printed via `window.print()` with a `@media print` stylesheet, no
+PDF dependency added.
+
+The report chart is deliberately a *different* component: fixed 720×260 px, no
+`ResponsiveContainer`, no brush, and always the light palette on white in both
+themes, because a dark-theme chart prints as a black rectangle.
+*Where:* `fe/src/pages/PatientReportPage.tsx`, `fe/src/utils/doctorFeeds.ts`.
+
+### ✅ 8.5 Consent activity (S)
+A doctor had no view of the consent grants and revocations affecting them.
+Shipped as one section of a merged `/audit` page (with 8.9) rather than a
+second near-identical route. See 10.5 for why the dedicated
+`consent-activity` endpoint is empty in practice and the audit-log view is the
+one that carries the data.
+*Where:* `fe/src/pages/DoctorAuditPage.tsx`.
+
+### ✅ 8.6 Care notes (M)
+Clinical observations had nowhere to live. Adds a private per-doctor note
+thread on each patient.
+
+**Doctor-private by design**, and labelled as such in the UI: consent in this
+system flows patient→doctor only, there is no doctor→patient channel, and
+turning clinical notes into patient-facing content is a product and
+medico-legal decision rather than a default. Admin gets a read-only compliance
+view. See 10.6 if that default is ever revisited.
+*Where:* `fe/src/pages/PatientsPage.tsx`; backend
+`care/CareNoteController.java`, `care_notes` in `V1__init.sql`,
+`GET /api/admin/care-notes`.
+
+### ✅ 8.7 Multi-patient overlay compare (M)
+Adds a compare mode overlaying up to 5 patients' 24 h curves on one chart,
+sharing 6.1's multi-series support and the same query cache key as the
+single-patient view — so switching modes costs no refetch.
+*Where:* `fe/src/pages/PatientsPage.tsx`.
+
+### ✅ 8.8 Per-patient threshold override (M)
+The clinical counterpart to 7.5: a doctor can set a scale for a specific
+patient that outranks that patient's personal one, with the current effective
+source shown so it's clear what's being overridden. Audited on set and clear.
+*Where:* `fe/src/components/ThresholdEditor.tsx` (scope `doctor-override`);
+backend `PUT/DELETE /api/thresholds/patient/{patientUserId}`.
+
+### ✅ 8.9 Own audit trail (S)
+Adds the doctor's own paginated activity feed — consent grants/revocations,
+threshold overrides, role changes and denied requests — worded by
+actor-vs-subject, with UUIDs resolved to patient names. Merged with 8.5 into
+`/audit`.
+*Where:* `fe/src/pages/DoctorAuditPage.tsx`; backend
+`GET /api/doctor/audit-log`.
+
+### ✅ 8.10 Device-reliability panel (S)
+The dashboard previously guessed staleness in the frontend from the last
+sparkline point. Replaced with the server's `stale` flag (computed against
+`devices.last_seen_at`) plus a dedicated panel listing patients with silent
+devices or no device at all, silent-first. One heuristic, server-side, instead
+of one per page.
+*Where:* `fe/src/pages/DoctorDashboardPage.tsx`.
+
+## 9. Admin features
+
+The `/admin` page moved from local tab state to nested `/admin/*` routes, so
+every view is deep-linkable and back/forward behaves. No `NavBar` change was
+needed — its existing `/admin` link already matches any sub-path.
+
+### ✅ 9.1 Ingest health (S)
+`/admin/health`: readings and reporting devices over the last hour and 24 h,
+a readings-by-type breakdown, and explicit stall alerts (warning at zero in an
+hour, danger at zero in a day). Auto-refreshes every 60 s. The first place to
+look when "the app shows no data".
+*Where:* `fe/src/pages/admin/AdminHealthPage.tsx`;
+backend `GET /api/admin/analytics/ingest`.
+
+### ✅ 9.2 Device inventory stats (S)
+Total / claimed / unclaimed / still-reporting tiles plus a model-and-firmware
+mix table above the existing registry — the fleet composition view needed
+before planning a rollout.
+*Where:* `fe/src/pages/admin/AdminDevicesPage.tsx`;
+backend `GET /api/admin/analytics/device-inventory`.
+
+### ✅ 9.3 OTA rollout list and detail (M)
+Rollouts could be created but never inspected. Adds a paginated list with
+installed/failed/pending progress bars and a detail page (group size, abort
+threshold, image/delta URLs, per-device target table with a status filter) —
+including a danger alert when the failure rate has passed the rollout's own
+abort threshold. Progress counts are a single grouped query, not one per
+rollout.
+*Where:* `fe/src/pages/admin/AdminRolloutsPage.tsx`,
+`AdminRolloutDetailPage.tsx`; backend `GET /api/rollouts`, `GET /api/rollouts/{id}`.
+
+### ✅ 9.4 User growth stats (S)
+Per-role totals and a 90-day sign-up trend chart above the user table
+(gap-filled, so quiet days read as zero rather than being skipped).
+*Where:* `fe/src/pages/admin/AdminUsersPage.tsx`;
+backend `GET /api/admin/analytics/user-growth`.
+
+### ✅ 9.5 Filterable audit-log viewer (M)
+The audit log was write-only — rows existed but nothing could read them.
+Adds a paginated viewer filtered by actor, action (with a datalist of known
+actions), subject and date range, all AND-combined server-side via a JPA
+`Specification`.
+*Where:* `fe/src/pages/admin/AdminAuditPage.tsx`;
+backend `GET /api/admin/audit-log`.
+
+### ✅ 9.6 Consent-integrity warnings (M)
+Adds a scan for consent links pointing at deleted patients or doctors, and
+doctors holding an implausible number of links, surfaced as tiles, a warning
+banner and a "flagged only" view — the data-quality problems that are
+invisible when you can only page through links one screen at a time.
+*Where:* `fe/src/pages/admin/AdminRelationshipsPage.tsx`;
+backend `GET /api/admin/analytics/consent-integrity`.
+
+### ✅ 9.7 User search, filter and role correction (M)
+The user list was unfiltered and unpaged (5.3). Adds debounced server-side
+search over username/email, a role filter, and an inline role change that
+blocks changing your own row — the self-lockout guard, since admin is the only
+role that can grant admin.
+
+**Scoped deliberately narrow:** this edits the local `users` mirror only, and
+`CurrentUserService` re-syncs role from the JWT on the user's next request, so
+the change is overwritten at next login. It is an audited correction tool for
+a mirror that has drifted, not a role editor — the UI says so, and 10.4 is the
+real thing.
+*Where:* `fe/src/pages/admin/AdminUsersPage.tsx`;
+backend `PATCH /api/admin/users/{id}`.
+
+### ✅ 9.8 System-default thresholds (S)
+The bottom of 7.5's precedence chain, editable: the scale every user gets
+before setting their own. Folded into an admin-only section of the existing
+Settings page rather than a near-empty admin tab.
+*Where:* `fe/src/pages/SettingsPage.tsx`;
+backend `GET/PUT /api/thresholds/system`.
+
+### ✅ 9.9 Storage and retention insight (M)
+`/admin/retention`: estimated stored readings, storage used, oldest retained
+reading, and the busiest devices over 30 days.
+
+Row counts come from `pg_class.reltuples` and summed chunk sizes, explicitly
+labelled as estimates — a `COUNT(*)` on a hypertable holding two years of
+readings is exactly the query that makes an admin page take a minute and
+consume the shared buffer cache.
+*Where:* `fe/src/pages/admin/AdminRetentionPage.tsx`;
+backend `GET /api/admin/analytics/retention`.
+
+### ✅ 9.10 Security-anomaly summary (M)
+Consumes 5.6's `access.denied` rows: denied-request counts, actors repeating
+a denied action past a configurable threshold, and most-denied actors — each
+with an "Open in log" action that pre-fills 9.5's filter. Folded into
+`/admin/audit` as a second view rather than a separate route, because every
+row in it is a jumping-off point into the log.
+*Where:* `fe/src/pages/admin/AdminAuditPage.tsx`;
+backend `GET /api/admin/analytics/security-ops`.
+
+## 10. Deferred / backlog
+
+### ⏸ 10.1 Per-device OTA credentials (L)
+The real fix for 5.1. Today every collector presents the same
+`thermometer.device.collector-token`, so extracting it from one gateway
+compromises the fleet's OTA read path and revocation is all-or-nothing.
+
+What per-device credentials actually require, and why this isn't a small
+change: a provisioning step that issues a credential at manufacture or first
+claim, somewhere to store it (device-side secure storage, which the DA1453x
+SPI-flash layout question in 2.3/2.4 also blocks), a credential table with
+rotation and revocation, and a decision between short-lived per-device JWTs
+(needs a token endpoint the device can reach before it has a token) and mTLS
+(needs a CA and cert distribution). None of that infrastructure exists yet.
+
+Until it does, 5.4's 10 req/min collector bucket is the compensating control:
+a leaked token still can't enumerate the fleet quickly.
+*Where:* `RolloutController`, `gateway/internal/auth/token.go`, a new
+credential table.
+
+### ⏸ 10.2 Battery telemetry pipeline (M)
+The firmware polls the Battery Service every 60 s and the backend's ingest
+switch already handles `type=battery` — but **nothing publishes it**. Neither
+the Go gateway, nor the browser BLE transport, nor the simulator ever emits a
+`battery` envelope, so the column is permanently empty and 7.7 shipped
+staleness-only.
+
+Closing this is collector work, not frontend work: read the BAS
+characteristic in `fe/src/ble/webBluetoothTransport.ts` and
+`gateway/internal/`, publish it as a second envelope type, and add it to the
+simulator so it's testable without hardware. The backend and schema need no
+change. Once readings exist, the FE addition is a second series on the device
+health widget — small, and blocked entirely on the data.
+*Where:* `gateway/internal/`, `fe/src/ble/`, `fe/src/pages/DevicesPage.tsx`.
+
+### ⏸ 10.3 Frontend bundle code-splitting (S)
+`npm run build` emits a single ~1.26 MB JS chunk (~360 kB gzipped) and warns
+about it. Nothing is user-visible yet on a local stack, but every role now
+downloads every other role's pages: a customer on mobile pays for the entire
+admin console and the print-report page.
+
+The obvious split is route-based `React.lazy` on the `/admin/*` subtree and
+`/patients/:patientId/report` — the two heaviest, least-visited areas — plus
+letting recharts land in its own vendor chunk. Deferred rather than done
+because it changes the loading behavior of every route and deserves its own
+verification pass, not a tail-end commit.
+*Where:* `fe/src/App.tsx`, `fe/vite.config.ts`.
+
+### ⏸ 10.4 Propagate admin role changes to Keycloak (M)
+9.7 edits the local mirror only, and `CurrentUserService` overwrites it from
+the JWT on the user's next request. A real role editor means calling the
+Keycloak Admin API, which needs a confidential service-account client with
+`realm-management` roles, credential handling for it, and a decision about
+what happens when Keycloak is unreachable mid-change (the local write must
+not commit). That's a different feature from what shipped, which is why the
+UI states the limitation instead of implying otherwise.
+*Where:* `AdminController#updateUserRole`, `deploy/keycloak/realm-export.json`.
+
+### ⏸ 10.5 `GET /api/doctor/consent-activity` returns nothing (S–M)
+The endpoint exists and is wired up, but is **always empty by design**, not by
+bug: consent rows record the *customer* as actor (they grant and revoke), so
+filtering the audit log by "doctor as actor" for consent actions matches
+nothing. `GET /api/doctor/audit-log` — actor **or** subject — is the query
+that actually carries the doctor's consent history, and is what the `/audit`
+page renders.
+
+Making the dedicated endpoint meaningful means changing what the audit log
+stores (a second indexed subject/participant column, or event-type-specific
+projections), which is a schema change, not a query fix. Kept as-is and
+documented rather than quietly deleted, since the frontend hook and the
+distinction are both real.
+*Where:* `ConsentController#doctorConsentActivity`, `domain/AuditLog.java`.
+
+### ⏸ 10.6 Patient-visible care notes (M)
+8.6's notes are doctor-private, with admin read-only access for compliance.
+Making them patient-visible is a defensible product choice but a **clinical
+and legal** decision, not an engineering one: it changes what a doctor can
+safely write down, and jurisdictions differ on patient access to clinical
+notes. Flagged here so the current default is understood as a decision rather
+than an oversight. The engineering change itself is small — a patient read
+path plus a per-note visibility flag.
+*Where:* `care/CareNoteController.java`, `care_notes` in `V1__init.sql`.
+
+### ⏸ 10.7 `useDevices()` doesn't poll (S)
+Every other live query has a `refetchInterval` (readings 5 s, doctor fleet
+10 s, episodes/rollouts 30–60 s), but `useDevices()` has none — it refreshes
+on mount, window focus, and mutation invalidation only. 7.7's staleness badges
+therefore age correctly on the customer Devices page purely by accident
+(`useAvailableDevices` polls at 5 s and re-renders the page), and would go
+stale if that neighbouring query were ever removed. A `refetchInterval` of
+30–60 s would make the widget's freshness intentional. Left alone in this pass
+rather than adding polling load without measuring it.
+*Where:* `fe/src/api/queries.ts`.
+
+### ✅ 10.8 Live-feed identity keying (S)
+*Fixed 2026-08-23.* The backend publishes `live/{user_id}/...` using the
+stable local `users.id`, but `fe/src/live/mqttClient.ts` subscribed using
+the browser's current JWT `sub`. These agree only until Keycloak is
+re-imported (it runs `start-dev --import-realm` with no volume, so every
+restart mints new subjects), after which a user's live feed silently stops
+arriving while REST history keeps working — which is exactly how it
+resurfaced: a fresh `docker compose up` against existing Postgres data made
+the e2e ad-hoc-connect scenario fail on "No live events yet.", providing
+the restart-reproducing test this fix was waiting for.
+
+`subscribeLive()` now takes `useMe()`'s `id` (the same id the backend
+publishes under) and ConnectPage subscribes once `/api/me` resolves; the
+publish topic's user segment stays as-is since ingest matches it with a `+`
+wildcard and fans out by `devices.owner_user_id`.
+*Where:* `fe/src/live/mqttClient.ts`, `fe/src/pages/ConnectPage.tsx`.
+
+### ⏸ 10.9 No test boots the full `docker`-profile Spring context (M)
+5.10 (the app failing to start entirely under `docker`) was caught only by
+running `docker compose up` and reading `/actuator/health` by hand — `mvn
+verify`'s `@SpringBootTest`s use a narrower context that never exercises
+`WebMvcAutoConfiguration`'s converter-bean scan the same way a real servlet
+container boot does. A single `@SpringBootTest(webEnvironment =
+RANDOM_PORT)` with the `docker` profile active (Testcontainers already stand
+up real Postgres/Mosquitto for `IngestPipelineIT`/`RbacIT`, so the
+infrastructure exists) run once in CI would have caught 5.10 before it ever
+reached a running stack.
+*Where:* a new IT alongside `RbacIT`/`IngestPipelineIT`.
+
+### ⏸ 10.10 `CurrentUserService`'s insert-race retry has no dedicated test (S)
+5.11's fix is exercised only indirectly — every `RbacIT`/`IngestPipelineIT`
+test that logs a user in once passes through `findExistingOrProvision`, but
+none of them race two concurrent first-sign-ins for the same subject the way
+the bug actually manifested. A focused test spawning two threads that both
+call `resolve()` for a brand-new JWT subject at once, asserting exactly one
+`users` row results and both calls return successfully, would pin the fix
+the way 10.9 would pin 5.10.
+*Where:* a new unit or `@DataJpaTest` alongside `CurrentUserService`.
+
+---
+
+## 11. Device naming & experience pass (2026-08-23)
+
+Three customer-experience gaps plus a sweep for usability/accessibility
+issues across the whole app.
+
+### ✅ 11.1 Remembered device selection (S)
+The dashboard reset its device picker to the first owned device on every
+mount, so a customer with several devices re-picked their choice after any
+detour to Devices/Settings/History. The selection now lives in a
+localStorage-persisted zustand store (`state/uiStore.ts`) shared by
+Dashboard **and** History (which had the identical bug), and the Devices
+page highlights the row the rest of the app is looking at. The stored id is
+a *preference*, not truth: `utils/devices.ts#resolveSelectedBdAddr`
+re-validates it against the currently-owned list on every load (unit-tested)
+— releasing the device elsewhere falls back gracefully instead of pointing
+at nothing.
+*Where:* `fe/src/state/uiStore.ts`, `fe/src/utils/devices.ts`,
+`DashboardPage.tsx`, `HistoryPage.tsx`, `DevicesPage.tsx`.
+
+### ✅ 11.2 Customer-set device names (M)
+A BD address means nothing to a customer, yet every picker and legend showed
+`DA14535 — AA:BB:CC:DD:EE:01`. Devices gained an owner-set label:
+`devices.label` (nullable, blank normalizes to NULL), exposed on
+`DeviceResponse`, written by owner-scoped `PATCH /api/devices/{bdAddr}/label`
+(lookup scoped in the query so non-owners get an indistinguishable 404 per
+§5.9's convention; audited as `device.rename`; admin can correct it through
+the existing edit endpoint) and set inline from the Devices page. The name
+wins wherever a device is displayed — dashboard/history pickers, compare
+checkboxes and chart legends (unnamed devices keep the old
+`model — address` form so same-model fleets stay distinguishable) — with
+`utils/devices.ts#deviceDisplayName` as the single fallback rule.
+*Where:* `backend/.../db/migration/V2__device_label.sql`,
+`DeviceController#renameLabel`, `RenameDeviceRequest`,
+`fe/src/utils/devices.ts`, `DevicesPage.tsx`, `AdminDevicesPage.tsx`.
+
+### ✅ 11.3 Custom DeviceList component (S)
+The Devices page's bare card list became a shared kit component:
+icon tile + name + mono address subtitle + badge/meta line + right-aligned
+action slot, hairline cards with hover border and a highlighted state for
+"this is the one your dashboard is showing". Both sections (owned +
+available) render through it, so future device surfaces inherit the look.
+*Where:* `fe/src/components/ui/DeviceList.tsx`.
+
+### ✅ 11.4 Usability / accessibility / contrast sweep (S–M)
+Findings from auditing every interactive surface against the design system:
+
+- **Contrast:** light-theme `ink-muted` measured **4.49:1** on `surface-2`
+  — under the WCAG AA 4.5:1 line for the caption text that sits there.
+  Darkened the token one step (`rgb(120 111 90)` → `rgb(116 107 87)`,
+  4.75:1 worst-case; still visibly lighter than `ink-secondary`); both
+  DESIGN_SYSTEM files updated in lockstep.
+- **Focus visibility:** the mobile nav drawer links and the customer bottom
+  tab bar had no focus-visible ring (keyboard users lost position); added.
+  Sign-out button got an explicit `type="button"`.
+- **Form semantics:** the dashboard's device `<select>` lacked the
+  `aria-label="Device"` its History twin already had; both selects (and the
+  compare checkbox group labels) now show names instead of raw addresses.
+  All other selects verified labeled via `htmlFor`/`aria-label`; the
+  NoteThread composer and rename inputs carry aria-labels.
+- Already in good shape and left alone: Button/Input/Card/Table primitives
+  (focus rings, `scope="col"`, touch-height targets), Badge's
+  never-color-alone rule, `motion-reduce` guards, Pagination aria-live.
+
+## Suggested ordering for the remaining platform work
+
+1. **10.9 + 10.10** — both are tests for bugs found live in this pass,
+   cheapest to write while the failure mode is still fresh, and the highest
+   ratio of confidence-gained to effort of anything left on this list.
+2. **10.2 battery telemetry** — smallest end-to-end win, unblocks the one
+   feature that shipped visibly incomplete, and doubles as FR-9's
+   "second measurement type end to end" proof.
+3. **10.7** — the remaining small frontend data-layer correctness fix
+   (10.8 is done).
+4. **10.3 code-splitting** — before the app grows further, while the split
+   points are still obvious.
+5. **10.5 / 10.4** — audit-log shape and Keycloak Admin API respectively;
+   both are schema/infrastructure changes worth batching with other backend
+   work.
+6. **10.1 per-device OTA credentials** — last, and only alongside the device
+   provisioning story (and the same SPI-flash-layout question that blocks
+   firmware items 2.3/2.4/3.4).
+7. **10.6** — not an engineering task until there's a product answer.

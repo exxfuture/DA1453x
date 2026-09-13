@@ -1,0 +1,167 @@
+# One-command local stack for the whole platform (architecture v3). See
+# README.md "Quick start". All ports below are host-side; change the left
+# side of any "host:container" mapping if something else on your machine
+# already uses it.
+name: thermometer
+
+services:
+  # --- Infra --------------------------------------------------------------
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    ports:
+      - "1883:1883" # MQTT
+      - "9001:9001" # MQTT over WebSocket (browsers subscribe here directly — v3 §7)
+    volumes:
+      - ./deploy/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+
+  postgres:
+    image: timescale/timescaledb:latest-pg16
+    environment:
+      POSTGRES_DB: thermometer
+      POSTGRES_USER: thermometer
+      POSTGRES_PASSWORD: thermometer
+    ports:
+      # Published on 5433 because 5432 is commonly taken on dev machines by a
+      # locally-running Postgres; the backend always reaches this service over
+      # the compose network (db:5432), so only direct host-side psql access
+      # uses the mapped port.
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U thermometer"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    command: start-dev --import-realm
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      # Fixes every URL Keycloak generates about itself — login form actions,
+      # redirects, password-reset email links, the token `iss` claim — to
+      # this one hostname, regardless of which internal path a request
+      # arrived through. It must be a hostname an actual human's browser (or
+      # mail client, for reset links) can resolve, since that's who ends up
+      # clicking these — host.docker.internal fails that (only containers
+      # can resolve it, not the host machine itself), so this is plain
+      # localhost, matching the "8082:8080" port mapping below. The backend
+      # container talks to Keycloak over the compose network directly
+      # instead (see backend/src/main/resources/application-docker.yml,
+      # thermometer.oidc.jwk-set-uri) rather than needing this hostname to
+      # resolve for it too.
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: "8082"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      # Custom "thermometer" login theme (./deploy/keycloak/themes) reloads
+      # from disk on every request instead of once at boot — dev-only, so
+      # editing login.css and refreshing the browser is enough to see the
+      # change (see deploy/README.md).
+      KC_SPI_THEME_CACHE_THEMES: "false"
+      KC_SPI_THEME_STATIC_MAX_AGE: "-1"
+    volumes:
+      - ./deploy/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
+      - ./deploy/keycloak/themes/thermometer:/opt/keycloak/themes/thermometer:ro
+    ports:
+      - "8082:8080" # admin console: http://localhost:8082 (admin/admin)
+    depends_on:
+      - mailpit
+
+  # Local SMTP catcher — Keycloak's realm (realm-export.json's smtpServer
+  # block) sends real "forgot password"/verification emails here instead of
+  # to the void, so that standard flow is genuinely testable locally: view
+  # what was "sent" at http://localhost:8025.
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      - "8025:8025" # web UI
+      - "1025:1025" # SMTP
+
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: thermometer
+      MINIO_ROOT_PASSWORD: thermometer123
+    ports:
+      - "9000:9000"   # S3 API
+      - "9091:9001"   # console: http://localhost:9091
+    volumes:
+      - minio_data:/data
+
+  # --- Platform -------------------------------------------------------------
+
+  backend:
+    build: ./backend
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      mosquitto:
+        condition: service_started
+      keycloak:
+        condition: service_started
+    # A cold dev-mode Keycloak boot can still race other backend startup
+    # concerns; restarting converges without needing a full Keycloak
+    # healthcheck (see backend/README.md).
+    restart: on-failure
+
+  fe:
+    build:
+      context: ./fe
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+        VITE_MQTT_WS_URL: ws://localhost:9001
+        VITE_KEYCLOAK_URL: http://localhost:8082
+    ports:
+      - "8090:80"
+    depends_on:
+      - backend
+
+  # --- Optional: a fleet of "devices" with no physical hardware needed -----
+  # Four simulated devices so the claim flow (one device per customer,
+  # exclusive ownership — see backend/README.md) is actually demonstrable:
+  # each publishes continuously and self-registers as unclaimed in the
+  # devices table on its first reading (MeasurementIngestService), so all
+  # four show up in GET /api/devices/available within a few seconds of
+  # `docker compose up`, no manual seeding needed.
+
+  gateway-1:
+    build: ./gateway
+    command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:01", "--collector-id", "gateway-01", "--interval", "5s"]
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  gateway-2:
+    build: ./gateway
+    command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:02", "--collector-id", "gateway-02", "--interval", "5s"]
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  gateway-3:
+    build: ./gateway
+    command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:03", "--collector-id", "gateway-03", "--interval", "5s"]
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+  gateway-4:
+    build: ./gateway
+    command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:04", "--collector-id", "gateway-04", "--interval", "5s"]
+    depends_on:
+      - mosquitto
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  mosquitto_data:
+  minio_data:

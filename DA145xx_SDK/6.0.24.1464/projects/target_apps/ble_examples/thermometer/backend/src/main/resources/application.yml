@@ -1,0 +1,83 @@
+spring:
+  application:
+    name: thermometer-backend
+  profiles:
+    default: local
+  threads:
+    virtual:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+  error:
+    # Without this, ResponseStatusException's reason (e.g. "Current password
+    # is incorrect", or Keycloak's password-policy violation text) is
+    # dropped from the JSON body and the frontend can only show a generic
+    # failure — the reason itself is never sensitive, it's our own
+    # controller/Keycloak text, not an internal stack trace.
+    include-message: always
+
+thermometer:
+  device:
+    # Shared secret every collector/gateway must send as `X-Device-Token` on
+    # the two OTA endpoints that have no user identity behind them
+    # (GET /api/rollouts/pending, POST /api/rollouts/{id}/status — see
+    # RolloutController). The default is a development placeholder: any real
+    # deployment must override it via THERMOMETER_DEVICE_COLLECTOR_TOKEN.
+    collector-token: ${THERMOMETER_DEVICE_COLLECTOR_TOKEN:dev-collector-token}
+  ratelimit:
+    # Per-caller-IP throttling, applied by RateLimitFilter ahead of the
+    # security chain. In-memory: one backend instance, no replicas (see
+    # ../docker-compose.yml) — these are per-instance numbers.
+    enabled: true
+    # Whether X-Forwarded-For identifies the caller. Only trustworthy behind a
+    # proxy that overwrites the header — otherwise any caller can rotate it to
+    # mint a fresh budget per request, or spoof someone else's address to drain
+    # their bucket. Defaults to false because nothing fronts this service in
+    # the stack this repo ships: ../docker-compose.yml publishes the backend on
+    # 8080:8080 with no reverse proxy, so the header is pure client input. A
+    # deployment that does put a trusted proxy in front should set this back to
+    # true (otherwise every user behind that proxy shares one bucket).
+    trust-forwarded-for: false
+    default:
+      # Sustained ceiling for every request. Headroom check: a single tab's
+      # baseline polling is ~24 req/min (5 s measurement history + 5 s device
+      # list). The multi-device/multi-patient overlay features (dashboard #3,
+      # doctor #7) fan that out per selected series — up to 5 devices at 5 s
+      # each is 60 req/min on its own — and several tabs or users behind one
+      # NAT address share this same per-IP bucket. 240 keeps multi-series
+      # overlay usage from a few concurrent tabs comfortably under the
+      # ceiling while still bounding a single caller far below abuse scale;
+      # raise further if real usage patterns need it (config, not code).
+      requests-per-minute: 240
+      # How many may arrive back-to-back before the sustained rate applies.
+      burst: 80
+    rollout:
+      # The two OTA collector endpoints (GET /api/rollouts/pending,
+      # POST /api/rollouts/{id}/status) — outside the JWT chain, guarded only
+      # by the fleet-wide shared X-Device-Token, so capped much harder. Nothing
+      # polls them on a timer today (the gateway does not implement OTA
+      # check-in yet); raise this when it does.
+      requests-per-minute: 10
+      burst: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+logging:
+  level:
+    com.dialog.thermometer: INFO

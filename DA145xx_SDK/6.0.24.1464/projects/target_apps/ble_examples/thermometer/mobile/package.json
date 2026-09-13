@@ -1,0 +1,22 @@
+{
+  "name": "thermometer-mobile",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Capacitor native shell for the thermometer web app (../fe) — Android + iOS from the same React codebase, per architecture v3 §3.3.",
+  "scripts": {
+    "build-web": "cd ../fe && npm run build",
+    "sync": "npm run build-web && cap sync",
+    "android": "npm run sync && cap open android",
+    "ios": "npm run sync && cap open ios"
+  },
+  "dependencies": {
+    "@capacitor-community/bluetooth-le": "^6.1.0",
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/ios": "^6.1.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2",
+    "typescript": "^5.6.2"
+  }
+}

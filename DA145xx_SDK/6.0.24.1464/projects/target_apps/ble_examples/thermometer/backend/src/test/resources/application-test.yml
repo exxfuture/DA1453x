@@ -1,0 +1,5 @@
+thermometer:
+  security:
+    enabled: false
+  cors:
+    allowed-origins: http://localhost:5173

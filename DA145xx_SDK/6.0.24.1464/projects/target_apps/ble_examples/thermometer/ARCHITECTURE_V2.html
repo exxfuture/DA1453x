@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thermometer — System Architecture v2</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1f27;
+    --muted: #5a6472;
+    --line: #d9dee5;
+    --accent: #0b6e6e;
+    --accent-soft: #e3f2f2;
+    --warn-soft: #fdf3e3;
+    --warn-line: #e0b96a;
+    --good-soft: #e7f5ea;
+    --good-line: #4c9a63;
+    --box: #f5f7f9;
+    --code-bg: #f0f2f5;
+    --tier-device: #e8f1fb;
+    --tier-collector: #e3f2f2;
+    --tier-backend: #f0ebf8;
+    --tier-users: #fdf3e3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14181d;
+      --fg: #e4e8ec;
+      --muted: #9aa5b1;
+      --line: #333c46;
+      --accent: #4fc3c3;
+      --accent-soft: #12333322;
+      --warn-soft: #33290f;
+      --warn-line: #8a713a;
+      --good-soft: #10241a;
+      --good-line: #4c9a63;
+      --box: #1b2129;
+      --code-bg: #20262e;
+      --tier-device: #16222f;
+      --tier-collector: #12302d;
+      --tier-backend: #241f31;
+      --tier-users: #2f2817;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .3rem; }
+  .subtitle { color: var(--muted); margin: 0 0 1.2rem; }
+  h2 {
+    font-size: 1.45rem; margin: 3rem 0 1rem;
+    padding-bottom: .35rem; border-bottom: 2px solid var(--line);
+  }
+  h3 { font-size: 1.12rem; margin: 2rem 0 .6rem; }
+  h4 { font-size: 1rem; margin: 1.4rem 0 .4rem; }
+  p { margin: .6rem 0; }
+  a { color: var(--accent); }
+  code {
+    background: var(--code-bg); border-radius: 4px;
+    padding: .1em .35em; font-size: .875em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: .9rem 1.1rem; overflow-x: auto; font-size: .85rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+  .table-wrap { overflow-x: auto; }
+  th, td { border: 1px solid var(--line); padding: .45rem .7rem; text-align: left; vertical-align: top; }
+  th { background: var(--box); }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .25rem 0; }
+  .toc {
+    background: var(--box); border: 1px solid var(--line); border-radius: 10px;
+    padding: 1rem 1.4rem; margin: 1.5rem 0;
+  }
+  .toc ol { margin: .4rem 0; }
+  .callout {
+    border-left: 4px solid var(--accent); background: var(--accent-soft);
+    border-radius: 0 8px 8px 0; padding: .7rem 1rem; margin: 1rem 0;
+  }
+  .callout.warn { border-left-color: var(--warn-line); background: var(--warn-soft); }
+  .callout.good { border-left-color: var(--good-line); background: var(--good-soft); }
+  .req-id {
+    display: inline-block; min-width: 3.4em; font-weight: 700;
+    color: var(--accent); font-family: ui-monospace, Menlo, monospace; font-size: .85em;
+  }
+  .pill {
+    display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .03em;
+    border-radius: 999px; padding: .1em .7em; vertical-align: middle;
+    border: 1px solid var(--line); background: var(--box); color: var(--muted);
+  }
+  .pill.done { color: var(--accent); border-color: var(--accent); }
+  .pill.new { color: var(--good-line); border-color: var(--good-line); }
+  .pill.cut { color: var(--warn-line); border-color: var(--warn-line); }
+  /* ---- diagrams ---- */
+  .diagram {
+    border: 1px solid var(--line); border-radius: 12px; background: var(--box);
+    padding: 1.2rem; margin: 1.2rem 0; overflow-x: auto;
+  }
+  .diagram-title {
+    font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin-bottom: 1rem;
+  }
+  .tier { display: flex; gap: .8rem; align-items: stretch; margin: .5rem 0; min-width: 640px; }
+  .tier-label {
+    flex: 0 0 108px; display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--muted); text-align: center; border-right: 2px solid var(--line);
+    padding-right: .6rem;
+  }
+  .tier-body { display: flex; gap: .8rem; flex: 1; flex-wrap: wrap; }
+  .node {
+    border: 1.5px solid var(--line); border-radius: 8px; padding: .5rem .8rem;
+    background: var(--bg); flex: 1; min-width: 130px;
+    font-size: .85rem; line-height: 1.35;
+  }
+  .node b { display: block; font-size: .9rem; }
+  .node small { color: var(--muted); }
+  .node.device { background: var(--tier-device); }
+  .node.collector { background: var(--tier-collector); }
+  .node.backend { background: var(--tier-backend); }
+  .node.users { background: var(--tier-users); }
+  .flow-arrow {
+    text-align: center; color: var(--muted); font-size: .8rem;
+    margin: .15rem 0 .15rem 116px; min-width: 640px;
+  }
+  .flow-arrow b { color: var(--fg); }
+  .seq { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .82rem; line-height: 1.55; }
+  footer { margin-top: 4rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  td.cut { text-decoration: line-through; color: var(--muted); }
+  td.new-cell { font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Thermometer — System Architecture v2</h1>
+<p class="subtitle">
+  Revision of <code>ARCHITECTURE.html</code> (v1) after a cost/speed/complexity
+  review. The <b>requirements are unchanged</b> — this document only revisits
+  <em>how</em> they are implemented, trading components that were solving
+  problems the system doesn't have yet for simpler ones, and picking a couple
+  of concrete performance wins.
+</p>
+
+<div class="callout">
+  <b>v1 is not wrong, it's early.</b> Every component v1 proposed is a
+  reasonable choice at real scale. The review below is about sequencing:
+  several pieces (a durable log, a fleet-rollout engine, a device PKI) earn
+  their operational cost only once a specific condition is met. v2 states that
+  condition explicitly and starts simpler until it's hit.
+</div>
+
+<div class="callout warn">
+  <b>Superseded by <code>ARCHITECTURE_V3.html</code>.</b> v3 keeps every
+  infrastructure decision made here (broker, storage, identity, OTA strategy,
+  deferred-complexity triggers) and swaps the backend implementation language
+  (Go → Java/Spring Boot, matching the team's expertise) and the web frontend
+  framework (Angular → React). This v2 document is kept as the historical
+  record of the cost/complexity review it performed.
+</div>
+
+<div class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#changelog">What changed, and why</a></li>
+    <li><a href="#principles">Design principles for v2</a></li>
+    <li><a href="#requirements">Requirements (unchanged)</a></li>
+    <li><a href="#overview">System overview (v2)</a></li>
+    <li><a href="#device">Device tier</a></li>
+    <li><a href="#collector">Collector tier</a></li>
+    <li><a href="#pipeline">Data pipeline (v2)</a></li>
+    <li><a href="#identity">Identity, profiles and access control (v2)</a></li>
+    <li><a href="#ota">Firmware update pipeline (v2)</a></li>
+    <li><a href="#security">Security model (v2)</a></li>
+    <li><a href="#scale">Scalability and sizing (v2)</a></li>
+    <li><a href="#extensibility">Extensibility</a></li>
+    <li><a href="#deployment">Deployment, operations and cost (v2)</a></li>
+    <li><a href="#roadmap">Phased roadmap (v2, with upgrade triggers)</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="changelog">1. What changed, and why</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Area</th><th>v1</th><th>v2</th><th>Why</th><th>Wins</th></tr>
+  <tr>
+    <td>Durability layer</td>
+    <td class="cut">NATS JetStream, from day one, between broker and ingest workers</td>
+    <td class="new-cell">Cut at MVP/Growth. Ingest worker consumes MQTT directly, QoS&nbsp;1,
+        acks only after DB commit. Introduce JetStream/Kafka only when a
+        <em>second independent consumer</em> (alerting engine, ML pipeline) needs
+        its own replay cursor on the same messages.</td>
+    <td>QoS&nbsp;1 + commit-then-ack already gives at-least-once delivery with
+        one consumer. A durable log's value is decoupling <em>multiple</em>
+        consumers — paying for that before it's needed is one more clustered
+        service to run, patch and monitor for zero benefit.</td>
+    <td><span class="pill new">simpler</span> <span class="pill new">cheaper</span></td>
+  </tr>
+  <tr>
+    <td>Live dashboard updates</td>
+    <td class="cut">API service relays measurements to browsers over a custom WebSocket</td>
+    <td class="new-cell">Browser/mobile subscribe <b>directly to the MQTT broker over WSS</b>
+        on a per-user scoped topic (<code>live/{user_id}/#</code>); the API
+        issues a short-lived, topic-scoped token, nothing else.</td>
+    <td>Removes a hop and a whole fan-out subsystem from the API service; the
+        broker (already built for millions of subscribers) does the fan-out
+        it's designed for instead of the API server doing it again.</td>
+    <td><span class="pill new">faster</span> <span class="pill new">simpler</span></td>
+  </tr>
+  <tr>
+    <td>API / ingest language</td>
+    <td class="cut">"Go/NestJS" — left open</td>
+    <td class="new-cell"><b>Go</b>, decisively, for API and ingest services.</td>
+    <td>Single static binary (trivial container images, fast cold start),
+        low idle memory, and native concurrency that maps cleanly onto
+        MQTT-subscribe/WebSocket-fan-out workloads — meaning smaller instances
+        do more work.</td>
+    <td><span class="pill new">cheaper</span> <span class="pill new">faster</span></td>
+  </tr>
+  <tr>
+    <td>OTA fleet management</td>
+    <td class="cut">Eclipse hawkBit from day one (own DB, typically RabbitMQ)</td>
+    <td class="new-cell">DIY: a <code>rollouts</code>/<code>rollout_targets</code>
+        table in the existing Postgres + MinIO for images + simple
+        percentage/group logic in the API service. Adopt hawkBit only when
+        rollout policy genuinely needs its own engine (many concurrent staged
+        rollouts, complex targeting rules, automated abort SLAs across a huge
+        heterogeneous fleet).</td>
+    <td>"Publish an image, target a group, watch the error rate, promote or
+        pause" is ~200 lines of application code before it's a product of its
+        own. Standing up a second stateful service (with its own DB) to do
+        that on day one is disproportionate.</td>
+    <td><span class="pill new">simpler</span> <span class="pill new">cheaper</span></td>
+  </tr>
+  <tr>
+    <td>OTA transfer</td>
+    <td class="cut">Full firmware image sent over SUOTA every update</td>
+    <td class="new-cell"><b>Delta/differential images</b> (bsdiff-style binary
+        diff against the device's current version, generated in CI) sent over
+        SUOTA; full image kept as fallback for version jumps too large to diff.</td>
+    <td>Firmware images are typically &gt;90% identical release-to-release.
+        Diffing cuts the bytes transferred over the (slow, power-hungry) BLE
+        link dramatically — shorter update sessions, less battery spent per
+        update, less bandwidth on the collector's connection.</td>
+    <td><span class="pill new">faster</span> <span class="pill new">cheaper</span></td>
+  </tr>
+  <tr>
+    <td>Gateway authentication</td>
+    <td class="cut">mTLS client certificates + OIDC client-credentials, as the default</td>
+    <td class="new-cell">Short-lived, device-scoped JWTs (issued by the API,
+        rotated on check-in, verified by the broker's JWT-auth plugin) as the
+        default. mTLS remains available as an <em>optional</em> hardening layer
+        for deployments that specifically require it (e.g. hospital-managed
+        gateway fleets).</td>
+    <td>A private CA plus certificate issuance/rotation/revocation is real,
+        ongoing operational machinery. A rotating signed JWT gives the same
+        practical guarantee (short-lived, revocable, scoped credential) with
+        far less to build and run.</td>
+    <td><span class="pill new">simpler</span></td>
+  </tr>
+  <tr>
+    <td>Broker sizing</td>
+    <td class="cut">EMQX from day one "for millions of connections"</td>
+    <td class="new-cell">Mosquitto (single node) through the MVP and most of
+        Growth — comfortably handles tens of thousands of concurrent
+        connections on modest hardware. Move to an EMQX (or VerneMQ) cluster
+        when connection count or the need for multi-node HA actually arrives.</td>
+    <td>EMQX's clustering is a real strength — at the scale it's built for.
+        Below that, Mosquitto is lighter, simpler to operate, and just as
+        capable for the connection counts an MVP/Growth fleet will produce.</td>
+    <td><span class="pill new">simpler</span> <span class="pill new">cheaper</span></td>
+  </tr>
+  <tr>
+    <td>Hosting</td>
+    <td class="cut">Generic "small VPS" cost sketch, x86 pricing assumed</td>
+    <td class="new-cell">Priced against arm64 instances (e.g. Hetzner's CAX
+        line) — every component here (Go binaries, Postgres, Mosquitto/EMQX,
+        MinIO, Grafana stack) ships arm64 images.</td>
+    <td>Materially cheaper per vCPU/RAM than the equivalent x86 tier, at no
+        functional cost.</td>
+    <td><span class="pill new">cheaper</span></td>
+  </tr>
+  <tr>
+    <td>Observability agents</td>
+    <td class="cut">Separate Prometheus scrape configs + Promtail as distinct agents</td>
+    <td class="new-cell">Grafana Alloy as the single collection agent (metrics
+        + logs), shipping into the same self-hosted Prometheus/Loki + Grafana
+        backend.</td>
+    <td>One agent to configure and upgrade per host instead of two, same FOSS
+        storage/query backend, no functional loss.</td>
+    <td><span class="pill new">simpler</span></td>
+  </tr>
+  <tr>
+    <td>Wire format</td>
+    <td class="cut">JSON envelope, unconditionally</td>
+    <td class="new-cell">JSON at MVP/Growth (debuggability matters more than
+        bytes at this volume); switch the envelope encoding to CBOR once
+        message volume is actually large enough for the bandwidth to matter —
+        the JSON Schema still describes the logical shape either way.</td>
+    <td>Saving bytes only pays off once you're moving billions of messages;
+        before that, being able to read a payload with your eyes during
+        debugging is worth more than the bytes saved.</td>
+    <td><span class="pill new">honest tradeoff</span>, deferred not forced</td>
+  </tr>
+  <tr>
+    <td>Identity provider</td>
+    <td>Keycloak (OIDC)</td>
+    <td class="new-cell"><b>Kept, deliberately.</b> Considered switching to Ory
+        Kratos/Hydra (lighter, Go-based) but decided against it as a default —
+        see the tradeoff note in §<a href="#identity">8</a>.</td>
+    <td>Keycloak's RAM footprint (a few hundred MB) is not the bottleneck on
+        any VPS tier this system uses; Ory would trade that non-issue for real
+        engineering time building custom login/consent UIs Keycloak ships out
+        of the box. Not every "lighter" component is a net win — this one isn't,
+        yet.</td>
+    <td><span class="pill">no change</span></td>
+  </tr>
+  <tr>
+    <td>Time-series storage</td>
+    <td>PostgreSQL + TimescaleDB</td>
+    <td class="new-cell"><b>Kept.</b> ClickHouse remains the scale-tail
+        escalation option, unchanged from v1.</td>
+    <td>Still the right call: one database for relational + time-series data,
+        SQL throughout, compression and continuous aggregates built in.</td>
+    <td><span class="pill">no change</span></td>
+  </tr>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="principles">2. Design principles for v2</h2>
+<ul>
+  <li><b>Earn complexity with a metric, not a forecast.</b> Every "heavy"
+      component (durable log, fleet-rollout engine, clustered broker, device
+      PKI) has an explicit trigger condition in §<a href="#roadmap">14</a> —
+      you introduce it when the metric is hit, not because the architecture
+      diagram eventually needs a box for it.</li>
+  <li><b>Minimize hops on the hot path.</b> The path that matters for user-perceived
+      speed (device → live dashboard) should touch as few services as possible;
+      every extra hop is added latency and another thing that can queue or fail.</li>
+  <li><b>One language for the server side.</b> Go throughout the platform's own
+      services keeps operational tooling, deployment and on-call knowledge
+      uniform — a real cost saving that has nothing to do with runtime performance.</li>
+  <li><b>Prefer deletion over addition when a simpler design covers the same
+      guarantee.</b> Each "cut" in the changelog above still satisfies the
+      original NFR — it just does it with less machinery.</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="requirements">3. Requirements (unchanged)</h2>
+<p>
+  All functional and non-functional requirements are exactly as defined in
+  <code>ARCHITECTURE.html</code> §1 (FR-1…FR-9, NFR-1…NFR-6) — pushing
+  measurements from device to collector to a customer profile, doctor/admin
+  access, reverse OTA, a cross-platform mobile app plus a Web-Bluetooth web
+  app, extensibility to new measurement types, and the scale/cost/security/
+  robustness/performance bars. Nothing below changes what the system must do —
+  only how.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="overview">4. System overview (v2)</h2>
+
+<div class="diagram">
+  <div class="diagram-title">System context — v2, fewer moving parts on the hot path</div>
+
+  <div class="tier">
+    <div class="tier-label">Users</div>
+    <div class="tier-body">
+      <div class="node users"><b>Customer</b><small>own live + historical data, device management, sharing consent</small></div>
+      <div class="node users"><b>Doctor</b><small>data of consenting patients, alerts, notes</small></div>
+      <div class="node users"><b>Admin</b><small>fleet &amp; user management, firmware rollouts, ops dashboards</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▲ HTTPS (REST) for history/mgmt · <b>MQTT/WSS direct</b> for live feed — OIDC login ▼</div>
+
+  <div class="tier">
+    <div class="tier-label">Platform<br>(self-hosted FOSS)</div>
+    <div class="tier-body">
+      <div class="node backend"><b>Mosquitto</b><small>MQTT broker (TLS/WSS); EMQX cluster once scale demands it</small></div>
+      <div class="node backend"><b>Go ingest + API</b><small>MQTT subscriber → validate → idempotent upsert; REST + token issuance</small></div>
+      <div class="node backend"><b>PostgreSQL + TimescaleDB</b><small>profiles, registry, measurement hypertables, rollout state</small></div>
+      <div class="node backend"><b>Keycloak</b><small>OIDC identity, roles, consent links</small></div>
+      <div class="node backend"><b>MinIO</b><small>firmware image + delta store</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    ▲ measurements: MQTT/TLS (mobile, gateway) or WSS/HTTPS (web) —
+    <b>firmware images/deltas + rollout commands ▼</b>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Collectors<br>(BLE ↔ internet)</div>
+    <div class="tier-body">
+      <div class="node collector"><b>Mobile app</b><small>Capacitor; one codebase → Android + iOS; buffer, upload, SUOTA client</small></div>
+      <div class="node collector"><b>Web app</b><small>Angular + Web Bluetooth; Chrome/Edge on desktop; subscribes MQTT/WSS directly</small></div>
+      <div class="node collector"><b>Gateway</b><small>optional headless collector; JWT-authenticated</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▲ HTP indications over BLE — <b>delta-image SUOTA over BLE ▼</b></div>
+
+  <div class="tier">
+    <div class="tier-label">Device</div>
+    <div class="tier-body">
+      <div class="node device"><b>DA14535 thermometer</b><small>AHT20 sensor · HTP/BAS/DIS · extended sleep · SUOTA + dual-image SPI flash (planned)</small></div>
+      <div class="node device" style="flex:0 1 220px"><b>Future sensors</b><small>same pattern, other GATT profiles / custom service</small></div>
+    </div>
+  </div>
+</div>
+
+<p>
+  Note what's <em>not</em> in this diagram compared to v1: no separate
+  durable-log tier between the broker and the database, no hawkBit box. Both
+  return in §<a href="#roadmap">14</a> the day their trigger condition fires —
+  the schema and service boundaries are already drawn so that's an addition,
+  not a rewrite.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="device">5. Device tier</h2>
+<p>
+  Unchanged from v1: standard GATT services (HTP, Battery, Device Information),
+  no internet credentials on the device, LE Secure Connections pairing already
+  enabled in firmware, bond persistence still tracked as proposal 2.4.
+</p>
+<h3>5.1 SUOTA readiness — delta images (new in v2)</h3>
+<p>
+  The flash layout and signing plan from v1 §4.1 stand (dual-bank rollback,
+  Ed25519 signatures verified by the collector before transfer). v2 adds one
+  step in CI: after building a signed image, also generate a
+  <b>binary diff against the previous released version</b> (bsdiff or a
+  similar block-diff tool) and publish both the full image and the delta to
+  MinIO. The collector fetches the delta whenever the device's current version
+  (read from Device Information Service) has one available, and falls back to
+  the full image for version jumps too large to diff economically (e.g. a
+  device that hasn't been online in a year). This is the single largest lever
+  on update time and on-device power draw during an update, since most of a
+  firmware image doesn't change between releases.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="collector">6. Collector tier</h2>
+<p>
+  The Capacitor recommendation from v1 §5.1 is unchanged and still the core
+  call: one Angular codebase compiled to the web app (Web Bluetooth) and to
+  Android/iOS (native BLE plugin) behind a shared <code>BleTransport</code>
+  interface. Two refinements:
+</p>
+<ul>
+  <li><b>Live view without a custom relay.</b> Instead of uploading and then
+      waiting for the API to push a WebSocket update, the web/mobile app that's
+      actively viewing a device's live feed subscribes directly to
+      <code>live/{user_id}/{device_id}/#</code> on the broker over WSS/TLS,
+      using a short-lived, topic-scoped JWT obtained from the API. The upload
+      path and the live-view path are now two independent, simple flows instead
+      of one flow with a fan-out service bolted onto it.</li>
+  <li><b>Wire format stays JSON for now</b> (see changelog) — CBOR is a
+      drop-in swap on the same schema once the numbers justify it, not a v2
+      requirement.</li>
+</ul>
+<p>
+  Store-and-forward (SQLite/IndexedDB local buffer, idempotent upload keyed on
+  <code>device_id + ts + type</code>) and the optional Raspberry Pi gateway
+  path are unchanged from v1 §5.2–5.3, except gateways now authenticate with a
+  rotating JWT (§<a href="#identity">8</a>) rather than a client certificate by default.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="pipeline">7. Data pipeline (v2)</h2>
+
+<div class="diagram">
+  <div class="diagram-title">Measurement path — one fewer hop than v1</div>
+  <pre class="seq" style="border:none;background:none;margin:0;padding:0">
+device ──BLE HTP──▶ collector
+                      │  local queue (SQLite / IndexedDB) — survives offline
+                      ▼
+                MQTT publish, QoS 1, TLS
+                topic: v1/{tenant}/{user_id}/{device_id}/measurement/temperature
+                      │
+                      ▼
+        ┌──────── Mosquitto ───────────┐   auth: JWT (users/apps/gateways)
+        │  single node; EMQX cluster   │   topic ACL = client may publish
+        │  once connection count       │   only its own ids
+        │  demands it (§14)            │
+        └──────────────┬───────────────┘
+                       ▼  Go ingest service subscribes directly (QoS 1)
+        ┌────── Go ingest workers ─────┐   validate envelope → authz check →
+        │  batch INSERT .. ON CONFLICT │   idempotent write → ack MQTT only
+        │  DO NOTHING (dedup) →        │   after commit → publish "live" event
+        │  ack                         │   to the broker's live/{user_id} topic
+        └──────────────┬───────────────┘
+                       ▼
+        PostgreSQL + TimescaleDB hypertable  (compressed, auto-retention,
+        continuous aggregates: 1 min / 1 h / 1 day rollups)
+
+  No durable-log tier: QoS 1 + commit-then-ack is the durability mechanism
+  with one consumer. Add NATS JetStream (or Kafka/Redpanda) the day a second,
+  independent consumer (e.g. an alerting engine) needs its own replay cursor
+  over the same messages — see §14.
+  </pre>
+</div>
+
+<h3>7.1 Why this is enough</h3>
+<div class="table-wrap"><table>
+  <tr><th>Concern</th><th>v2 answer</th></tr>
+  <tr><td>At-least-once delivery</td>
+      <td>MQTT QoS&nbsp;1 keeps redelivering until acked; the ingest worker acks
+          only after the database transaction commits. A crash mid-processing
+          means redelivery, not loss — exactly the guarantee JetStream would add,
+          without running JetStream.</td></tr>
+  <tr><td>Dedup</td>
+      <td>Same as v1: <code>(device_id, type, ts)</code> primary key with
+          <code>ON CONFLICT DO NOTHING</code> makes redelivery idempotent.</td></tr>
+  <tr><td>Backpressure</td>
+      <td>Mosquitto queues QoS&nbsp;1 messages per client session; the ingest
+          worker's own bounded channel plus Postgres's normal write throughput
+          absorb bursts. At the volumes MVP/Growth actually see (§<a href="#scale">11</a>)
+          this headroom is ample.</td></tr>
+  <tr><td>When this stops being enough</td>
+      <td>The moment a <em>second</em> consumer type needs the same
+          measurements independently (e.g. a real-time alerting/rules engine
+          that must replay from an arbitrary point, or an analytics job that
+          shouldn't compete with ingest for the same subscription) — introduce
+          JetStream then, fed by the broker via a bridge, with the ingest
+          worker's own logic (consume → validate → upsert) unchanged.</td></tr>
+</table></div>
+
+<p>The message envelope (§6.2 in v1) and storage schema (§6.3 in v1) are unchanged — both already extensibility-ready and don't depend on which durability mechanism sits underneath.</p>
+
+<!-- ================================================================ -->
+<h2 id="identity">8. Identity, profiles and access control (v2)</h2>
+<p>
+  Roles, consent-link model, row-level-security enforcement and privacy
+  mechanics are all unchanged from v1 §7. Two v2 refinements:
+</p>
+<h3>8.1 Identity provider: Keycloak, kept on purpose</h3>
+<div class="callout good">
+  <b>Considered and rejected: switching to Ory Kratos/Hydra.</b> Ory is
+  lighter (Go binaries, tens of MB of RAM) and was tempting to include as a
+  blanket "lighter is cheaper" swap. It isn't a clear win here: Keycloak's RAM
+  footprint (a few hundred MB) is not the constraint on any VPS tier this
+  system uses, while Ory ships no login/consent UI — the team would spend real
+  engineering time building and maintaining self-service flows Keycloak
+  provides out of the box. Optimizing a resource that isn't scarce, at the
+  cost of one that is (developer time), isn't a win. Keycloak stays the
+  default; Ory is worth revisiting only if a future requirement (e.g. an
+  extremely resource-constrained edge deployment) makes Keycloak's footprint
+  the actual bottleneck.
+</div>
+<h3>8.2 Gateway authentication: JWT by default, mTLS optional</h3>
+<p>
+  Gateways register once and receive a short-lived, device-scoped JWT, renewed
+  on check-in via the API (itself authenticated by the previous token plus a
+  long-lived registration secret provisioned at install time). The broker
+  validates the JWT (Mosquitto/EMQX JWT-auth plugin) and its embedded topic
+  claims enforce the same per-device topic ACL as before. This drops the need
+  for a private CA and certificate rotation/revocation tooling for the common
+  case. Deployments that specifically require mutual TLS (e.g. a hospital's
+  own security policy for gateways it manages) can still layer it on — the
+  broker supports both simultaneously — but it's opt-in, not default-on
+  infrastructure everyone pays for.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="ota">9. Firmware update pipeline (v2)</h2>
+<p>
+  Same actors and same safety rails as v1 (signed images, dual-bank rollback,
+  consent before update, phased rollout, per-device status). What changes is
+  who orchestrates it.
+</p>
+
+<div class="diagram">
+  <div class="diagram-title">Update rollout — DIY orchestration in the platform's own services</div>
+  <pre class="seq" style="border:none;background:none;margin:0;padding:0">
+1  CI builds thermometer.img ──▶ signs (Ed25519) ──▶ generates delta vs.
+   previous version ──▶ publishes full image + delta to MinIO
+2  Admin creates a row in `rollouts` (target filter: model, current fw ≤ X;
+   group percentages: 1% → 10% → 100%; abort threshold) via the API
+3  API evaluates the rollout against `devices` on each collector check-in:
+   "does this device have a pending update, and is it in an active group?"
+4  Collector (mobile/web/gateway) is told: fetch delta (or full image) from
+   MinIO, verify signature + hash
+5  Collector connects to the device ──▶ SUOTA transfer into inactive flash
+   bank ──▶ device validates CRC ──▶ reboots into new image
+6  Collector confirms new version via DIS ──▶ reports status to the API
+7  API tallies per-group success/error rate in `rollout_targets`; auto-pauses
+   the rollout if the error threshold is exceeded, exposes progress to the
+   admin console. Rollback: bootloader falls back to the previous bank on an
+   invalid image; a previous version can also be republished as a new rollout.
+  </pre>
+</div>
+
+<p>
+  This is the same functional capability as hawkBit — targeting, phased
+  groups, abort thresholds, per-device status — implemented as two tables and
+  a few endpoints in the platform that already exists, instead of standing up
+  and learning a second product with its own database. See §<a href="#roadmap">14</a>
+  for when to actually adopt hawkBit.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="security">10. Security model (v2)</h2>
+<div class="table-wrap"><table>
+  <tr><th>Hop / layer</th><th>Mechanism</th></tr>
+  <tr><td>Device ↔ collector (BLE)</td>
+      <td>Unchanged: LE Secure Connections pairing; device holds no internet
+          credentials.</td></tr>
+  <tr><td>Collector ↔ platform</td>
+      <td>TLS 1.3 everywhere. Users: short-lived OIDC JWTs (Keycloak).
+          Gateways: rotating device-scoped JWTs by default, mTLS optional
+          per-deployment (§8.2). Topic ACLs on the broker pin every client to
+          its own id space either way.</td></tr>
+  <tr><td>Live feed</td>
+      <td>Browsers/mobile connect directly to the broker over WSS with a
+          short-lived, topic-scoped token minted by the API — scoped to
+          exactly the topics the requesting user/doctor is authorized to read,
+          same authorization model as the REST API, enforced at the broker
+          instead of re-implemented in a relay.</td></tr>
+  <tr><td>Inside the platform</td>
+      <td>Unchanged: private network between services, secrets in the
+          orchestrator's secret store, least-privilege DB roles.</td></tr>
+  <tr><td>Data at rest</td>
+      <td>Unchanged: disk/volume encryption, encrypted backups, PII isolated
+          in one table, row-level security as defense in depth.</td></tr>
+  <tr><td>Firmware</td>
+      <td>Unchanged signing/verification model; delta images are signed and
+          verified the same way as full images (the diff, not just the
+          resulting image, is a signed artifact).</td></tr>
+  <tr><td>Accountability</td>
+      <td>Unchanged: append-only audit log, retained service logs (now shipped
+          via Grafana Alloy, §<a href="#deployment">13</a>).</td></tr>
+  <tr><td>Abuse resistance</td>
+      <td>Unchanged: rate limits at the broker and API, schema validation at
+          ingest, dead-letter quarantine for malformed input.</td></tr>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="scale">11. Scalability and sizing (v2)</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Stage</th><th>Fleet</th><th>Sustained load (est.)</th><th>Deployment</th></tr>
+  <tr><td>MVP</td><td>≤ 5k devices</td><td>&lt; 200 msg/s</td>
+      <td>1 arm64 VPS (2 vCPU / 4 GB, e.g. Hetzner CAX21): Mosquitto, Go
+          ingest+API, Postgres+Timescale, Keycloak, MinIO, Caddy, Grafana
+          Alloy → Prometheus/Loki/Grafana.</td></tr>
+  <tr><td>Growth</td><td>≤ 200k devices</td><td>~2–8k msg/s</td>
+      <td>Still Mosquitto (single node handles this comfortably) on a larger
+          arm64 box; Go ingest scales to multiple replicas behind the same
+          subscription (shared MQTT session or partitioned by device-id hash);
+          Postgres gains a streaming read replica for dashboard queries.</td></tr>
+  <tr><td>Scale</td><td>millions</td><td>tens of thousands msg/s</td>
+      <td>Now justified: EMQX (or VerneMQ) cluster for connection fan-in at
+          this size; NATS JetStream (or Kafka/Redpanda) introduced once a
+          second consumer type exists, partitioned by <code>device_id</code>;
+          N ingest workers per consumer group batching inserts; Timescale
+          multi-node or ClickHouse for the analytics tail if the query shape
+          demands it.</td></tr>
+</table></div>
+
+<ul>
+  <li><b>Same horizontal paths as v1, just introduced later:</b> broker
+      clustering, stream partitioning and stateless replicas are all still in
+      the design — v2 changes when you turn them on, not whether they're
+      available.</li>
+  <li><b>pgBouncer</b> added at the Growth→Scale transition once concurrent
+      ingest/API replicas make direct Postgres connections the limiting factor
+      — a cheap, standard addition, not a redesign.</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="extensibility">12. Extensibility</h2>
+<p>
+  Unchanged from v1 §11 — the measurement-type registry, GATT-profile pattern
+  on the device, and opaque hawkBit-or-DIY artifact distribution for updates
+  all remain type-agnostic. None of the v2 changes touch this: dropping the
+  durable-log tier and DIY-ing the rollout orchestration are implementation
+  choices behind interfaces that were already type-agnostic in v1.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="deployment">13. Deployment, operations and cost (v2)</h2>
+<ul>
+  <li><b>Packaging:</b> unchanged — OCI containers, <code>docker-compose</code>
+      for MVP, k3s from Growth on. All images built for arm64.</li>
+  <li><b>Observability:</b> Grafana Alloy as the single collection agent per
+      host (metrics + logs) shipping into self-hosted Prometheus, Loki and
+      Grafana — same FOSS backend as v1, one agent instead of two.</li>
+  <li><b>Backups:</b> unchanged — pgBackRest + WAL archiving, MinIO versioned
+      buckets replicated off-site with restic.</li>
+  <li><b>CI/CD:</b> firmware lane gains one step (generate + sign the delta
+      image alongside the full image); platform lane unchanged.</li>
+  <li><b>Cost sketch:</b> MVP ≈ one ~€5–8/month arm64 VPS (Hetzner CAX11/CAX21
+      class) + domain — cheaper than v1's x86 estimate for the same workload,
+      and with one fewer clustered service (no NATS, no hawkBit) to operate.
+      Growth ≈ a couple of larger arm64 nodes + a read replica. Scale ≈ the
+      same handful of dedicated servers as v1 once EMQX/JetStream are actually
+      justified — v2 doesn't change the ceiling, it delays paying for it.</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="roadmap">14. Phased roadmap (v2, with explicit upgrade triggers)</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Phase</th><th>Delivers</th><th>Upgrade triggers to watch for</th></tr>
+  <tr>
+    <td><b>1 — Connected MVP</b></td>
+    <td>Compose stack (Mosquitto/Go ingest+API/Postgres+Timescale/Keycloak/MinIO/Caddy);
+        Angular FE gains login, upload with IndexedDB buffering, direct MQTT/WSS
+        live view, history dashboard.</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><b>2 — Mobile</b></td>
+    <td>Capacitor shell around the shared Angular codebase; native BLE plugin
+        behind <code>BleTransport</code>; Android + iOS store builds;
+        background collection.</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><b>3 — Care circle</b></td>
+    <td>Doctor role, consent links, live shared views, audit surface; admin
+        console v1.</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><b>4 — OTA</b></td>
+    <td>Firmware SUOTA + dual-bank bootloader; DIY rollout tables + MinIO;
+        delta images from CI; signed images; collector-side updater in web,
+        mobile and gateway.</td>
+    <td>Adopt <b>hawkBit</b> when rollout policy needs more than percentage
+        groups + an abort threshold — e.g. many concurrent staged rollouts,
+        complex per-segment targeting rules, or contractual rollout SLAs.</td>
+  </tr>
+  <tr>
+    <td><b>5 — Scale-out &amp; new types</b></td>
+    <td>Measurement-type registry UI, gateway reference image, second
+        measurement type (humidity) end-to-end as the extensibility proof.</td>
+    <td>
+      <ul style="margin:.2rem 0">
+        <li>Cluster the broker (<b>EMQX/VerneMQ</b>) when concurrent
+            connections approach single-node limits (rough guide: tens of
+            thousands sustained) or multi-node HA is required.</li>
+        <li>Introduce <b>NATS JetStream</b> (or Kafka/Redpanda) the day a
+            second independent consumer of the measurement stream appears
+            (alerting engine, ML pipeline) and needs its own replay cursor.</li>
+        <li>Add <b>pgBouncer</b> when concurrent ingest/API replicas make raw
+            Postgres connection count the bottleneck.</li>
+        <li>Switch the wire envelope to <b>CBOR</b> once bandwidth cost at
+            actual message volume outweighs JSON's debuggability.</li>
+        <li>Revisit <b>Keycloak → Ory</b> only if its footprint becomes the
+            actual constraint on a specific deployment target.</li>
+      </ul>
+    </td>
+  </tr>
+</table></div>
+
+<footer>
+  Thermometer project · architecture v2 · 2026-07-26 · supersedes
+  <code>ARCHITECTURE.html</code> (v1) as the current design; v1 is kept as the
+  historical record of the initial proposal and the rationale this revision
+  responds to. Keep both in sync with <code>README.md</code>,
+  <code>PACKAGING_CONCEPT.md</code> and <code>proposals.md</code>.
+</footer>
+
+</main>
+</body>
+</html>

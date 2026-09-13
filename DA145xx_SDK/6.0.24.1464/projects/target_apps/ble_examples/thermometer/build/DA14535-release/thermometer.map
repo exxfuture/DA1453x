@@ -51,9 +51,9 @@ Archive member included to satisfy reference by file (symbol)
 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libnosys.a(_exit.o)
                               /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libg_nano.a(libc_a-exit.o) (_exit)
 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_sqi.o)
-                              /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o (__gnu_thumb1_case_sqi)
+                              /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o (__gnu_thumb1_case_sqi)
 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/libgcc.a(_thumb1_case_uqi.o)
-                              /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o (__gnu_thumb1_case_uqi)
+                              /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o (__gnu_thumb1_case_uqi)
 
 Discarded input sections
 
@@ -78,21 +78,21 @@ Discarded input sections
  .debug_aranges
                 0x0000000000000000       0x20 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
  .debug_str     0x0000000000000000       0xf4 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
- .text          0x0000000000000000        0x0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
- .data          0x0000000000000000        0x0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
- .bss           0x0000000000000000        0x0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ .text          0x0000000000000000        0x0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
+ .data          0x0000000000000000        0x0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
+ .bss           0x0000000000000000        0x0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.batt_cal_alkaline
-                0x0000000000000000       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000000000000       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.batt_cal_volt_alkaline
-                0x0000000000000000       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
- .text._close   0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
- .text._lseek   0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
- .text._read    0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
- .text._write   0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000000000000       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
+ .text._close   0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
+ .text._lseek   0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
+ .text._read    0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
+ .text._write   0x0000000000000000        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.calibration_res
-                0x0000000000000000       0x2a /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000000000000       0x2a /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .data.pa_en_dcf_tx_setting
-                0x0000000000000000        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000000000000        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .debug_frame   0x0000000000000000       0xb0 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/platform/system_library/output/Keil_5/da14535.lib(patch_3.o)
  __ARM_common_switch8
                 0x0000000000000000        0xc /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/platform/system_library/output/Keil_5/da14535.lib(patch_3.o)
@@ -621,7 +621,7 @@ LOAD /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
 LOAD /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/crtbegin.o
 LOAD /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
 LOAD /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/build/DA14535-release/Users_alexv_projects_da14531_renesas_DA145xx_SDK_6.0.24.1464_projects_target_apps_ble_examples_thermometer_.._.._.._.._sdk_platform_arch_main_hardfault_handler.o
-LOAD /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+LOAD /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 LOAD /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/build/DA14535-release/Users_alexv_projects_da14531_renesas_DA145xx_SDK_6.0.24.1464_projects_target_apps_ble_examples_thermometer_.._.._.._.._sdk_platform_arch_main_nmi_handler.o
 LOAD /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/build/DA14535-release/Users_alexv_projects_da14531_renesas_DA145xx_SDK_6.0.24.1464_projects_target_apps_ble_examples_thermometer_.._.._.._.._sdk_platform_arch_boot_startup_DA14535.o
 LOAD /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/build/DA14535-release/Users_alexv_projects_da14531_renesas_DA145xx_SDK_6.0.24.1464_projects_target_apps_ble_examples_thermometer_.._.._.._.._sdk_platform_arch_boot_system_DA14535.o
@@ -710,16 +710,16 @@ LOAD /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-no
 
 ER_IROM1        0x0000000007fc0000       0xc0
  *(.vectors)
- .vectors       0x0000000007fc0000       0xa0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ .vectors       0x0000000007fc0000       0xa0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc0000                __Vectors
  *(otp_cs_booter)
- otp_cs_booter  0x0000000007fc00a0        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ otp_cs_booter  0x0000000007fc00a0        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x00000000000000c0                . = 0xc0
  *fill*         0x0000000007fc00a8       0x18 
 
 ER_IROM2        0x0000000007fc00c0       0x50
  *(patch_table)
- patch_table    0x0000000007fc00c0       0x50 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ patch_table    0x0000000007fc00c0       0x50 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc00c0                patch_table_var
 
 ER_IROM3        0x0000000007fc0110     0x51db
@@ -739,399 +739,399 @@ ER_IROM3        0x0000000007fc0110     0x51db
                 0x0000000007fc01b4                _mainCRTStartup
                 0x0000000007fc01b4                _start
  .text.Default_Handler
-                0x0000000007fc0228        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0228        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc022a        0x2 
  .text.HardFault_Handler
-                0x0000000007fc022c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc022c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.NMI_Handler
-                0x0000000007fc024c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc024c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_db_init_next
-                0x0000000007fc026c       0x6c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc026c       0x6c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_enable_rsp_handler
-                0x0000000007fc02d8        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc02d8        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_batt_level_upd_rsp_handler
-                0x0000000007fc02dc        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc02dc        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_batt_level_ntf_cfg_ind_handler
-                0x0000000007fc02e0        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc02e0        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_dis_init
-                0x0000000007fc02e4        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc02e4        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc02e6        0x2 
  .text.default_app_on_get_dev_appearance
-                0x0000000007fc02e8        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc02e8        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_on_get_dev_slv_pref_params
-                0x0000000007fc02f4       0x12 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc02f4       0x12 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_update_params_request
-                0x0000000007fc0306        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0306        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc0312        0x2 
  .text.app_msg_utils_api_process_handler
-                0x0000000007fc0314       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0314       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.timer_modified_handler
-                0x0000000007fc0344        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0344        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_enable_cfm_handler
-                0x0000000007fc0346        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0346        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_meas_send_cfm_handler
-                0x0000000007fc034a        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc034a        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc034e        0x2 
  .text.app_check_BLE_active
-                0x0000000007fc0350       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0350       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gapc_encrypt_req_ind_handler
-                0x0000000007fc0384        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0384        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gapc_encrypt_ind_handler
-                0x0000000007fc0388       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0388       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gapm_addr_solved_ind_handler
-                0x0000000007fc03a0        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03a0        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.lld_sleep_lpcycles_2_us_rcx_func
-                0x0000000007fc03a4       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03a4       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.lld_sleep_us_2_lpcycles_sel_func
-                0x0000000007fc03cc       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03cc       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.lld_sleep_lpcycles_2_us_sel_func
-                0x0000000007fc03ec        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03ec        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.crypto_init_func
-                0x0000000007fc03f4        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03f4        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dbg_init_func_empty
-                0x0000000007fc03f6        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03f6        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dbg_platform_reset_complete_func_empty
-                0x0000000007fc03f8        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03f8        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc03fa        0x2 
  .text.platform_reset_func
-                0x0000000007fc03fc       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc03fc       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.otp_cs_store_user_handler
-                0x0000000007fc0414       0x48 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0414       0x48 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.pd_sys_func
-                0x0000000007fc045c       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc045c       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.pd_id21_func
-                0x0000000007fc0478       0x38 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0478       0x38 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_reg_rd
-                0x0000000007fc04b0        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc04b0        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_reg_wr
-                0x0000000007fc04b4        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc04b4        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_reset
-                0x0000000007fc04b6        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc04b6        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_rssi_convert
-                0x0000000007fc04b8       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc04b8       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.RADIOCNTL_Handler
-                0x0000000007fc04e8        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc04e8        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_force_agc_enable
-                0x0000000007fc04ea        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc04ea        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_txpwr_dbm_get
-                0x0000000007fc04ec       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc04ec       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.set_recommended_settings
-                0x0000000007fc0538      0x2d8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0538      0x2d8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.lld_sleep_compensate_func
-                0x0000000007fc0810       0x58 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0810       0x58 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dlg_error_isr
-                0x0000000007fc0868        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0868        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc086a        0x2 
  .text.ADC_Handler
-                0x0000000007fc086c       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc086c       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.batt_cal_cr2032
-                0x0000000007fc0888       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0888       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.tx_reply
-                0x0000000007fc08b4       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc08b4       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.intr_master_transmit_buffer_handler
-                0x0000000007fc08f0       0xb4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc08f0       0xb4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rx_reply
-                0x0000000007fc09a4       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc09a4       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.intr_master_receive_buffer_handler
-                0x0000000007fc09e0       0xbc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc09e0       0xbc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.I2C_Handler
-                0x0000000007fc0a9c       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0a9c       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.SWTIM1_Handler
-                0x0000000007fc0acc       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0acc       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_create
-                0x0000000007fc0b28       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0b28       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_cleanup
-                0x0000000007fc0b4c       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0b4c       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_prf_itf_get
-                0x0000000007fc0b70        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0b70        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_create
-                0x0000000007fc0b78        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0b78        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_cleanup
-                0x0000000007fc0b7a        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0b7a        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_prf_itf_get
-                0x0000000007fc0b7c        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0b7c        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_value_to_handle
-                0x0000000007fc0b84       0x2e /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0b84       0x2e /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_create
-                0x0000000007fc0bb2        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0bb2        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_prf_itf_get
-                0x0000000007fc0bbc        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0bbc        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_att_hdl_get
-                0x0000000007fc0bc4       0x38 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0bc4       0x38 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_att_idx_get
-                0x0000000007fc0bfc       0x70 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0bfc       0x70 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.uart_rx_isr.constprop.0
-                0x0000000007fc0c6c       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0c6c       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.UART2_Handler
-                0x0000000007fc0cc8       0xcc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0cc8       0xcc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.i2c_master_transmit_buffer_async.constprop.0
-                0x0000000007fc0d94       0x48 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0d94       0x48 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.calibrate_rcx20.constprop.0
-                0x0000000007fc0ddc       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0ddc       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.battery_get_lvl.constprop.0
-                0x0000000007fc0e0c        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0e0c        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.arch_ble_force_wakeup.isra.0
-                0x0000000007fc0e18       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0e18       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.Reset_Handler
-                0x0000000007fc0e4c       0x6c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0e4c       0x6c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc0e4c                Reset_Handler
  .text.app_easy_gap_advertise_stop_handler
-                0x0000000007fc0eb8       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0eb8       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_easy_gap_dev_configure
-                0x0000000007fc0ed8       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0ed8       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.ltk_exch_create_msg
-                0x0000000007fc0f54       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0f54       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_easy_security_send_pairing_rsp.constprop.0
-                0x0000000007fc0f88       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0f88       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_on_pairing_request
-                0x0000000007fc0fd4        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0fd4        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_bass_create_db
-                0x0000000007fc0fdc       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc0fdc       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_diss_create_db
-                0x0000000007fc1028       0x38 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1028       0x38 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_htpt_create_db
-                0x0000000007fc1060       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1060       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_bass_enable
-                0x0000000007fc10a0       0x64 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc10a0       0x64 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_bass_timer_handler
-                0x0000000007fc1104       0x84 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1104       0x84 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_bass_alert_timer_handler
-                0x0000000007fc1188       0x48 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1188       0x48 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_bass_process_handler
-                0x0000000007fc11d0       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc11d0       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.user_catch_rest_hndl
-                0x0000000007fc11f0        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc11f0        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_diss_process_handler
-                0x0000000007fc11fc       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc11fc       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_htpt_process_handler
-                0x0000000007fc121c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc121c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_sec_process_handler
-                0x0000000007fc123c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc123c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_value_req_ind_handler
-                0x0000000007fc125c       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc125c       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_on_get_dev_name
-                0x0000000007fc12b8       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc12b8       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_on_set_dev_info
-                0x0000000007fc12d0       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc12d0       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.pd_rad_func
-                0x0000000007fc1304       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1304       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.pd_adpll_func
-                0x0000000007fc1330       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1330       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.ble_init_arp_func
-                0x0000000007fc1360       0x54 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1360       0x54 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_easy_security_tk_exch.constprop.0
-                0x0000000007fc13b4       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc13b4       0x5c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_on_tk_exch
-                0x0000000007fc1410       0x44 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1410       0x44 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_cleanup
-                0x0000000007fc1454       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1454       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_generate_static_random_addr
-                0x0000000007fc146c       0x32 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc146c       0x32 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.ba431_get_rand_func
-                0x0000000007fc149e       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc149e       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc14b6        0x2 
  .text.default_app_on_ltk_exch
-                0x0000000007fc14b8       0xa0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc14b8       0xa0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gapc_bond_req_ind_handler
-                0x0000000007fc1558       0x6c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1558       0x6c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.create_timer
-                0x0000000007fc15c4       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc15c4       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_easy_timer.part.0
-                0x0000000007fc1604       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1604       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_easy_timer
-                0x0000000007fc1638       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1638       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.led_blink_cb
-                0x0000000007fc1674       0x50 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1674       0x50 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.handle_sample_done
-                0x0000000007fc16c4       0xdc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc16c4       0xdc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.on_trigger_done
-                0x0000000007fc17a0       0x44 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc17a0       0x44 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.on_read_done
-                0x0000000007fc17e4       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc17e4       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_timer_api_process_handler
-                0x0000000007fc1804      0x140 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1804      0x140 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_easy_timer_cancel
-                0x0000000007fc1944       0x50 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1944       0x50 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_advertise_operation
-                0x0000000007fc1994       0xb4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1994       0xb4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.default_app_on_set_dev_config_complete
-                0x0000000007fc1a48       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1a48       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.start_temp_timer
-                0x0000000007fc1a58       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1a58       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.stop_temp_timer
-                0x0000000007fc1a80       0x78 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1a80       0x78 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_cfg_indntf_ind_handler
-                0x0000000007fc1af8       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1af8       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_htpt_enable
-                0x0000000007fc1b1c       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1b1c       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_htpt_send_measurement_interval_chg_cfm
-                0x0000000007fc1b50       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1b50       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_meas_intv_chg_ind_handler
-                0x0000000007fc1b7c       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1b7c       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_notify_batt_lvl
-                0x0000000007fc1bc8       0x84 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1bc8       0x84 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_att_info_req_ind_handler.lto_priv.1
-                0x0000000007fc1c4c       0x78 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1c4c       0x78 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_read_req_ind_handler.lto_priv.2
-                0x0000000007fc1cc4       0xd0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1cc4       0xd0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.send_indication_cb
-                0x0000000007fc1d94       0x88 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1d94       0x88 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_get_att_idx.constprop.0
-                0x0000000007fc1e1c       0x94 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1e1c       0x94 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_att_info_req_ind_handler.lto_priv.0
-                0x0000000007fc1eb0       0x54 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1eb0       0x54 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gapc_bond_ind_handler
-                0x0000000007fc1f04      0x104 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc1f04      0x104 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_button_wakeup_cb
-                0x0000000007fc2008       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2008       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.WKUP_QUADEC_Handler
-                0x0000000007fc2028       0xc4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2028       0xc4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.check_sys_startup_period
-                0x0000000007fc20ec       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc20ec       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.stop_led_blink
-                0x0000000007fc2104       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2104       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.start_led_blink
-                0x0000000007fc212c       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc212c       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.user_app_on_db_init_complete
-                0x0000000007fc2158       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2158       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.user_app_on_connection
-                0x0000000007fc2184       0xac /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2184       0xac /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.user_app_on_disconnect
-                0x0000000007fc2230       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2230       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dia_srand_func
-                0x0000000007fc226c       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc226c       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.read_rcx_freq
-                0x0000000007fc227c       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc227c       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.set_sleep_delay
-                0x0000000007fc22bc       0x80 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc22bc       0x80 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.lld_sleep_init_func
-                0x0000000007fc233c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc233c       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dia_rand_func
-                0x0000000007fc235c        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc235c        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.otp_cs_load_pd_rad
-                0x0000000007fc2364       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2364       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.otp_cs_load_pd_adpll
-                0x0000000007fc2390       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2390       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_init_func
-                0x0000000007fc23c0       0xdc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc23c0       0xdc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.rf_reinit_func
-                0x0000000007fc249c       0x78 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc249c       0x78 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.BLE_WAKEUP_LP_Handler
-                0x0000000007fc2514       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2514       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dlg_slp_isr
-                0x0000000007fc2590       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2590       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dlg_finetgtim_isr
-                0x0000000007fc25bc        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc25bc        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dlg_cscnt_isr
-                0x0000000007fc25c8       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc25c8       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dlg_rx_isr
-                0x0000000007fc25e0        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc25e0        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dlg_event_isr
-                0x0000000007fc25e8       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc25e8       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.dlg_eventapfa_isr
-                0x0000000007fc2604        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2604        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc260e        0x2 
  .text.rwble_isr
-                0x0000000007fc2610       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2610       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.adc_init
-                0x0000000007fc2644       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2644       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.batt_cal_volt_cr2032
-                0x0000000007fc2674       0x70 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2674       0x70 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.GPIOn_Handler.part.0
-                0x0000000007fc26e4       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc26e4       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.GPIO0_Handler
-                0x0000000007fc2718        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2718        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.GPIO1_Handler
-                0x0000000007fc2722        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2722        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.GPIO2_Handler
-                0x0000000007fc272c        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc272c        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.GPIO3_Handler
-                0x0000000007fc2736        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2736        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.GPIO4_Handler
-                0x0000000007fc2740        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2740        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_destroy
-                0x0000000007fc274a       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc274a       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc2766        0x2 
  .text.bass_exe_operation
-                0x0000000007fc2768       0xe8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2768       0xe8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_cmp_evt_handler.lto_priv.0
-                0x0000000007fc2850       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2850       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_destroy
-                0x0000000007fc2860       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2860       0x1c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_exe_operation
-                0x0000000007fc287c       0xe8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc287c       0xe8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_cmp_evt_handler.lto_priv.1
-                0x0000000007fc2964        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2964        0xa /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc296e        0x2 
  .text.bass_init
-                0x0000000007fc2970      0x158 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2970      0x158 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_init
-                0x0000000007fc2ac8      0x118 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2ac8      0x118 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_batt_level_upd_req_handler
-                0x0000000007fc2be0       0x80 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2be0       0x80 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_value_cfm_handler
-                0x0000000007fc2c60       0x9c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2c60       0x9c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_meas_intv_upd_req_handler
-                0x0000000007fc2cfc       0xc4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2cfc       0xc4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_meas_intv_chg_cfm_handler
-                0x0000000007fc2dc0       0x88 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2dc0       0x88 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.bass_enable_req_handler
-                0x0000000007fc2e48       0x90 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2e48       0x90 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_enable_req_handler
-                0x0000000007fc2ed8       0x64 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2ed8       0x64 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_write_req_ind_handler.lto_priv.0
-                0x0000000007fc2f3c       0xcc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc2f3c       0xcc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_read_req_ind_handler.lto_priv.1
-                0x0000000007fc3008       0xf4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3008       0xf4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_update_ntf_ind_cfg
-                0x0000000007fc30fc       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc30fc       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_write_req_ind_handler.lto_priv.1
-                0x0000000007fc3178      0x138 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3178      0x138 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.gattc_read_req_ind_handler.lto_priv.0
-                0x0000000007fc32b0       0xe0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc32b0       0xe0 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_init
-                0x0000000007fc3390       0xbc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3390       0xbc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.diss_destroy
-                0x0000000007fc344c       0x22 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc344c       0x22 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc346e        0x2 
  .text.diss_set_value_req_handler
-                0x0000000007fc3470       0xd4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3470       0xd4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.htpt_temp_send_req_handler
-                0x0000000007fc3544      0x118 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3544      0x118 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.aht20_read_cb
-                0x0000000007fc365c       0x9c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc365c       0x9c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.i2c_temp_sensor_trigger.constprop.0
-                0x0000000007fc36f8       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc36f8       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.sample_gap_cb
-                0x0000000007fc3774       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3774       0x2c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.on_data_read
-                0x0000000007fc37a0       0xb8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc37a0       0xb8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.on_reset_sent
-                0x0000000007fc3858        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3858        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.on_status_read
-                0x0000000007fc3860       0x64 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3860       0x64 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.on_init_sent
-                0x0000000007fc38c4       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc38c4       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.on_trigger_sent
-                0x0000000007fc38dc       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc38dc       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.temp_timer_cb
-                0x0000000007fc3904      0x13c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3904      0x13c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_button_enable
-                0x0000000007fc3a40       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3a40       0x7c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_advertise_complete
-                0x0000000007fc3abc      0x154 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3abc      0x154 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.periph_init
-                0x0000000007fc3c10       0xa8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3c10       0xa8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.app_button_press_cb
-                0x0000000007fc3cb8       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3cb8       0x4c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .text.HardFault_HandlerC
-                0x0000000007fc3d04       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3d04       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc3d04                HardFault_HandlerC
  .text.NMI_HandlerC
-                0x0000000007fc3d1c       0x44 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3d1c       0x44 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc3d1c                NMI_HandlerC
  .text.startup.main
-                0x0000000007fc3d60      0xafc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc3d60      0xafc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc3d60                main
  .text          0x0000000007fc485c      0x148 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/platform/system_library/output/Keil_5/da14535.lib(patch_3.o)
                 0x0000000007fc485c                JT_llm_le_adv_report_ind_func
@@ -1165,83 +1165,83 @@ ER_IROM3        0x0000000007fc0110     0x51db
  .fini          0x0000000007fc4a74        0x8 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/crtn.o
  *(.rodata*)
  .rodata.rf_rssi_convert.cst1
-                0x0000000007fc4a7c        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4a7c        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.default_advertise_operation.str1.1
-                0x0000000007fc4a7d        0xe /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4a7d        0xe /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.str1.1
-                0x0000000007fc4a8b       0x3f /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4a8b       0x3f /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc4aca        0x2 
- .rodata        0x0000000007fc4acc       0xa8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ .rodata        0x0000000007fc4acc       0xa8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.CSWTCH.3
-                0x0000000007fc4b74        0x9 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4b74        0x9 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc4b7d        0x3 
  .rodata.CSWTCH.4
-                0x0000000007fc4b80       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4b80       0x24 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.TASK_DESC_APP
-                0x0000000007fc4ba4       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4ba4       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.app_bass_process_handlers
-                0x0000000007fc4bb4       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4bb4       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.app_diss_process_handlers
-                0x0000000007fc4bdc        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4bdc        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.app_htpt_process_handlers
-                0x0000000007fc4be4       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4be4       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.app_process_handlers
-                0x0000000007fc4c04       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4c04       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.app_sec_process_handlers
-                0x0000000007fc4c24       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4c24       0x28 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.bas_att_db
-                0x0000000007fc4c4c       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4c4c       0x3c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.bass_default_handler
-                0x0000000007fc4c88        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4c88        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.bass_default_state
-                0x0000000007fc4c90       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4c90       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.bass_itf
-                0x0000000007fc4cc0       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4cc0       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.ble_irq
-                0x0000000007fc4cd0       0x58 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4cd0       0x58 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.diss_att_db
-                0x0000000007fc4d28       0xe4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4d28       0xe4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.diss_default_handler
-                0x0000000007fc4e0c        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4e0c        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.diss_default_state
-                0x0000000007fc4e14       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4e14       0x18 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.diss_itf
-                0x0000000007fc4e2c       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4e2c       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.htpt_att_db
-                0x0000000007fc4e3c       0x9c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4e3c       0x9c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.htpt_default_handler
-                0x0000000007fc4ed8        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4ed8        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.htpt_default_state
-                0x0000000007fc4ee0       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4ee0       0x40 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.htpt_itf
-                0x0000000007fc4f20       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4f20       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.my_custom_msg_handlers
-                0x0000000007fc4f30        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4f30        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.nvds_data_storage
-                0x0000000007fc4f38        0xe /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4f38        0xe /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc4f46        0x2 
  .rodata.prf_funcs
-                0x0000000007fc4f48       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4f48       0x30 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.prf_if
-                0x0000000007fc4f78       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4f78       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.rom_app_task_cfg
-                0x0000000007fc4f98       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4f98       0x20 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.rom_cfg_table_var
-                0x0000000007fc4fb8       0xf8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc4fb8       0xf8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.rom_chacha20_cfg
-                0x0000000007fc50b0       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc50b0       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.rom_func_addr_table_var
-                0x0000000007fc50c0      0x180 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc50c0      0x180 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.rom_nvds_cfg
-                0x0000000007fc5240        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5240        0x8 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.rom_prf_cfg
-                0x0000000007fc5248        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5248        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.user_app_callbacks
-                0x0000000007fc5254       0x84 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5254       0x84 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.user_prf_funcs
-                0x0000000007fc52d8        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc52d8        0xc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .rodata.user_security_conf
-                0x0000000007fc52e4        0x7 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc52e4        0x7 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 
 .eh_frame       0x0000000007fc52ec        0x0
  .eh_frame      0x0000000007fc52ec        0x0 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/crtbegin.o
@@ -1297,12 +1297,12 @@ ER_IROM3        0x0000000007fc0110     0x51db
  *(vtable)
  *(.data*)
  .data.current_conidx
-                0x0000000007fc5310        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5310        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc5311        0x3 
  .data.startup_sleep_delay
-                0x0000000007fc5314        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5314        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .data.temp_interval_ticks
-                0x0000000007fc5318        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5318        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc531c                . = ALIGN (0x4)
                 0x0000000007fc531c                PROVIDE (__preinit_array_start = .)
  *(.preinit_array)
@@ -1336,24 +1336,24 @@ ER_IROM3        0x0000000007fc0110     0x51db
 
 chacha20_state  0x0000000007fc5328       0x60
  chacha20_state
-                0x0000000007fc5328       0x60 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5328       0x60 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 
 heap_db_area    0x0000000007fc5388      0x40c
- heap_db_area   0x0000000007fc5388      0x40c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ heap_db_area   0x0000000007fc5388      0x40c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 
 heap_env_area   0x0000000007fc5794      0x2bc
- heap_env_area  0x0000000007fc5794      0x2bc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ heap_env_area  0x0000000007fc5794      0x2bc /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 
 heap_mem_area_not_ret
                 0x0000000007fc5a50      0x40c
  heap_mem_area_not_ret
-                0x0000000007fc5a50      0x40c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc5a50      0x40c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 
 heap_msg_area   0x0000000007fc5e5c      0x57c
- heap_msg_area  0x0000000007fc5e5c      0x57c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ heap_msg_area  0x0000000007fc5e5c      0x57c /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 
 trng_state      0x0000000007fc63d8        0x4
- trng_state     0x0000000007fc63d8        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ trng_state     0x0000000007fc63d8        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
 
 .bss            0x0000000007fc63dc       0x80
                 0x0000000007fc63dc                . = ALIGN (0x4)
@@ -1364,67 +1364,67 @@ trng_state      0x0000000007fc63d8        0x4
  *fill*         0x0000000007fc63dd        0x3 
  .bss.object.0  0x0000000007fc63e0       0x18 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/crtbegin.o
  .bss.aht20_read_timer
-                0x0000000007fc63f8        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc63f8        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc63f9        0x1 
- .bss.cal_val   0x0000000007fc63fa        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ .bss.cal_val   0x0000000007fc63fa        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.extra_samples
-                0x0000000007fc63fc        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc63fc        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.indications_enabled
-                0x0000000007fc6400        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6400        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.led_blink_timer
-                0x0000000007fc6401        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6401        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.led_state
-                0x0000000007fc6402        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6402        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc6403        0x1 
  .bss.otp_hdr_timestamp
-                0x0000000007fc6404        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6404        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.rwip_sleep_step
-                0x0000000007fc6408        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6408        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.s_cmd_buf
-                0x0000000007fc640c        0x3 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc640c        0x3 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.s_consecutive_fail_cycles
-                0x0000000007fc640f        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc640f        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.s_measurement_pending
-                0x0000000007fc6410        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6410        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc6411        0x1 
  .bss.s_pending_temp_x100
-                0x0000000007fc6412        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6412        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.s_read_cb
-                0x0000000007fc6414        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
- .bss.s_rx_buf  0x0000000007fc6418        0x7 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6414        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
+ .bss.s_rx_buf  0x0000000007fc6418        0x7 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.s_sample_attempts
-                0x0000000007fc641f        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc641f        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.s_sample_count
-                0x0000000007fc6420        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6420        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc6421        0x1 
  .bss.s_samples
-                0x0000000007fc6422        0x6 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6422        0x6 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.s_status_buf
-                0x0000000007fc6428        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6428        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc6429        0x3 
  .bss.s_trig_cb
-                0x0000000007fc642c        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc642c        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.sample_gap_timer
-                0x0000000007fc6430        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6430        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.send_ind_timer
-                0x0000000007fc6431        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6431        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.syscntl_dcdc_state
-                0x0000000007fc6432        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6432        0x2 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.temp_timer
-                0x0000000007fc6434        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6434        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.therm_state
-                0x0000000007fc6435        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6435        0x1 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  *fill*         0x0000000007fc6436        0x2 
  .bss.trng_bits
-                0x0000000007fc6438       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6438       0x10 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.twext_value
-                0x0000000007fc6448        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6448        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.twirq_reset_value
-                0x0000000007fc644c        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc644c        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.twirq_set_value
-                0x0000000007fc6450        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6450        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.txdiv_trim
-                0x0000000007fc6454        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fc6454        0x4 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .bss.__stdio_exit_handler
                 0x0000000007fc6458        0x4 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libg_nano.a(libc_a-findfp.o)
                 0x0000000007fc6458                __stdio_exit_handler
@@ -1451,7 +1451,7 @@ ER_NZI          0x0000000007fc645c        0x0
 .stack_dummy    0x0000000007fc645c      0x700
                 0x0000000007fc645c                __StackLimit = .
  *(stack)
- stack          0x0000000007fc645c      0x700 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ stack          0x0000000007fc645c      0x700 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fc645c                stack_var
                 0x0000000007fc6b5c                __StackTop = .
                 0x0000000007fc6b5c                PROVIDE (__stack = __StackTop)
@@ -1473,7 +1473,7 @@ RET_DATA        0x0000000007fccb28      0x308
                 0x0000000007fccb28                . = ALIGN (0x4)
  *(retention_mem_area0)
  retention_mem_area0
-                0x0000000007fccb28      0x308 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000007fccb28      0x308 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
                 0x0000000007fcce30                . = ALIGN (0x4)
                 0x0000000007fcce30                __ret_data_end__ = .
                 0x0000000000000001                ASSERT ((0x898 > SIZEOF (RET_DATA)), CFG_RET_DATA_SIZE value must be increased.)
@@ -2610,7 +2610,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x000000000000004a       0x1b /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/crt0.o
  .ARM.attributes
-                0x0000000000000065       0x2a /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+                0x0000000000000065       0x2a /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .ARM.attributes
                 0x000000000000008f       0x45 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/platform/system_library/output/Keil_5/da14535.lib(patch_3.o)
  .ARM.attributes
@@ -2637,7 +2637,7 @@ LOAD linker stubs
 .comment        0x0000000000000000      0x8e4
  .comment       0x0000000000000000       0x33 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/thumb/v6-m/nofp/crtbegin.o
                                          0x34 (size before relaxing)
- .comment       0x0000000000000033       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//ccbnCFNU.ltrans0.ltrans.o
+ .comment       0x0000000000000033       0x34 /var/folders/c6/60mxml0x32l7wff0nk0_tkx80000gp/T//cc8B3jDk.ltrans0.ltrans.o
  .comment       0x0000000000000033      0x8b1 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/platform/system_library/output/Keil_5/da14535.lib(patch_3.o)
  .comment       0x00000000000008e4       0x34 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libg_nano.a(libc_a-exit.o)
  .comment       0x00000000000008e4       0x34 /Applications/ArmGNUToolchain/11.3.rel1/arm-none-eabi/bin/../lib/gcc/arm-none-eabi/11.3.1/../../../../arm-none-eabi/lib/thumb/v6-m/nofp/libg_nano.a(libc_a-findfp.o)

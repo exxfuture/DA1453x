@@ -3,6 +3,120 @@
 A BLE Health Thermometer Profile (HTP) application for the Renesas DA14535-00FXDEVKT-U development kit.
 Reads temperature and humidity from an AHT20 sensor over I2C and transmits temperature measurements to a BLE collector via HTP indications.
 
+This README covers the **firmware**. The rest of the system — backend, web
+app, mobile app, and an optional headless gateway — is documented in
+`ARCHITECTURE_V3.html` and implemented in the folders below.
+
+---
+
+## Platform (backend, web, mobile, gateway)
+
+An implementation of architecture v3 (`ARCHITECTURE_V3.html`): a Java/Spring
+Boot backend ingesting measurements over MQTT into TimescaleDB, a React web
+app that connects to the device over Web Bluetooth, a Capacitor mobile
+wrapper of that same app for Android/iOS, and an optional Go gateway binary
+for unattended sites. Everything is dockerized and runnable locally without
+real hardware (a synthetic device simulator stands in for the BLE thermometer).
+
+### Quick start
+
+```bash
+docker compose up --build
+```
+
+If you have a **pre-existing** local stack (a `postgres_data` volume from
+before 2026-08-07): the backend's schema migrations were consolidated into a
+single `V1__init.sql` (pre-prod, no versioning discipline yet — see
+`backend/README.md` "Data model"), which Flyway will reject against an old
+volume's migration history as a checksum mismatch. Reset it once with
+`docker compose down -v` before bringing the stack back up; this drops local
+dev data only.
+
+This starts Mosquitto, PostgreSQL+TimescaleDB, Keycloak (with a demo realm
+pre-imported, styled to match the web app — see `deploy/README.md`), MinIO,
+the backend, the web app, and a **fleet of four**
+simulated "devices" (`gateway-1`..`gateway-4` in `--simulate` mode,
+`AA:BB:CC:DD:EE:01`..`04`, each publishing synthetic readings every 5s — no
+physical thermometer needed). Each self-registers as unclaimed the moment it
+starts publishing, so all four show up in the web app's Devices page within
+a few seconds.
+
+| Service | URL | Notes |
+|---------|-----|-------|
+| Web app | http://localhost:8090 | React + Vite; Web Bluetooth needs Chrome/Edge |
+| Backend API | http://localhost:8080 | `/actuator/health` is open; the rest of `/actuator/**` needs an **admin** JWT, everything else any Keycloak JWT. The two OTA collector endpoints take an `X-Device-Token` header instead of a JWT — see `backend/README.md` "Device & operator authentication" |
+| Keycloak admin | http://localhost:8082 | `admin` / `admin` |
+| Mailpit (local email catcher) | http://localhost:8025 | Catches Keycloak's password-reset emails — see "Demo accounts" below |
+| MinIO console | http://localhost:9091 | `thermometer` / `thermometer123` |
+| Postgres | localhost:5433 | `thermometer` / `thermometer` (host port 5433 — 5432 often taken by a local Postgres; containers use the internal network) |
+| Mosquitto | localhost:1883 (MQTT), localhost:9001 (WebSocket) | anonymous access — local dev only |
+
+Sign in at the web app with "Sign in with Keycloak" — this redirects to
+Keycloak's own hosted login page (standard OAuth2 Authorization Code + PKCE,
+`fe/src/auth/oidc.ts`), not a form owned by this app. Password change and
+"Forgot password?" are both handled the same way, by Keycloak itself — see
+`fe/README.md`'s implementation-status table.
+
+**Demo accounts** (`deploy/keycloak/realm-export.json`; passwords satisfy the
+realm's password policy — length ≥ 8, upper/lower/digit/special char — so
+they aren't simply "password = username").
+See `backend/README.md` "Roles & identity" for the full permission model —
+briefly: a customer can claim any number of devices from the fleet, name each one so pickers and legends show the name instead of the Bluetooth address, and can
+grant doctors access to their data; a doctor sees only consenting patients;
+admin sees and can edit everything but never claims a device itself.
+
+| Username | Password | Role | Can do |
+|----------|----------|------|--------|
+| `customer1` | `Customer1!` | customer | Claim one or more devices from the fleet; scroll/zoom the history chart; compare several devices on one chart; export CSV; see fever-episode history and a trend digest; annotate individual readings; set personal alert thresholds; grant/revoke doctor access and review that consent history; edit own profile (display name, preferred °C/°F unit); change own password |
+| `customer2` | `Customer2!` | customer | Same as `customer1` |
+| `doctor1` | `Doctor1!` | doctor | For every customer who's granted consent: a risk-ranked patient worklist with variability and staleness, a fleet-wide fever-episode feed, per-patient charts and multi-patient compare, per-patient alert-threshold overrides, private care notes, a printable clinical report, and their own audit trail |
+| `admin1` | `Admin123!` | admin | View/edit all users (search, filter, local-registry role correction), all devices (incl. force-release) with inventory stats, all doctor-patient relationships with integrity warnings, plus ingest health, OTA rollout progress, the audit log with a security-anomaly view, storage/retention insight, and the system-default alert thresholds |
+
+Prove a simulated device's readings are flowing end to end (needs a Keycloak
+token — see `deploy/README.md`):
+
+```bash
+curl -H "Authorization: Bearer $TOKEN" "http://localhost:8080/api/measurements/AA:BB:CC:DD:EE:01?type=temperature"
+```
+
+Or publish a one-off reading by hand instead of waiting for the simulator:
+`tools/simulate-device.sh`.
+
+### Components
+
+| Folder | What it is | Docs |
+|--------|------------|------|
+| `backend/` | Spring Boot 3 / Java 21 ingest + REST API | `backend/README.md` |
+| `fe/` | React + TypeScript + Vite web app (Web Bluetooth) | `fe/README.md` |
+| `mobile/` | Capacitor wrapper of `fe/` for Android/iOS | `mobile/README.md` |
+| `gateway/` | Optional Go binary for headless/unattended collection | `gateway/README.md` |
+| `deploy/` | Mosquitto/Keycloak config consumed by `docker-compose.yml` | `deploy/README.md` |
+| `tools/` | `simulate-device.sh` — publish a one-off fake reading | — |
+
+Each folder's README has its own **Build / Run / Test** sections and an
+explicit **"what's implemented vs. scaffolded"** table — this is a working
+MVP-scope implementation of architecture v3's Phase 1, not the full
+million-device system; read those tables before assuming a given capability
+is live.
+
+Building and testing each component independently (without Docker, for
+faster iteration):
+
+```bash
+cd backend && mvn test              # unit tests, ~1s
+cd backend && mvn verify            # + Testcontainers integration tests (needs Docker)
+cd fe       && npm test             # vitest — pins the IEEE-11073 decode correctness
+cd gateway  && go test ./...
+```
+
+For a full real-browser, real-backend end-to-end check (needs the whole
+stack running — `docker compose up -d` first): `cd fe && npm run test:e2e`.
+It logs in, connects a simulated device (no hardware needed — see
+`fe/README.md` "Testing without real hardware"), claims it, and confirms the
+reading round-trips through the live feed onto the dashboard chart — plus a
+second scenario covering device-fleet claiming, doctor consent, and the
+doctor/admin views.
+
 ---
 
 ## Hardware
@@ -353,12 +467,29 @@ All user-facing configuration is in `src/thermometer.h`, `src/config/user_profil
 
 ```
 thermometer/
-├── build.sh                    Standalone GCC build script (dev/release, incremental)
-├── compile_commands.json       Generated by build.sh for clangd (do not edit)
-├── README.md                   This file
+├── README.md                   This file — firmware docs + platform quick start
+├── ARCHITECTURE_V3.html        Current system architecture: requirements, BLE
+│                               collectors (mobile/web/gateway), self-hosted data
+│                               platform, roles (customer/doctor/admin), OTA update
+│                               pipeline — Java/Spring Boot backend, React web FE
+├── ARCHITECTURE_V2.html        v2 architecture (superseded by ARCHITECTURE_V3.html,
+│                               kept as the historical record of the cost/complexity review)
+├── ARCHITECTURE.html           v1 architecture (superseded, kept as the historical
+│                               record of the initial design)
 ├── PACKAGING_CONCEPT.md        Wearable product/packaging concept (enclosure,
 │                               battery, sensor choice, baby safety, regulatory)
 ├── proposals.md                Improvement backlog with implementation status
+│
+├── docker-compose.yml          Runs the whole platform locally — see "Platform" above
+├── deploy/                     Mosquitto + Keycloak config for docker-compose.yml
+├── tools/simulate-device.sh    Publish a one-off fake reading without the gateway
+├── backend/                    Spring Boot 3 / Java 21 ingest + REST API
+├── fe/                         React + Vite web app (Web Bluetooth)
+├── mobile/                     Capacitor wrapper of fe/ for Android/iOS
+├── gateway/                    Optional Go headless-collector binary
+│
+├── build.sh                    Standalone GCC build script (dev/release, incremental)
+├── compile_commands.json       Generated by build.sh for clangd (do not edit)
 ├── tests/
 │   ├── test_codec.c            Host-side unit tests for src/codec.h
 │   └── run_tests.sh            Build & run the tests with the host compiler

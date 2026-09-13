@@ -1,5 +1,12 @@
 # ThermometerFe
 
+> **Superseded.** The current web frontend is the React + Vite app at
+> `../DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/fe/`
+> (architecture v3 — see that project's `ARCHITECTURE_V3.html`). This Angular
+> app is kept only as the historical reference for its correct IEEE-11073
+> temperature decode (`src/app/app.component.ts`), which was ported
+> byte-for-byte into the new app's `fe/src/ble/ieee11073.ts`.
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.17.
 
 ## Development server

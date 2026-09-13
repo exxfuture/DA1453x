@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thermometer — System Architecture v3</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --fg: #1a1f27;
+    --muted: #5a6472;
+    --line: #d9dee5;
+    --accent: #0b6e6e;
+    --accent-soft: #e3f2f2;
+    --warn-soft: #fdf3e3;
+    --warn-line: #e0b96a;
+    --good-soft: #e7f5ea;
+    --good-line: #4c9a63;
+    --box: #f5f7f9;
+    --code-bg: #f0f2f5;
+    --tier-device: #e8f1fb;
+    --tier-collector: #e3f2f2;
+    --tier-backend: #f0ebf8;
+    --tier-users: #fdf3e3;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14181d;
+      --fg: #e4e8ec;
+      --muted: #9aa5b1;
+      --line: #333c46;
+      --accent: #4fc3c3;
+      --accent-soft: #12333322;
+      --warn-soft: #33290f;
+      --warn-line: #8a713a;
+      --good-soft: #10241a;
+      --good-line: #4c9a63;
+      --box: #1b2129;
+      --code-bg: #20262e;
+      --tier-device: #16222f;
+      --tier-collector: #12302d;
+      --tier-backend: #241f31;
+      --tier-users: #2f2817;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 980px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 .3rem; }
+  .subtitle { color: var(--muted); margin: 0 0 1.2rem; }
+  h2 {
+    font-size: 1.45rem; margin: 3rem 0 1rem;
+    padding-bottom: .35rem; border-bottom: 2px solid var(--line);
+  }
+  h3 { font-size: 1.12rem; margin: 2rem 0 .6rem; }
+  h4 { font-size: 1rem; margin: 1.4rem 0 .4rem; }
+  p { margin: .6rem 0; }
+  a { color: var(--accent); }
+  code {
+    background: var(--code-bg); border-radius: 4px;
+    padding: .1em .35em; font-size: .875em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: .9rem 1.1rem; overflow-x: auto; font-size: .85rem; line-height: 1.5;
+  }
+  pre code { background: none; padding: 0; }
+  table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: .92rem; }
+  .table-wrap { overflow-x: auto; }
+  th, td { border: 1px solid var(--line); padding: .45rem .7rem; text-align: left; vertical-align: top; }
+  th { background: var(--box); }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: .25rem 0; }
+  .toc {
+    background: var(--box); border: 1px solid var(--line); border-radius: 10px;
+    padding: 1rem 1.4rem; margin: 1.5rem 0;
+  }
+  .toc ol { margin: .4rem 0; }
+  .callout {
+    border-left: 4px solid var(--accent); background: var(--accent-soft);
+    border-radius: 0 8px 8px 0; padding: .7rem 1rem; margin: 1rem 0;
+  }
+  .callout.warn { border-left-color: var(--warn-line); background: var(--warn-soft); }
+  .callout.good { border-left-color: var(--good-line); background: var(--good-soft); }
+  .req-id {
+    display: inline-block; min-width: 3.4em; font-weight: 700;
+    color: var(--accent); font-family: ui-monospace, Menlo, monospace; font-size: .85em;
+  }
+  .pill {
+    display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .03em;
+    border-radius: 999px; padding: .1em .7em; vertical-align: middle;
+    border: 1px solid var(--line); background: var(--box); color: var(--muted);
+  }
+  .pill.done { color: var(--accent); border-color: var(--accent); }
+  .pill.new { color: var(--good-line); border-color: var(--good-line); }
+  .pill.cut { color: var(--warn-line); border-color: var(--warn-line); }
+  /* ---- diagrams ---- */
+  .diagram {
+    border: 1px solid var(--line); border-radius: 12px; background: var(--box);
+    padding: 1.2rem; margin: 1.2rem 0; overflow-x: auto;
+  }
+  .diagram-title {
+    font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--muted); margin-bottom: 1rem;
+  }
+  .tier { display: flex; gap: .8rem; align-items: stretch; margin: .5rem 0; min-width: 640px; }
+  .tier-label {
+    flex: 0 0 108px; display: flex; align-items: center; justify-content: center;
+    font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--muted); text-align: center; border-right: 2px solid var(--line);
+    padding-right: .6rem;
+  }
+  .tier-body { display: flex; gap: .8rem; flex: 1; flex-wrap: wrap; }
+  .node {
+    border: 1.5px solid var(--line); border-radius: 8px; padding: .5rem .8rem;
+    background: var(--bg); flex: 1; min-width: 130px;
+    font-size: .85rem; line-height: 1.35;
+  }
+  .node b { display: block; font-size: .9rem; }
+  .node small { color: var(--muted); }
+  .node.device { background: var(--tier-device); }
+  .node.collector { background: var(--tier-collector); }
+  .node.backend { background: var(--tier-backend); }
+  .node.users { background: var(--tier-users); }
+  .flow-arrow {
+    text-align: center; color: var(--muted); font-size: .8rem;
+    margin: .15rem 0 .15rem 116px; min-width: 640px;
+  }
+  .flow-arrow b { color: var(--fg); }
+  .seq { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .82rem; line-height: 1.55; }
+  footer { margin-top: 4rem; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+  td.cut { text-decoration: line-through; color: var(--muted); }
+  td.new-cell { font-weight: 600; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Thermometer — System Architecture v3</h1>
+<p class="subtitle">
+  Revision of <code>ARCHITECTURE_V2.html</code> (v2) to use a backend language
+  the team already has deep expertise in, and a more widely-adopted web
+  frontend framework. <b>Requirements are unchanged.</b> This document
+  replaces the backend language and the web UI framework, keeps every v2
+  infrastructure decision that doesn't depend on either (broker, storage,
+  identity, OTA strategy, deferred-complexity triggers), and is explicit about
+  the tradeoffs behind both swaps.
+</p>
+
+<div class="callout">
+  <b>Decision up front:</b> backend platform services move from Go to
+  <b>Java 21+ LTS / Spring Boot 3.2+ with virtual threads</b>. The web app
+  moves from Angular to <b>React + TypeScript + Vite</b>, still wrapped in
+  Capacitor for the shared web/Android/iOS codebase. The optional Raspberry Pi
+  gateway binary <b>stays Go</b> — it's a different deployment target (a
+  resource-constrained edge device), not a second backend language competing
+  with the first. Reasoning for all three calls is in §2–3.
+</div>
+
+<div class="callout good">
+  <b>This architecture has a working implementation</b> in the sibling
+  folders (<code>backend/</code>, <code>fe/</code>, <code>mobile/</code>,
+  <code>gateway/</code>, <code>deploy/</code>, <code>docker-compose.yml</code>) —
+  runnable locally with <code>docker compose up</code>, no physical
+  thermometer required (a simulator stands in for the device). See
+  §<a href="#implementation">16</a> for exactly what's real vs. scaffolded,
+  or jump straight to <code>../README.md</code>'s "Platform" section for the
+  quick start.
+</div>
+
+<div class="toc">
+  <b>Contents</b>
+  <ol>
+    <li><a href="#changelog">What changed since v2, and why</a></li>
+    <li><a href="#backend-lang">Backend language decision: Java vs. Go</a></li>
+    <li><a href="#frontend-lang">Frontend framework decision: React vs. alternatives</a></li>
+    <li><a href="#requirements">Requirements (unchanged)</a></li>
+    <li><a href="#overview">System overview (v3)</a></li>
+    <li><a href="#device">Device tier</a></li>
+    <li><a href="#collector">Collector tier (v3)</a></li>
+    <li><a href="#pipeline">Data pipeline (v3)</a></li>
+    <li><a href="#identity">Identity, profiles and access control (v3)</a></li>
+    <li><a href="#ota">Firmware update pipeline (v3)</a></li>
+    <li><a href="#security">Security model</a></li>
+    <li><a href="#scale">Scalability and sizing (v3)</a></li>
+    <li><a href="#testing">Testing strategy (new)</a></li>
+    <li><a href="#deployment">Deployment, operations and cost (v3)</a></li>
+    <li><a href="#roadmap">Phased roadmap (v3)</a></li>
+    <li><a href="#implementation">Implementation status</a></li>
+  </ol>
+</div>
+
+<!-- ================================================================ -->
+<h2 id="changelog">1. What changed since v2, and why</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Area</th><th>v2</th><th>v3</th><th>Why</th></tr>
+  <tr>
+    <td>Platform backend language</td>
+    <td class="cut">Go, decisively, for API and ingest services</td>
+    <td class="new-cell">Java 21+ LTS, Spring Boot 3.2+, virtual threads
+        enabled for blocking-style I/O at Go-like concurrency</td>
+    <td>The team's standing expertise is Java — that's a bigger, more durable
+        lever on delivery speed and code quality than the modest hosting-cost
+        edge Go had in v2. See §<a href="#backend-lang">2</a> for the full
+        tradeoff analysis, including where the v2 cost argument was weaker
+        than it looked.</td>
+  </tr>
+  <tr>
+    <td>Gateway edge binary</td>
+    <td>Go (implicitly, as part of the platform)</td>
+    <td class="new-cell"><b>Still Go</b> — now an explicit, deliberate exception,
+        not a leftover.</td>
+    <td>A Raspberry Pi/SBC gateway is a different deployment target from a
+        data-center container: constrained RAM, no JVM you want to install and
+        patch on a physical device in the field, trivial cross-compilation to
+        arm/armhf/arm64 needed. This was never really "backend" — it's an edge
+        agent, same tier as the mobile/web collector apps.</td>
+  </tr>
+  <tr>
+    <td>Web frontend framework</td>
+    <td class="cut">Angular 17 (existing FE)</td>
+    <td class="new-cell">React 18/19 + TypeScript + Vite</td>
+    <td>Larger, more widely-adopted talent pool and ecosystem (TanStack Query/Router,
+        shadcn/ui, Tailwind). See §<a href="#frontend-lang">3</a> for the
+        migration-cost honesty check and why Next.js and React Native were
+        each considered and not chosen as the default.</td>
+  </tr>
+  <tr>
+    <td>Mobile wrapper</td>
+    <td>Capacitor around the Angular codebase</td>
+    <td class="new-cell">Capacitor around the <b>React</b> codebase — same
+        strategy, different UI framework underneath.</td>
+    <td>The "one codebase → web + Android + iOS" win from v1/v2 doesn't depend
+        on which web framework is inside the wrapper; only the UI layer changes.</td>
+  </tr>
+  <tr>
+    <td>Integration testing</td>
+    <td>Implicit / unspecified</td>
+    <td class="new-cell"><b>Testcontainers</b> named explicitly as the
+        integration-test backbone (spins up real Postgres/Mosquitto/Keycloak
+        containers per test run).</td>
+    <td>Testcontainers originated in the Java ecosystem and has its deepest,
+        most mature support there — a concrete side-benefit of the language
+        choice, not a separate decision.</td>
+  </tr>
+  <tr>
+    <td>MVP hosting sizing</td>
+    <td>~€5–8/mo arm64 VPS (Go's low idle memory)</td>
+    <td class="new-cell">~€8–15/mo arm64 VPS in plain-JVM mode; back to
+        v2-parity if GraalVM Native Image is adopted (opt-in, see §<a href="#backend-lang">2.3</a>).</td>
+    <td>Honest accounting: a Spring Boot service's idle footprint (~150–300&nbsp;MB
+        without native compilation) is real, even though it's not the binding
+        constraint at these VPS sizes. Native Image closes most of the gap for
+        teams willing to adopt it.</td>
+  </tr>
+  <tr>
+    <td>Everything else</td>
+    <td colspan="2" style="text-align:center">Unchanged from v2 — Mosquitto (broker),
+        PostgreSQL+TimescaleDB, Keycloak, MinIO, DIY OTA rollout tables, delta
+        firmware images, JWT-first gateway auth, direct MQTT/WSS live feed,
+        deferred-complexity triggers for JetStream/hawkBit/EMQX/CBOR.</td>
+    <td>None of these decisions depended on the platform's implementation
+        language or the web UI framework.</td>
+  </tr>
+</table></div>
+
+<!-- ================================================================ -->
+<h2 id="backend-lang">2. Backend language decision: Java vs. Go</h2>
+
+<h3>2.1 The honest tradeoff table</h3>
+<div class="table-wrap"><table>
+  <tr><th>Dimension</th><th>Go (v2's pick)</th><th>Java 21 + Spring Boot 3.2 (v3's pick)</th></tr>
+  <tr>
+    <td>Team fit</td>
+    <td>New language/ecosystem for a Java-strong team — real ramp-up cost,
+        ongoing "translate the idiom" tax on every feature.</td>
+    <td><b>Direct reuse of existing expertise.</b> Faster delivery, better
+        code review quality, easier hiring/onboarding against the stack the
+        team already knows.</td>
+  </tr>
+  <tr>
+    <td>Idle memory / cold start</td>
+    <td>~10–30&nbsp;MB idle, near-instant start — genuinely excellent, single
+        static binary.</td>
+    <td>Plain JVM mode: ~150–300&nbsp;MB idle, 1–3&nbsp;s cold start.
+        <b>With GraalVM Native Image</b> (Spring Boot 3 AOT support, opt-in):
+        tens of MB, tens of milliseconds — closes most of the gap.</td>
+  </tr>
+  <tr>
+    <td>Concurrency model for I/O-bound MQTT/DB workloads</td>
+    <td>Goroutines — cheap, built-in, simple mental model.</td>
+    <td><b>Virtual threads</b> (stable since Java 21, "Project Loom"): write
+        ordinary blocking-style code (a thread per MQTT message/session,
+        blocking JDBC calls) and the JVM schedules millions of them cheaply.
+        Gets Go-like scalability <em>without</em> reactive/WebFlux complexity —
+        the team keeps writing code the way it already knows how.</td>
+  </tr>
+  <tr>
+    <td>Ecosystem fit with the rest of the stack</td>
+    <td>Standalone — no particular synergy with Keycloak or (if ever adopted)
+        hawkBit.</td>
+    <td><b>Keycloak is itself a Quarkus/Java application</b>, and hawkBit
+        (deferred per §<a href="#roadmap">14</a>, adopt-when-triggered) is
+        Spring Boot. An all-Java platform means one JVM tuning/monitoring
+        playbook across every server-side component, and zero new-language
+        cost the day hawkBit is actually adopted.</td>
+  </tr>
+  <tr>
+    <td>Libraries for this domain</td>
+    <td>Solid, minimal (MQTT client, JWT, JSON schema) — you assemble more
+        yourself.</td>
+    <td>Mature, batteries-included: Spring Data JPA/JDBC for Postgres+Timescale,
+        Spring Security + OAuth2 Resource Server for Keycloak-issued JWTs
+        (this is exactly what Spring Security is built for), Spring Boot
+        Actuator + Micrometer for Prometheus metrics out of the box, HiveMQ
+        MQTT Client (Apache-2.0) for the broker connection.</td>
+  </tr>
+  <tr>
+    <td>Testing ecosystem</td>
+    <td>Good, but Testcontainers (used to spin up real Postgres/Mosquitto/
+        Keycloak in CI) is a Java-native project — support elsewhere is thinner.</td>
+    <td><b>Testcontainers is at its best here</b> — deepest integration,
+        largest module catalog, first-class JUnit&nbsp;5 support.</td>
+  </tr>
+  <tr>
+    <td>Build/CI complexity</td>
+    <td>Trivial — <code>go build</code>, tiny static binary, fast every time.</td>
+    <td>Plain JVM mode: trivial (standard <code>mvn package</code>/<code>./gradlew build</code>).
+        Native Image mode: a real added cost — multi-stage GraalVM/Mandrel
+        builder image, native compilation adds minutes to CI, and some
+        libraries need reflection hints (Quarkus/Spring curate extensions to
+        minimize this, but it's not zero-risk). Treat as opt-in, not default.</td>
+  </tr>
+</table></div>
+
+<h3>2.2 Where the v2 cost argument was weaker than it looked</h3>
+<p>
+  v2 picked Go partly on hosting cost. Revisited honestly: at the actual VPS
+  sizes in play for MVP/Growth (2–4&nbsp;GB RAM), a Spring Boot service's extra
+  ~150–250&nbsp;MB over a Go binary is real but is <em>not</em> the constraint
+  that determines whether the box is big enough — disk, connection limits and
+  CPU headroom matter more at this scale, and the difference is a rounding
+  error against a 4&nbsp;GB box running four or five services. The cost
+  argument for Go was real but secondary; team velocity was the load-bearing
+  factor all along, and it now points the other way.
+</p>
+
+<h3>2.3 The decision</h3>
+<ul>
+  <li><b>Java 21+ LTS, Spring Boot 3.2+</b> for the API and ingest services.
+      Spring Boot over Quarkus specifically because "Java expertise" in
+      industry overwhelmingly means Spring-flavored Java — this maximizes
+      reuse of what the team already knows, at the cost of a somewhat higher
+      idle footprint than Quarkus would give by default. (Quarkus remains a
+      reasonable alternative if the team is specifically comfortable with it —
+      it's built for exactly this footprint/startup axis — but it's not the
+      default here.)</li>
+  <li><b>Virtual threads enabled</b> (<code>spring.threads.virtual.enabled=true</code>)
+      so ingest/API code stays simple, blocking-style Java — no reactive
+      rewrite needed to get high concurrency out of I/O-bound MQTT and DB work.</li>
+  <li><b>GraalVM Native Image is an explicit, opt-in upgrade</b>, not a day-one
+      requirement — adopt it once the team is comfortable with the added build
+      complexity, to close the remaining footprint/cold-start gap with Go.
+      Until then, plain JVM mode is entirely adequate; it just costs a
+      slightly bigger VPS tier (§<a href="#scale">12</a>).</li>
+  <li><b>Go stays exactly where it already made sense on its own merits</b>:
+      the optional Raspberry Pi/SBC gateway collector binary. This isn't a
+      "some services in Go" hybrid — it's recognizing that an edge device and
+      a data-center container are different problems, and Go is still the
+      better tool for the former regardless of what the platform backend uses.</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="frontend-lang">3. Frontend framework decision: React vs. alternatives</h2>
+
+<h3>3.1 Web app: React + TypeScript + Vite</h3>
+<div class="table-wrap"><table>
+  <tr><th>Option</th><th>Verdict</th><th>Reasoning</th></tr>
+  <tr>
+    <td><b>React + Vite (chosen)</b></td>
+    <td class="new-cell">✅ Selected</td>
+    <td>Widest talent pool and ecosystem of any option evaluated across v1–v3.
+        Vite is the current standard React toolchain (superseded Create React
+        App): fast dev server, fast builds, no unnecessary runtime. The app is
+        an authenticated SPA dashboard — no page needs to be indexed or
+        server-rendered.</td>
+  </tr>
+  <tr>
+    <td>Next.js (React, with SSR/SSG)</td>
+    <td class="cut">❌ Not chosen</td>
+    <td>Its core value — server rendering and SEO — doesn't apply to a
+        logged-in health dashboard, and <b>cannot</b> apply to the one screen
+        that matters most: Web Bluetooth is a browser-only API and can never
+        be server-rendered. Adopting Next.js here would mean operating an
+        extra Node server runtime for no benefit this project can use.</td>
+  </tr>
+  <tr>
+    <td>Angular (kept as-is)</td>
+    <td class="cut">❌ Not chosen (this revision)</td>
+    <td>The existing FE works and its BLE/IEEE&nbsp;11073 decode logic is
+        already correct and tested (see migration note, §3.3) — but Angular
+        has a smaller hiring pool and ecosystem than React, which is the
+        specific gap this revision addresses.</td>
+  </tr>
+</table></div>
+
+<h3>3.2 Supporting stack for the React app</h3>
+<ul>
+  <li><b>TanStack Query</b> for all server-state (REST history queries, cache
+      invalidation on live measurement events) — the standard, widely-adopted
+      data-fetching layer for React today.</li>
+  <li><b>Zustand</b> for local/UI state (selected device, BLE connection
+      status) — smaller and simpler than Redux for a project this size, and
+      currently the more common default for new React codebases.</li>
+  <li><b>React Router</b> for navigation — the largest install base of any
+      React router, the safe default. (TanStack Router is a fully type-safe
+      alternative worth a look if the team wants tighter integration with
+      TanStack Query, but isn't necessary here.)</li>
+  <li><b>Tailwind CSS + a bespoke design-token/component kit</b> (not
+      shadcn/ui) for the dashboard UI — a "Pine &amp; Ember" health-oriented
+      visual language (light + dark themes, a 5-tier temperature-status
+      color scale, Fraunces/Public&nbsp;Sans/IBM&nbsp;Plex&nbsp;Mono type,
+      <code>lucide-react</code> icons) with its own Button/Card/Input/Badge/
+      StatCard/Table/Alert primitives in <code>fe/src/components/ui/</code>,
+      chosen over shadcn's generic defaults so the product reads as
+      distinctively health-focused rather than generic SaaS, while keeping
+      the same "accessible primitives on Tailwind" approach shadcn would
+      have given (WCAG&nbsp;AA contrast, focus-visible states, 44px touch
+      targets). See <code>fe/README.md</code> "Design system" for the full
+      token/component inventory.</li>
+</ul>
+
+<h3>3.3 Mobile: Capacitor stays, now wrapping React</h3>
+<p>
+  The v1/v2 case for Capacitor was never "because Angular" — it was "one
+  codebase, one set of UI components and one <code>BleTransport</code>
+  abstraction, shipped to web, Android and iOS." That case is framework-agnostic:
+  Capacitor wraps any web app, so swapping the UI layer to React changes
+  nothing about the strategy, only what's inside the wrapper.
+</p>
+<div class="table-wrap"><table>
+  <tr><th>Option</th><th>UI codebases to maintain</th><th>Verdict</th></tr>
+  <tr>
+    <td><b>Capacitor + React (chosen)</b></td>
+    <td>One (the React web app, rendered in a WebView on mobile)</td>
+    <td class="new-cell">✅ Same rationale as v1/v2, React swapped in for Angular.</td>
+  </tr>
+  <tr>
+    <td>React Native</td>
+    <td>Two (React DOM components for web, React Native components for
+        mobile) sharing only business logic (hooks, BLE codec, API client) via
+        a monorepo package</td>
+    <td class="cut">Considered, not chosen as the default. It gives a more
+        natively-idiomatic mobile UI and a large ecosystem
+        (<code>react-native-ble-plx</code> is mature) — a legitimate option if
+        the team later decides native look-and-feel matters enough to justify
+        maintaining two UI layers instead of one. For a data/BLE dashboard
+        app, that tradeoff doesn't pay for itself today.</td>
+  </tr>
+</table></div>
+
+<h3>3.4 Migration cost — be honest about it</h3>
+<div class="callout warn">
+  This is a real rewrite, not a free upgrade. The existing Angular FE already
+  correctly decodes the IEEE&nbsp;11073 FLOAT format (0.01&nbsp;°C resolution) —
+  a detail the vendor's own SmartBond app gets wrong (see <code>README.md</code>,
+  "Temperature encoding"). Before building new UI, port the <b>pure,
+  framework-agnostic</b> pieces first — IEEE&nbsp;11073 decode, HTP
+  characteristic parsing, CRC/validation logic — as plain TypeScript with unit
+  tests ported alongside them, verified against the existing Angular tests.
+  Only then build the new React components on top. This avoids silently
+  reintroducing a decode bug the project has already solved once.
+</div>
+
+<!-- ================================================================ -->
+<h2 id="requirements">4. Requirements (unchanged)</h2>
+<p>
+  All functional and non-functional requirements are exactly as defined in
+  <code>ARCHITECTURE.html</code> §1 (FR-1…FR-9, NFR-1…NFR-6). Nothing in this
+  revision changes what the system must do — only the backend language and
+  the web UI framework.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="overview">5. System overview (v3)</h2>
+
+<div class="diagram">
+  <div class="diagram-title">System context — v3: Java platform services, React web app</div>
+
+  <div class="tier">
+    <div class="tier-label">Users</div>
+    <div class="tier-body">
+      <div class="node users"><b>Customer</b><small>own live + historical data, device management, sharing consent</small></div>
+      <div class="node users"><b>Doctor</b><small>data of consenting patients, alerts, notes</small></div>
+      <div class="node users"><b>Admin</b><small>fleet &amp; user management, firmware rollouts, ops dashboards</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▲ HTTPS (REST) for history/mgmt · <b>MQTT/WSS direct</b> for live feed — OIDC login ▼</div>
+
+  <div class="tier">
+    <div class="tier-label">Platform<br>(self-hosted FOSS)</div>
+    <div class="tier-body">
+      <div class="node backend"><b>Mosquitto</b><small>MQTT broker (TLS/WSS); EMQX cluster once scale demands it</small></div>
+      <div class="node backend"><b>Spring Boot (Java 21)</b><small>virtual threads; MQTT subscribe → validate → idempotent upsert; REST + token issuance</small></div>
+      <div class="node backend"><b>PostgreSQL + TimescaleDB</b><small>profiles, registry, measurement hypertables, rollout state</small></div>
+      <div class="node backend"><b>Keycloak</b><small>OIDC identity, roles, consent links — also JVM-based</small></div>
+      <div class="node backend"><b>MinIO</b><small>firmware image + delta store</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">
+    ▲ measurements: MQTT/TLS (mobile, gateway) or WSS/HTTPS (web) —
+    <b>firmware images/deltas + rollout commands ▼</b>
+  </div>
+
+  <div class="tier">
+    <div class="tier-label">Collectors<br>(BLE ↔ internet)</div>
+    <div class="tier-body">
+      <div class="node collector"><b>Mobile app</b><small>Capacitor + React; one codebase → Android + iOS; buffer, upload, SUOTA client</small></div>
+      <div class="node collector"><b>Web app</b><small>React + Vite + Web Bluetooth; Chrome/Edge on desktop; subscribes MQTT/WSS directly</small></div>
+      <div class="node collector"><b>Gateway</b><small>optional headless collector; <b>Go</b> binary, JWT-authenticated</small></div>
+    </div>
+  </div>
+
+  <div class="flow-arrow">▲ HTP indications over BLE — <b>delta-image SUOTA over BLE ▼</b></div>
+
+  <div class="tier">
+    <div class="tier-label">Device</div>
+    <div class="tier-body">
+      <div class="node device"><b>DA14535 thermometer</b><small>AHT20 sensor · HTP/BAS/DIS · extended sleep · SUOTA + dual-image SPI flash (planned)</small></div>
+      <div class="node device" style="flex:0 1 220px"><b>Future sensors</b><small>same pattern, other GATT profiles / custom service</small></div>
+    </div>
+  </div>
+</div>
+
+<p>
+  Everything below the Platform tier that isn't the language/framework itself
+  is identical to v2 — same broker, same storage, same identity provider, same
+  OTA strategy, same deferred-complexity triggers.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="device">6. Device tier</h2>
+<p>
+  Unchanged from v1/v2: standard GATT services (HTP, Battery, Device
+  Information), no internet credentials on the device, LE Secure Connections
+  pairing, dual-bank SUOTA with delta images (v2 §5.1) and Ed25519 signing.
+  None of this depends on the platform's backend language or web framework.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="collector">7. Collector tier (v3)</h2>
+<ul>
+  <li><b>Web app:</b> React + TypeScript + Vite, Web Bluetooth for direct BLE
+      access, TanStack Query for REST history, direct MQTT/WSS subscription
+      for the live feed (unchanged pattern from v2 §6), IndexedDB for offline
+      buffering.</li>
+  <li><b>Mobile app:</b> the same React codebase inside Capacitor, with the
+      native BLE plugin (<code>@capacitor-community/bluetooth-le</code>)
+      behind the shared <code>BleTransport</code> interface, SQLite for
+      offline buffering.</li>
+  <li><b>Gateway:</b> unchanged from v2 — a Go binary on BlueZ for unattended
+      sites, JWT-authenticated by default (v2 §8.2), mTLS optional per-deployment.</li>
+</ul>
+<p>
+  Store-and-forward, idempotent upload keys, and the delta-aware SUOTA client
+  logic are all unchanged from v2 §6.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="pipeline">8. Data pipeline (v3)</h2>
+
+<div class="diagram">
+  <div class="diagram-title">Measurement path — same shape as v2, Java under the hood</div>
+  <pre class="seq" style="border:none;background:none;margin:0;padding:0">
+device ──BLE HTP──▶ collector
+                      │  local queue (SQLite / IndexedDB) — survives offline
+                      ▼
+                MQTT publish, QoS 1, TLS
+                topic: v1/{tenant}/{user_id}/{device_id}/measurement/temperature
+                      │
+                      ▼
+        ┌──────── Mosquitto ───────────┐   auth: JWT (users/apps/gateways)
+        │  single node; EMQX cluster   │   topic ACL = client may publish
+        │  once connection count       │   only its own ids
+        │  demands it                  │
+        └──────────────┬───────────────┘
+                       ▼  Spring Boot ingest subscribes directly (QoS 1),
+                          HiveMQ MQTT Client, one virtual thread per message
+        ┌─── Spring Boot ingest ───────┐   validate envelope → authz check →
+        │  Spring Data JDBC batch      │   idempotent write → ack MQTT only
+        │  INSERT .. ON CONFLICT       │   after commit → publish "live" event
+        │  DO NOTHING (dedup) → ack    │   to the broker's live/{user_id} topic
+        └──────────────┬───────────────┘
+                       ▼
+        PostgreSQL + TimescaleDB hypertable  (compressed, auto-retention,
+        continuous aggregates: 1 min / 1 h / 1 day rollups)
+
+  No durable-log tier at this stage, same reasoning as v2 §7.1: MQTT QoS 1 +
+  commit-then-ack is the durability mechanism with one consumer. Virtual
+  threads let this be plain blocking Java code (one thread per in-flight
+  message) instead of a reactive pipeline, while still scaling to the
+  concurrency levels that matter here.
+  </pre>
+</div>
+
+<p>
+  The message envelope, storage schema, dedup key and backpressure reasoning
+  are all identical to v2 §7 — none of it is language-specific. The upgrade
+  trigger for introducing NATS JetStream (a second independent consumer
+  needing its own replay cursor) is unchanged.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="identity">9. Identity, profiles and access control (v3)</h2>
+<p>
+  Roles, consent-link model and row-level-security enforcement are unchanged
+  from v2 §8. The decision to keep Keycloak (v2 §8.1) is, if anything,
+  reinforced by the language choice: Keycloak already runs on the JVM
+  (Quarkus), so an all-Java platform means <b>every</b> server-side component —
+  API, ingest, identity, and hawkBit if/when it's adopted — shares one runtime
+  family, one GC/monitoring playbook, and one on-call mental model. Gateway
+  JWT-first authentication (v2 §8.2) is unchanged; Spring Security's OAuth2
+  Resource Server support validates Keycloak-issued and gateway-issued JWTs
+  with standard, well-trodden configuration rather than hand-rolled verification.
+</p>
+<p>
+  <b>Implementation note (FR-4/FR-5, now live):</b> Keycloak deliberately holds
+  no relationship data — no groups, no user attributes, nothing that could
+  express "doctor X treats patient Y." That was always going to live in the
+  backend's own <code>users</code>/<code>consent_links</code> tables, and it
+  does: <code>security/CurrentUserService</code> JIT-provisions/re-syncs a
+  local <code>users</code> row from the JWT on every request (first
+  authenticated call creates it), and every controller does an explicit role
+  check against the resolved identity rather than Spring's
+  <code>@PreAuthorize</code>/<code>hasRole()</code> — the <code>local</code>
+  profile's fully-open filter chain still populates an anonymous
+  authentication with <code>ROLE_ANONYMOUS</code> under the hood, which would
+  make any <code>hasRole(...)</code> annotation reject local curl testing
+  entirely. Per-device ownership exclusivity (a device has one owner at a
+  time) is enforced in-app on claim; a customer may own multiple devices — an
+  earlier one-device-per-customer cap (DB-enforced by a partial unique index)
+  was tried and then deliberately dropped once it turned out to block the
+  ordinary case of claiming a second device you're already connected to. See
+  <code>backend/README.md</code> "Roles &amp; identity" for the full endpoint
+  table.
+</p>
+<p>
+  <b>Consent-scoped sub-resources (added after the initial v3 build):</b> the
+  patient→doctor consent link is no longer only a gate on measurement
+  history. It now governs a small family of resources that hang off a patient:
+  <b>alert thresholds</b> (a per-user tier scale with whole-row precedence
+  <code>doctor_override</code> → <code>self</code> → <code>system</code> →
+  built-in fallback), <b>derived temperature events</b> (threshold-crossing
+  episodes computed on read from the measurements hypertable — no events
+  table, so a threshold change re-tiers history for free), <b>reading
+  annotations</b> (customer-authored, readable by anyone who may read the
+  readings), and <b>care notes</b> (doctor-authored and doctor-private —
+  consent flows patient→doctor only, so there is no channel through which a
+  patient-visible clinical note would be delivered; admin gets a read-only
+  compliance view). The ownership/consent decision itself is one shared
+  component (<code>security/DeviceAccessGuard</code>) rather than a check
+  re-implemented per controller, which is what keeps four resources from
+  drifting into four subtly different access rules.
+</p>
+<p>
+  <b>One deliberate exception to "no <code>@PreAuthorize</code>":</b>
+  <code>/actuator/**</code>. Spring Security resolves those paths before any
+  controller exists, so the in-controller convention above cannot reach them —
+  which is why, until an audit caught it, <code>/actuator/info</code> and
+  <code>/actuator/prometheus</code> were readable by <em>any</em>
+  authenticated user rather than admins only. A Keycloak
+  <code>realm_access.roles</code> → <code>ROLE_*</code> JWT converter now
+  exists, scoped <em>only</em> to the secured filter chain, purely so
+  <code>hasRole("ADMIN")</code> can gate the actuator (with
+  <code>/actuator/health</code> left open for probes). The application's own
+  endpoints are unchanged, and the <code>local</code> profile's open chain is
+  untouched.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="ota">10. Firmware update pipeline (v3)</h2>
+<p>
+  Unchanged in shape from v2 §9: DIY rollout tables in Postgres + MinIO for
+  images/deltas, phased group percentages with abort thresholds, signed and
+  diffed images from CI. The only change is that the rollout-evaluation logic
+  is now a Spring Boot service instead of a Go one — and the future upgrade
+  trigger (adopt hawkBit once rollout policy genuinely needs a dedicated
+  engine) now comes with <b>zero new-language cost</b>, since hawkBit is
+  itself Spring Boot.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="security">11. Security model</h2>
+<p>
+  Unchanged from v2 §10 in every particular — TLS everywhere, JWT-first
+  collector/gateway auth with optional mTLS, broker-enforced topic ACLs for
+  the live feed, encrypted data at rest, signed and now-diffed firmware,
+  append-only audit log, rate limiting and schema validation at ingest. None
+  of it is specific to Go or Java.
+</p>
+<p>
+  <b>Implementation note (what of this is actually live):</b> schema
+  validation at ingest, the append-only audit log and JWT-first API
+  authentication shipped with the initial v3 build. A later audit closed three
+  gaps and added one signal:
+</p>
+<ul>
+  <li><b>Rate limiting is now real</b> — Bucket4j token buckets in Caffeine,
+      keyed by caller IP, applied by a servlet filter that runs <em>ahead</em>
+      of Spring Security so floods cost no JWT validation or database work. A
+      blanket budget plus a much tighter one on the OTA collector endpoints.
+      State is per-instance in-memory, which is correct for the single-instance
+      compose deployment and is the thing to revisit when replicas appear —
+      N instances silently mean <code>limit × N</code>, not a distributed
+      limit.</li>
+  <li><b>The OTA collector endpoints are no longer unauthenticated.</b> They
+      were <code>permitAll()</code> with no compensating check, so anyone
+      could enumerate firmware metadata by BD address or POST fabricated
+      install failures until a rollout tripped its own auto-abort threshold.
+      They now require a shared <code>X-Device-Token</code> (constant-time
+      compared). This is explicitly the <em>MVP shape</em> of the model
+      described above, not its end state: the model calls for JWT-first
+      collector auth with optional mTLS, and a fleet-wide shared secret is
+      neither — one extraction compromises the fleet and revocation is
+      all-or-nothing. Per-device credentials need provisioning infrastructure
+      that doesn't exist yet (tracked in <code>proposals.md</code> 10.1); the
+      tight collector rate-limit bucket is the compensating control until
+      then.</li>
+  <li><b>The actuator lockdown</b> described in §9.</li>
+  <li><b>Denied requests are now audited</b> (<code>access.denied</code> rows
+      on every 403), which is what makes an operator-facing security-anomaly
+      view possible at all — the audit log previously recorded only successful
+      state changes, so "someone is probing device ids" left no trace.</li>
+</ul>
+<p>
+  Still not implemented from the model: TLS (the local stack is plain HTTP),
+  broker-enforced topic ACLs (Mosquitto runs anonymous for local dev),
+  encryption at rest, and firmware signing.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="scale">12. Scalability and sizing (v3)</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Stage</th><th>Fleet</th><th>Sustained load (est.)</th><th>Deployment</th></tr>
+  <tr><td>MVP</td><td>≤ 5k devices</td><td>&lt; 200 msg/s</td>
+      <td>1 arm64 VPS (2–4 vCPU / 4–8 GB, e.g. Hetzner CAX21/CAX31 — a step up
+          from v2's estimate to cover plain-JVM-mode Spring Boot's idle
+          footprint): Mosquitto, Spring Boot (API + ingest), Postgres+Timescale,
+          Keycloak, MinIO, Caddy, Grafana Alloy → Prometheus/Loki/Grafana.</td></tr>
+  <tr><td>Growth</td><td>≤ 200k devices</td><td>~2–8k msg/s</td>
+      <td>Still Mosquitto (single node); Spring Boot ingest scales to multiple
+          replicas (virtual threads keep per-instance throughput high);
+          Postgres gains a streaming read replica for dashboard queries.
+          <b>Consider GraalVM Native Image here</b> if per-instance memory is
+          becoming the limiting factor before CPU/connections are.</td></tr>
+  <tr><td>Scale</td><td>millions</td><td>tens of thousands msg/s</td>
+      <td>Same escalation path as v2: EMQX/VerneMQ cluster for connection
+          fan-in, NATS JetStream (or Kafka/Redpanda) once a second consumer
+          type exists, pgBouncer once connection count is the bottleneck,
+          Timescale multi-node or ClickHouse for the analytics tail if needed.</td></tr>
+</table></div>
+
+<p>
+  Note the one real, honest cost delta versus v2: the MVP tier is priced one
+  notch up to cover Spring Boot's idle memory in plain-JVM mode. If GraalVM
+  Native Image is adopted from the start, MVP sizing returns to v2-parity
+  (CAX11/CAX21-class). Either way, the gap closes as the fleet grows, since
+  fixed per-instance overhead matters less at Growth/Scale volumes.
+</p>
+
+<!-- ================================================================ -->
+<h2 id="testing">13. Testing strategy (new in v3)</h2>
+<p>
+  Called out explicitly because the language choice makes it unusually strong
+  here:
+</p>
+<ul>
+  <li><b>Testcontainers</b> (JUnit&nbsp;5 integration) spins up real Postgres+TimescaleDB,
+      Mosquitto and Keycloak containers per test run — the ingest/API tests
+      run against the actual dependencies, not mocks, catching integration
+      issues (schema drift, broker ACL misconfiguration, token validation
+      edge cases) that unit tests alone would miss.</li>
+  <li><b>Contract tests</b> for the message envelope (JSON Schema validation)
+      run identically whether the producer is the Angular-derived codec port,
+      the React web app, the Capacitor mobile app, or the Go gateway binary —
+      one schema, four producers, tested once.</li>
+  <li><b>Firmware-side</b> host-tested codec logic (<code>tests/run_tests.sh</code>,
+      already in place per <code>README.md</code>) is unaffected by any of
+      this — it stays as-is.</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="deployment">14. Deployment, operations and cost (v3)</h2>
+<ul>
+  <li><b>Packaging:</b> unchanged — OCI containers, <code>docker-compose</code>
+      for MVP, k3s from Growth on. Spring Boot images built on an arm64 JRE
+      base (or a GraalVM/Mandrel builder stage if Native Image is adopted).</li>
+  <li><b>Observability:</b> unchanged — Grafana Alloy per host, self-hosted
+      Prometheus/Loki/Grafana. Spring Boot Actuator + Micrometer expose
+      Prometheus-format metrics natively, one dependency, no manual
+      instrumentation needed.</li>
+  <li><b>Backups:</b> unchanged — pgBackRest + WAL archiving, MinIO versioned
+      buckets replicated off-site with restic.</li>
+  <li><b>CI/CD:</b> platform lane now builds/tests a Maven or Gradle project
+      (Testcontainers-backed integration tests, §13) instead of a Go module;
+      firmware lane (delta image generation + signing) is unchanged.</li>
+  <li><b>Cost sketch:</b> MVP ≈ one ~€10–18/month arm64 VPS in plain-JVM mode
+      (or ~€5–8/month at v2-parity with Native Image adopted) + domain. Growth
+      and Scale tiers are unaffected by the language choice — the same handful
+      of dedicated servers as v2 once EMQX/JetStream are actually justified.</li>
+</ul>
+
+<!-- ================================================================ -->
+<h2 id="roadmap">15. Phased roadmap (v3)</h2>
+
+<div class="table-wrap"><table>
+  <tr><th>Phase</th><th>Delivers</th><th>Upgrade triggers to watch for</th></tr>
+  <tr>
+    <td><b>1 — Connected MVP</b></td>
+    <td>Compose stack (Mosquitto / Spring Boot API+ingest / Postgres+Timescale /
+        Keycloak / MinIO / Caddy); React+Vite web app with login, upload with
+        IndexedDB buffering, direct MQTT/WSS live view, history dashboard —
+        built on top of the ported, framework-agnostic BLE codec logic (§3.4).</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><b>2 — Mobile</b></td>
+    <td>Capacitor shell around the shared React codebase; native BLE plugin
+        behind <code>BleTransport</code>; Android + iOS store builds;
+        background collection.</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><b>3 — Care circle</b></td>
+    <td><span class="pill new">delivered</span> Doctor role, patient-initiated
+        consent links, per-action audit log writes, admin console v1
+        (users/devices/relationships, force-release, edit). One gap vs. the
+        original phase description: the doctor's patient view polls the REST
+        history endpoint (5s interval) rather than subscribing to the direct
+        MQTT/WSS live feed the customer dashboard uses — "live shared views"
+        in that stricter sense is still open.</td>
+    <td>—</td>
+  </tr>
+  <tr>
+    <td><b>4 — OTA</b></td>
+    <td>Firmware SUOTA + dual-bank bootloader; DIY rollout tables + MinIO;
+        delta images from CI; signed images; collector-side updater in web,
+        mobile and the Go gateway.</td>
+    <td>Adopt <b>hawkBit</b> when rollout policy needs more than percentage
+        groups + an abort threshold — now a zero-new-language adoption since
+        hawkBit is Spring Boot.</td>
+  </tr>
+  <tr>
+    <td><b>5 — Scale-out &amp; new types</b></td>
+    <td>Measurement-type registry UI, gateway reference image, second
+        measurement type (humidity) end-to-end as the extensibility proof.</td>
+    <td>
+      <ul style="margin:.2rem 0">
+        <li>Cluster the broker (<b>EMQX/VerneMQ</b>) when concurrent
+            connections approach single-node limits or multi-node HA is required.</li>
+        <li>Introduce <b>NATS JetStream</b> (or Kafka/Redpanda) the day a
+            second independent consumer of the measurement stream appears.</li>
+        <li>Add <b>pgBouncer</b> when concurrent ingest/API replicas make raw
+            Postgres connection count the bottleneck.</li>
+        <li>Adopt <b>GraalVM Native Image</b> for Spring Boot services if
+            per-instance memory becomes the binding constraint before CPU/connections do.</li>
+        <li>Switch the wire envelope to <b>CBOR</b> once bandwidth cost at
+            actual message volume outweighs JSON's debuggability.</li>
+      </ul>
+    </td>
+  </tr>
+</table></div>
+
+<h2 id="implementation">16. Implementation status</h2>
+
+<p>
+  Phase 1 ("Connected MVP", §15) has a working implementation, runnable
+  locally end-to-end via <code>docker compose up</code> — see
+  <code>../README.md</code> "Platform" for the quick start. This section is
+  the honest map from architecture to actual code, kept current as
+  implementation progresses; each component folder's own README has a more
+  detailed version of the same table.
+</p>
+
+<h3>16.1 Repo layout</h3>
+<pre><code>thermometer/
+├── docker-compose.yml     One-command local stack
+├── deploy/                Mosquitto config + Keycloak demo realm
+├── tools/simulate-device.sh
+├── backend/               Spring Boot 3 / Java 21 — ingest + REST API
+├── fe/                    React + TypeScript + Vite — web app
+├── mobile/                Capacitor wrapper of fe/ — Android + iOS
+└── gateway/               Go — optional headless collector
+</code></pre>
+
+<h3>16.2 By requirement (FR/NFR ids per <code>ARCHITECTURE.html</code> §1)</h3>
+<div class="table-wrap"><table>
+  <tr><th>Req</th><th>Status</th><th>Detail</th></tr>
+  <tr>
+    <td><span class="req-id">FR-1/FR-2</span></td>
+    <td><span class="pill done">implemented</span></td>
+    <td>Firmware, unchanged — see <code>../README.md</code>.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-3</span></td>
+    <td><span class="pill new">partially implemented</span></td>
+    <td>Device claim + measurement upload (MQTT direct-publish and REST
+        fallback) + history API + live-feed fan-out to
+        <code>live/{user_id}/...</code> after ingest all work end-to-end,
+        integration-tested and browser-tested (§16.3). Offline buffering
+        (IndexedDB/SQLite) is <b>not</b> implemented yet — readings are only
+        durable while the collector is connected and online.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-4</span></td>
+    <td><span class="pill new">implemented</span></td>
+    <td>Patient-initiated consent linking (<code>ConsentController</code>,
+        backed by the pre-existing <code>consent_links</code> table): a
+        customer grants/revokes a doctor's access to their own data; a
+        doctor's device/measurement reads are scoped to consenting patients
+        only (enforced in <code>MeasurementController.history()</code> and
+        <code>DeviceController</code>'s role-branched listing); admin can
+        revoke any link. Doctor UI (Patients page) and admin UI
+        (Relationships tab) both ship. Fine-grained <code>scope</code> (e.g.
+        "vitals only") remains schema-only/unused — full access is implied
+        by an active link. The link now also gates a family of
+        consent-scoped sub-resources — alert thresholds, derived temperature
+        events, reading annotations and (doctor-private) care notes — through
+        one shared <code>DeviceAccessGuard</code> rather than a per-controller
+        re-implementation; see §9. Admin additionally gets a consent-integrity
+        scan (links pointing at deleted accounts, doctors holding an
+        implausible number of links), which is the kind of data-quality
+        problem that is invisible when links can only be paged through one
+        screen at a time.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-5</span></td>
+    <td><span class="pill new">implemented</span></td>
+    <td>Three roles (customer/doctor/admin) enforced end-to-end: a local
+        <code>users</code> table is JIT-provisioned from the Keycloak JWT on
+        every request (<code>security/CurrentUserService</code>), and every
+        controller does an explicit role check against it — deliberately
+        <b>not</b> Spring's <code>@PreAuthorize</code>/<code>hasRole()</code>,
+        since the <code>local</code> profile's open filter chain would
+        otherwise reject every unauthenticated dev request via
+        <code>ROLE_ANONYMOUS</code> (see <code>backend/README.md</code>
+        "Roles &amp; identity"). Device claiming is customer-only; a device
+        can only have one owner at a time but a customer may claim several —
+        with a dedicated admin force-release/edit path instead of admin
+        competing for ownership. The rollout-creation endpoint now has its
+        admin-only guard. Two later refinements: <code>/actuator/**</code> is
+        the one path that <em>does</em> use <code>hasRole("ADMIN")</code>,
+        because Spring resolves it before any controller (§9); and admin's
+        role-change endpoint deliberately edits only the local mirror —
+        <code>CurrentUserService</code> re-syncs role from the JWT at next
+        login, so it is an audited correction tool for a drifted mirror, not
+        a role editor. A real one needs the Keycloak Admin API
+        (<code>proposals.md</code> 10.4).</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-6</span></td>
+    <td><span class="pill new">partially implemented</span></td>
+    <td>DIY rollout targeting (percentage groups, version comparison,
+        auto-abort on error threshold) is implemented and unit-tested, and
+        now has an operator surface: a paginated admin rollout list with
+        batched installed/failed/pending progress counts, a detail view with
+        the per-device target table, and an alert when the failure rate has
+        passed the rollout's own abort threshold. The two collector endpoints
+        are authenticated (shared <code>X-Device-Token</code>) and
+        rate-limited — see §11 for why that is the MVP shape rather than the
+        end state. Not implemented: actual firmware image storage in MinIO,
+        delta-image generation in CI, and the collector-side SUOTA
+        download/apply step — the firmware itself also doesn't have SUOTA yet
+        (tracked as <code>proposals.md</code> item 3.4).</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-7</span></td>
+    <td><span class="pill new">implemented</span></td>
+    <td>React + Vite web app: Web Bluetooth connect, correct IEEE-11073
+        decode (ported and tested against the Angular app's proven logic),
+        direct MQTT/WSS live feed (subscribed and rendered), a role-aware
+        nav/routing layer (customer/doctor/admin see different pages), a
+        charted dashboard (<code>recharts</code>, 1h/24h/7d range) replacing
+        the old bare-table history view, a device fleet browser (claim/
+        release), a settings page (profile + doctor-consent management), a
+        doctor patient list with a fleet-overview dashboard (stats, fever
+        alerts, search/filter/sort, per-patient sparklines — backed by
+        <code>GET /api/doctor/patients/summary</code>), an admin console
+        (users/devices/relationships), and a working login against Keycloak.
+        The login is the <b>real production flow</b>: standard OAuth2
+        Authorization Code + PKCE, redirecting into Keycloak's own hosted
+        login page (<code>fe/src/auth/oidc.ts</code>,
+        <code>oidc-client-ts</code>/<code>react-oidc-context</code>) rather
+        than a credential form owned by this app —
+        <code>thermometer-web</code>'s <code>directAccessGrantsEnabled</code>
+        is off. The session persists across reloads (refresh token in
+        localStorage, proactively renewed before the access token expires)
+        and lasts until Keycloak's SSO session actually ends — expiry,
+        explicit logout, or an admin revoking the session — not merely
+        until the tab is refreshed; logout ends the Keycloak SSO session
+        server-side too. Password change (Settings page → "Change
+        password") and "Forgot password?" are both handled entirely by
+        Keycloak's own hosted UI as well — a redirect into its
+        <code>kc_action=UPDATE_PASSWORD</code> required-action form and its
+        built-in <code>resetPasswordAllowed</code> flow respectively, with
+        the realm's password policy enforced by Keycloak itself. No
+        password, current or new, ever reaches this app's own code in any
+        of the three flows; the backend has no password-related endpoint at
+        all. Reset emails are real and inspectable via a local
+        <code>mailpit</code> SMTP catcher rather than being a theoretical
+        capability — see <code>backend/README.md</code> "Authentication"
+        and §16.3 below for how this was verified. A
+        <code>SimulatedBluetoothTransport</code> (third <code>BleTransport</code>
+        implementation alongside Web Bluetooth and native) makes the entire
+        app testable with no physical thermometer and no Web Bluetooth
+        support required — see §16.3.
+        <p><b>Later feature pass (thirty capabilities, ten per role).</b> The
+        chart was rewritten to scroll horizontally through time (a
+        <code>Brush</code> plus always-present step buttons) with a vertical
+        axis recomputed from the <em>visible</em> window, so a fever spike
+        reads as a spike instead of being flattened by a fixed full-range
+        axis — the window is held as timestamps and re-resolved to indices
+        each render, because the 5 s rolling refetch makes index 0 a different
+        instant on every tick. Customers gained fever-episode history, a trend
+        digest, multi-device comparison, CSV export, per-reading annotations,
+        personal alert thresholds, device-health badges, consent-access
+        transparency and an onboarding checklist; doctors gained risk ranking,
+        a fleet-wide episode feed, variability/trend indicators, a printable
+        clinical report, care notes, multi-patient comparison, per-patient
+        threshold overrides and their own audit trail; admin gained
+        deep-linkable <code>/admin/*</code> sub-routes covering ingest health,
+        device inventory, rollout progress, user growth and search, a
+        filterable audit log with a security-anomaly view, consent-integrity
+        warnings, retention insight and the system-default thresholds. No new
+        design tokens were needed for any of it, which is the practical
+        evidence the token system was already sound; a grep audit found
+        exactly one ad-hoc color in the whole app, and fixed it. The
+        production bundle is currently a single ~1.26 MB chunk with no route
+        splitting (<code>proposals.md</code> 10.3). Per-page detail is in
+        <code>fe/README.md</code>'s implementation-status tables.</p></td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-8</span></td>
+    <td><span class="pill new">partially implemented</span></td>
+    <td>Capacitor project + native BLE transport implemented and type-checked
+        against the real plugin API; Android/iOS platform scaffolding
+        verified to generate and (for Android) resolve Gradle / (for iOS) run
+        <code>pod install</code> correctly in this environment. <b>Not</b>
+        verified: an actual on-device/simulator build (this environment has
+        Xcode but no installed Simulator runtime, and a JDK too new for the
+        auto-downloaded Gradle version) — see <code>mobile/README.md</code>
+        for the exact verification boundary.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">FR-9</span></td>
+    <td><span class="pill new">partially implemented</span></td>
+    <td><code>measurement_types</code> registry table exists; the ingest
+        service's scalar-extraction switch already handles
+        <code>temperature</code>/<code>humidity</code>/<code>battery</code>.
+        Only temperature actually flows through a device/FE today — adding a
+        second type end-to-end (the extensibility proof from the roadmap) is
+        still open. <b>Battery is the concrete instance of this gap:</b> the
+        firmware polls the Battery Service every 60 s, but no collector —
+        gateway, browser transport or simulator — ever publishes a
+        <code>type=battery</code> envelope, so the customer device-health
+        widget shipped with staleness only and no battery trend. Closing it is
+        collector work; the backend and schema need no change
+        (<code>proposals.md</code> 10.2), which also makes it the cheapest way
+        to land the second-measurement-type proof.</td>
+  </tr>
+  <tr>
+    <td><span class="req-id">NFR-1…6</span></td>
+    <td><span class="pill new">holds at MVP scale</span></td>
+    <td>Verified at the scale this implementation targets: real Testcontainers
+        integration test proves at-least-once delivery + dedup; local stack
+        is free/FOSS/self-hosted and runs on a single machine. Not
+        load-tested at Growth/Scale volumes — that was never the claim for
+        Phase 1.</td>
+  </tr>
+</table></div>
+
+<h3>16.3 Verification performed</h3>
+<ul>
+  <li><b>Backend:</b> unit tests + three Testcontainers integration tests
+      against real Mosquitto/TimescaleDB containers.
+      <code>IngestPipelineIT</code> (a real MQTT message lands in Postgres and
+      is queryable via the REST API, plus a redelivery-dedup test);
+      <code>RbacIT</code>, which drives real controller methods with hand-built
+      JWT-backed <code>Authentication</code>s (the <code>test</code> profile
+      disables JWT parsing entirely) across the whole authorization matrix —
+      device claim/release exclusivity, consent-gated measurement access and
+      owner-only upload, threshold scoping and the
+      doctor_override&nbsp;→&nbsp;self&nbsp;→&nbsp;system&nbsp;→&nbsp;fallback
+      resolution ladder, device and fleet event feeds, annotation authorship,
+      care-note privacy, the admin analytics/role-change guards, and the OTA
+      collector token; and <code>RolloutCollectorTokenIT</code>, which exercises
+      the two collector endpoints over real HTTP (token accepted/rejected with
+      no JWT involved, <code>/pending</code> not shadowed by the
+      <code>/{id}</code> mapping, rate limiter genuinely registered in the
+      servlet chain). <code>mvn verify</code>.</li>
+  <li><b>Frontend — unit:</b> vitest suite pinning the IEEE-11073 decode
+      behavior (including a regression test for the exact bug the vendor
+      SmartBond app has), the simulated transport's timing contract, and the
+      customer/doctor/admin role-priority derivation from a Keycloak
+      <code>realm_access.roles</code> claim (<code>auth/oidc.test.ts</code>);
+      full <code>tsc -b && vite build</code> production build succeeds.
+      The later feature pass added suites for the pure logic split out of the
+      new components — chart window math (including the timestamp-vs-index
+      drift fix), trend/digest computation, episode grouping and report
+      bucketing, admin daily-series gap-filling, and rollout progress
+      arithmetic.</li>
+  <li><b>Verification boundary — worth being explicit about:</b> the backend
+      endpoints added in the later feature pass are now covered by the
+      integration tests above, so what remains untested is narrower and
+      different in kind. Namely: no real Keycloak participates in any backend
+      test (the <code>test</code> profile disables JWT parsing, so what is
+      asserted is every authorization <em>decision</em> the application makes,
+      not that a genuine Keycloak-issued token validates — the frontend's
+      Playwright suite covers that round trip instead), and the frontend
+      feature pass itself remains unit-tested plus exercised by hand in a
+      browser against the live compose stack as each of the four demo
+      accounts.</li>
+  <li><b>Frontend — end-to-end, real browser:</b> four Playwright tests
+      (<code>fe/e2e/thermometer.spec.ts</code>) drive real headless Chromium
+      against the actual <code>docker compose up</code> stack, no mocks —
+      including real cross-origin navigation into Keycloak's own hosted
+      login/password pages, not anything owned by this app. One logs in,
+      connects the simulated device, claims it via the real secured REST
+      API, waits for the backend's live-feed fan-out over a real MQTT/WSS
+      subscription, and confirms the chart renders on the dashboard, failing
+      on any unexpected browser console error — this is the test that caught
+      two real bugs during v3's initial build, both fixed: the simulator's
+      non-MAC-shaped device id being rejected by the backend's claim
+      validation, and the live-feed handler reading a JSON field name
+      (<code>deviceId</code>) that didn't match the wire envelope's actual
+      <code>device_id</code>. The second covers the FR-4/FR-5 rollout: a
+      customer claims a fleet device from the Devices page, grants a doctor
+      consent from Settings, and confirms the doctor sees that patient (with
+      a chart) and the admin sees the user/device/relationship. The third
+      and fourth prove the FR-7 auth rework end-to-end for real: one changes
+      a password via Keycloak's <code>kc_action=UPDATE_PASSWORD</code> form
+      and confirms the old password is rejected and the new one works at
+      login; the other triggers Keycloak's built-in forgot-password flow,
+      retrieves the real reset email from the local <code>mailpit</code>
+      SMTP catcher via its REST API, follows the reset link, and confirms
+      the new password works — nothing about either flow was taken on
+      faith.</li>
+  <li><b>Gateway:</b> Go unit tests for envelope schema/topic naming and
+      simulator plausibility/determinism; additionally smoke-tested by hand
+      against a live Mosquitto container with <code>mosquitto_sub</code>
+      confirming well-formed messages arrive on the expected topic.</li>
+  <li><b>Mobile:</b> Capacitor config verified via <code>cap doctor</code>;
+      both <code>cap add android</code> and <code>cap add ios</code> were run
+      for real, producing a Gradle project and an Xcode workspace with
+      CocoaPods resolved — the native platform folders were then removed
+      again so the delivered scaffold matches what <code>mobile/README.md</code>
+      documents (regenerate with <code>cap add</code>).</li>
+  <li><b>Docker Compose — full stack, run for real:</b> built and started every
+      service (<code>docker compose up --build</code>: Mosquitto, TimescaleDB,
+      Keycloak, <code>mailpit</code>, MinIO, backend, fe, and the gateway in
+      <code>--simulate</code> mode) and confirmed, against the live
+      containers: the simulated device's readings flow gateway → Mosquitto →
+      backend → TimescaleDB and are queryable via the REST API;
+      unauthenticated requests are correctly rejected (401); a real browser
+      completing the Authorization Code + PKCE flow against Keycloak gets a
+      token this backend validates correctly, whose subject becomes the
+      claimed device's <code>ownerUserId</code>; the fe container serves the
+      built React app.
+      <p>Two real integration snags surfaced and were fixed in the process,
+      both hostname-identity issues inherent to "browser and backend reach
+      Keycloak by different paths" in a docker-compose setup — worth knowing
+      about if this ever gets touched again:</p>
+      <ol>
+        <li>Keycloak's issued token <code>iss</code> claim needs to be one
+        fixed value regardless of whether a request came from the host
+        browser (<code>localhost:8082</code>) or the backend container
+        (<code>keycloak:8080</code> internally), or Spring Security rejects
+        it as a mismatch. The v3 fix pinned Keycloak's
+        <code>KC_HOSTNAME</code> to <code>host.docker.internal</code> —
+        which worked for that revision's back-channel password-grant login
+        (the browser's <code>fetch()</code> call didn't need to literally
+        resolve that hostname, only the token payload contained it as a
+        string), but broke once real Authorization Code + PKCE login was
+        implemented: Keycloak's login-form <code>action</code> attribute,
+        redirects, and password-reset email links all use
+        <code>KC_HOSTNAME</code> too, and <code>host.docker.internal</code>
+        is <em>not</em> resolvable from the host machine itself (only from
+        inside other containers) — so a real browser (or a person's mail
+        client, for reset links) couldn't actually navigate anywhere
+        Keycloak sent it. Fixed by setting <code>KC_HOSTNAME</code> to plain
+        <code>localhost</code> instead (resolvable by an actual human) and
+        decoupling the backend's own key-fetching from that: it now reaches
+        Keycloak over the compose network directly
+        (<code>thermometer.oidc.jwk-set-uri</code> →
+        <code>keycloak:8080</code>) while still validating the <code>iss</code>
+        claim against the externally-visible <code>localhost:8082</code>
+        string (<code>SecurityConfig.jwtDecoder</code>,
+        <code>backend/src/main/resources/application-docker.yml</code>) — no
+        single URL has to serve both purposes anymore.</li>
+        <li>Keycloak's ID token doesn't include <code>realm_access.roles</code>
+        by default (only the access token does — a deliberate OIDC
+        minimality default), but the frontend's role-aware routing derives
+        the signed-in user's role from <code>oidc-client-ts</code>'s
+        <code>user.profile</code>, which comes from the ID token. Fixed with
+        a client-level protocol mapper on <code>thermometer-web</code>
+        (<code>realm-export.json</code>) that also includes the realm-roles
+        claim on the ID token.</li>
+      </ol></li>
+</ul>
+
+<footer>
+  Thermometer project · architecture v3 · 2026-07-27 · supersedes
+  <code>ARCHITECTURE_V2.html</code> as the current design; v1 and v2 are kept
+  as the historical record of prior proposals and the rationale this revision
+  responds to. Keep in sync with <code>README.md</code>,
+  <code>PACKAGING_CONCEPT.md</code> and <code>proposals.md</code>.
+</footer>
+
+</main>
+</body>
+</html>

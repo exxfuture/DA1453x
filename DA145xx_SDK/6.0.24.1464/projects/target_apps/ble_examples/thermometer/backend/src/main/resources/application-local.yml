@@ -1,0 +1,25 @@
+# Active by default (see spring.profiles.default in application.yml) — for
+# running the backend on the host JVM (mvn spring-boot:run) against the
+# infra containers started by ../docker-compose.yml, which publish their
+# ports to localhost. Security is disabled so the API is curl-able while
+# iterating without a running Keycloak.
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/thermometer
+    username: thermometer
+    password: thermometer
+
+thermometer:
+  security:
+    enabled: false
+  device:
+    # Fixed value on the local profile so the OTA endpoints stay curl-able
+    # with `-H 'X-Device-Token: dev-collector-token'`. Unlike the rest of the
+    # local profile, this check is NOT disabled with security.enabled=false —
+    # it lives in the controller, not the filter chain, so local development
+    # exercises the same code path production does.
+    collector-token: dev-collector-token
+  mqtt:
+    broker-url: tcp://localhost:1883
+  cors:
+    allowed-origins: http://localhost:5173

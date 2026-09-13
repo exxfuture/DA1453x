@@ -1,0 +1,32 @@
+# Active when the backend itself runs inside docker-compose (SPRING_PROFILES_ACTIVE=docker)
+# — talks to the other services by their compose service names, and requires
+# real Keycloak-issued JWTs per architecture v3 §9.
+spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/thermometer
+    username: thermometer
+    password: thermometer
+
+thermometer:
+  security:
+    enabled: true
+  device:
+    # Collector/gateway shared secret for the two unauthenticated OTA
+    # endpoints (see RolloutController). Kept as an env-var override with a
+    # development default so `docker compose up` works out of the box —
+    # set THERMOMETER_DEVICE_COLLECTOR_TOKEN to a real secret anywhere the
+    # stack is reachable beyond localhost.
+    collector-token: ${THERMOMETER_DEVICE_COLLECTOR_TOKEN:dev-collector-token}
+  oidc:
+    # Internal docker-compose hostname — this container fetches Keycloak's
+    # signing keys directly over the compose network, no host involved.
+    jwk-set-uri: http://keycloak:8080/realms/thermometer/protocol/openid-connect/certs
+    # The externally-visible hostname (Keycloak's KC_HOSTNAME,
+    # docker-compose.yml) that ends up in every token's `iss` claim, since
+    # that's what a real browser/user actually reached Keycloak through.
+    # See SecurityConfig.jwtDecoder for why this is split from jwk-set-uri.
+    issuer-uri: http://localhost:8082/realms/thermometer
+  mqtt:
+    broker-url: tcp://mosquitto:1883
+  cors:
+    allowed-origins: http://localhost:5173,http://localhost:8090

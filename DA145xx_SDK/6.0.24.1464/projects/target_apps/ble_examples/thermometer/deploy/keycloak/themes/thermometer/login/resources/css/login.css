@@ -1,0 +1,284 @@
+/*
+ * "Pine & Ember" reskin of Keycloak's stock keycloak.v2 login theme.
+ * Mirrors fe/tailwind.config.js's primitive ramps (primary/sand/ember) and
+ * fe/src/index.css's fonts by hand, the same way fe/src/theme/chartColors.ts
+ * mirrors CSS-variable values for recharts — there is no shared token file
+ * to import across the app/Keycloak boundary.
+ *
+ * The app self-hosts Fraunces/Public Sans via @fontsource so the bundle has
+ * no third-party font request; the login page is a separate, isolated
+ * origin/context, so a Google Fonts import here is the pragmatic choice
+ * rather than duplicating font files into this theme.
+ *
+ * Both PatternFly v5 custom properties (keycloak.v2's actual theming hook)
+ * and plain element/class selectors are set, the latter as a safety net in
+ * case a Keycloak point release renames a custom property — see
+ * deploy/README.md for how to verify/iterate on this file.
+ */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --pf-v5-global--primary-color--100: #2F9481;
+  --pf-v5-global--primary-color--200: #1F7A6A;
+  --pf-v5-global--primary-color--300: #144E46;
+  --pf-v5-global--link--Color: #1F7A6A;
+  --pf-v5-global--link--Color--hover: #144E46;
+  --pf-v5-global--BackgroundColor--100: #FFFFFF;
+  --pf-v5-global--BackgroundColor--150: #FAF9F6;
+  --pf-v5-global--BackgroundColor--200: #F5F3EE;
+  --pf-v5-global--Color--100: #27231F;
+  --pf-v5-global--Color--200: #6E6552;
+  --pf-v5-global--BorderColor--100: #DEDACD;
+  --pf-v5-global--BorderColor--200: #C7C1AF;
+  --pf-v5-global--danger-color--100: #B8341F;
+  --pf-v5-global--FontFamily--sans-serif: 'Public Sans', system-ui, -apple-system, sans-serif;
+  --pf-v5-global--BorderRadius--sm: 8px;
+  --pf-v5-global--BorderRadius--lg: 16px;
+}
+
+html,
+body {
+  height: 100%;
+  background: linear-gradient(180deg, #faf9f6 0%, #f5f3ee 100%) !important;
+  font-family: 'Public Sans', system-ui, -apple-system, sans-serif !important;
+  color: #27231f !important;
+}
+
+/*
+ * keycloak.v2's container is a `grid-template-areas: "main header"` split
+ * screen (form on one side, a brand panel on the other) — verified against
+ * the shipped patternfly.min.css rather than guessed, since the class names
+ * alone don't reveal the grid areas. That layout wants real screen width to
+ * read as intentional; at this app's actual login size it just puts the
+ * realm displayName off in empty space next to the card. Dropping the brand
+ * panel and centering the card alone is simpler and reads better here — the
+ * "Sign in to your account" heading (styled below) carries the branding
+ * instead, the same job `#kc-header-wrapper` would have done.
+ */
+.pf-v5-c-login__header {
+  display: none !important;
+}
+.pf-v5-c-login__container {
+  display: block !important;
+  max-width: 28rem !important;
+  margin: 0 auto !important;
+  /* The stock split-screen layout reserves ~6rem of inline padding on each
+   * side for the second grid column (see the `display:none`'d header above)
+   * — without resetting it, a centered single-column card ends up with that
+   * padding squeezing its content to a sliver. */
+  padding-inline-start: 0 !important;
+  padding-inline-end: 0 !important;
+}
+
+#kc-page-title,
+.pf-v5-c-login__main-header,
+h1,
+.pf-v5-c-title {
+  font-family: 'Fraunces', Georgia, serif !important;
+  color: #144e46 !important;
+  font-size: 1.75rem !important;
+  line-height: 1.3 !important;
+}
+
+/* Without the split-screen layout, several PatternFly elements that relied
+ * on a grid/flex ancestor for their width shrink to content instead of
+ * filling the card — force it explicitly rather than track down which
+ * ancestor rule supplied it before. */
+.pf-v5-c-login__main,
+.pf-v5-c-login__main-body,
+.pf-v5-c-login__main-header,
+#kc-form-wrapper,
+#kc-form,
+.pf-v5-c-form,
+.pf-v5-c-form__group {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+.pf-v5-c-form-control,
+input[type='text'],
+input[type='password'],
+input[type='email'],
+button[type='submit'],
+input[type='submit'],
+.pf-v5-c-button.pf-m-primary {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/*
+ * Card surface. Only `.pf-v5-c-login__main` (the outer section wrapping both
+ * the title and the form) gets the card treatment — its descendants
+ * (`.pf-v5-c-login__main-body`, `#kc-form-wrapper`) are deliberately left
+ * transparent, since styling more than one level of this nesting produces
+ * visibly overlapping/offset boxes (double borders, doubled shadow). `.card-pf`
+ * is the legacy (non-v2) theme's equivalent, kept as a fallback.
+ */
+.card-pf,
+.pf-v5-c-login__main {
+  background: #ffffff !important;
+  border: 1px solid #dedacd !important;
+  border-radius: 16px !important;
+  box-shadow: 0 8px 24px rgba(39, 35, 31, 0.08) !important;
+  padding: 2rem !important;
+  max-width: 28rem;
+}
+.pf-v5-c-login__main-body,
+#kc-form-wrapper {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Primary action (Sign In, etc.) — Pine 600, matching the app's Button
+ * component primary variant. */
+button[type='submit'],
+input[type='submit'],
+.btn-primary,
+.pf-v5-c-button.pf-m-primary {
+  background-color: #1f7a6a !important;
+  border-color: #1f7a6a !important;
+  border-radius: 8px !important;
+  font-family: 'Public Sans', system-ui, sans-serif !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+}
+button[type='submit']:hover,
+input[type='submit']:hover,
+.btn-primary:hover,
+.pf-v5-c-button.pf-m-primary:hover {
+  background-color: #144e46 !important;
+  border-color: #144e46 !important;
+}
+
+/*
+ * Text inputs — sand border, teal focus ring, matching
+ * fe/src/components/ui/Input.tsx. The visible box in Keycloak's markup is
+ * the wrapping `.pf-v5-c-form-control` *span* (`<span class="pf-v5-c-form-control"><input/></span>`
+ * per login.ftl), not the `<input>` itself — styling both independently
+ * with their own `border`/`:focus` rules produced a faint double
+ * border/ring at rest and on focus. Only the span carries border/radius/
+ * background here; the input inside is transparent and unstyled, and the
+ * span reacts to the *child* input's focus via `:focus-within` (a bare
+ * `:focus` on the span never fires — the input is what receives focus).
+ */
+.pf-v5-c-form-control {
+  border: 1px solid #8a8069 !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+}
+.pf-v5-c-form-control:focus-within {
+  border-color: #1f7a6a !important;
+  box-shadow: 0 0 0 3px rgba(47, 148, 129, 0.25) !important;
+}
+/*
+ * PatternFly also draws its own `:before`/`:after` border layer on
+ * `.pf-v5-c-form-control` (an animated bottom-border validation/focus
+ * indicator, colored from its own unthemed custom properties) underneath
+ * the plain border above — left alone it shows as a stray colored line
+ * under every text field regardless of focus state. We already communicate
+ * border/focus state with a real border, so drop both pseudo-layers
+ * instead of chasing PatternFly's separate before/after color variables.
+ */
+.pf-v5-c-form-control:before,
+.pf-v5-c-form-control:after {
+  content: none !important;
+}
+input[type='text'],
+input[type='password'],
+input[type='email'],
+.pf-v5-c-form-control input {
+  font-family: 'Public Sans', system-ui, sans-serif !important;
+  background-color: transparent !important;
+  color: #27231f !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/*
+ * Password field's show/hide toggle. Keycloak wraps the password input and
+ * its toggle button in `.pf-v5-c-input-group` (`<input/>` + `<button
+ * class="pf-v5-c-button pf-m-control"><i class="fa-eye fas"/></button>`,
+ * see login.ftl / passwordVisibility.js) — left untouched, the button falls
+ * back to PatternFly's stock "control" button skin, a dark fill with a
+ * barely-visible icon glyph (the black square in the bug report). Style the
+ * whole group as one merged control matching Input.tsx: single shared
+ * border/radius, borderless input + button inside it, so the toggle reads
+ * as part of the field instead of a foreign dark chip bolted on the side.
+ * Button width is `2.75rem` — the same `spacing.touch` token the app's
+ * Input/Button height is built on (fe/tailwind.config.js), so the toggle
+ * lines up as a square touch target.
+ */
+.pf-v5-c-input-group {
+  display: flex !important;
+  align-items: stretch !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  border: 1px solid #8a8069 !important;
+  border-radius: 8px !important;
+  background-color: #ffffff !important;
+  overflow: hidden !important;
+}
+.pf-v5-c-input-group:focus-within {
+  border-color: #1f7a6a !important;
+  box-shadow: 0 0 0 3px rgba(47, 148, 129, 0.25) !important;
+}
+.pf-v5-c-input-group .pf-v5-c-form-control,
+.pf-v5-c-input-group .pf-v5-c-form-control:focus-within {
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control {
+  width: 2.75rem !important;
+  flex: 0 0 auto !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background-color: transparent !important;
+  border: none !important;
+  border-left: 1px solid #dedacd !important;
+  border-radius: 0 !important;
+  color: #6e6552 !important;
+}
+/*
+ * `.pf-v5-c-button` has its own `:after` pseudo-element (a full,
+ * absolutely-positioned border overlay, `inset:0`) independent from the
+ * `.pf-v5-c-form-control` one neutralized above — `.pf-m-control:hover`
+ * grows this overlay's bottom-border width and recolors it from
+ * PatternFly's own hover variable, which resolves through our `:root`
+ * primary-color override, i.e. exactly the stray-colored-line bug from the
+ * text fields, on the button, on hover ("bottom shadow that grows green").
+ * Same fix: drop the pseudo-elements instead of chasing their variables.
+ */
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control:before,
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control:after {
+  content: none !important;
+}
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control:hover,
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control:focus {
+  background-color: #f5f3ee !important;
+  color: #1f7a6a !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.pf-v5-c-input-group .pf-v5-c-button.pf-m-control i {
+  color: inherit !important;
+}
+
+/* Links — "Forgot password", "Register", locale switcher. */
+a,
+.pf-v5-c-login__main-footer-links a {
+  color: #1f7a6a !important;
+}
+a:hover {
+  color: #144e46 !important;
+}
+
+/* Error/alert banners — Garnet, matching fe's danger.* role tokens. */
+.alert-error,
+.pf-v5-c-alert.pf-m-danger {
+  background-color: #fdedea !important;
+  border-color: #f1c4bb !important;
+  color: #b8341f !important;
+}
