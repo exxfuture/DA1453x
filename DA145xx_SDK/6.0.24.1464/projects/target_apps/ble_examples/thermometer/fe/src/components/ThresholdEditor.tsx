@@ -69,10 +69,15 @@ export function ThresholdEditor({
 }: ThresholdEditorProps) {
   const [draft, setDraft] = useState<Draft>(() => toDraft(value));
 
-  // Re-seed when the parent loads/refreshes the stored values.
+  // Re-seed when the parent loads/refreshes the stored values. Destructured
+  // first so the dependency list can be the four numbers themselves: several
+  // callers build `value` as a fresh object literal on every render (it is
+  // derived from whichever scope is in effect), so depending on the object
+  // would re-seed the form mid-edit and discard what the user typed.
+  const { normalStartC, elevatedStartC, feverStartC, highFeverStartC } = value;
   useEffect(() => {
-    setDraft(toDraft(value));
-  }, [value.normalStartC, value.elevatedStartC, value.feverStartC, value.highFeverStartC]);
+    setDraft(toDraft({ normalStartC, elevatedStartC, feverStartC, highFeverStartC }));
+  }, [normalStartC, elevatedStartC, feverStartC, highFeverStartC]);
 
   const { parsed, errors } = useMemo(() => {
     const numbers = {} as Record<keyof ThresholdValues, number>;
@@ -100,7 +105,7 @@ export function ThresholdEditor({
       }
     }
 
-    return { parsed: numbers as ThresholdValues, errors: fieldErrors };
+    return { parsed: numbers, errors: fieldErrors };
   }, [draft]);
 
   const isValid = Object.keys(errors).length === 0;

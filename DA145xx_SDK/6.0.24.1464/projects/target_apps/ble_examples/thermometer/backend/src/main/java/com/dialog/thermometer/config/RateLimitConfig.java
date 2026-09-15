@@ -41,13 +41,20 @@ public class RateLimitConfig {
      *                          application.yml} so an omitted property is
      *                          safe-by-default rather than silently trusting
      *                          client input
+     * @implNote every {@code @Value} fallback below is kept identical to the
+     *           value {@code application.yml} ships. {@code application.yml} is
+     *           the canonical source — these literals only apply if someone
+     *           removes an entry from it, and they used to disagree (60/20 vs.
+     *           240/80), so deleting the YAML block "because it looks
+     *           redundant" silently cut the effective limit by 4×. If you
+     *           change one, change both.
      */
     @Bean
     public FilterRegistrationBean<RateLimitFilter> rateLimitFilterRegistration(
             @Value("${thermometer.ratelimit.enabled:true}") boolean enabled,
             @Value("${thermometer.ratelimit.trust-forwarded-for:false}") boolean trustForwardedFor,
-            @Value("${thermometer.ratelimit.default.requests-per-minute:60}") long defaultRequestsPerMinute,
-            @Value("${thermometer.ratelimit.default.burst:20}") long defaultBurst,
+            @Value("${thermometer.ratelimit.default.requests-per-minute:240}") long defaultRequestsPerMinute,
+            @Value("${thermometer.ratelimit.default.burst:80}") long defaultBurst,
             @Value("${thermometer.ratelimit.rollout.requests-per-minute:10}") long rolloutRequestsPerMinute,
             @Value("${thermometer.ratelimit.rollout.burst:10}") long rolloutBurst,
             CorsConfigurationSource corsConfigurationSource,

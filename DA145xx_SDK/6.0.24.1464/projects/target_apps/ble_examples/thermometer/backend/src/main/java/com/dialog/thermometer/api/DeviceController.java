@@ -11,11 +11,14 @@ import com.dialog.thermometer.domain.Device;
 import com.dialog.thermometer.domain.DeviceRepository;
 import com.dialog.thermometer.domain.User;
 import com.dialog.thermometer.domain.UserRepository;
+import com.dialog.thermometer.security.AuditDetailWriter;
 import com.dialog.thermometer.security.CurrentUser;
 import com.dialog.thermometer.security.CurrentUserService;
 import com.dialog.thermometer.security.Role;
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -42,27 +45,41 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/devices")
 public class DeviceController {
 
+    /**
+     * Ceiling on the admin branch of {@link #list}. That branch answers "every
+     * device in the fleet", which is unbounded by construction, and this
+     * endpoint returns a plain list with no page envelope. The paged admin
+     * surfaces ({@code GET /api/admin/users} carries each user's devices, and
+     * the device inventory panel under {@code /api/admin/analytics}) are the
+     * ones meant for browsing a large fleet; this cap keeps a single response
+     * from growing with the install base.
+     */
+    private static final int ADMIN_LIST_LIMIT = 500;
+
     private final DeviceRepository devices;
     private final UserRepository users;
     private final ConsentLinkRepository consentLinks;
     private final AuditLogRepository auditLogs;
     private final CurrentUserService currentUserService;
+    private final AuditDetailWriter auditDetail;
 
     public DeviceController(DeviceRepository devices, UserRepository users, ConsentLinkRepository consentLinks,
-                             AuditLogRepository auditLogs, CurrentUserService currentUserService) {
+                             AuditLogRepository auditLogs, CurrentUserService currentUserService,
+                             AuditDetailWriter auditDetail) {
         this.devices = devices;
         this.users = users;
         this.consentLinks = consentLinks;
         this.auditLogs = auditLogs;
         this.currentUserService = currentUserService;
+        this.auditDetail = auditDetail;
     }
 
     @PostMapping("/{bdAddr}/claim")
     public ResponseEntity<DeviceResponse> claim(@PathVariable String bdAddr,
-                                                 @RequestBody(required = false) ClaimDeviceRequest request,
+                                                 @Valid @RequestBody(required = false) ClaimDeviceRequest request,
                                                  Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        requireRole(me, Role.CUSTOMER, "only customers can claim a device");
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only customers can claim a device",
+                Role.CUSTOMER);
 
         ClaimDeviceRequest body = request != null ? request : new ClaimDeviceRequest(null, null);
         Device device = devices.findByBdAddr(bdAddr)
@@ -98,8 +115,8 @@ public class DeviceController {
 
     @PostMapping("/{bdAddr}/release")
     public ResponseEntity<Void> release(@PathVariable String bdAddr, Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        requireRole(me, Role.CUSTOMER, "only customers can release a device");
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only customers can release a device",
+                Role.CUSTOMER);
 
         Device device = devices.findByBdAddr(bdAddr)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -134,19 +151,31 @@ public class DeviceController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         device.setLabel(label == null || label.isEmpty() ? null : label);
         devices.save(device);
-        auditLogs.save(new AuditLog(me.id(), "device.rename", bdAddr,
-                label == null ? "null" : "\"" + label + "\""));
+        // Serialised, never concatenated: audit_log.detail is JSONB, so a label
+        // containing a quote or a backslash would otherwise produce invalid JSON
+        // and fail the insert — turning an ordinary rename into a 500.
+        auditLogs.save(new AuditLog(me.id(), "device.rename", bdAddr, auditDetail.of("label", device.getLabel())));
 
         return DeviceResponse.from(device, me.username());
     }
 
     @GetMapping("/available")
     public List<DeviceResponse> available(Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        requireRole(me, Role.CUSTOMER, "only customers browse available devices");
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only customers browse available devices", Role.CUSTOMER);
         return enrich(devices.findByOwnerUserIdIsNull());
     }
 
+    /**
+     * Role-branched device list: own devices (customer), consenting patients'
+     * devices (doctor), or the whole fleet (admin).
+     *
+     * <p>The admin branch is capped at {@link #ADMIN_LIST_LIMIT} rows — it is
+     * the only branch whose size is bounded by the install base rather than by
+     * one person's belongings, and this endpoint's response is a plain list with
+     * no page envelope. Browsing a large fleet belongs on the paged admin
+     * surfaces under {@code /api/admin}.
+     */
     @GetMapping
     public List<DeviceResponse> list(Authentication authentication) {
         CurrentUser me = currentUserService.resolve(authentication);
@@ -158,14 +187,10 @@ public class DeviceController {
                         .toList();
                 yield enrich(devices.findByOwnerUserIdIn(patientIds));
             }
-            case ADMIN -> enrich(devices.findAll());
+            case ADMIN -> enrich(devices
+                    .findAll(PageRequest.of(0, ADMIN_LIST_LIMIT, Sort.by(Sort.Direction.ASC, "bdAddr")))
+                    .getContent());
         };
-    }
-
-    static void requireRole(CurrentUser me, Role required, String message) {
-        if (me.role() != required) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, message);
-        }
     }
 
     private List<DeviceResponse> enrich(List<Device> deviceList) {

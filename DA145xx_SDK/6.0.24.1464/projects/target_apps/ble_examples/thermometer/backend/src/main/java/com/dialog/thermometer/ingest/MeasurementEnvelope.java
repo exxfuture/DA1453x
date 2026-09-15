@@ -1,6 +1,7 @@
 package com.dialog.thermometer.ingest;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
@@ -10,8 +11,19 @@ import java.util.Map;
  * The one wire envelope shared by every collector (mobile, web, gateway) and
  * every measurement type, per architecture v2 §6.2 / v3 §8. New measurement
  * types add a registry entry, not a new envelope shape.
+ *
+ * <p>The format is defined by {@code ../schema/measurement-envelope.v1.schema.json}
+ * — a JSON Schema this record is checked against by
+ * {@code MeasurementEnvelopeSchemaTest}, and that the Go gateway and the web app
+ * are checked against in their own suites. Change the schema first, then the
+ * three implementations.
+ *
+ * <p>{@code NON_NULL} because the schema types the optional members as objects,
+ * not "object or null": an absent {@code meta} has to be <b>omitted</b> rather
+ * than serialised as {@code null}, both here and on the live-feed republish.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record MeasurementEnvelope(
         int v,
         @JsonProperty("device_id") String deviceId,

@@ -1,7 +1,6 @@
-import { getAuthToken, userManager } from '../auth/oidc';
+import { getAuthToken, renewSession } from '../auth/oidc';
+import { apiBaseUrl } from '../config/env';
 import { TemperatureTier } from '../theme/temperature';
-
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
 
 /**
  * The envelope every paginated endpoint returns (backend
@@ -61,6 +60,26 @@ export interface MeResponse {
   role: 'customer' | 'doctor' | 'admin';
   displayName: string | null;
   temperatureUnit: TemperatureUnit;
+}
+
+/**
+ * A short-lived MQTT broker credential, minted per authenticated user by
+ * `POST /api/live/credentials` (review FE-03 / INF-01).
+ *
+ * The broker's dynamic-security plugin scopes this client to
+ * `live/{userId}/#` (subscribe) and `v1/default/{userId}/+/measurement/+`
+ * (publish) and nothing else. `userId` is the local `users.id` — the same value
+ * `/api/me` returns as `id` and the backend fans live readings out under — and
+ * is what the FE must use as the topic's user segment; it is server-asserted
+ * precisely so no client-supplied identifier decides what a browser can reach.
+ * Every mint rotates the password, invalidating the previous one.
+ */
+export interface LiveCredentialsResponse {
+  username: string;
+  password: string;
+  userId: string;
+  /** ISO-8601; the backend sweeps clients that are not re-minted by then. */
+  expiresAt: string;
 }
 
 export interface DoctorResponse {
@@ -390,7 +409,9 @@ function queryString(params: Record<string, string | number | undefined | null>)
 }
 
 function fetchWithToken(path: string, init: RequestInit | undefined, token: string | null): Promise<Response> {
-  return fetch(`${API_BASE_URL}${path}`, {
+  // Resolved per call, not at module load: `apiBaseUrl()` reads window.__ENV__,
+  // which the nginx entrypoint writes at container start (see ../config/env.ts).
+  return fetch(`${apiBaseUrl()}${path}`, {
     ...init,
     headers: {
       'Content-Type': 'application/json',
@@ -405,15 +426,15 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (response.status === 401 && getAuthToken()) {
     // The access token expired between oidc-client-ts's automaticSilentRenew
     // and this call (e.g. the tab was backgrounded/suspended past the
-    // renew window). Redeem the refresh token once and retry before giving
-    // up — signinSilent() throws if the refresh token is itself invalid,
-    // and the retry below then fails the same way the first call did.
-    try {
-      await userManager.signinSilent();
-    } catch {
-      // fall through — retry with whatever token we still have, which will
-      // 401 again and surface as a normal request failure below
-    }
+    // renew window). Redeem the refresh token once and retry before giving up.
+    //
+    // renewSession() is single-flight (see ../auth/oidc.ts, review FE-09): a
+    // page whose four queries all 401 in the same tick shares ONE renewal
+    // instead of racing four refresh-token redemptions against Keycloak. It
+    // never throws — a false result means the refresh token is itself invalid,
+    // and the retry below then fails the same way the first call did, surfacing
+    // as a normal request failure.
+    await renewSession();
     response = await fetchWithToken(path, init, getAuthToken());
   }
   if (!response.ok) {
@@ -472,6 +493,13 @@ export const api = {
       method: 'POST',
       body: JSON.stringify(envelope),
     }),
+
+  /**
+   * Mints this user's broker credential. Called by `live/mqttClient.ts` before
+   * it connects — never cached in a query, because every call rotates the
+   * password and would invalidate a session another component is using.
+   */
+  mintLiveCredentials: () => request<LiveCredentialsResponse>('/api/live/credentials', { method: 'POST' }),
 
   measurementHistory: (deviceId: string, type = 'temperature', options?: { from?: string; to?: string; limit?: number }) => {
     const params = new URLSearchParams({ type });

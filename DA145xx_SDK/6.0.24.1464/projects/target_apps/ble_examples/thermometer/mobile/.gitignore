@@ -1,1 +1,28 @@
-node_modules
+# Dependencies
+node_modules/
+
+# Capacitor-generated native projects (review INF-19).
+# `npx cap add android` / `npx cap add ios` regenerate these from the installed
+# @capacitor/android and @capacitor/ios templates — see README.md. They are large
+# binary-heavy trees, and committing one is the same mistake already made on the
+# firmware side (review INF-08).
+android/
+ios/
+
+# Native build tooling caches and outputs
+.gradle/
+local.properties
+*.iml
+Pods/
+Podfile.lock
+*.xcuserstate
+xcuserdata/
+DerivedData/
+
+# Web build output. `npm run build-web` writes ../fe/dist (ignored there); these
+# are where `cap copy` puts its own copy if run from this folder.
+dist/
+www/
+
+# OS cruft
+.DS_Store

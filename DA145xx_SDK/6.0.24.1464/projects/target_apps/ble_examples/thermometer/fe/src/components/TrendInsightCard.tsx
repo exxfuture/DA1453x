@@ -3,7 +3,7 @@ import { Minus, Sparkles, TrendingDown, TrendingUp } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { MeasurementResponse, TemperatureUnit } from '../api/client';
 import { convertFromCelsius, unitSuffix } from '../utils/temperature';
-import { relativeTime } from '../utils/time';
+import { formatDuration, MS_PER_HOUR, relativeTime } from '../utils/time';
 import { computeTrendInsight, type InsightReading, type TrendComparison } from './trendInsight';
 import { Card } from './ui/Card';
 
@@ -19,13 +19,6 @@ export interface TrendInsightCardProps {
 /** Differences are intervals, so °F conversion scales them — it must not offset by 32. */
 function scaleDelta(deltaCelsius: number, unit: TemperatureUnit): number {
   return unit === 'FAHRENHEIT' ? (deltaCelsius * 9) / 5 : deltaCelsius;
-}
-
-function formatDuration(hours: number): string {
-  if (hours < 1) return `${Math.round(hours * 60)} minutes`;
-  if (hours < 48) return `${hours % 1 === 0 ? hours : hours.toFixed(1)} hours`;
-  const days = hours / 24;
-  return `${days % 1 === 0 ? days : days.toFixed(1)} days`;
 }
 
 function formatReading(celsius: number, unit: TemperatureUnit): string {
@@ -44,7 +37,11 @@ const DIRECTION_ICON: Record<TrendComparison['direction'], LucideIcon> = {
  * clinical assessment.
  */
 function comparisonSentence(comparison: TrendComparison, unit: TemperatureUnit): string {
-  const period = formatDuration(comparison.halfHours);
+  // The one elapsed-time formatter (review FE-25), converting from the hours
+  // this module works in. `maxUnit: 'hours'` because the period is the range the
+  // reader just chose — "84 h" reads as the half of a 7-day window it is, where
+  // "3 d 12 h" invites arithmetic.
+  const period = formatDuration(comparison.halfHours * MS_PER_HOUR, { maxUnit: 'hours' });
   if (comparison.direction === 'flat') {
     return `Your average is holding steady compared with the previous ${period}.`;
   }

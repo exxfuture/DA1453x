@@ -18,7 +18,9 @@ import {
   TableRow,
 } from '../../components/ui/Table';
 import { relativeTime } from '../../utils/time';
-import { Segmented, StatTile, StatTileGrid, largestOf } from './AdminUi';
+import { Segmented } from '../../components/ui/Segmented';
+import { StatTile, StatTileGrid } from '../../components/ui/StatTile';
+import { largestOf } from '../../utils/breakdown';
 
 const PAGE_SIZE = 25;
 
@@ -268,13 +270,13 @@ function SecurityAnomaliesView({ onInspect }: { onInspect: (actorId: string, act
       </Alert>
 
       <StatTileGrid className="lg:grid-cols-3">
-        <StatTile
+        <StatTile size="lg"
           label="Denied requests"
           value={ops.deniedLast24h.toLocaleString()}
           hint={`Last ${ops.windowHours} hours`}
         />
-        <StatTile label="Repeat-action anomalies" value={ops.repeatedActions.length.toLocaleString()} />
-        <StatTile label="Actors being denied" value={ops.topDenied.length.toLocaleString()} />
+        <StatTile size="lg" label="Repeat-action anomalies" value={ops.repeatedActions.length.toLocaleString()} />
+        <StatTile size="lg" label="Actors being denied" value={ops.topDenied.length.toLocaleString()} />
       </StatTileGrid>
 
       <Card

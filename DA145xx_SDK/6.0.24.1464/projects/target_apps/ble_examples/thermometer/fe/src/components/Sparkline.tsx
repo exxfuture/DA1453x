@@ -1,16 +1,27 @@
 import { useChartColors } from '../theme/chartColors';
 import type { SparkPoint } from '../api/client';
 
-/** Minimal inline-SVG trend line — deliberately not a recharts instance:
- *  the doctor dashboard renders one per patient row, and a full chart
- *  (axes, tooltip, responsive container) per row would be needless
- *  overhead for a glance-only trend indicator. */
+/**
+ * Minimal inline-SVG trend line — deliberately not a recharts instance: the
+ * doctor dashboard renders one per patient row, and a full chart (axes, tooltip,
+ * responsive container) per row would be needless overhead for a glance-only
+ * trend indicator.
+ *
+ * `label` is not optional decoration (review FE-18): the SVG is `aria-hidden`,
+ * because the *shape* of a polyline cannot be spoken, so without a text
+ * equivalent a primary clinical signal is simply missing for screen-reader
+ * users. The caller supplies the sentence because only it knows the unit and the
+ * period — see DoctorDashboardPage's `sparklineSummary()`.
+ */
 export function Sparkline({
   points,
+  label,
   width = 96,
   height = 28,
 }: {
   points: SparkPoint[];
+  /** Visually-hidden description, e.g. "ranged from 36.4 °C to 38.9 °C". */
+  label: string;
   width?: number;
   height?: number;
 }) {
@@ -36,8 +47,11 @@ export function Sparkline({
     .join(' ');
 
   return (
-    <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible" aria-hidden>
-      <polyline points={coords} fill="none" stroke={colors.line} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
-    </svg>
+    <>
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible" aria-hidden>
+        <polyline points={coords} fill="none" stroke={colors.line} strokeWidth={1.5} strokeLinejoin="round" strokeLinecap="round" />
+      </svg>
+      <span className="sr-only">{label}</span>
+    </>
   );
 }

@@ -65,11 +65,13 @@
 #define I2C_SDA_PORT                GPIO_PORT_0
 #define I2C_SDA_PIN                 GPIO_PIN_6
 
-/// AHT20 I2C slave address (fixed, no address-select pin)
-#define I2C_TEMP_SENSOR_ADDRESS     (0x38)
+/* The AHT20's fixed 7-bit address (0x38) is a property of the sensor, not of
+ * the board, so it lives in i2c_temp_sensor.h (AHT20_I2C_ADDRESS).  The two
+ * bus parameters below are consumed by the driver's build_i2c_cfg(). */
 
 /// I2C bus speed: fast mode (400 kbps) - AHT20 supports up to 400 kHz
 #define I2C_SPEED_MODE              I2C_SPEED_FAST
+/// I2C addressing mode: 7-bit (the AHT20 has no 10-bit address)
 #define I2C_ADDRESS_MODE            I2C_ADDRESSING_7B
 
 /****************************************************************************************/

@@ -100,3 +100,18 @@ A "wellness, not diagnostic" positioning softens but does not eliminate this.
    `src/i2c_temp_sensor.c` carries over almost unchanged).
 2. Longer-interval + advertising-broadcast firmware changes.
 3. Bill of materials for a first prototype build.
+4. **Per-unit provisioning line.** Every unit needs its own Bluetooth
+   device address burned into the DA14535 OTP header before it leaves the
+   bench: the firmware's `CFG_NVDS_TAG_BD_ADDRESS` is only a fallback that
+   every unit built from this source (and the SDK examples) shares, so two
+   unprovisioned units are indistinguishable to collectors and to the
+   platform's device registry (`devices.bd_addr` is unique). Allocate
+   addresses from an IEEE-registered OUI block, record the mapping
+   serial → address for the fleet registry, and program it with
+   SmartSnippets Toolbox (OTP Header) or the Renesas Flash Programmer CLI
+   as part of the same step that burns the production firmware image. The
+   same station is where a per-device pairing/OTA credential would be
+   provisioned once that exists (`proposals.md` §10.1) and, if BLE privacy
+   (resolvable private addresses) is ever enabled, where the per-device IRK
+   is generated — the firmware refuses to build a privacy mode with the
+   placeholder IRK (`src/config/user_config.h`).

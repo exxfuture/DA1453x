@@ -16,6 +16,7 @@ import com.dialog.thermometer.domain.Device;
 import com.dialog.thermometer.domain.DeviceRepository;
 import com.dialog.thermometer.domain.User;
 import com.dialog.thermometer.domain.UserRepository;
+import com.dialog.thermometer.patient.PatientSummaryService;
 import com.dialog.thermometer.security.CurrentUser;
 import com.dialog.thermometer.security.CurrentUserService;
 import com.dialog.thermometer.security.Role;
@@ -28,15 +29,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.Timestamp;
-import java.time.Duration;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -59,13 +56,12 @@ public class ConsentController {
     private static final List<String> CONSENT_ACTIONS = List.of("consent.grant", "consent.revoke");
 
     /**
-     * How long a patient may go without a reading before the dashboard calls
-     * them stale. Tunable: 6 h is a "missed roughly a night's worth of
-     * readings at the firmware's ~1/minute cadence" heuristic, not a clinical
-     * or contractual figure — raise it if patients routinely take the device
-     * off for longer.
+     * Ceiling on the admin branch of {@link #list}. That branch answers "every
+     * consent link in the system", which grows with the install base, and this
+     * endpoint returns a plain list with no page envelope — the paged equivalent
+     * is {@code GET /api/admin/consents}.
      */
-    private static final Duration STALE_AFTER = Duration.ofHours(6);
+    private static final int ADMIN_LIST_LIMIT = 500;
 
     private final UserRepository users;
     private final DeviceRepository devices;
@@ -73,35 +69,31 @@ public class ConsentController {
     private final AuditLogRepository auditLogs;
     private final CurrentUserService currentUserService;
     private final AlertThresholdService alertThresholds;
-    private final JdbcTemplate jdbcTemplate;
+    private final PatientSummaryService patientSummaries;
 
     public ConsentController(UserRepository users, DeviceRepository devices, ConsentLinkRepository consentLinks,
                               AuditLogRepository auditLogs, CurrentUserService currentUserService,
-                              AlertThresholdService alertThresholds, JdbcTemplate jdbcTemplate) {
+                              AlertThresholdService alertThresholds, PatientSummaryService patientSummaries) {
         this.users = users;
         this.devices = devices;
         this.consentLinks = consentLinks;
         this.auditLogs = auditLogs;
         this.currentUserService = currentUserService;
         this.alertThresholds = alertThresholds;
-        this.jdbcTemplate = jdbcTemplate;
+        this.patientSummaries = patientSummaries;
     }
 
     @GetMapping("/doctors")
     public List<DoctorResponse> doctors(Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.CUSTOMER && me.role() != Role.ADMIN) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-        }
+        currentUserService.resolveWithRole(authentication, "only a customer or an admin lists doctors",
+                Role.CUSTOMER, Role.ADMIN);
         return users.findByRole(Role.DOCTOR.dbValue()).stream().map(DoctorResponse::from).toList();
     }
 
     @PostMapping("/consents")
     public ResponseEntity<ConsentResponse> grant(@Valid @RequestBody GrantConsentRequest request, Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.CUSTOMER) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "only a customer can grant consent to their own data");
-        }
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a customer can grant consent to their own data", Role.CUSTOMER);
         User doctor = users.findById(request.doctorUserId())
                 .filter(u -> Role.DOCTOR.dbValue().equals(u.getRole()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "no such doctor"));
@@ -136,23 +128,29 @@ public class ConsentController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Role-branched consent list: own links including revoked ones (customer),
+     * active links pointing at the caller (doctor), or every link (admin).
+     *
+     * <p>The admin branch is capped at {@link #ADMIN_LIST_LIMIT} newest links —
+     * see {@code GET /api/admin/consents} for the paged view meant for browsing.
+     */
     @GetMapping("/consents")
     public List<ConsentResponse> list(Authentication authentication) {
         CurrentUser me = currentUserService.resolve(authentication);
         List<ConsentLink> links = switch (me.role()) {
             case CUSTOMER -> consentLinks.findByPatientUserId(me.id());
             case DOCTOR -> consentLinks.findByDoctorUserIdAndRevokedAtIsNull(me.id());
-            case ADMIN -> consentLinks.findAll();
+            case ADMIN -> consentLinks
+                    .findAll(PageRequest.of(0, ADMIN_LIST_LIMIT, Sort.by(Sort.Direction.DESC, "grantedAt")))
+                    .getContent();
         };
         return enrich(links);
     }
 
     @GetMapping("/doctor/patients")
     public List<PatientResponse> myPatients(Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.DOCTOR) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "only doctors have patients");
-        }
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only doctors have patients", Role.DOCTOR);
         List<ConsentLink> active = consentLinks.findByDoctorUserIdAndRevokedAtIsNull(me.id());
         Map<String, String> usernamesById = users.findAllById(active.stream().map(ConsentLink::getPatientUserId).toList())
                 .stream().collect(Collectors.toMap(User::getId, User::getUsername));
@@ -175,20 +173,16 @@ public class ConsentController {
      * stddev/count/sparkline scoped to {@code rangeHours}, and a derived
      * staleness flag and risk ranking.
      *
-     * <p>Deliberately N+1 (one set of small queries per patient's device)
-     * rather than a single ANY(?)-array query — same "fine at this MVP's
-     * scale" tradeoff as {@code myPatients()}'s per-patient device lookup
-     * above. The threshold scales, by contrast, are resolved for the whole
-     * request in one batch: they are new work and had no reason to inherit
-     * that shape.
+     * <p>All of that is computed by {@code patient/PatientSummaryService}; this
+     * method resolves the caller, enforces the doctor-only rule, batch-resolves
+     * every patient's threshold scale in three queries (including this doctor's
+     * own overrides, since the tiers the risk score is built from are the ones
+     * this doctor set) and maps the result.
      */
     @GetMapping("/doctor/patients/summary")
     public List<PatientSummaryResponse> myPatientsSummary(
             @RequestParam(defaultValue = "24") int rangeHours, Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.DOCTOR) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "only doctors have patients");
-        }
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only doctors have patients", Role.DOCTOR);
         List<ConsentLink> active = consentLinks.findByDoctorUserIdAndRevokedAtIsNull(me.id());
         List<String> patientIds = active.stream().map(ConsentLink::getPatientUserId).toList();
         Map<String, String> usernamesById = users.findAllById(patientIds).stream()
@@ -206,93 +200,9 @@ public class ConsentController {
             String username = usernamesById.get(patientId);
             ResolvedThresholds scale = scaleByPatient.getOrDefault(patientId, AlertThresholdService.FALLBACK);
             Optional<Device> device = devices.findByOwnerUserId(patientId).stream().findFirst();
-            return device.map(d -> summarize(patientId, username, d, from, to, scale))
-                    .orElseGet(() -> new PatientSummaryResponse(
-                            patientId, username, null, null, null, null, null, null, null, null, 0, List.of(),
-                            "low", 0, true));
+            return device.map(d -> patientSummaries.summarize(patientId, username, d, from, to, scale))
+                    .orElseGet(() -> patientSummaries.noDevice(patientId, username));
         }).toList();
-    }
-
-    private PatientSummaryResponse summarize(String patientId, String username, Device device, Instant from,
-                                              Instant to, ResolvedThresholds scale) {
-        String bdAddr = device.getBdAddr();
-
-        List<Map.Entry<Instant, Double>> latest = jdbcTemplate.query("""
-                        SELECT ts, value_num FROM measurements
-                        WHERE device_id = ? AND type = 'temperature' AND value_num IS NOT NULL
-                        ORDER BY ts DESC LIMIT 1
-                        """,
-                (rs, n) -> Map.entry(rs.getTimestamp("ts").toInstant(), rs.getDouble("value_num")),
-                bdAddr);
-
-        // STDDEV_POP rides along in the aggregate query that was already
-        // being run — variability costs zero extra round trips.
-        Aggregate agg = jdbcTemplate.query("""
-                        SELECT AVG(value_num) avg_v, MIN(value_num) min_v, MAX(value_num) max_v,
-                               STDDEV_POP(value_num) stddev_v, COUNT(*) cnt
-                        FROM measurements
-                        WHERE device_id = ? AND type = 'temperature' AND value_num IS NOT NULL AND ts BETWEEN ? AND ?
-                        """,
-                (rs, n) -> new Aggregate((Double) rs.getObject("avg_v"), (Double) rs.getObject("min_v"),
-                        (Double) rs.getObject("max_v"), (Double) rs.getObject("stddev_v"), rs.getLong("cnt")),
-                bdAddr, Timestamp.from(from), Timestamp.from(to)).get(0);
-
-        List<PatientSummaryResponse.SparkPoint> sparkline = jdbcTemplate.query("""
-                        SELECT ts, value_num FROM measurements
-                        WHERE device_id = ? AND type = 'temperature' AND value_num IS NOT NULL AND ts BETWEEN ? AND ?
-                        ORDER BY ts DESC LIMIT 20
-                        """,
-                (rs, n) -> new PatientSummaryResponse.SparkPoint(rs.getTimestamp("ts").toInstant(), rs.getDouble("value_num")),
-                bdAddr, Timestamp.from(from), Timestamp.from(to));
-        Collections.reverse(sparkline);
-
-        Double latestCelsius = latest.isEmpty() ? null : latest.get(0).getValue();
-        Instant latestAt = latest.isEmpty() ? null : latest.get(0).getKey();
-        boolean stale = latestAt == null || latestAt.isBefore(to.minus(STALE_AFTER));
-        double riskScore = riskScoreOf(latestCelsius, latestAt, to, scale);
-
-        return new PatientSummaryResponse(
-                patientId, username, bdAddr, device.getModel(),
-                latestCelsius, latestAt,
-                agg.avg(), agg.min(), agg.max(), agg.stddev(), agg.count(), sparkline,
-                riskTierOf(riskScore), riskScore, stale);
-    }
-
-    /**
-     * Orders a doctor's worklist: how hot the last reading was (70%) tempered
-     * by how recently it arrived (30%), on a 0–100 scale.
-     *
-     * <p><b>A triage heuristic, not a clinical score.</b> It exists so the
-     * patient most worth looking at first floats to the top of a list — it
-     * carries no diagnostic meaning, is not validated against anything, and
-     * must never be presented as a medical assessment. The recency term is
-     * what stops a week-old 39.5 °C from outranking a live one; a patient
-     * with no readings at all scores 0 and is flagged {@code stale} instead,
-     * because "we know nothing" is a different problem from "they are fine".
-     */
-    private double riskScoreOf(Double latestCelsius, Instant latestAt, Instant now, ResolvedThresholds scale) {
-        if (latestCelsius == null || latestAt == null) {
-            return 0;
-        }
-        // 0 for "low" through 1.0 for "highFever" — four steps between the
-        // five tiers of AlertThresholdService.TIER_ORDER.
-        double severity = AlertThresholdService.tierRank(alertThresholds.tierOf(latestCelsius, scale)) / 4.0;
-        double hoursSince = Duration.between(latestAt, now).toMinutes() / 60.0;
-        double recency = Math.max(0.0, Math.min(1.0, 1.0 - hoursSince / 24.0));
-        return Math.round(100 * (0.7 * severity + 0.3 * recency));
-    }
-
-    private static String riskTierOf(double riskScore) {
-        if (riskScore >= 70) {
-            return "urgent";
-        }
-        if (riskScore >= 35) {
-            return "watch";
-        }
-        return "low";
-    }
-
-    private record Aggregate(Double avg, Double min, Double max, Double stddev, long count) {
     }
 
     /**
@@ -306,10 +216,8 @@ public class ConsentController {
      */
     @GetMapping("/consents/access-history")
     public PageResponse<ConsentHistoryResponse> myConsentHistory(Pageable pageable, Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.CUSTOMER) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "only a customer has a consent history");
-        }
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a customer has a consent history", Role.CUSTOMER);
         Page<AuditLog> page = auditLogs.findByActorIdAndActionInOrderByAtDesc(me.id(), CONSENT_ACTIONS,
                 atDescByDefault(pageable));
         // subject holds the doctor's id for both consent actions.
@@ -333,7 +241,7 @@ public class ConsentController {
      */
     @GetMapping("/doctor/consent-activity")
     public PageResponse<AuditLogResponse> doctorConsentActivity(Pageable pageable, Authentication authentication) {
-        CurrentUser me = requireDoctor(authentication);
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "doctor role required", Role.DOCTOR);
         Page<AuditLog> page = auditLogs.findByActorIdAndActionInOrderByAtDesc(me.id(), CONSENT_ACTIONS,
                 atDescByDefault(pageable));
         return PageResponse.of(page, AuditLogResponse::from);
@@ -342,18 +250,10 @@ public class ConsentController {
     /** Everything this doctor did, plus everything done to them (e.g. a patient granting them consent). */
     @GetMapping("/doctor/audit-log")
     public PageResponse<AuditLogResponse> myAuditLog(Pageable pageable, Authentication authentication) {
-        CurrentUser me = requireDoctor(authentication);
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "doctor role required", Role.DOCTOR);
         Page<AuditLog> page = auditLogs.findByActorIdOrSubjectOrderByAtDesc(me.id(), me.id(),
                 atDescByDefault(pageable));
         return PageResponse.of(page, AuditLogResponse::from);
-    }
-
-    private CurrentUser requireDoctor(Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.DOCTOR) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "doctor role required");
-        }
-        return me;
     }
 
     /**

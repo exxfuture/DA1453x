@@ -27,6 +27,12 @@ thermometer:
     # See SecurityConfig.jwtDecoder for why this is split from jwk-set-uri.
     issuer-uri: http://localhost:8082/realms/thermometer
   mqtt:
-    broker-url: tcp://mosquitto:1883
+    # Compose service name; the broker requires credentials (dynamic-security
+    # plugin, allow_anonymous false). username/password/collector-password and
+    # user-credential-ttl are inherited from application.yml, which reads
+    # THERMOMETER_MQTT_USERNAME / _PASSWORD / _COLLECTOR_PASSWORD /
+    # _USER_CREDENTIAL_TTL — the same values ../docker-compose.yml initialises
+    # the plugin's admin client and the collector client with.
+    broker-url: ${THERMOMETER_MQTT_BROKER_URL:tcp://mosquitto:1883}
   cors:
     allowed-origins: http://localhost:5173,http://localhost:8090

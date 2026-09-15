@@ -21,6 +21,22 @@ import java.util.UUID;
 @Service
 public class RolloutService {
 
+    /**
+     * The rollout lifecycle vocabulary. {@code active} is the default a new
+     * rollout is created with; {@code aborted} is what {@link #maybeAutoAbort}
+     * sets when too many targets fail.
+     */
+    static final String STATUS_ACTIVE = "active";
+    static final String STATUS_ABORTED = "aborted";
+
+    /**
+     * Per-device target statuses. {@code pending} is the row default;
+     * {@code success} and {@code failed} are the only two values a collector may
+     * report (see {@code RolloutStatusRequest}). Nothing writes "installed".
+     */
+    static final String TARGET_PENDING = "pending";
+    static final String TARGET_FAILED = "failed";
+
     private final RolloutRepository rollouts;
     private final RolloutTargetRepository targets;
 
@@ -85,16 +101,22 @@ public class RolloutService {
      * The rollout a collector should offer to a device, if any: active,
      * matches chip model, device is in the current target group, newer than
      * the device's reported firmware version, and not already reported as
-     * installed/failed for this device.
+     * success/failed for this device.
+     *
+     * <p>Status and chip model are narrowed by the database
+     * ({@link RolloutRepository#findByStatusAndChipModelIgnoreCase}); only the
+     * three conditions that aren't columns — deterministic target-group
+     * bucketing, dotted-numeric version comparison, and this device's own
+     * reported status — are evaluated here. This endpoint is polled by every
+     * collector, so loading the table and filtering it in Java made its cost
+     * scale with fleet size times poll rate.
      */
     public Optional<Rollout> findPending(String chipModel, String currentVersion, String deviceBdAddr) {
-        return rollouts.findAll().stream()
-                .filter(r -> "active".equals(r.getStatus()))
-                .filter(r -> r.getChipModel().equalsIgnoreCase(chipModel))
+        return rollouts.findByStatusAndChipModelIgnoreCase(STATUS_ACTIVE, chipModel).stream()
                 .filter(r -> isNewer(r.getVersion(), currentVersion))
                 .filter(r -> isInTargetGroup(r, deviceBdAddr))
                 .filter(r -> targets.findByRolloutAndDevice(r.getId(), deviceBdAddr)
-                        .map(t -> "pending".equals(t.getStatus()))
+                        .map(t -> TARGET_PENDING.equals(t.getStatus()))
                         .orElse(true))
                 .findFirst();
     }
@@ -107,20 +129,43 @@ public class RolloutService {
         maybeAutoAbort(rolloutId);
     }
 
-    /** Pauses the rollout if the error rate among devices that have reported so far exceeds its threshold. */
-    private void maybeAutoAbort(java.util.UUID rolloutId) {
+    /**
+     * Pauses the rollout once the error rate among devices that have reported so
+     * far reaches its threshold — the only thing standing between a bad firmware
+     * image and the whole fleet, so the arithmetic is worth being explicit
+     * about:
+     *
+     * <ul>
+     *   <li>the denominator is <b>devices that have reported</b>
+     *   ({@code reportedAt != null}), not every target: a rollout whose devices
+     *   have mostly not checked in yet must not look like a 0%-failure success
+     *   <i>or</i> be aborted by two early failures out of a thousand pending
+     *   targets;</li>
+     *   <li>the comparison is {@code >=}, so a threshold of 20 aborts <i>at</i>
+     *   20% and not only above it;</li>
+     *   <li>integer division truncates, which rounds in the safe direction
+     *   (1 of 3 failures is 33%, not 34%);</li>
+     *   <li>only an {@code active} rollout changes state, so an already-aborted
+     *   one is never rewritten and a manually-resumed one isn't re-aborted by a
+     *   late straggler report.</li>
+     * </ul>
+     *
+     * <p>Package-private rather than private so its threshold arithmetic is
+     * unit-testable against mocked repositories without going through HTTP.
+     */
+    void maybeAutoAbort(java.util.UUID rolloutId) {
         List<RolloutTarget> reported = targets.findByRollout(rolloutId).stream()
                 .filter(t -> t.getReportedAt() != null)
                 .toList();
         if (reported.isEmpty()) {
             return;
         }
-        long failed = reported.stream().filter(t -> "failed".equals(t.getStatus())).count();
+        long failed = reported.stream().filter(t -> TARGET_FAILED.equals(t.getStatus())).count();
         int errorPct = (int) (100 * failed / reported.size());
 
         rollouts.findById(rolloutId).ifPresent(rollout -> {
-            if (errorPct >= rollout.getAbortThresholdPct() && "active".equals(rollout.getStatus())) {
-                rollout.setStatus("aborted");
+            if (errorPct >= rollout.getAbortThresholdPct() && STATUS_ACTIVE.equals(rollout.getStatus())) {
+                rollout.setStatus(STATUS_ABORTED);
                 rollouts.save(rollout);
             }
         });

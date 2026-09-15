@@ -73,6 +73,12 @@
  */
 #define USER_CFG_ADDRESS_MODE       APP_CFG_ADDR_PUB
 
+/* The IRK in user_gapm_conf below is a placeholder: privacy modes must not be
+ * enabled until it is randomised per device (see the comment there). */
+#if (USER_CFG_ADDRESS_MODE != APP_CFG_ADDR_PUB) && (USER_CFG_ADDRESS_MODE != APP_CFG_ADDR_STATIC)
+#error "Randomise user_gapm_conf.irk per device before enabling a privacy (RPA) address mode"
+#endif
+
 /*************************************************************************
  * Controller Privacy Mode:
  * - APP_CFG_CNTL_PRIV_MODE_NETWORK Controler Privacy Network mode (default)
@@ -249,6 +255,14 @@ static const struct gapm_configuration user_gapm_conf = {
     .addr = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
 
     /// Device IRK used for Resolvable Private Address generation (LSB first)
+    ///
+    /// PLACEHOLDER — this is the SDK's sequential boilerplate value and is
+    /// inert only because USER_CFG_ADDRESS_MODE is a non-private mode (the
+    /// #error guard next to that define enforces it).  Before any privacy /
+    /// RPA mode is enabled, the IRK must be per-device and unpredictable
+    /// (e.g. generated from the TRNG at first boot and persisted in NVDS);
+    /// with this well-known value every device's "private" address would be
+    /// trivially resolvable and linkable.
     .irk = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f},
 
     /****************************
@@ -351,7 +365,12 @@ static const struct default_handlers_configuration  user_default_hnd_conf = {
     // Possible values:
     //  - DEF_SEC_REQ_NEVER
     //  - DEF_SEC_REQ_ON_CONNECT
-    .security_request_scenario = DEF_SEC_REQ_NEVER
+    //
+    // ON_CONNECT: the thermometer asks the collector to pair (Just Works, no
+    // bonding — see user_security_conf) right after the link comes up, so
+    // the link is encrypted before the HTP characteristics (which require an
+    // encrypted link, see user_app_on_db_init_complete) are touched.
+    .security_request_scenario = DEF_SEC_REQ_ON_CONNECT
 };
 
 /*

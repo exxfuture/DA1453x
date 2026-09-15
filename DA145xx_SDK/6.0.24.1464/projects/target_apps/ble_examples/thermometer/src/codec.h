@@ -147,4 +147,65 @@ static inline int16_t apply_offset_i16(int16_t temp_x100, int16_t offset_x100)
     return (int16_t)v;
 }
 
+/*
+ * Measurement-cycle decision table.  thermometer.c drives its ISR/task state
+ * machine through these two pure functions so the "what happens next" logic
+ * is host-testable even though the state machine itself is SDK-bound.
+ */
+
+/// What the measurement cycle does after one sample attempt has completed
+typedef enum
+{
+    CYCLE_NEXT_SAMPLE = 0,  ///< attempts remain: take another sample after the gap
+    CYCLE_FAILED,           ///< attempts exhausted, no valid sample: a dead cycle
+    CYCLE_COMPLETE          ///< attempts exhausted, >= 1 valid sample: aggregate + send
+} cycle_next_t;
+
+/**
+ * Decide the next step after a sample attempt.
+ *   attempts   number of attempts made so far in this cycle (incl. the one just done)
+ *   valid      number of valid samples collected so far
+ *   per_cycle  TEMP_SAMPLES_PER_MEASUREMENT
+ */
+static inline cycle_next_t cycle_next_action(uint8_t attempts, uint8_t valid, uint8_t per_cycle)
+{
+    if (attempts < per_cycle)
+    {
+        return CYCLE_NEXT_SAMPLE;
+    }
+    return (valid == 0) ? CYCLE_FAILED : CYCLE_COMPLETE;
+}
+
+/// Sensor-recovery step due at the start of a measurement cycle
+typedef enum
+{
+    RECOVERY_NONE = 0,          ///< measure normally
+    RECOVERY_SOFT_RESET,        ///< send the AHT20 soft-reset command instead of measuring
+    RECOVERY_BUS_AND_SOFT_RESET ///< manually recover the I2C bus, then soft-reset
+} recovery_action_t;
+
+/**
+ * Recovery ladder: a soft reset every `soft_reset_every` consecutive dead
+ * cycles, preceded by a bus recovery every `bus_recovery_every`.  The
+ * recovery cycle itself is counted as a dead cycle by the caller, so the
+ * ladder fires at 5, 10, 15, 20, ... with the default 5/10 thresholds.
+ */
+static inline recovery_action_t recovery_action(uint8_t consecutive_fail_cycles,
+                                                uint8_t soft_reset_every,
+                                                uint8_t bus_recovery_every)
+{
+    if (soft_reset_every == 0 ||
+        consecutive_fail_cycles < soft_reset_every ||
+        (consecutive_fail_cycles % soft_reset_every) != 0)
+    {
+        return RECOVERY_NONE;
+    }
+    if (bus_recovery_every != 0 &&
+        (consecutive_fail_cycles % bus_recovery_every) == 0)
+    {
+        return RECOVERY_BUS_AND_SOFT_RESET;
+    }
+    return RECOVERY_SOFT_RESET;
+}
+
 #endif // _THERM_CODEC_H_

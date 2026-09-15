@@ -84,12 +84,21 @@ export function useRenameDevice() {
  * time (mount + every refetchInterval tick) so a sliding "last N hours"
  * window keeps moving with the clock instead of freezing at first render. A
  * custom window's fixed instants just pass through unchanged.
+ *
+ * `enabled: false` stops the 5 s poll for a caller that currently shows nothing
+ * from it — the Dashboard in compare mode (review FE-10), where a second set of
+ * 5 s queries via useMeasurementHistories is what is actually on screen. The
+ * cache entry survives, so switching back is instant.
  */
-export function useMeasurementHistory(deviceId: string | null, window: TimeWindow) {
+export function useMeasurementHistory(
+  deviceId: string | null,
+  window: TimeWindow,
+  options?: { enabled?: boolean },
+) {
   return useQuery({
     queryKey: ['measurements', deviceId, timeWindowKey(window)],
     queryFn: () => api.measurementHistory(deviceId as string, 'temperature', resolveTimeWindow(window)),
-    enabled: !!deviceId,
+    enabled: !!deviceId && options?.enabled !== false,
     refetchInterval: 5000,
   });
 }
@@ -107,11 +116,11 @@ export function useGrantConsent() {
   return useMutation({
     mutationFn: (doctorUserId: string) => api.grantConsent(doctorUserId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['consents'] });
+      void queryClient.invalidateQueries({ queryKey: ['consents'] });
       // A grant changes the consent table the integrity scan reads, so the
       // admin relationship view's tiles/"flagged only" list must not sit on
       // a 5-minute ANALYTICS_STALE_TIME snapshot of pre-grant state.
-      queryClient.invalidateQueries({ queryKey: ['admin', 'analytics', 'consent-integrity'] });
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'analytics', 'consent-integrity'] });
     },
   });
 }
@@ -121,12 +130,12 @@ export function useRevokeConsent() {
   return useMutation({
     mutationFn: (id: string) => api.revokeConsent(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['consents'] });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'consents'] });
+      void queryClient.invalidateQueries({ queryKey: ['consents'] });
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'consents'] });
       // Revoking an orphaned link is exactly what clears its integrity
       // warning — without this the flagged row and counts stay visible
       // until the analytics cache ages out.
-      queryClient.invalidateQueries({ queryKey: ['admin', 'analytics', 'consent-integrity'] });
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'analytics', 'consent-integrity'] });
     },
   });
 }
@@ -167,8 +176,8 @@ export function useAdminUpdateUserRole() {
     mutationFn: ({ id, role }: { id: string; role: 'customer' | 'doctor' | 'admin' }) =>
       api.adminUpdateUserRole(id, role),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
-      queryClient.invalidateQueries({ queryKey: ['admin', 'audit-log'] });
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'audit-log'] });
     },
   });
 }
@@ -206,8 +215,8 @@ export function useAdminReleaseDevice() {
   return useMutation({
     mutationFn: (bdAddr: string) => api.adminReleaseDevice(bdAddr),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
-      queryClient.invalidateQueries({ queryKey: ['devices'] });
+      void queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+      void queryClient.invalidateQueries({ queryKey: ['devices'] });
     },
   });
 }
@@ -227,11 +236,17 @@ export function useAdminEditDevice() {
  * The scale actually in effect for a subject (omit for "me"), plus the scope
  * it came from. A doctor asking about a patient gets the scale *they* see,
  * i.e. including their own override.
+ *
+ * A subject-scoped caller MUST pass `enabled` (review FE-22): `queryString()`
+ * drops an empty `subjectUserId`, so this endpoint silently answers "me" —
+ * which, on a patient-scoped page whose id hasn't resolved yet, renders the
+ * *doctor's* own alert scale as if it were the patient's.
  */
-export function useResolvedThresholds(subjectUserId?: string) {
+export function useResolvedThresholds(subjectUserId?: string, options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['thresholds', 'resolved', subjectUserId ?? null],
     queryFn: () => api.getResolvedThresholds(subjectUserId),
+    enabled: options?.enabled !== false,
     staleTime: ON_DEMAND_STALE_TIME,
   });
 }
@@ -312,9 +327,9 @@ export function useUpsertSystemThreshold() {
  * until their next natural refetch.
  */
 function invalidateThresholdDerived(queryClient: ReturnType<typeof useQueryClient>) {
-  queryClient.invalidateQueries({ queryKey: ['thresholds'] });
-  queryClient.invalidateQueries({ queryKey: ['events'] });
-  queryClient.invalidateQueries({ queryKey: ['doctor-patients'] });
+  void queryClient.invalidateQueries({ queryKey: ['thresholds'] });
+  void queryClient.invalidateQueries({ queryKey: ['events'] });
+  void queryClient.invalidateQueries({ queryKey: ['doctor-patients'] });
 }
 
 // ---- fever episodes ---------------------------------------------------------
@@ -423,8 +438,8 @@ export function useDeleteCareNote() {
 
 /** The doctor feed and the admin compliance view read the same rows under different keys. */
 function invalidateCareNotes(queryClient: ReturnType<typeof useQueryClient>) {
-  queryClient.invalidateQueries({ queryKey: ['care-notes'] });
-  queryClient.invalidateQueries({ queryKey: ['admin', 'care-notes'] });
+  void queryClient.invalidateQueries({ queryKey: ['care-notes'] });
+  void queryClient.invalidateQueries({ queryKey: ['admin', 'care-notes'] });
 }
 
 // ---- consent history & audit feeds ------------------------------------------

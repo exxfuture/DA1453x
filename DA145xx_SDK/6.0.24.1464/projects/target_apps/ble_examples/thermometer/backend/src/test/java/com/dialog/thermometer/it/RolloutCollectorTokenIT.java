@@ -22,7 +22,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import org.testcontainers.utility.MountableFile;
 
 import java.util.UUID;
 
@@ -76,19 +75,24 @@ class RolloutCollectorTokenIT {
             .withUsername("thermometer")
             .withPassword("thermometer");
 
+    /**
+     * The broker this service talks to refuses anonymous connections (see
+     * {@link MosquittoDynsecContainer}); these tests don't publish over MQTT
+     * themselves, but the application context connects on startup, so the
+     * credentials have to be real ones.
+     */
     @Container
-    static GenericContainer<?> mosquitto = new GenericContainer<>(DockerImageName.parse("eclipse-mosquitto:2"))
-            .withExposedPorts(1883)
-            .withCopyFileToContainer(MountableFile.forClasspathResource("mosquitto-test.conf"),
-                    "/mosquitto/config/mosquitto.conf");
+    static GenericContainer<?> mosquitto = MosquittoDynsecContainer.create();
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("thermometer.mqtt.broker-url",
-                () -> "tcp://" + mosquitto.getHost() + ":" + mosquitto.getMappedPort(1883));
+        registry.add("thermometer.mqtt.broker-url", () -> MosquittoDynsecContainer.brokerUrl(mosquitto));
+        registry.add("thermometer.mqtt.username", () -> MosquittoDynsecContainer.ADMIN_USERNAME);
+        registry.add("thermometer.mqtt.password", () -> MosquittoDynsecContainer.ADMIN_PASSWORD);
+        registry.add("thermometer.mqtt.collector-password", () -> MosquittoDynsecContainer.COLLECTOR_PASSWORD);
     }
 
     private static final String REJECTION = "\"message\":\"missing or invalid X-Device-Token\"";

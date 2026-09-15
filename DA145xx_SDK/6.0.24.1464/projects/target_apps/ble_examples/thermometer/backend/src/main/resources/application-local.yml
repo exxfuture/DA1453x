@@ -5,7 +5,11 @@
 # iterating without a running Keycloak.
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/thermometer
+    # 5433, not 5432: ../docker-compose.yml deliberately publishes Postgres on
+    # 5433 ("5432 is commonly taken on dev machines") and binds it to
+    # 127.0.0.1. Pointing this at 5432 would either fail to connect or, worse,
+    # silently talk to an unrelated Postgres the developer already runs.
+    url: jdbc:postgresql://localhost:5433/thermometer
     username: thermometer
     password: thermometer
 
@@ -20,6 +24,13 @@ thermometer:
     # exercises the same code path production does.
     collector-token: dev-collector-token
   mqtt:
-    broker-url: tcp://localhost:1883
+    # The compose broker, reached through its published (127.0.0.1-bound) port.
+    # Credentials are NOT disabled on this profile — the broker requires them
+    # regardless of thermometer.security.enabled, which only governs this
+    # service's own HTTP chain. username/password/collector-password come from
+    # application.yml's env-var defaults (admin / mqtt-admin-dev /
+    # collector-dev), i.e. exactly what ../docker-compose.yml initialises the
+    # dynamic-security plugin with.
+    broker-url: ${THERMOMETER_MQTT_BROKER_URL:tcp://localhost:1883}
   cors:
     allowed-origins: http://localhost:5173

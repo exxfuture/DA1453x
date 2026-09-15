@@ -2,14 +2,12 @@ package com.dialog.thermometer.admin;
 
 import com.dialog.thermometer.security.CurrentUserService;
 import com.dialog.thermometer.security.Role;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.time.Instant;
 import java.util.List;
@@ -351,8 +349,6 @@ public class AdminAnalyticsController {
     }
 
     private void requireAdmin(Authentication authentication) {
-        if (currentUserService.resolve(authentication).role() != Role.ADMIN) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin role required");
-        }
+        currentUserService.resolveWithRole(authentication, "admin role required", Role.ADMIN);
     }
 }

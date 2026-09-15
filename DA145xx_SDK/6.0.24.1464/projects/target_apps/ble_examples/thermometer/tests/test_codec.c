@@ -1,5 +1,8 @@
 /*
- * Host-side unit tests for src/codec.h (pure functions, no SDK dependencies).
+ * Host-side unit tests for src/codec.h (pure functions, no SDK dependencies):
+ * AHT20 CRC-8 / decode, IEEE 11073 encode, aggregation, offset, and the
+ * measurement-cycle decision table (cycle_next_action / recovery_action)
+ * that thermometer.c's ISR/task state machine is driven by.
  * Build & run: bash tests/run_tests.sh
  */
 
@@ -131,6 +134,107 @@ static void test_offset(void)
     CHECK(apply_offset_i16(-32760, -100) == INT16_MIN); /* saturates */
 }
 
+/* cycle_next_action(): the per-attempt decision table thermometer.c drives
+ * handle_sample_done() with (3 samples per cycle). */
+static void test_cycle_next_action(void)
+{
+    /* attempts remaining -> another sample, regardless of how many were valid */
+    CHECK(cycle_next_action(1, 1, 3) == CYCLE_NEXT_SAMPLE);
+    CHECK(cycle_next_action(1, 0, 3) == CYCLE_NEXT_SAMPLE);
+    CHECK(cycle_next_action(2, 0, 3) == CYCLE_NEXT_SAMPLE);
+    CHECK(cycle_next_action(2, 2, 3) == CYCLE_NEXT_SAMPLE);
+
+    /* last attempt done: at least one valid sample -> send, none -> dead cycle */
+    CHECK(cycle_next_action(3, 3, 3) == CYCLE_COMPLETE);
+    CHECK(cycle_next_action(3, 1, 3) == CYCLE_COMPLETE);
+    CHECK(cycle_next_action(3, 0, 3) == CYCLE_FAILED);
+
+    /* single-sample configuration */
+    CHECK(cycle_next_action(1, 1, 1) == CYCLE_COMPLETE);
+    CHECK(cycle_next_action(1, 0, 1) == CYCLE_FAILED);
+
+    /* defensive: more attempts than configured never asks for another sample */
+    CHECK(cycle_next_action(4, 0, 3) == CYCLE_FAILED);
+}
+
+/* recovery_action(): the ladder must fire at 5, 10, 15, 20 ... with the
+ * default thresholds (5 soft reset, 10 bus recovery) and nowhere else. */
+static void test_recovery_ladder_defaults(void)
+{
+    CHECK(recovery_action(0, 5, 10)  == RECOVERY_NONE);
+    CHECK(recovery_action(1, 5, 10)  == RECOVERY_NONE);
+    CHECK(recovery_action(4, 5, 10)  == RECOVERY_NONE);
+    CHECK(recovery_action(5, 5, 10)  == RECOVERY_SOFT_RESET);
+    CHECK(recovery_action(6, 5, 10)  == RECOVERY_NONE);
+    CHECK(recovery_action(9, 5, 10)  == RECOVERY_NONE);
+    CHECK(recovery_action(10, 5, 10) == RECOVERY_BUS_AND_SOFT_RESET);
+    CHECK(recovery_action(11, 5, 10) == RECOVERY_NONE);
+    CHECK(recovery_action(15, 5, 10) == RECOVERY_SOFT_RESET);
+    CHECK(recovery_action(20, 5, 10) == RECOVERY_BUS_AND_SOFT_RESET);
+    CHECK(recovery_action(255, 5, 10) == RECOVERY_SOFT_RESET);   /* saturated counter */
+
+    /* degenerate thresholds never trigger / never bus-recover */
+    CHECK(recovery_action(10, 0, 10) == RECOVERY_NONE);
+    CHECK(recovery_action(10, 5, 0)  == RECOVERY_SOFT_RESET);
+}
+
+/* Simulate temp_timer_cb + handle_sample_done over a dead sensor: every cycle
+ * fails, the recovery cycle itself is counted as a failure (as thermometer.c
+ * does), so the ladder must be: soft reset at cycle 5, bus+soft at 10, soft
+ * at 15, bus+soft at 20, ... exactly as README "Edge-case behavior" states. */
+static void test_recovery_ladder_sequence(void)
+{
+    uint8_t fails = 0;
+    int soft_resets = 0, bus_recoveries = 0;
+    int cycles_with_soft[8], cycles_with_bus[8];
+    int ns = 0, nb = 0;
+
+    for (int cycle = 1; cycle <= 40; cycle++)
+    {
+        recovery_action_t r = recovery_action(fails, 5, 10);
+        if (r != RECOVERY_NONE)
+        {
+            if (r == RECOVERY_BUS_AND_SOFT_RESET)
+            {
+                bus_recoveries++;
+                if (nb < 8) cycles_with_bus[nb++] = cycle;
+            }
+            soft_resets++;
+            if (ns < 8) cycles_with_soft[ns++] = cycle;
+            if (fails < UINT8_MAX) fails++;      /* the skipped cycle counts too */
+            continue;
+        }
+        /* a measured cycle with zero valid samples */
+        if (cycle_next_action(3, 0, 3) == CYCLE_FAILED && fails < UINT8_MAX)
+        {
+            fails++;
+        }
+    }
+
+    /* The 5th failure is seen at the START of cycle 6 (first recovery); the
+     * recovery cycle counts as a failure too, so the ladder then repeats
+     * every 5 cycles: soft resets at 6, 11, 16, 21, 26, 31, 36 and, every
+     * second rung (counter 10, 20, 30), a bus recovery first: 11, 21, 31. */
+    CHECK(soft_resets == 7);
+    CHECK(bus_recoveries == 3);
+    CHECK(cycles_with_soft[0] == 6 && cycles_with_soft[1] == 11 && cycles_with_soft[2] == 16);
+    CHECK(cycles_with_bus[0] == 11 && cycles_with_bus[1] == 21 && cycles_with_bus[2] == 31);
+    /* every bus recovery is also a soft reset */
+    CHECK(bus_recoveries < soft_resets);
+}
+
+/* A recovered sensor resets the ladder: one good cycle clears the counter */
+static void test_recovery_clears_on_success(void)
+{
+    uint8_t fails = 7;
+    if (cycle_next_action(3, 2, 3) == CYCLE_COMPLETE)
+    {
+        fails = 0;
+    }
+    CHECK(fails == 0);
+    CHECK(recovery_action(fails, 5, 10) == RECOVERY_NONE);
+}
+
 int main(void)
 {
     test_crc8_known_vector();
@@ -142,6 +246,10 @@ int main(void)
     test_median3();
     test_aggregate();
     test_offset();
+    test_cycle_next_action();
+    test_recovery_ladder_defaults();
+    test_recovery_ladder_sequence();
+    test_recovery_clears_on_success();
 
     if (g_failures)
     {

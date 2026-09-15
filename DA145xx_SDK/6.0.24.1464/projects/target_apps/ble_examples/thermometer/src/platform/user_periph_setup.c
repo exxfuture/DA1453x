@@ -19,6 +19,7 @@
 #include "uart.h"
 #include "syscntl.h"
 #include "thermometer.h"
+#include "i2c_temp_sensor.h"
 #include "arch.h"
 
 #if defined (__DA14531__)
@@ -80,9 +81,17 @@ void set_pad_functions(void)
     GPIO_ConfigurePin(UART2_TX_PORT, UART2_TX_PIN, OUTPUT, PID_UART2_TX, false);
 #endif
 
-    /* I2C for AHT20 -- configured as open-drain with pull-ups on the PCB */
-    GPIO_ConfigurePin(I2C_SCL_PORT, I2C_SCL_PIN, INPUT, PID_I2C_SCL, false);
-    GPIO_ConfigurePin(I2C_SDA_PORT, I2C_SDA_PIN, INPUT, PID_I2C_SDA, false);
+    /* I2C for AHT20 -- configured as open-drain with pull-ups on the PCB.
+     * periph_init() (and therefore this function) also runs from the button
+     * WKUPCT ISR; while an AHT20 transfer is in flight the pads already
+     * belong to the I2C block, and re-issuing GPIO_ConfigurePin() on them
+     * mid-transaction can corrupt it or leave the bus undefined.  The pads
+     * are only (re)assigned when the driver is idle. */
+    if (!i2c_temp_sensor_busy())
+    {
+        GPIO_ConfigurePin(I2C_SCL_PORT, I2C_SCL_PIN, INPUT, PID_I2C_SCL, false);
+        GPIO_ConfigurePin(I2C_SDA_PORT, I2C_SDA_PIN, INPUT, PID_I2C_SDA, false);
+    }
 }
 
 #if defined (CFG_PRINTF_UART2)

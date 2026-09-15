@@ -5,8 +5,10 @@ import { createBleTransport } from '../ble/createBleTransport';
 import { SimulatedBluetoothTransport } from '../ble/simulatedBluetoothTransport';
 import { useThermometerStore, type ConnectionStatus } from '../state/store';
 import { publishMeasurement, subscribeLive, LiveMeasurement } from '../live/mqttClient';
+import { buildTemperatureEnvelope } from '../live/envelope';
 import { api } from '../api/client';
 import { useClaimDevice, useMe } from '../api/queries';
+import { useTransientFlag } from '../hooks/useTransientFlag';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Alert } from '../components/ui/Alert';
@@ -21,6 +23,9 @@ const CONNECTION_STATE_BY_STATUS: Record<ConnectionStatus, ConnectionState> = {
   error: 'failed',
 };
 
+/** How many live-feed events the panel keeps on screen. */
+const LIVE_EVENT_LIMIT = 5;
+
 /**
  * Two ways to get a BleTransport here: the real one (Web Bluetooth or the
  * Capacitor native plugin, picked by createBleTransport()) and the
@@ -33,21 +38,42 @@ export function ConnectPage() {
   const claimDevice = useClaimDevice();
   const meQuery = useMe();
   const unit = meQuery.data?.temperatureUnit ?? 'CELSIUS';
-  const myId = meQuery.data?.id;
+  const signedIn = meQuery.data != null;
+  const justClaimed = useTransientFlag(claimDevice.isSuccess);
   const [liveEvents, setLiveEvents] = useState<LiveMeasurement[]>([]);
+
+  /**
+   * Tears the transport down when this page unmounts (review FE-05).
+   *
+   * Without it, navigating away via any in-app link left the transport running:
+   * the simulator's setInterval kept publishing to MQTT and REST forever in the
+   * background, and a real device kept its GATT connection and notification
+   * stream open — draining its battery with no way to stop short of coming back
+   * to /connect. Empty dependency list on purpose: this must run on unmount
+   * only, and the ref is read at that moment rather than captured.
+   */
+  useEffect(
+    () => () => {
+      transportRef.current?.disconnect();
+      transportRef.current = null;
+    },
+    [],
+  );
 
   // Subscribes to our own live feed regardless of connection state, so this
   // panel demonstrates the full loop: local reading -> publish -> backend
   // ingest -> live re-publish (architecture v3 §7) -> this subscription.
-  // Keyed on /api/me's stable id — see subscribeLive() for why the JWT `sub`
-  // must not be used here.
+  //
+  // No user id is passed: subscribeLive() derives the topic from the id inside
+  // the broker credential the backend mints, which is server-asserted (see
+  // live/mqttClient.ts, review FE-03). Gated on /api/me having resolved simply
+  // because minting needs a live access token — not because the id is used here.
   useEffect(() => {
-    if (!myId) return;
-    const unsubscribe = subscribeLive((measurement) => {
-      setLiveEvents((prev) => [measurement, ...prev].slice(0, 5));
-    }, myId);
-    return unsubscribe;
-  }, [myId]);
+    if (!signedIn) return undefined;
+    return subscribeLive((measurement) => {
+      setLiveEvents((prev) => [measurement, ...prev].slice(0, LIVE_EVENT_LIMIT));
+    });
+  }, [signedIn]);
 
   const connectWith = async (transport: BleTransport) => {
     setStatus('connecting');
@@ -59,20 +85,17 @@ export function ConnectPage() {
       transport.onTemperature((celsius) => {
         setReading(celsius);
 
-        const envelope = {
-          v: 1,
-          device_id: device.id,
-          collector_id: 'web-fe',
-          ts: new Date().toISOString(),
-          type: 'temperature',
-          payload: { celsius },
-        };
+        const envelope = buildTemperatureEnvelope(device.id, celsius);
         // Direct MQTT/WSS publish (primary path) — REST is the fallback
         // upload path per architecture v2 §5.2, used here as a durability
-        // belt-and-braces since this demo has no offline queue yet.
-        publishMeasurement(envelope);
+        // belt-and-braces since this demo has no offline queue yet. Both are
+        // best-effort and independent: publishing now also has to mint a broker
+        // credential first (review FE-03), so it can reject like any request.
+        publishMeasurement(envelope).catch(() => {
+          // broker or credential unavailable — the REST upload below still runs
+        });
         api.uploadMeasurement(envelope).catch(() => {
-          // best-effort fallback; MQTT publish above already attempted delivery
+          // best-effort fallback; the MQTT publish above already attempted delivery
         });
       });
 
@@ -94,7 +117,13 @@ export function ConnectPage() {
 
   const handleClaim = () => {
     if (!deviceId) return;
-    claimDevice.mutate({ bdAddr: deviceId, model: 'DA14535' });
+    // No model is sent (review FE-14): this page cannot know what the hardware
+    // actually is — Web Bluetooth doesn't expose it and the simulator isn't
+    // hardware at all — so a hardcoded 'DA14535' only fed the admin console's
+    // model breakdown a literal unrelated to the device. The backend defaults
+    // the column, and an admin can correct it from the device registry; a real
+    // value would have to come from the Device Information Service.
+    claimDevice.mutate({ bdAddr: deviceId });
   };
 
   const bluetoothSupported = typeof navigator !== 'undefined' && !!navigator.bluetooth;
@@ -116,7 +145,7 @@ export function ConnectPage() {
 
       <div className="flex flex-wrap gap-2">
         <Button
-          onClick={() => connectWith(createBleTransport())}
+          onClick={() => void connectWith(createBleTransport())}
           disabled={status === 'connecting' || status === 'connected' || !bluetoothSupported}
           loading={status === 'connecting'}
         >
@@ -124,7 +153,7 @@ export function ConnectPage() {
         </Button>
         <Button
           variant="secondary"
-          onClick={() => connectWith(new SimulatedBluetoothTransport())}
+          onClick={() => void connectWith(new SimulatedBluetoothTransport())}
           disabled={status === 'connecting' || status === 'connected'}
         >
           Connect (Simulated Device)
@@ -157,9 +186,8 @@ export function ConnectPage() {
             <Button size="sm" onClick={handleClaim} loading={claimDevice.isPending}>
               Claim this device to my account
             </Button>
-            {claimDevice.isSuccess && (
-              <span className="text-body font-semibold text-success-text">Claimed ✓</span>
-            )}
+            {/* Expires on its own — see useTransientFlag (review FE-29). */}
+            {justClaimed && <span className="text-body font-semibold text-success-text">Claimed ✓</span>}
           </div>
           {claimDevice.isError && (
             <div className="mt-2">
@@ -181,8 +209,11 @@ export function ConnectPage() {
           <EmptyState icon={Radio} title="No live events yet." />
         ) : (
           <ul className="space-y-1 text-body text-ink-secondary">
-            {liveEvents.map((event, i) => (
-              <li key={i} className="font-tabular">
+            {liveEvents.map((event) => (
+              // Keyed by the reading's own identity, not its position (review
+              // FE-28): the list is built by unshifting, so an index key makes
+              // React reconcile every row on each new event.
+              <li key={`${event.ts}-${event.device_id}`} className="font-tabular">
                 {new Date(event.ts).toLocaleTimeString()} — {event.device_id} — {JSON.stringify(event.payload)}
               </li>
             ))}

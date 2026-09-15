@@ -462,7 +462,9 @@ device** — the same per-device credentials as 10.1.
 
 5.4 keyed its buckets on `X-Forwarded-For`'s first entry with
 `trust-forwarded-for` defaulting to `true` — but `docker-compose.yml`
-publishes `backend` on `8080:8080` with **no reverse proxy in front of it**,
+publishes `backend` on `8080:8080` with **no reverse proxy in front of it** (the
+`docker-compose.prod.yml` overlay added on 2026-09-14 does put Caddy in front
+and sets `trust-forwarded-for=true` there, and only there — see §12),
 so that header is pure client input on the topology this repo actually ships.
 Any caller could rotate it for a fresh bucket per request, defeating both the
 blanket limiter and the tighter collector bucket that exists specifically to
@@ -1117,3 +1119,170 @@ Findings from auditing every interactive surface against the design system:
    provisioning story (and the same SPI-flash-layout question that blocks
    firmware items 2.3/2.4/3.4).
 7. **10.6** — not an engineering task until there's a product answer.
+
+---
+
+## 12. Code-review fix pass (2026-09-14)
+
+`CODE_REVIEW.html` (same date, commit `0178d01`) listed 92 verified findings.
+This pass worked through all of them; the review document now carries a
+resolution line per finding. What follows is the backlog view: what changed,
+what was verified, and the few things deliberately left open. Firmware
+findings are `FW-`, backend `BE-`, web frontend `FE-`, gateway/deploy/CI/repo
+`INF-`.
+
+### Implementation status
+
+| Area | Fixed | Fixed differently / partially | Open | Total |
+|------|-------|-------------------------------|------|-------|
+| Firmware | 16 | 0 | 0 | 16 |
+| Backend | 19 | 0 (BE-16/BE-18 done in their pragmatic form, see below) | 0 | 19 |
+| Web frontend | 32 | 1 (FE-23, see 12.4) | 0 | 33 |
+| Gateway, mobile, deploy, CI, repo | 24 | 0 | 0 | 24 |
+
+Verification at the end of the pass: `bash tests/run_tests.sh` (all codec +
+decision-table checks pass), `bash build.sh` / `bash build.sh release` (both
+green), the Eclipse DA14585 configuration compiles again, backend
+`mvn verify` (98 unit + 32 integration tests, against a dynamic-security
+Mosquitto), `fe` `npm run lint` clean + `vitest` 158 tests / 0 unhandled
+errors + `npm run build`, gateway `go vet` + `go test` (87 tests, also under
+`-race`), both compose files `config`-valid, and the full local stack brought
+up with the browser e2e suite run against it (result recorded in the root
+README's "Platform" section).
+
+### ✅ 12.1 Firmware: ISR/task races and build hygiene (FW-01 … FW-16)
+- **FW-02/03/04 (one gap):** every variable shared between the I2C ISR and
+  the BLE task context is `volatile`; `user_app_on_disconnect()` clears the
+  connection guards *before* tearing the cycle down, and `stop_temp_timer()`
+  runs inside `GLOBAL_INT_DISABLE/RESTORE`; the AHT20 driver exposes
+  `i2c_temp_sensor_busy()` and `set_pad_functions()` leaves the SCL/SDA pads
+  alone while a transfer is in flight.
+- **FW-15:** the cycle's decisions are the pure `cycle_next_action()` and
+  `recovery_action()` in `codec.h`, with host tests including a 40-cycle
+  dead-sensor simulation that pins the 6/11/16/21… recovery cadence.
+- **FW-01:** `arch_set_deep_sleep()` guarded for DA14585 (single-argument
+  form). The Eclipse DA14585 configuration compiles; it was never able to
+  link a bootable image from the checked-in CDT makefiles (the startup files
+  were not part of them), so it is documented as compile-checked only.
+- **FW-05:** HTP service created with `SRV_PERM_UNAUTH` and
+  `DEF_SEC_REQ_ON_CONNECT` — Just Works pairing without bonding on every
+  connection, encrypted link before any temperature flows. **Needs a
+  hardware check per collector platform** (Chrome Web Bluetooth on
+  macOS/Windows/Linux, Android, iOS) — recorded in the README; the simulated
+  transport and the e2e suite are unaffected.
+- **FW-06:** per-unit OTP BD-address provisioning documented as mandatory
+  (README "Hardware", `PACKAGING_CONCEPT.md` §8).
+- **FW-07:** driver consumes `I2C_SPEED_MODE` / `I2C_ADDRESS_MODE`; the
+  duplicate address define is gone.
+- **FW-08:** placeholder IRK loudly commented and guarded by an `#error`
+  for any privacy address mode.
+- **FW-09 / INF-08:** project and repo-root `.gitignore`; 660 tracked
+  artifacts (`build/`, Eclipse per-config dirs, `compile_commands.json`,
+  `tests/test_codec`, `.vscode/`, every `.DS_Store`, the SDK `.metadata/`)
+  untracked with `git rm --cached` (working tree untouched).
+- **FW-10:** dead `meas.type` assignment removed; the type is exposed via
+  the Temperature Type characteristic. **FW-11/13:** `_Static_assert`s on
+  the tuning constants. **FW-12:** indication-failure counter + `arch_printf`.
+  **FW-14/16:** Eclipse documented as IDE-only with the DA14531/DA14585 config
+  variants explained; design-system files in the structure tree.
+
+### ✅ 12.2 Backend (BE-01 … BE-19, INF-07 Java, INF-14, INF-18)
+BE-01 audit detail through Jackson (`AuditDetailWriter`); BE-02
+`V3__audit_log_indexes.sql`; BE-03 local profile on 5433; BE-04 limit clamped
+1..5000; BE-05 explicit role precedence; BE-06 status vocabulary reconciled
+(`pending`/`success`/`failed`) with a `statusCounts` key test; BE-07 `azp`/
+`aud` validator (`thermometer.oidc.client-id`); BE-08 one tier order; BE-09
+`findByStatusAndChipModelIgnoreCase`; BE-10 `@Size`/`@Valid` on the device
+DTOs; BE-11 V1 header rewritten (**changes V1's Flyway checksum — existing
+volumes need `docker compose down -v` or `flyway repair`**, README says so);
+BE-12 dead query removed; BE-13 fallbacks 240/80; BE-14 admin branches bounded
+(500) with pointers to the paged `/api/admin/*`; BE-15 Dockerfile no longer
+swallows dependency failures + `HEALTHCHECK`; BE-16 `AdminController` and
+`RolloutController` moved to their feature packages, target shape recorded in
+the README (four pure renames deferred); BE-17 `CurrentUserService.requireRole`
+everywhere; BE-18 `PatientSummaryService` with 9 unit tests (the analytics
+controller's read-only SQL stays inline, documented); BE-19 auto-abort unit
+tests + pagination MVC tests (`standaloneSetup`, since `@WebMvcTest`/
+`@MockBean` cannot instrument on this JDK) + an RBAC IT over the new indexes;
+INF-07 schema parity test; INF-18 confirmed `trust-forwarded-for=false` in both
+places (the review's "defaulting to true" reading of §5.8 was historical).
+
+### ✅ 12.3 Broker authentication (FE-03, INF-01, INF-04) — the cross-cutting one
+Mosquitto runs the built-in dynamic-security plugin with `allow_anonymous
+false`. The backend connects as the dynsec admin and is the sole
+provisioning authority: role/client `collector` (publish
+`v1/+/collector/+/measurement/+` only) for the gateways, a `backend` role
+(publish `live/#`) for itself, and per-user `user-<id>` clients minted by
+`POST /api/live/credentials` (random password rotated on every mint, ACL
+`live/<id>/#` subscribe + `v1/default/<id>/+/measurement/+` publish, swept
+after `thermometer.mqtt.user-credential-ttl`). Provisioning is
+check-then-write because the plugin disconnects clients whose roles it
+rewrites. Ingest treats the `collector` segment as trusted and everything
+else as a browser user whose readings must be for an unclaimed or own device
+(`ingest.rejected` audit row otherwise). The gateway authenticates as
+`collector` (refuses to start without a password unless `--allow-anonymous`);
+the web app mints its credential and uses the server-asserted `userId` for
+both topics. Identity/ACL table: `deploy/README.md`.
+
+### ✅ 12.4 Web frontend (FE-01 … FE-33, INF-09, INF-17, INF-19, INF-24)
+Demo credentials DEV-only (FE-01); tokens in `sessionStorage` + CSP and the
+full browser-header set from an unprivileged nginx (FE-02/INF-09/INF-24);
+IEEE-11073 NaN/NRes/±Inf sentinels → `null` (FE-04); transport disconnected
+on unmount and characteristic listener removed (FE-05/06); admin mutations
+surface errors (FE-07); real ESLint (`typescript-eslint` type-checked,
+`react-hooks`, `jsx-a11y`) with zero `eslint-disable` left (FE-08);
+single-flight token renewal (FE-09); compare mode stops the hidden poll
+(FE-10); 83 new tests incl. component tests for the connect lifecycle, admin
+error paths, routing and the 401 race (FE-11); `react-router-dom` 7 (the v6
+line has no patched release, FE-12); admin-promotion confirm (FE-13); model
+no longer hardcoded (FE-14); `SettingsPage` split into `pages/settings/`
+(FE-15); `StatTile`, `Select`, `formatDuration`, `TIER_ICON`,
+`MAX_OVERLAY_SERIES` consolidated (FE-16/17/25/27/30); sparkline text
+alternative (FE-18); windowed `computeYDomain` (FE-19); `useSelectedDevice`
+hook (FE-20); shared `useMeasurementHistories` (FE-21); threshold query gated
+(FE-22); inert sticky table header removed rather than offset — the horizontal-scroll wrapper is its scroll container, and an offset covered the first rows (FE-23); report error state (FE-24);
+`pages/doctor/` + generic pieces in `components/ui/` (FE-26); stable list keys
+(FE-28); expiring confirmations (FE-29); route-level code splitting, entry
+chunk 1,265 kB → 184 kB, mqtt.js loaded on demand (FE-31, closes 10.3);
+NavBar boundary match (FE-32); server-enforcement note (FE-33). Runtime
+`env.js` rendered by the nginx entrypoint replaces build-time `VITE_*` args so
+one image is promotable (INF-17; the Capacitor shell still needs them at
+build time — `mobile/README.md`). `mobile/.gitignore` covers the native trees
+(INF-19).
+
+### ✅ 12.5 Gateway (INF-04/05/11/12/16/20/22, INF-07 Go)
+Credentials wired through the previously dead `auth` package (used on every
+reconnect); bounded `WaitTimeout` waits with the shutdown context threaded to
+`Publish` and `Source.Read`; a 256-entry ring buffer replayed in order after
+an outage with Prometheus-format counters on `--metrics-addr`; non-root image
+on the Go version `go.mod` declares; topic-segment and reading validation;
+synthetic battery/RSSI in `meta` (closes the collector half of 10.2 for the
+simulator; the BlueZ source will supply real values); embedded-broker tests
+for the publisher and the main loop; schema parity test.
+
+### ✅ 12.6 Deploy, CI, repo (INF-02/03/06/08/10/13/14/15/21/23)
+`docker-compose.yml` is now the laptop profile (all host ports on 127.0.0.1,
+`.env`-overridable defaults, pinned images, healthchecks on every service and
+`service_healthy` on every dependency) and `docker-compose.prod.yml` the
+hardened overlay (no host ports, secrets required, Caddy TLS on one public
+hostname path-routing FE / API / Keycloak / MQTT-WS, Keycloak in production
+mode without the demo realm, `trust-forwarded-for=true`). Keycloak
+`sslRequired=external`; admin demo password follows the `<Role><NN>!`
+pattern (`Admin01!`). Four new path-filtered workflows (backend, frontend,
+gateway, mobile) next to the firmware one; every action pinned to a commit
+SHA. Superseded architecture docs moved to `docs/superseded/`.
+`schema/measurement-envelope.v1.schema.json` is the wire contract all three
+implementations test against.
+
+### ⏸ 12.7 Left open, deliberately
+- **Hardware validation of the encrypted-link posture (FW-05)** on each
+  collector platform — no device on the bench during this pass.
+- **Dev-toolchain `npm audit` findings** (`vite`/`vitest`/`esbuild`, each a
+  major bump; nothing ships to users).
+- **React Compiler preview lint rules** of `eslint-plugin-react-hooks` 7 —
+  fire on correct code, would mean refactoring every form.
+- **Remaining `api/` → feature-package renames** (BE-16) and the analytics
+  SQL extraction (BE-18) — pure churn, recorded in `backend/README.md`.
+- **Short-lived *gateway* credentials** (INF-04's end state, 10.1) — the
+  gateway now authenticates with a static `collector` credential; a
+  backend-minted, renewable one is the next step and the seam is in place.

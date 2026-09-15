@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Bluetooth, Download, History, Layers } from 'lucide-react';
 import { MeasurementChart } from '../components/MeasurementChart';
@@ -9,16 +9,17 @@ import { TimeWindowPicker } from '../components/TimeWindowPicker';
 import { TrendInsightCard } from '../components/TrendInsightCard';
 import { MeasurementResponse } from '../api/client';
 import { useAnnotations, useDevices, useMe, useMeasurementHistory } from '../api/queries';
-import { useUiPreferences } from '../state/uiStore';
-import { deviceDisplayName, resolveSelectedBdAddr } from '../utils/devices';
+import { useSelectedDevice } from '../hooks/useSelectedDevice';
+import { deviceDisplayName } from '../utils/devices';
 import { useMeasurementHistories } from '../api/useMeasurementHistories';
-import { useChartColors } from '../theme/chartColors';
+import { MAX_OVERLAY_SERIES, useChartColors } from '../theme/chartColors';
 import { downloadCsv } from '../utils/csv';
 import { convertFromCelsius, unitSuffix } from '../utils/temperature';
 import { timeWindowHours, timeWindowKey, timeWindowLabel, type TimeWindow } from '../utils/timeWindow';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { StatCard } from '../components/ui/StatCard';
+import { Select } from '../components/ui/Select';
 import { EmptyState, SkeletonBlock } from '../components/ui/EmptyState';
 
 const RANGES = [
@@ -26,12 +27,6 @@ const RANGES = [
   { label: '24h', hours: 24 },
   { label: '7d', hours: 24 * 7 },
 ];
-
-/**
- * Overlay cap. The categorical palette has six validated slots and a legend
- * of more than a handful of lines stops being readable long before that.
- */
-const MAX_COMPARE_DEVICES = 5;
 
 /** BD addresses contain colons, which Windows rejects in filenames. */
 function safeFilenamePart(value: string): string {
@@ -44,33 +39,23 @@ export function DashboardPage() {
   const colors = useChartColors();
   const unit = meQuery.data?.temperatureUnit ?? 'CELSIUS';
   const [timeWindow, setTimeWindow] = useState<TimeWindow>({ kind: 'sliding', hours: 24 });
-  const lastDeviceBdAddr = useUiPreferences((s) => s.lastDeviceBdAddr);
-  const setLastDeviceBdAddr = useUiPreferences((s) => s.setLastDeviceBdAddr);
-  const [selectedBdAddr, setSelectedBdAddr] = useState<string | null>(null);
   const [compareBdAddrs, setCompareBdAddrs] = useState<string[] | null>(null);
   const [selectedReading, setSelectedReading] = useState<SelectedReading | null>(null);
 
-  const devices = devicesQuery.data ?? [];
+  // Memoised so it is the same array identity between renders: several
+  // useMemo/useEffect hooks below depend on it, and `?? []` would hand them a
+  // fresh empty array on every render (react-hooks/exhaustive-deps, review FE-08).
+  const devices = useMemo(() => devicesQuery.data ?? [], [devicesQuery.data]);
   const comparing = compareBdAddrs !== null;
 
-  // Keep the selection valid as the device list loads/changes — defaulting to
-  // the remembered choice (survives navigating away and back) or the first
-  // device. The stored preference is only ever a hint: resolveSelectedBdAddr
-  // re-checks it against what this account still owns.
-  useEffect(() => {
-    setSelectedBdAddr(resolveSelectedBdAddr(devices, selectedBdAddr ?? lastDeviceBdAddr));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run when the device set changes, not on every keystroke of state above
-  }, [devices.map((d) => d.bdAddr).join(',')]);
-
-  // Remember the choice for the next visit (and so Devices can highlight it).
-  useEffect(() => {
-    if (selectedBdAddr) {
-      setLastDeviceBdAddr(selectedBdAddr);
-    }
-  }, [selectedBdAddr, setLastDeviceBdAddr]);
+  // Remembered + revalidated device choice, shared with HistoryPage (review FE-20).
+  const { selectedBdAddr, setSelectedBdAddr } = useSelectedDevice(devices);
 
   const device = devices.find((d) => d.bdAddr === selectedBdAddr) ?? null;
-  const historyQuery = useMeasurementHistory(device?.bdAddr ?? null, timeWindow);
+  // Paused in compare mode (review FE-10): nothing this query feeds is on
+  // screen then, and compare mode brings its own 5 s queries — two overlapping
+  // polling sets for as long as the overlay stays open is pure waste.
+  const historyQuery = useMeasurementHistory(device?.bdAddr ?? null, timeWindow, { enabled: !comparing });
   const latest = historyQuery.data?.[0];
   // Same query ReadingNotes below makes (React Query dedupes it) — reused here
   // so the chart can mark each note's location without an extra fetch.
@@ -125,7 +110,7 @@ export function DashboardPage() {
     setCompareBdAddrs((current) => {
       if (current === null) return current;
       if (current.includes(bdAddr)) return current.filter((addr) => addr !== bdAddr);
-      if (current.length >= MAX_COMPARE_DEVICES) return current;
+      if (current.length >= MAX_OVERLAY_SERIES) return current;
       return [...current, bdAddr];
     });
   };
@@ -188,9 +173,8 @@ export function DashboardPage() {
       ) : (
         <>
           {devices.length > 1 && !comparing && (
-            <select
+            <Select
               aria-label="Device"
-              className="h-touch w-full cursor-pointer rounded-md border border-sand-500 bg-surface-1 px-3 text-body text-ink-primary transition-colors duration-fast ease-standard hover:border-sand-600 dark:border-sand-600 dark:hover:border-sand-400 focus-visible:outline-none focus-visible:border-primary-600 focus-visible:shadow-focus"
               value={selectedBdAddr ?? ''}
               onChange={(e) => {
                 setSelectedBdAddr(e.target.value);
@@ -202,7 +186,7 @@ export function DashboardPage() {
                   {deviceDisplayName(d)} ({d.bdAddr})
                 </option>
               ))}
-            </select>
+            </Select>
           )}
 
           {!comparing && (
@@ -250,7 +234,7 @@ export function DashboardPage() {
             {comparing && (
               <fieldset className="mb-3 border-b border-border-hairline pb-3 dark:border-border-hairline/[0.08]">
                 <legend className="text-label uppercase tracking-wide text-ink-secondary">
-                  Devices to overlay (up to {MAX_COMPARE_DEVICES})
+                  Devices to overlay (up to {MAX_OVERLAY_SERIES})
                 </legend>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2">
                   {devices.map((d) => {
@@ -260,7 +244,7 @@ export function DashboardPage() {
                         <input
                           type="checkbox"
                           checked={checked}
-                          disabled={!checked && (compareBdAddrs ?? []).length >= MAX_COMPARE_DEVICES}
+                          disabled={!checked && (compareBdAddrs ?? []).length >= MAX_OVERLAY_SERIES}
                           onChange={() => toggleCompareDevice(d.bdAddr)}
                           className="size-4 accent-primary-600 disabled:opacity-40"
                         />

@@ -11,8 +11,12 @@ const FORMULA_PREFIXES = ['=', '+', '-', '@', '\t', '\r'];
 function formatValue(value: unknown): string {
   if (value == null) return '';
   if (value instanceof Date) return value.toISOString();
-  if (typeof value === 'object') return JSON.stringify(value);
-  return String(value);
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean' || typeof value === 'bigint') return String(value);
+  // Objects, arrays and anything else. Enumerated rather than falling through to
+  // String(value), which renders an object as the useless '[object Object]'.
+  // JSON.stringify answers undefined for a function or symbol, hence the ?? ''.
+  return JSON.stringify(value) ?? '';
 }
 
 function escapeCell(value: unknown): string {

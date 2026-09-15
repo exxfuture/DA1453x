@@ -140,12 +140,39 @@ export function shiftWindow(resolved: ResolvedWindow, direction: -1 | 1): [numbe
 }
 
 /**
+ * First index of a **ts-sorted** point array whose ts is >= `ts`; the array
+ * length when none is. Binary search, so the scan below can start at the
+ * window's edge instead of at index 0.
+ */
+function lowerBound(points: TemperatureSeriesPoint[], ts: number): number {
+  let low = 0;
+  let high = points.length;
+  while (low < high) {
+    const mid = (low + high) >> 1;
+    if (points[mid].ts < ts) low = mid + 1;
+    else high = mid;
+  }
+  return low;
+}
+
+/**
  * Vertical auto-scale: min/max across every series inside the visible window,
  * plus padding, so a fever spike entering the window zooms the axis onto it.
  * Returns null when the window holds no readings (caller falls back to 'auto').
  *
- * Plain loops rather than Math.min(...values): a 7-day range can hold tens of
- * thousands of points and spreading those blows the argument limit.
+ * Only the visible slice is scanned (review FE-19). This runs inside a `useMemo`
+ * that re-evaluates on every brush drag AND every 5 s refetch, so on a 30-day
+ * range at 5 s cadence — hundreds of thousands of points — walking each series
+ * end to end and filtering inside the loop was a repeated full O(n) pass to read
+ * a window that is usually a small fraction of it. Binary-searching both edges
+ * makes it O(log n + window).
+ *
+ * Requires each series' `points` to be sorted by ts ascending, which is the
+ * chart's contract everywhere (`mergeSeries` sorts, and every call site reverses
+ * the API's newest-first response before building points).
+ *
+ * Plain loops rather than Math.min(...slice): even a windowed slice can hold
+ * tens of thousands of points and spreading those blows the argument limit.
  */
 export function computeYDomain(
   series: TemperatureSeries[],
@@ -156,8 +183,10 @@ export function computeYDomain(
   let min = Infinity;
   let max = -Infinity;
   for (const s of series) {
-    for (const point of s.points) {
-      if (point.ts < windowStart || point.ts > windowEnd) continue;
+    const from = lowerBound(s.points, windowStart);
+    for (let i = from; i < s.points.length; i += 1) {
+      const point = s.points[i];
+      if (point.ts > windowEnd) break;
       if (point.value < min) min = point.value;
       if (point.value > max) max = point.value;
     }

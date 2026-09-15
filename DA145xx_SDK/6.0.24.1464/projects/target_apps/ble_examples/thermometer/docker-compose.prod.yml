@@ -1,0 +1,141 @@
+# Hardened overlay for anything reachable beyond a laptop. Layer it on top
+# of docker-compose.yml:
+#
+#   cp .env.example .env   # fill in every value — secrets have NO defaults here
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml config   # fails on a missing secret
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+#
+# What it changes relative to the local stack:
+#   - No service publishes a host port except Caddy (80/443). Postgres,
+#     Keycloak, MinIO, Mosquitto, the backend and the FE are reachable only
+#     on the compose network.
+#   - Caddy terminates TLS for one PUBLIC_HOST (deploy/caddy/Caddyfile) and
+#     path-routes to fe / backend / keycloak (/auth) / mosquitto (/mqtt, WSS).
+#     ACME or Caddy's internal CA per CADDY_TLS.
+#   - Every credential comes from .env (`${VAR:?...}` — compose refuses to
+#     start without it).
+#   - Keycloak runs `start` (production mode) behind the proxy, with the
+#     realm NOT auto-imported: deploy/keycloak/realm-export.json carries
+#     demo users with committed passwords and localhost redirect URIs, which
+#     must not exist on a public deployment. Provision the realm (roles,
+#     the thermometer-web client with https://PUBLIC_HOST/* redirect URIs,
+#     real users, sslRequired=external) through the admin console or a
+#     realm file of your own mounted at /opt/keycloak/data/import.
+#   - The backend trusts X-Forwarded-For (rate limiting / audit IPs) because
+#     Caddy is now the only hop that can set it.
+#   - The mail catcher (mailpit) is removed; point Keycloak's realm SMTP at a
+#     real relay.
+#   - The four simulated gateways are removed.
+#
+# Keycloak's `iss` claim becomes https://PUBLIC_HOST/auth/realms/thermometer,
+# which is what the backend validates and what the browser is redirected to.
+
+services:
+  caddy:
+    image: caddy:2.10.0-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    environment:
+      PUBLIC_HOST: ${PUBLIC_HOST:?set PUBLIC_HOST in .env}
+      CADDY_TLS: ${CADDY_TLS:?set CADDY_TLS in .env (internal or an ACME e-mail)}
+    volumes:
+      - ./deploy/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      fe:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mosquitto:
+    ports: !reset []
+    environment:
+      MQTT_ADMIN_USERNAME: ${MQTT_ADMIN_USERNAME:?set MQTT_ADMIN_USERNAME in .env}
+      MQTT_ADMIN_PASSWORD: ${MQTT_ADMIN_PASSWORD:?set MQTT_ADMIN_PASSWORD in .env}
+    restart: unless-stopped
+
+  postgres:
+    ports: !reset []
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Creates the `keycloak` database on first init (see the file's header).
+      - ./deploy/postgres/init-keycloak-db.sql:/docker-entrypoint-initdb.d/10-keycloak-db.sql:ro
+    restart: unless-stopped
+
+  keycloak:
+    command: start
+    ports: !reset []
+    volumes: !reset []
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:?set KC_BOOTSTRAP_ADMIN_USERNAME in .env}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:?set KC_BOOTSTRAP_ADMIN_PASSWORD in .env}
+      KC_HOSTNAME: https://${PUBLIC_HOST:?set PUBLIC_HOST in .env}/auth
+      KC_HOSTNAME_PORT: !reset null
+      KC_HOSTNAME_STRICT_HTTPS: !reset null
+      KC_HTTP_RELATIVE_PATH: /auth
+      KC_HTTP_ENABLED: "true"        # plain HTTP between Caddy and Keycloak, inside the compose network only
+      KC_PROXY_HEADERS: xforwarded
+      KC_SPI_THEME_CACHE_THEMES: !reset null
+      KC_SPI_THEME_STATIC_MAX_AGE: !reset null
+      # Production mode needs a real database; share the TimescaleDB instance
+      # (separate database inside it) rather than running a second Postgres.
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
+      KC_DB_USERNAME: thermometer
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+    depends_on: !reset
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  mailpit: !reset null
+
+  minio:
+    ports: !reset []
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?set MINIO_ROOT_PASSWORD in .env}
+    restart: unless-stopped
+
+  backend:
+    ports: !reset []
+    environment:
+      THERMOMETER_MQTT_USERNAME: ${MQTT_ADMIN_USERNAME:?set MQTT_ADMIN_USERNAME in .env}
+      THERMOMETER_MQTT_PASSWORD: ${MQTT_ADMIN_PASSWORD:?set MQTT_ADMIN_PASSWORD in .env}
+      THERMOMETER_MQTT_COLLECTOR_PASSWORD: ${MQTT_COLLECTOR_PASSWORD:?set MQTT_COLLECTOR_PASSWORD in .env}
+      THERMOMETER_DEVICE_COLLECTOR_TOKEN: ${THERMOMETER_DEVICE_COLLECTOR_TOKEN:?set THERMOMETER_DEVICE_COLLECTOR_TOKEN in .env}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      # Same-origin behind Caddy: the browser reaches the API and Keycloak
+      # through https://PUBLIC_HOST, so that is the only allowed origin and
+      # the issuer every token must carry.
+      THERMOMETER_CORS_ALLOWED_ORIGINS: https://${PUBLIC_HOST}
+      THERMOMETER_OIDC_ISSUER_URI: https://${PUBLIC_HOST}/auth/realms/thermometer
+      THERMOMETER_OIDC_JWK_SET_URI: http://keycloak:8080/auth/realms/thermometer/protocol/openid-connect/certs
+      # Caddy is the only hop that can set X-Forwarded-For now.
+      THERMOMETER_RATELIMIT_TRUST_FORWARDED_FOR: "true"
+    restart: unless-stopped
+
+  fe:
+    ports: !reset []
+    environment:
+      API_BASE_URL: https://${PUBLIC_HOST}
+      MQTT_WS_URL: wss://${PUBLIC_HOST}/mqtt
+      KEYCLOAK_URL: https://${PUBLIC_HOST}/auth
+    restart: unless-stopped
+
+  gateway-1: !reset null
+  gateway-2: !reset null
+  gateway-3: !reset null
+  gateway-4: !reset null
+
+volumes:
+  caddy_data:
+  caddy_config:

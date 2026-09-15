@@ -29,6 +29,11 @@
  * within this file (none -- we just fire the user callback and let the caller
  * decide).
  *
+ * A volatile busy flag is raised for the lifetime of every transaction
+ * (i2c_temp_sensor_busy()) so that set_pad_functions() — which the SDK's
+ * wake-up boilerplate runs from the button ISR — leaves the SCL/SDA pads
+ * alone while a transfer is in flight.
+ *
  * Copyright (C) 2015-2025 Renesas Electronics Corporation and/or its affiliates.
  * All rights reserved. Confidential Information.
  *
@@ -61,6 +66,19 @@ static i2c_temp_trig_cb_t s_trig_cb;
 static i2c_temp_read_cb_t s_read_cb;
 
 /*
+ * True from the moment a transaction is started until its terminal ISR
+ * callback runs.  Written from both task context (start) and I2C ISR context
+ * (completion), read from the button ISR via set_pad_functions() — hence
+ * volatile.
+ */
+static volatile bool s_busy;
+
+bool i2c_temp_sensor_busy(void)
+{
+    return s_busy;
+}
+
+/*
  * Forward declarations of internal ISR callbacks.
  */
 static void on_status_read(void *cb_data, uint16_t len, bool success);
@@ -80,10 +98,10 @@ static void build_i2c_cfg(i2c_cfg_t *cfg)
     cfg->clock_cfg.fs_hcnt = I2C_FS_SCL_HCNT_REG_RESET;
     cfg->clock_cfg.fs_lcnt = I2C_FS_SCL_LCNT_REG_RESET;
     cfg->restart_en        = I2C_RESTART_ENABLE;
-    cfg->speed             = I2C_SPEED_FAST;
+    cfg->speed             = I2C_SPEED_MODE;      /* user_periph_setup.h */
     cfg->mode              = I2C_MODE_MASTER;
-    cfg->addr_mode         = I2C_ADDRESSING_7B;
-    cfg->address           = AHT20_I2C_ADDRESS;
+    cfg->addr_mode         = I2C_ADDRESS_MODE;    /* user_periph_setup.h */
+    cfg->address           = AHT20_I2C_ADDRESS;   /* fixed by the sensor */
     cfg->tx_fifo_level     = 1;
     cfg->rx_fifo_level     = 1;
 }
@@ -97,6 +115,7 @@ void i2c_temp_sensor_trigger(i2c_temp_trig_cb_t cb)
     i2c_cfg_t cfg;
 
     s_trig_cb = cb;
+    s_busy    = true;
 
     build_i2c_cfg(&cfg);
     i2c_init(&cfg);
@@ -114,6 +133,7 @@ static void on_status_read(void *cb_data, uint16_t len, bool success)
     if (!success || len != 1)
     {
         i2c_release();
+        s_busy = false;
         if (s_trig_cb) s_trig_cb(false);
         return;
     }
@@ -149,6 +169,7 @@ static void on_init_sent(void *cb_data, uint16_t len, bool success)
     (void)success;
 
     i2c_release();
+    s_busy = false;
     /* Skip this cycle; next trigger will find the sensor calibrated */
     if (s_trig_cb) s_trig_cb(false);
 }
@@ -159,6 +180,7 @@ static void on_trigger_sent(void *cb_data, uint16_t len, bool success)
     (void)cb_data;
 
     i2c_release();
+    s_busy = false;
     if (s_trig_cb) s_trig_cb(success && (len == 3));
 }
 
@@ -171,6 +193,7 @@ void i2c_temp_sensor_read(i2c_temp_read_cb_t cb)
     i2c_cfg_t cfg;
 
     s_read_cb = cb;
+    s_busy    = true;
 
     build_i2c_cfg(&cfg);
     i2c_init(&cfg);
@@ -187,6 +210,7 @@ static void on_data_read(void *cb_data, uint16_t len, bool success)
     (void)cb_data;
 
     i2c_release();
+    s_busy = false;
 
     if (!success || len != 7 || !aht20_decode(s_rx_buf, &sample))
     {
@@ -205,6 +229,8 @@ static void on_data_read(void *cb_data, uint16_t len, bool success)
 void i2c_temp_sensor_soft_reset(void)
 {
     i2c_cfg_t cfg;
+
+    s_busy = true;
 
     build_i2c_cfg(&cfg);
     i2c_init(&cfg);
@@ -225,4 +251,5 @@ static void on_reset_sent(void *cb_data, uint16_t len, bool success)
     (void)success;
 
     i2c_release();
+    s_busy = false;
 }

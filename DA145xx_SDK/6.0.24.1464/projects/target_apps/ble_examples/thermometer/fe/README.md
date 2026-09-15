@@ -37,9 +37,11 @@ in sync, which this README's summary below doesn't.
   `tailwind.config.js`'s `darkMode: ['class', '[data-theme="dark"]']` and
   `src/index.css`'s `:root[data-theme='dark']` block key off. Toggle lives in
   the nav (`src/components/ui/ThemeToggle.tsx`).
-- **Component kit**: `src/components/ui/` — `Button`, `Card`, `Input`,
+- **Component kit**: `src/components/ui/` — `Button`, `Card`, `Input`, `Select`,
   `Badge`/`TemperatureBadge`/`ConnectionBadge`, `StatCard` (the hero live
-  reading), `Table` primitives, `EmptyState`/`SkeletonBlock`/`ErrorState`,
+  reading), `StatTile`/`StatTileGrid` (label + big number + hint, the unit every
+  analytics strip is built from), `Segmented` (mutually exclusive view switch),
+  `Table` primitives, `EmptyState`/`SkeletonBlock`/`ErrorState`,
   `Alert`, `Timeline` (the shape every event/history feed uses),
   `Pagination`, `ProgressBar`, `TrendChart`. Icons are `lucide-react`. The
   latter four were built before the feature pass that needed them, precisely
@@ -80,6 +82,29 @@ One genuine duplication did surface: `relativeTime()` existed twice
 (`StatCard.tsx` and `DoctorDashboardPage.tsx`) with different granularity.
 Hoisted to `src/utils/time.ts`, now shared by both plus the device-staleness
 widgets.
+
+### Follow-up (2026-09-14): the duplication that WAS there was structural, not chromatic
+
+The code review of 2026-09-14 (`../CODE_REVIEW.html`) confirmed the colour
+finding above — "essentially no hard-coded colours" — and then found five real
+duplications one level up, in *components and constants* rather than in tokens.
+All five are now single-sourced, and the pattern in every case was the same: the
+shared thing lived somewhere call sites wouldn't look.
+
+| What was duplicated | Where it lives now |
+|---|---|
+| `StatTile` (three near-identical implementations: `pages/admin/AdminUi.tsx`, `EventsPage`, `DoctorDashboardPage` — plus a fourth in the clinical report) | `components/ui/StatTile.tsx`, with the union of their props and three numeral sizes |
+| The themed `<select>` class string, retyped in six files | `components/ui/Select.tsx`, mirroring `Input`'s API |
+| `formatDuration` — three implementations with three signatures (`(hours)`, `(ms)`, `(startMs, endMs)`) and three unit conventions | `utils/time.ts#formatDuration(ms)`; callers convert, and the doctor's feed and the customer's history now word the same episode identically |
+| `TIER_ICON`, declared byte-for-byte (comment included) in `HistoryPage` and `EventsPage` | `theme/temperature.ts`, next to `TEMPERATURE_TIER_BANDS` |
+| The overlay cap `5`, declared twice under two names for the same reason (the six-slot `seriesPalette`) | `theme/chartColors.ts#MAX_OVERLAY_SERIES`, derived from `seriesPalette.length` |
+
+The structural cause was folder asymmetry: generic components sitting under
+`pages/admin/AdminUi.tsx` are not where anyone looks for reusable UI, so the
+doctor pages reinvented them. `AdminUi.tsx` is gone — `StatTile` and `Segmented`
+moved into `components/ui/`, `largestOf()` into `utils/breakdown.ts` — and the
+doctor pages now have their own `pages/doctor/` namespace to match
+`pages/admin/`.
 
 ### Charts
 
@@ -139,7 +164,7 @@ questions:
 
 Plus `Sparkline.tsx`, which is plain inline SVG rather than recharts — one
 recharts instance per row of a patient table would be gratuitous — and
-`PatientReportPage`'s private `ReportChart`, a fixed 720×260 px chart with no
+`pages/doctor/PatientReportPage`'s private `ReportChart`, a fixed 720×260 px chart with no
 `ResponsiveContainer`, no brush, and the light palette (`LIGHT_CHART_COLORS`,
 imported from `theme/chartColors.ts` rather than copied) pinned even in dark
 mode, because a dark-theme chart prints as a black rectangle.
@@ -159,14 +184,19 @@ stays the single-series color.
 - A Chromium-based browser (Chrome or Edge) to actually use Web Bluetooth —
   Safari and Firefox don't implement it; the rest of the app still works there.
 - The backend and broker running — see `../README.md` "Quick start" for the
-  one-command `docker compose up`.
+  one-command `docker compose up`. The broker no longer accepts anonymous
+  connections, so the API has to be up for the live feed to work at all: the app
+  mints its broker credential from it.
 
 ## Build
 
 ```bash
 npm install
-npm run build     # tsc -b (typecheck) && vite build -> dist/
+npm run build     # tsc -b (typecheck, all three tsconfigs) && vite build -> dist/
 ```
+
+No `VITE_*` variable is needed for a container build any more — the API/broker/
+Keycloak URLs are read at *runtime* (see "Runtime configuration" below).
 
 ## Run (local dev server)
 
@@ -178,32 +208,92 @@ npm run dev                  # http://localhost:5173, hot reload
 Requires the backend (`localhost:8080`) and Mosquitto's WebSocket listener
 (`localhost:9001`) to be reachable — start them via
 `docker compose up mosquitto postgres backend` from the `thermometer/` root
-(see `../README.md`).
+(see `../README.md`). The broker now requires credentials, which the app mints
+for itself through the API — nothing here connects to MQTT anonymously.
+
+The dev login page shows the local realm's demo accounts. That block is behind
+`import.meta.env.DEV`, so it exists in `npm run dev` and in **no** build output;
+the accounts are also listed in `../README.md`.
+
+## Lint
+
+```bash
+npm run lint      # tsc -b --noEmit && eslint .
+npm run lint:fix  # eslint . --fix
+```
+
+ESLint is a flat config (`eslint.config.js`) with type-aware
+`typescript-eslint`, `eslint-plugin-react-hooks` and `eslint-plugin-jsx-a11y`.
+It covers `src/`, `e2e/` and the root config files, and the repo currently has
+**zero** `eslint-disable` comments — the three that used to sit on
+`react-hooks/exhaustive-deps` were suppressing a rule that had never been
+installed, and the dependency arrays behind them were fixed instead (the shared
+`hooks/useSelectedDevice.ts` is what they turned into). The rules worth knowing
+about:
+
+- `no-floating-promises` — fire-and-forget is a real pattern here (a best-effort
+  MQTT publish, a `signinRedirect()` from an `onClick`) but has to be spelled
+  `void x()` so a genuinely dropped rejection stands out.
+- `react-hooks/exhaustive-deps` as an **error**, not a warning.
+- `jsx-a11y` recommended, with two documented option tweaks (`<ul role="list">`
+  is kept because Safari/VoiceOver drops list semantics under
+  `list-style: none`; label nesting depth is raised for the two-line
+  label-wraps-checkbox rows).
+- `eslint-plugin-react-hooks` v7's React Compiler preview rules (`purity`,
+  `set-state-in-effect`, …) are deliberately **not** enabled — see the comment
+  in `eslint.config.js` for why that is a separate, deliberate refactor.
 
 ## Test
 
 ```bash
-npm test          # vitest run
+npm test          # vitest run — jsdom, 19 files / 158 tests
 npm run test:watch
 ```
 
+**Pure logic**
+
 | Suite | What it covers |
 |-------|-----------------|
-| `src/ble/ieee11073.test.ts` | Pins the exact decode behavior (mantissa × 10^exponent, signed 24-bit mantissa, signed 8-bit exponent) so a future refactor can't silently reintroduce the bug the vendor app has |
+| `src/ble/ieee11073.test.ts` | Pins the exact decode behavior (mantissa × 10^exponent, signed 24-bit mantissa, signed 8-bit exponent) so a future refactor can't silently reintroduce the bug the vendor app has — **plus one case per reserved sentinel** (NaN `0x7FFFFF`, NRes `0x800000`, ±Inf `0x7FFFFE`/`0x800002`), which must decode to `null` rather than to a finite-looking 83886.07 °C, and the adjacent mantissas which must still decode |
 | `src/ble/simulatedBluetoothTransport.test.ts` | The simulator's connect/reading-cadence/disconnect contract (fake timers, no real waiting) |
 | `src/auth/oidc.test.ts` | `primaryRole()`/`roleOf()` role-priority derivation from a Keycloak `realm_access.roles` claim |
+| `src/auth/renewSession.test.ts` | The single-flight silent renewal: N concurrent callers redeem the refresh token **once**, a later 401 starts a fresh attempt, and a failed renewal resolves `false` instead of throwing |
+| `src/live/envelope.test.ts` | The wire envelope against `../schema/measurement-envelope.v1.schema.json`, **read from disk** (`ajv` + `ajv-formats`) — the single source of truth shared with the Go gateway and the Java backend. Positive cases plus the rejections: missing fields, an over-long `device_id`, an empty or wrong-shaped payload, a non-finite celsius, a timestamp with no offset |
 | `src/components/temperatureWindow.test.ts` | The chart's window math — `mergeSeries`, `resolveWindow`'s timestamp→index re-resolution (the live-refetch drift fix), `shiftWindow` clamping, `computeYDomain` padding incl. the °C→°F interval scaling |
 | `src/components/trendInsight.test.ts` | The customer trend/digest computation (half-window comparison, highest/lowest, normal-day streak) |
 | `src/utils/temperature.test.ts` | °C/°F conversion |
-| `src/utils/doctorFeeds.test.ts` | Episode grouping per patient, duration formatting, and the report's reading bucketing |
+| `src/utils/doctorFeeds.test.ts` | Episode grouping per patient, duration formatting (now the shared `utils/time.ts#formatDuration`), and the report's reading bucketing |
 | `src/pages/admin/dailySeries.test.ts` | Gap-filling a sparse daily-signup series (quiet days must read as zero, not be skipped) |
 | `src/pages/admin/rolloutProgress.test.ts` | Rollout installed/failed/pending arithmetic and status→badge mapping |
+| `src/utils/devices.test.ts` | `deviceDisplayName()` and `resolveSelectedBdAddr()`'s remembered-choice reconciliation |
+
+**Component / integration (jsdom + `@testing-library/react`)**
+
+Added because the leaks and silent failures below are exactly what no pure-logic
+test and no e2e scenario could see: the e2e suite never navigates away while
+connected, and never fails an admin mutation.
+
+| Suite | What it covers |
+|-------|-----------------|
+| `src/pages/ConnectPage.test.tsx` | The transport lifecycle: connect → reading → publish on both paths, explicit disconnect, **disconnect on unmount** (the leak that kept the simulator publishing forever in the background), no double-disconnect, clean unmount with nothing connected, live-feed subscribe/unsubscribe, event rows keyed by identity, claim without a fabricated model, the "Claimed ✓" badge expiring, a failed pairing, and a failed MQTT publish still reaching REST |
+| `src/pages/DashboardPage.test.tsx` | Opens on the remembered device, switches device from the picker, and the compare-mode polling gate — the hidden single-device 5 s query must stop while the overlay is open and resume when it closes (verified to fail if the `enabled` flag is removed) |
+| `src/pages/admin/AdminDevicesPage.test.tsx` | The admin mutation **failure** paths: a rejected edit keeps the editor open and shows the error, a rejected force-release keeps the confirmation open, the error is dismissible and retryable, and cancelling releases nothing |
+| `src/ble/webBluetoothTransport.test.ts` | Listener lifecycle over real `EventTarget` fakes: the notification listener is removed on disconnect, a *cached* characteristic no longer fires on a discarded transport (the duplicate-publish bug), the device listener comes off too, an unexpected GATT drop still reports, and an unsupported browser is refused |
+| `src/api/client.test.ts` | Bearer attachment, single 401 → one renewal → retry with the **new** token, four concurrent 401s → **one** renewal, no retry on a non-401, non-JSON error bodies, 204, and the live-credential mint |
+| `src/App.test.tsx` | The route table on react-router-dom 7: the lazy doctor and admin chunks resolve behind the shared `Suspense` fallback, each role lands on its own home from `/`, an unknown deep link falls back home, and `RequireRole` refuses a route the role doesn't allow |
+| `src/components/NavBar.test.tsx` | Active-link matching on a path **boundary** (`/history-export` must not light up `/history`, while `/admin/rollouts/:id` must still light up `/admin`) and the per-role link set |
 
 The pure-logic modules (`temperatureWindow.ts`, `trendInsight.ts`,
-`doctorFeeds.ts`, `dailySeries.ts`, `rolloutProgress.ts`) are split out of
-their components specifically so this suite can cover them without rendering
-anything. Component rendering itself is covered by the Playwright e2e suite
-below rather than by jsdom tests.
+`doctorFeeds.ts`, `dailySeries.ts`, `rolloutProgress.ts`) are still split out of
+their components so they can be covered without rendering anything; the
+component suites above cover behaviour that only exists once mounted. Full
+user journeys across the real stack remain the Playwright suite's job.
+
+`src/test/setup.ts` is the shared jsdom setup (RTL cleanup, `matchMedia`,
+`ResizeObserver`, and a working in-memory `Storage` — Node ≥ 24 exposes a
+half-implemented global `localStorage` that breaks zustand's `persist`, which is
+what the old `NODE_OPTIONS=--no-experimental-webstorage` in the test script was
+working around; it is no longer needed).
 
 ## Testing without real hardware
 
@@ -268,17 +358,81 @@ assertions use `.first()` to tolerate an account owning several devices.
 The password scenarios revert themselves in `finally`. Re-running the suite
 back-to-back therefore works without manual cleanup.
 
+## Runtime configuration
+
+The three external endpoints are read **at runtime**, not baked into the bundle,
+so one built image is promotable across environments:
+
+| Container env var | What it is | Compose default |
+|---|---|---|
+| `API_BASE_URL` | Spring Boot API, as the **browser** reaches it | `http://localhost:8080` |
+| `MQTT_WS_URL` | Mosquitto's WebSocket listener | `ws://localhost:9001` |
+| `KEYCLOAK_URL` | Keycloak base URL (the realm path is appended) | `http://localhost:8082` |
+
+These are the URLs the *browser* calls, so they must be reachable from the user's
+machine — never docker-compose service names.
+
+How it works:
+
+1. `docker/20-render-runtime-config.sh` runs from `/docker-entrypoint.d/` before
+   nginx starts and writes `/usr/share/nginx/html/env.js`:
+   `window.__ENV__ = { API_BASE_URL, MQTT_WS_URL, KEYCLOAK_URL }`. It is served
+   with `Cache-Control: no-store`, because a cached `env.js` would point a
+   promoted image at the previous environment's API.
+2. `index.html` loads `<script src="/env.js">` — an **external** script, so the
+   CSP can stay `script-src 'self'` with no nonce or hash. (`dist/index.html` has
+   no inline script; that is a property to preserve.)
+3. The same script renders `/etc/nginx/conf.d/default.conf` from
+   `nginx.conf.template`, substituting the origins it derives from those three
+   URLs into the CSP's `connect-src` / `frame-src` / `form-action`.
+4. Application code never reads either source directly: **`src/config/env.ts`**
+   is the one helper, resolving
+   `window.__ENV__?.X ?? import.meta.env.VITE_X ?? <localhost default>`.
+
+That fallback chain is what keeps the other two consumers working:
+
+- **`npm run dev` / `vite preview`** use `.env.local`'s `VITE_*` vars (see
+  `.env.example`). `public/env.js` ships an intentionally **empty**
+  `window.__ENV__` so the script tag never 404s and resolution falls through.
+- **The Capacitor mobile shell** (`../mobile`) loads `../fe/dist` from the app
+  bundle, where there is no server to render `env.js` — so it still needs the
+  `VITE_*` vars set at `npm run build` time. See `../mobile/README.md`.
+
+## Security posture
+
+| Concern | Where it stands |
+|---|---|
+| **Token storage** | The oidc-client-ts user object — access **and refresh** token — lives in `sessionStorage`, never `localStorage`, so it is scoped to one tab and gone when that tab closes. An XSS foothold therefore cannot lift a refresh token that outlives the session. `automaticSilentRenew` still refreshes the access token for as long as the tab is open, so nothing about an *active* session changes. **The trade-off:** a reopened tab (or a browser restart) has no local session and signs in again — which is one redirect, not a password prompt, while Keycloak's own SSO session is still valid. For a health-data app that is the right side of the trade. |
+| **Passwords** | Never touched by this app: login, logout, "forgot password" and "change password" are all redirects into Keycloak's own hosted UI (Authorization Code + PKCE). |
+| **Demo credentials** | Behind `import.meta.env.DEV`, so they are present in `npm run dev` and absent from every build output. |
+| **MQTT** | The broker requires credentials (`allow_anonymous false` + dynamic-security ACLs). `src/live/mqttClient.ts` mints one per user via `POST /api/live/credentials` before connecting, and uses the **server-asserted** `userId` from that response for both the publish topic's user segment and the live subscription — no client-supplied identifier decides what a browser can reach, and the broker ACL enforces the same thing independently. A connection/auth failure re-mints once (a rotated password is the expected cause). Signing out drops the session. |
+| **Response headers** | Set by nginx (`nginx-security-headers.conf`, included by every location): CSP, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy: strict-origin-when-cross-origin`, and a `Permissions-Policy` that denies everything the app doesn't use but **keeps `bluetooth=(self)`** for the Connect page. |
+| **CSP** | `default-src 'self'`; `script-src 'self'` (no inline script, no nonce); `style-src 'self' 'unsafe-inline'` (React and recharts set element `style` attributes, which `style-src-attr` blocks otherwise); `connect-src` naming exactly the API, MQTT-WS and Keycloak origins; `frame-src`/`child-src` allowing the Keycloak origin, which oidc-client-ts needs for its silent-renew and session-monitor iframes; `frame-ancestors 'none'`; `object-src 'none'`. |
+| **TLS / HSTS** | Not here on purpose — it belongs on the TLS-terminating reverse proxy in front of this container (`../ARCHITECTURE_V3.html` §12). Still not implemented anywhere in the local stack. |
+| **Route guards** | `components/RequireRole.tsx` is navigation, not authorisation, and says so: the real boundary is the backend re-deriving the caller's role from the bearer token per endpoint. |
+
 ## Docker
 
 ```bash
 docker build -t thermometer-fe .
-docker run -p 8081:80 thermometer-fe
+docker run --rm -p 8090:8080 \
+  -e API_BASE_URL=http://localhost:8080 \
+  -e MQTT_WS_URL=ws://localhost:9001 \
+  -e KEYCLOAK_URL=http://localhost:8082 \
+  thermometer-fe
 ```
 
-Or via `../docker-compose.yml` (`docker compose up fe`), which builds this
-image and serves it behind nginx with SPA fallback routing. API/broker/
-Keycloak endpoints are baked in at build time via `VITE_API_BASE_URL` /
-`VITE_MQTT_WS_URL` / `VITE_KEYCLOAK_URL` build args — see `../docker-compose.yml`.
+- Base image `nginxinc/nginx-unprivileged:1.27-alpine`: the master process runs
+  as uid 101, so nginx listens on **8080**, not 80. `../docker-compose.yml` maps
+  `8090:8080` — the app's host URL is unchanged at http://localhost:8090.
+- There are **no build args**: the URLs above are runtime environment (see
+  "Runtime configuration"). Passing `VITE_*` at build time does nothing for the
+  container.
+- `HEALTHCHECK` hits `/health` with `wget`. `docker inspect -f
+  '{{.State.Health.Status}}' <container>` should read `healthy` within ~30 s.
+- Hashed assets under `/assets/` are served `immutable` for a year; `index.html`
+  is `no-cache` and `env.js` `no-store`, so a redeployed image is picked up
+  immediately.
 
 ## What's implemented vs. scaffolded
 
@@ -286,8 +440,9 @@ Keycloak endpoints are baked in at build time via `VITE_API_BASE_URL` /
 |------|--------|
 | Web Bluetooth connect + IEEE-11073 decode | ✅ implemented, tested |
 | Simulated BLE transport (no hardware needed) | ✅ implemented, tested — see "Testing without real hardware" above |
-| MQTT/WSS publish (primary) + REST upload (fallback) | ✅ implemented |
-| Direct MQTT/WSS live subscription | ✅ implemented and wired into the Connect page (`src/live/mqttClient.ts`) |
+| MQTT/WSS publish (primary) + REST upload (fallback) | ✅ implemented — authenticated: `src/live/mqttClient.ts` mints a per-user broker credential via `POST /api/live/credentials` before connecting, and publishes under the server-asserted user id. The broker refuses anonymous connections. |
+| Direct MQTT/WSS live subscription | ✅ implemented and wired into the Connect page (`src/live/mqttClient.ts`) — subscribes to `live/{userId}/#` using the id from the minted credential, so the topic is not caller-supplied. mqtt.js is `import()`ed on demand, so only the Connect page downloads it. |
+| Measurement-envelope parity with the gateway and backend | ✅ implemented — `src/live/envelope.ts` is the only place an envelope is built, and `envelope.test.ts` validates it against `../schema/measurement-envelope.v1.schema.json` read from disk |
 | Device claim/release + fleet browser (Devices page, custom `DeviceList` rows) — a customer may own several devices, name each one, and see health/staleness per row | ✅ implemented |
 | Device naming (`PATCH /api/devices/{bdAddr}/label`) — the customer's name replaces the BD address in the dashboard/history pickers, compare overlays and legends; inline rename on the Devices page, admin-editable in the registry table | ✅ implemented (`utils/devices.ts#deviceDisplayName`, `state/uiStore.ts`) |
 | Remembered device selection — Dashboard and History open on the device you last looked at (localStorage via zustand `persist`, revalidated against the owned list on every load so a released device can't be restored) | ✅ implemented (`uiStore.ts` + `utils/devices.ts#resolveSelectedBdAddr`, unit-tested) |
@@ -295,16 +450,20 @@ Keycloak endpoints are baked in at build time via `VITE_API_BASE_URL` /
 | Temperature chart: horizontal time scroll (Brush + step buttons), per-window vertical auto-scale, 5 tier bands, multi-series overlay | ✅ implemented (`TemperatureChart.tsx`) — see "Charts" above |
 | Role-aware routing/nav (customer/doctor/admin see different pages) | ✅ implemented (`components/RequireRole.tsx`, `components/NavBar.tsx`) |
 | Deep-linkable admin sub-routes (`/admin/users`, `/admin/rollouts/:id`, …) | ✅ implemented — replaced local tab state; no `NavBar` change needed, its `/admin` link already matches any sub-path |
-| Profile/settings page, incl. customer's doctor-consent management | ✅ implemented |
+| Profile/settings page, incl. customer's doctor-consent management | ✅ implemented — `SettingsPage.tsx` is a thin role-driven composition of one section per concern in `pages/settings/`, not a single 461-line module |
 | Doctor view: patient list + read-only chart per consenting patient | ✅ implemented (`PatientsPage.tsx`) |
 | Doctor dashboard: fleet stats, fever alert banner, search/filter/sort, per-patient sparkline + range-scoped avg/min/max, staleness, click-through to Patients | ✅ implemented (`DoctorDashboardPage.tsx`, backend `GET /api/doctor/patients/summary`) |
 | Admin view: all users/devices/relationships, force-release, edit device | ✅ implemented |
 | Keycloak login | ✅ implemented as the real production flow — standard OAuth2 Authorization Code + PKCE redirect into Keycloak's own hosted login page (`src/auth/oidc.ts`, `oidc-client-ts`/`react-oidc-context`), not a password form owned by this app. |
-| Persistent session (survives page reload), proactive token refresh, server-side logout | ✅ implemented — `oidc-client-ts`'s `UserManager` persists the refresh token (localStorage) and its `automaticSilentRenew` redeems a fresh access token before it expires or on reload, so the user stays signed in until Keycloak's SSO session actually ends (expiry, explicit logout, or an admin revoking the session), not merely until the tab is refreshed. `signoutRedirect()` ends the Keycloak SSO session server-side, not just local state. |
+| Per-tab session (survives page reload), proactive token refresh, server-side logout | ✅ implemented — `oidc-client-ts`'s `UserManager` keeps the user object (access + refresh token) in **`sessionStorage`**, and its `automaticSilentRenew` redeems a fresh access token before it expires or on reload, so the session lasts as long as the tab does. Deliberately *not* `localStorage`: see "Security posture" for the trade-off. Concurrent 401s share one renewal (`renewSession()`). `signoutRedirect()` ends the Keycloak SSO session server-side, not just local state, and also drops the MQTT broker session. |
 | Password change | ✅ implemented — redirects into Keycloak's own `kc_action=UPDATE_PASSWORD` required-action form (Settings page → "Change password"), the same mechanism its Account Console uses. No password ever passes through this app's code. |
 | Forgot password | ✅ implemented — Keycloak's own built-in "Forgot password?" link on its login page (`resetPasswordAllowed` in `deploy/keycloak/realm-export.json`), no app code needed; reset emails go through the local `mailpit` SMTP catcher (http://localhost:8025) so the flow is genuinely testable, not just theoretical. |
 | Offline buffering (IndexedDB) | ⏸ not implemented — architecture v2 §5 calls for this; readings are only durable while the browser tab is open and connected. |
-| Route-based code splitting | ⏸ not implemented — `npm run build` emits a single ~1.26 MB JS chunk (~360 kB gzipped) and warns about it, so every role downloads every other role's pages. Tracked as `../proposals.md` 10.3. |
+| Route-based code splitting | ✅ implemented — the doctor and admin routes are `React.lazy()` behind one `Suspense` boundary using the existing loading screen, vendor code is split by change cadence (`react-vendor` / `charts` / `auth` / `mqtt`), and mqtt.js is `import()`ed only when the live feed needs it. The entry chunk is **184 kB (53 kB gzipped)**, down from a single 1.26 MB (362 kB) chunk, and Rollup no longer warns. Customer pages stay statically imported — they are the common case and the landing view. |
+| Component tests | ✅ implemented — jsdom + `@testing-library/react` over the connect lifecycle, the dashboard's polling gate, the admin mutation failure paths, the Web Bluetooth listener lifecycle and the API client's 401 handling (see "Test") |
+| Linting | ✅ implemented — ESLint flat config with type-aware `typescript-eslint`, `react-hooks` and `jsx-a11y`; `npm run lint` runs the typechecker and it, and there are no `eslint-disable` comments |
+| Promotable container image (runtime config) | ✅ implemented — `API_BASE_URL` / `MQTT_WS_URL` / `KEYCLOAK_URL` are read at container start into `/env.js`; no build args (see "Runtime configuration") |
+| Security response headers | ✅ implemented — CSP scoped to the three back-end origins, nosniff, `X-Frame-Options: DENY`, `Referrer-Policy`, `Permissions-Policy` (bluetooth kept), plus gzip; served by an unprivileged nginx on 8080 with a `/health` HEALTHCHECK |
 
 ### Role features (2026-08-07 pass)
 
@@ -359,40 +518,64 @@ adding a route — noted per row — to keep the nav from sprawling.
 
 ```
 src/
+├── config/
+│   └── env.ts                        The ONE reader of API_BASE_URL / MQTT_WS_URL / KEYCLOAK_URL:
+│                                      window.__ENV__ (runtime /env.js) ?? import.meta.env.VITE_* ?? localhost
+│                                      default. See "Runtime configuration"
 ├── ble/
-│   ├── ieee11073.ts                  Ported decode/encode — pure, framework-agnostic
-│   ├── ieee11073.test.ts             Pins the correct decode behavior
+│   ├── ieee11073.ts                  Ported decode/encode — pure, framework-agnostic; returns null for a short
+│   │                                  buffer AND for the reserved NaN/NRes/±Inf mantissas
+│   ├── ieee11073.test.ts             Pins the correct decode behavior + one case per reserved sentinel
 │   ├── BleTransport.ts               Shared interface (also implemented in ../mobile)
-│   ├── webBluetoothTransport.ts      Web Bluetooth implementation
+│   ├── webBluetoothTransport.ts      Web Bluetooth implementation — holds the characteristic so disconnect()
+│   │                                  can detach its notification listener
+│   ├── webBluetoothTransport.test.ts Listener lifecycle over EventTarget fakes (no hardware)
 │   ├── nativeBluetoothTransport.ts   Capacitor native BLE implementation
 │   ├── simulatedBluetoothTransport.ts No-hardware-needed implementation, see above
 │   └── createBleTransport.ts         Picks web vs. native at runtime (not simulated — that's an explicit UI choice)
 ├── auth/
 │   ├── oidc.ts                       oidc-client-ts UserManager (Authorization Code + PKCE against Keycloak) —
-│   │                                  role derivation from realm_access.roles, sync token/subject getters for
-│   │                                  non-React modules, redirectToChangePassword() (kc_action=UPDATE_PASSWORD)
-│   └── oidc.test.ts                  Pins primaryRole()/roleOf()'s role-priority logic
+│   │                                  sessionStorage user store (per-tab tokens), role derivation from
+│   │                                  realm_access.roles, a sync getAuthToken() for non-React modules (and
+│   │                                  deliberately no subject getter — see FE-03), single-flight
+│   │                                  renewSession(), redirectToChangePassword()
+│   ├── oidc.test.ts                  Pins primaryRole()/roleOf()'s role-priority logic
+│   └── renewSession.test.ts          Pins the single-flight renewal over a fake UserManager
 ├── api/
-│   ├── client.ts                     REST client (fetch wrapper, attaches the access token; 401 → one
-│   │                                  signinSilent() retry before giving up) + every response/request type.
-│   │                                  Paginated endpoints return PageResponse<T> — a stable {content, page,
-│   │                                  size, totalElements, totalPages} envelope with a ZERO-based `page`
-│   │                                  (the Pagination component is 1-based, so pages need the ±1)
+│   ├── client.ts                     REST client (fetch wrapper, attaches the access token; 401 → ONE shared
+│   │                                  renewSession() retry before giving up) + every response/request type,
+│   │                                  incl. LiveCredentialsResponse. Paginated endpoints return PageResponse<T>
+│   │                                  — a stable {content, page, size, totalElements, totalPages} envelope with
+│   │                                  a ZERO-based `page` (the Pagination component is 1-based, so pages need ±1)
+│   ├── client.test.ts                Bearer attachment, the 401 retry, and the concurrent-401 de-duplication
 │   ├── queries.ts                    TanStack Query hooks. Polling cadence is per data shape: live readings
 │   │                                  5 s, doctor fleet 10 s, fever episodes/rollout progress 30–60 s,
 │   │                                  thresholds/notes/audit feeds on demand, admin analytics 5 min.
+│   │                                  useMeasurementHistory/useResolvedThresholds take an `enabled` option, so a
+│   │                                  caller showing nothing stops polling (Dashboard compare mode) and a
+│   │                                  patient-scoped read can't silently answer for the caller instead.
 │   │                                  Note: useDevices() has no refetchInterval — see ../proposals.md 10.7
-│   └── useMeasurementHistories.ts    Parallel useQueries fetch for the multi-device overlay; deliberately reuses
-│                                      useMeasurementHistory's ['measurements', bdAddr, timeWindowKey(window)] key
-│                                      so the cache is shared
+│   └── useMeasurementHistories.ts    Parallel useQueries fetch for every multi-device/multi-patient overlay;
+│                                      deliberately reuses useMeasurementHistory's
+│                                      ['measurements', bdAddr, timeWindowKey(window)] key so the cache is shared
+├── hooks/
+│   ├── useSelectedDevice.ts          Remembered + revalidated device choice, shared by Dashboard and History
+│   │                                  (replaces the duplicated effect pair in both)
+│   └── useTransientFlag.ts           Turns a latched mutation isSuccess into a "✓" that expires
 ├── components/
-│   ├── NavBar.tsx                    Role-aware nav: bottom tabs (customer/mobile) or top bar + drawer (doctor/admin/mobile)
-│   ├── RequireRole.tsx               Route guard reading the derived role from react-oidc-context's useAuth()
+│   ├── NavBar.tsx                    Role-aware nav: bottom tabs (customer/mobile) or top bar + drawer
+│   │                                  (doctor/admin/mobile); active link matches on a path boundary, and
+│   │                                  signing out closes the MQTT session first
+│   ├── RequireRole.tsx               Route guard reading the derived role from react-oidc-context's useAuth().
+│   │                                  Navigation, NOT authorisation — the header comment cross-references the
+│   │                                  server-side enforcement that is the real boundary
 │   ├── TemperatureChart.tsx          recharts chart with a Brush-driven scrollable time window and a Y domain
 │   │                                  computed from the visible window; tier bands from TEMPERATURE_TIER_BANDS;
 │   │                                  an `annotations` prop marks each reading note's anchor instant on the line
 │   ├── temperatureWindow.ts          Window state as timestamps (not Brush indices) + re-resolution to indices
-│   │                                  each render — the live-refetch drift fix (see temperatureWindow.test.ts)
+│   │                                  each render — the live-refetch drift fix (see temperatureWindow.test.ts).
+│   │                                  computeYDomain binary-searches to the window's edges instead of scanning
+│   │                                  every point of every series
 │   ├── MeasurementChart.tsx          Single-series adapter over TemperatureChart (MeasurementResponse[] -> series)
 │   ├── TimeWindowPicker.tsx          Preset (1h/24h/7d/...) + "Custom" datetime-local range control, shared by
 │   │                                  DashboardPage and HistoryPage
@@ -405,18 +588,27 @@ src/
 │   ├── trendInsight.ts               Pure half-window comparison / highest / lowest / normal-day-streak math
 │   ├── OnboardingChecklist.tsx       3-step getting-started card, localStorage-dismissible
 │   ├── PatientTriage.tsx             RiskBadge / RISK_RANK / TrendArrow — shared by fleet table, detail pane, report
-│   ├── Sparkline.tsx                 Minimal inline-SVG trend line — doctor dashboard's per-patient row, not recharts (one chart per row would be overkill)
+│   ├── Sparkline.tsx                 Minimal inline-SVG trend line — doctor dashboard's per-patient row, not
+│   │                                  recharts (one chart per row would be overkill). The SVG is aria-hidden, so
+│   │                                  a `label` prop is REQUIRED and rendered sr-only
 │   └── ui/                           Design-system component kit — see "Design system" above. Beyond the base kit:
 │                                      Timeline (event feeds, 6 call sites), Pagination (1-based over the API's
 │                                      0-based PageResponse), ProgressBar, TrendChart (small admin metric chart),
-│                                      DeviceList (card rows for owned/available devices: icon tile, mono
-│                                      bd-addr subtitle, badge+meta line, action slot, highlighted state)
+│                                      DeviceList (card rows for owned/available devices), Select (the themed
+│                                      native <select>, mirroring Input's API — six call sites used to retype its
+│                                      class string), StatTile/StatTileGrid (label + big number + hint, three
+│                                      sizes; there used to be four copies of this), Segmented (mutually
+│                                      exclusive view switch — moved out of pages/admin/ because it is generic)
 ├── theme/
-│   ├── temperature.ts                getTemperatureTier() + TEMPERATURE_TIER_BANDS — the 5-tier scale, cut points declared once
+│   ├── temperature.ts                getTemperatureTier() + TEMPERATURE_TIER_BANDS — the 5-tier scale, cut points
+│   │                                  declared once — plus TIER_LABEL and TIER_ICON (the lucide icon per tier,
+│   │                                  which HistoryPage and EventsPage each used to declare for themselves)
 │   └── chartColors.ts                useChartColors() — theme-aware raw colors for recharts, incl. tierFill and
-│                                      seriesPalette (6 fixed validated slots, never cycled)
+│                                      seriesPalette (6 fixed validated slots, never cycled) + MAX_OVERLAY_SERIES,
+│                                      derived from the palette rather than restated per overlay page
 ├── utils/
-│   ├── time.ts                       relativeTime() — hoisted so StatCard/dashboards share one granularity
+│   ├── time.ts                       relativeTime() ("how long ago") + formatDuration(ms) ("how long") — one
+│   │                                  elapsed-time convention where there used to be three signatures
 │   ├── temperature.ts                °C/°F conversion
 │   ├── temperatureFormat.ts          formatTemperature / formatTemperatureDelta (a delta is an interval, so °F scales ×9/5 without the offset)
 │   ├── timeWindow.ts                 TimeWindow ({kind:'sliding',hours} | {kind:'custom',from,to}) + resolve/key/label
@@ -424,43 +616,84 @@ src/
 │   ├── devices.ts                    deviceDisplayName() (label → model fallback shown everywhere) +
 │   │                                  resolveSelectedBdAddr() (remembered-choice reconciliation), unit-tested
 │   ├── doctorFeeds.ts                groupByPatient / durationText / bucketReadings — pure shaping for the events feed and report table
+│   ├── breakdown.ts                  largestOf() — the denominator for the admin breakdown bars (the largest row,
+│   │                                  never the sum, because every breakdown is server-side capped)
 │   └── csv.ts                        downloadCsv() — client-side export with a spreadsheet formula-injection guard
 ├── live/
-│   └── mqttClient.ts                 Direct MQTT/WSS publish + live subscribe (mqtt.js)
+│   ├── envelope.ts                   buildTemperatureEnvelope() + WEB_COLLECTOR_ID — the one place a wire envelope
+│   │                                  is constructed; the FORMAT lives in ../../../schema/
+│   ├── envelope.test.ts              Validates it against that schema file, read from disk (ajv)
+│   └── mqttClient.ts                 Direct MQTT/WSS publish + live subscribe. Mints a per-user broker credential
+│                                      from POST /api/live/credentials before connecting, uses the server-asserted
+│                                      userId for both the publish topic and the subscription, re-mints once on a
+│                                      connection/auth failure, and closeLiveSession() drops it on sign-out.
+│                                      mqtt.js is import()ed on demand
 ├── state/
 │   ├── store.ts                      Zustand store (connection status, current reading)
 │   ├── themeStore.ts                 Zustand store (light/dark/system theme preference, persisted)
 │   └── uiStore.ts                    Zustand store (persisted UI prefs: last-selected device bd_addr,
 │                                      shared by Dashboard/History/Devices)
+├── test/
+│   └── setup.ts                      Shared jsdom setup: RTL cleanup, matchMedia/ResizeObserver stubs, and a
+│                                      working in-memory Storage (Node's experimental one breaks zustand persist)
 └── pages/
-    ├── LoginPage.tsx                 Sign-in button → redirects into Keycloak's own hosted login page
-    ├── ConnectPage.tsx               Connect (real or simulated), live reading, claim device, live feed
+    ├── LoginPage.tsx                 Sign-in button → redirects into Keycloak's own hosted login page. The demo
+    │                                  accounts are behind import.meta.env.DEV, so they never ship in a build
+    ├── ConnectPage.tsx               Connect (real or simulated), live reading, claim device, live feed —
+    │                                  disconnects the transport on unmount
+    ├── ConnectPage.test.tsx          That lifecycle, plus the publish/claim/live-feed behaviour
     ├── DashboardPage.tsx             Customer: onboarding, live reading, trend insight, chart (+ multi-device
-    │                                  overlay), CSV export, reading notes; opens on the remembered device
+    │                                  overlay), CSV export, reading notes; opens on the remembered device and
+    │                                  pauses the single-device poll while the overlay is open
+    ├── DashboardPage.test.tsx        The remembered device, the picker, and that polling gate
     ├── HistoryPage.tsx               Customer: fever-episode timeline (24h / 7d / 30d preset or a custom range)
     ├── DevicesPage.tsx               Customer: owned devices as DeviceList rows (health badge, inline rename,
     │                                  release each) + available fleet (claim more); highlights the row the
     │                                  dashboard is currently showing
-    ├── SettingsPage.tsx              All roles: profile + password change; customer: thresholds, doctor consent +
-    │                                  access history; admin: system-default thresholds
-    ├── DoctorDashboardPage.tsx       Doctor: patient-fleet overview — stats, fever alerts, risk sort, sparklines,
-    │                                  variability, device-reliability panel
-    ├── PatientsPage.tsx              Doctor: consenting patients + chart (deep-linkable via ?patient=<id>), compare
-    │                                  mode, per-patient threshold override, care notes
-    ├── PatientReportPage.tsx         Doctor: printable clinical report (own fixed-geometry, always-light chart)
-    ├── EventsPage.tsx                Doctor: fleet-wide fever-episode feed
-    ├── DoctorAuditPage.tsx           Doctor: consent activity + own audit trail
+    ├── SettingsPage.tsx              A thin role-driven composition of ./settings/* — nothing else
+    ├── settings/                     One section per concern, each owning its own queries and mutations:
+    │   ├── ProfileSection.tsx         Display name + temperature unit (all roles)
+    │   ├── PasswordSection.tsx        The Keycloak kc_action=UPDATE_PASSWORD redirect (all roles)
+    │   ├── MyThresholdsSection.tsx    Customer's personal alert scale, incl. the doctor-override notice
+    │   ├── MyDoctorsSection.tsx       Customer's consent grant/revoke + the collapsible history below
+    │   ├── ConsentHistorySection.tsx  That paginated grant/revoke timeline (consent lifecycle, never reads)
+    │   └── SystemThresholdsSection.tsx Admin's system-default scale
+    ├── doctor/                       The doctor page set, namespaced to match pages/admin/
+    │   ├── DoctorDashboardPage.tsx    Patient-fleet overview — stats, fever alerts, risk sort, sparklines
+    │   │                              (each with an sr-only summary), variability, device-reliability panel
+    │   ├── PatientsPage.tsx          Consenting patients + chart (deep-linkable via ?patient=<id>), compare
+    │   │                              mode via the shared useMeasurementHistories hook, per-patient threshold
+    │   │                              override, care notes
+    │   ├── PatientReportPage.tsx     Printable clinical report (own fixed-geometry, always-light chart); its
+    │   │                              patient-scoped threshold read is gated on a real id, and a failed
+    │   │                              patient-list fetch renders an error with a retry, not "not found"
+    │   ├── EventsPage.tsx            Fleet-wide fever-episode feed
+    │   └── DoctorAuditPage.tsx       Consent activity + own audit trail
     ├── AdminPage.tsx                 Admin: tab strip over the nested /admin/* routes below
     └── admin/
-        ├── AdminUsersPage.tsx        Growth strip, searchable paged user browser, inline role correction
-        ├── AdminDevicesPage.tsx      Inventory strip, model/firmware mix, registry, edit + force-release
+        ├── AdminUsersPage.tsx        Growth strip, searchable paged user browser, inline role correction —
+        │                              promoting to admin requires an explicit confirm
+        ├── AdminDevicesPage.tsx      Inventory strip, model/firmware mix, registry, edit + force-release; both
+        │                              mutations close their UI on success only and surface isError
+        ├── AdminDevicesPage.test.tsx Those failure paths
         ├── AdminRelationshipsPage.tsx  Consent links, integrity warnings, flagged-only view, revoke
         ├── AdminHealthPage.tsx       Ingest health tiles, stall alerts, readings-by-type
         ├── AdminRolloutsPage.tsx     OTA rollout list with progress bars
         ├── AdminRolloutDetailPage.tsx  Rollout detail + per-target status table
         ├── AdminAuditPage.tsx        Filterable audit log + security-anomaly view
         ├── AdminRetentionPage.tsx    Storage/retention estimates + busiest devices
-        ├── AdminUi.tsx               StatTile / StatTileGrid / Segmented — shared admin-page primitives
         ├── dailySeries.ts            fillDailySeries() — gap-fills sparse daily counts
         └── rolloutProgress.ts        Installed/failed/pending arithmetic + status→badge mapping
+```
+
+Project-root files worth knowing about:
+
+```
+eslint.config.js                Flat ESLint config (see "Lint")
+nginx.conf.template             Served config TEMPLATE — the CSP's origins are substituted at container start
+nginx-security-headers.conf     The header set, installed as an nginx snippet and included by every location
+docker/20-render-runtime-config.sh  Entrypoint: renders env.js + default.conf from the container environment
+public/env.js                   Intentionally EMPTY window.__ENV__, so dev/preview/Capacitor don't 404 on it
+tsconfig.{app,node,e2e}.json    Three projects — src/, the Vite config, and the Playwright suite (all typechecked
+                                by `tsc -b`, which is why `npm run lint` catches e2e drift too)
 ```

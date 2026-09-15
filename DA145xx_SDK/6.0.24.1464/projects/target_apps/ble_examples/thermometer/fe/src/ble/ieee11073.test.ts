@@ -42,6 +42,44 @@ describe('decodeHtpTemperature', () => {
     expect(decodeHtpTemperature(dataViewOf(shortBuffer), false)).toBeNull();
   });
 
+  /**
+   * The reserved mantissas of IEEE-11073-20601 §A.1 (review FE-04). Each has to
+   * come back as null, not as the finite number the plain two's-complement
+   * conversion would produce — 0x7FFFFF at exponent -2 used to decode to
+   * 83886.07 °C, which renders as "High Fever" and poisons chart scaling and
+   * trend averages.
+   */
+  describe('reserved sentinels', () => {
+    const SENTINELS: Array<[name: string, mantissa: number]> = [
+      ['NaN (0x7FFFFF)', 0x7fffff],
+      ['NRes (0x800000)', 0x800000],
+      ['+INFINITY (0x7FFFFE)', 0x7ffffe],
+      ['-INFINITY (0x800002)', 0x800002],
+    ];
+
+    for (const [name, mantissa] of SENTINELS) {
+      it(`returns null for ${name}`, () => {
+        // Encoded through the same helper real payloads use: the mantissa is
+        // written verbatim into the low 3 bytes (values ≥ 0x800000 are already
+        // in their unsigned wire form, so no offset is applied).
+        const buffer = encodeHtpTemperature(mantissa, -2);
+        expect(decodeHtpTemperature(dataViewOf(buffer), false)).toBeNull();
+      });
+
+      it(`returns null for ${name} in raw-Celsius firmware mode too`, () => {
+        const buffer = encodeHtpTemperature(mantissa, 0);
+        expect(decodeHtpTemperature(dataViewOf(buffer), true)).toBeNull();
+      });
+    }
+
+    it('still decodes the mantissas adjacent to the sentinels', () => {
+      // 0x7FFFFD and 0x800001 are NOT reserved, so they must survive — proof
+      // the guard is an exact-value check, not a range.
+      expect(decodeHtpTemperature(dataViewOf(encodeHtpTemperature(0x7ffffd, 0)), true)).toBe(0x7ffffd);
+      expect(decodeHtpTemperature(dataViewOf(encodeHtpTemperature(0x800001, 0)), true)).toBe(0x800001 - 0x1000000);
+    });
+  });
+
   it('round-trips a range of realistic body/ambient temperatures', () => {
     const cases: Array<[number, number]> = [
       [3650, -2], // 36.50 °C

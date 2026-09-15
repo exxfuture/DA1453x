@@ -1,18 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AlertTriangle, Bluetooth, Flame } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { Bluetooth } from 'lucide-react';
 import { TemperatureEventResponse } from '../api/client';
 import { useDeviceEvents, useDevices, useMe } from '../api/queries';
-import { useUiPreferences } from '../state/uiStore';
-import { deviceDisplayName, resolveSelectedBdAddr } from '../utils/devices';
-import { TEMPERATURE_TIER_BANDS, type TemperatureTier } from '../theme/temperature';
+import { useSelectedDevice } from '../hooks/useSelectedDevice';
+import { deviceDisplayName } from '../utils/devices';
+import { TIER_ICON, TIER_LABEL } from '../theme/temperature';
 import { convertFromCelsius, unitSuffix } from '../utils/temperature';
+import { formatDuration } from '../utils/time';
 import type { TimeWindow } from '../utils/timeWindow';
 import { Alert } from '../components/ui/Alert';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
 import { EmptyState, SkeletonBlock } from '../components/ui/EmptyState';
+import { Select } from '../components/ui/Select';
 import { Timeline, type TimelineItem } from '../components/ui/Timeline';
 import { TimeWindowPicker } from '../components/TimeWindowPicker';
 
@@ -25,30 +26,6 @@ const RANGES = [
   { label: '7d', hours: 24 * 7 },
   { label: '30d', hours: 24 * 30 },
 ];
-
-const TIER_LABEL: Record<TemperatureTier, string> = Object.fromEntries(
-  TEMPERATURE_TIER_BANDS.map((band) => [band.tier, band.label]),
-) as Record<TemperatureTier, string>;
-
-/** Only the three raised tiers can appear in an episode; the rest are defensive. */
-const TIER_ICON: Record<TemperatureTier, LucideIcon> = {
-  low: AlertTriangle,
-  normal: AlertTriangle,
-  elevated: AlertTriangle,
-  fever: Flame,
-  highFever: Flame,
-};
-
-function formatDuration(ms: number): string {
-  const minutes = Math.max(1, Math.round(ms / 60_000));
-  if (minutes < 60) return `${minutes} min`;
-  const hours = Math.floor(minutes / 60);
-  const remainder = minutes % 60;
-  if (hours < 24) return remainder === 0 ? `${hours} h` : `${hours} h ${remainder} min`;
-  const days = Math.floor(hours / 24);
-  const leftoverHours = hours % 24;
-  return leftoverHours === 0 ? `${days} d` : `${days} d ${leftoverHours} h`;
-}
 
 function toTimelineItem(event: TemperatureEventResponse, unit: 'CELSIUS' | 'FAHRENHEIT'): TimelineItem {
   const start = new Date(event.startTs).getTime();
@@ -77,25 +54,13 @@ export function HistoryPage() {
   const meQuery = useMe();
   const unit = meQuery.data?.temperatureUnit ?? 'CELSIUS';
   const [timeWindow, setTimeWindow] = useState<TimeWindow>({ kind: 'sliding', hours: 24 * 7 });
-  const lastDeviceBdAddr = useUiPreferences((s) => s.lastDeviceBdAddr);
-  const setLastDeviceBdAddr = useUiPreferences((s) => s.setLastDeviceBdAddr);
-  const [selectedBdAddr, setSelectedBdAddr] = useState<string | null>(null);
 
   const devices = devicesQuery.data ?? [];
 
-  // Same selection-reconciliation as the dashboard — including the shared
-  // remembered choice: whichever device was last looked at anywhere is the
-  // one these pages open on.
-  useEffect(() => {
-    setSelectedBdAddr(resolveSelectedBdAddr(devices, selectedBdAddr ?? lastDeviceBdAddr));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- re-run when the device set changes
-  }, [devices.map((d) => d.bdAddr).join(',')]);
-
-  useEffect(() => {
-    if (selectedBdAddr) {
-      setLastDeviceBdAddr(selectedBdAddr);
-    }
-  }, [selectedBdAddr, setLastDeviceBdAddr]);
+  // Same remembered + revalidated choice as the Dashboard, from the shared hook
+  // (review FE-20): whichever device was last looked at anywhere is the one
+  // both pages open on.
+  const { selectedBdAddr, setSelectedBdAddr } = useSelectedDevice(devices);
 
   const device = devices.find((d) => d.bdAddr === selectedBdAddr) ?? null;
   const eventsQuery = useDeviceEvents(device?.bdAddr ?? null, timeWindow);
@@ -131,8 +96,7 @@ export function HistoryPage() {
       ) : (
         <>
           {devices.length > 1 && (
-            <select
-              className="h-touch w-full cursor-pointer rounded-md border border-sand-500 bg-surface-1 px-3 text-body text-ink-primary transition-colors duration-fast ease-standard hover:border-sand-600 dark:border-sand-600 dark:hover:border-sand-400 focus-visible:outline-none focus-visible:border-primary-600 focus-visible:shadow-focus"
+            <Select
               value={selectedBdAddr ?? ''}
               onChange={(e) => setSelectedBdAddr(e.target.value)}
               aria-label="Device"
@@ -142,7 +106,7 @@ export function HistoryPage() {
                   {deviceDisplayName(d)} ({d.bdAddr})
                 </option>
               ))}
-            </select>
+            </Select>
           )}
 
           <Card

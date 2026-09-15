@@ -27,12 +27,18 @@ import java.util.List;
  * rule. The upload path is authenticated as a <i>person</i> because that is
  * who calls it — the browser collector in {@code fe/src/pages/ConnectPage.tsx}
  * uploading its own Web Bluetooth readings — unlike the OTA collector
- * endpoints in {@link RolloutController}, which have no user behind them and
+ * endpoints in {@link com.dialog.thermometer.rollout.RolloutController}, which have no user behind them and
  * use a shared {@code X-Device-Token} instead.
  */
 @RestController
 @RequestMapping("/api/measurements")
 public class MeasurementController {
+
+    /** Default rows returned when the caller gives no {@code limit}. */
+    private static final int DEFAULT_LIMIT = 500;
+
+    /** Hard ceiling: a chart never needs more, and an unbounded LIMIT is a hypertable scan. */
+    private static final int MAX_LIMIT = 5000;
 
     private final MeasurementIngestService ingestService;
     private final JdbcTemplate jdbcTemplate;
@@ -62,14 +68,18 @@ public class MeasurementController {
                                               @RequestParam(defaultValue = "temperature") String type,
                                               @RequestParam(required = false) Instant from,
                                               @RequestParam(required = false) Instant to,
-                                              @RequestParam(defaultValue = "500") int limit,
+                                              @RequestParam(defaultValue = "" + DEFAULT_LIMIT) int limit,
                                               Authentication authentication) {
         CurrentUser me = currentUserService.resolve(authentication);
         accessGuard.requireReadAccess(me, deviceId);
 
         Instant effectiveFrom = from != null ? from : Instant.EPOCH;
         Instant effectiveTo = to != null ? to : Instant.now();
-        int effectiveLimit = Math.min(limit, 5000);
+        // Clamped at both ends, matching AnnotationController: `limit=0` would
+        // return nothing for no obvious reason and a negative one is rejected by
+        // Postgres outright, which used to surface as an unhandled 500 rather
+        // than a sensible response to a client bug.
+        int effectiveLimit = Math.max(1, Math.min(limit, MAX_LIMIT));
 
         return jdbcTemplate.query("""
                         SELECT ts, device_id, type, value_num, payload::text AS payload, collector_id

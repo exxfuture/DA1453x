@@ -1,16 +1,16 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { AlertTriangle, CalendarClock, Flame, RefreshCw, Search, Users } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-import { useMe, usePatientEvents } from '../api/queries';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { EmptyState, SkeletonBlock } from '../components/ui/EmptyState';
-import { Input } from '../components/ui/Input';
-import { Timeline, TimelineItem } from '../components/ui/Timeline';
-import { getTemperatureTier, TemperatureTier } from '../theme/temperature';
-import { durationText, groupByPatient } from '../utils/doctorFeeds';
-import { formatTemperature } from '../utils/temperatureFormat';
+import { CalendarClock, Flame, RefreshCw, Search, Users } from 'lucide-react';
+import { useMe, usePatientEvents } from '../../api/queries';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { EmptyState, SkeletonBlock } from '../../components/ui/EmptyState';
+import { Input } from '../../components/ui/Input';
+import { StatTile } from '../../components/ui/StatTile';
+import { Timeline, TimelineItem } from '../../components/ui/Timeline';
+import { getTemperatureTier, TIER_ICON } from '../../theme/temperature';
+import { durationText, groupByPatient } from '../../utils/doctorFeeds';
+import { formatTemperature } from '../../utils/temperatureFormat';
 
 const RANGES = [
   { label: '24h', hours: 24 },
@@ -29,16 +29,6 @@ const TIER_FILTERS: [TierFilter, string][] = [
 
 /** Episodes render in pages so a 30-day fleet feed can't mount 10k list items. */
 const PAGE_SIZE = 50;
-
-/** An episode is only ever elevated/fever/highFever; the other two tiers are
- *  here because the tier union is shared, and are never rendered. */
-const TIER_ICON: Record<TemperatureTier, LucideIcon> = {
-  low: AlertTriangle,
-  normal: AlertTriangle,
-  elevated: AlertTriangle,
-  fever: Flame,
-  highFever: Flame,
-};
 
 export function EventsPage() {
   const [rangeHours, setRangeHours] = useState(24 * 7);
@@ -219,17 +209,5 @@ export function EventsPage() {
         </>
       )}
     </div>
-  );
-}
-
-function StatTile({ icon: Icon, label, value }: { icon: LucideIcon; label: string; value: string }) {
-  return (
-    <Card density="compact">
-      <div className="flex items-center gap-2 text-ink-muted">
-        <Icon className="size-4" aria-hidden />
-        <span className="text-label uppercase tracking-wide">{label}</span>
-      </div>
-      <div className="mt-1 font-tabular text-h2 font-semibold text-ink-primary">{value}</div>
-    </Card>
   );
 }

@@ -1,0 +1,1643 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thermometer Code Review</title>
+<style>
+:root {
+  --bg:#f7f6f2; --panel:#ffffff; --ink:#1d2a24; --muted:#5b6b63; --line:#e2e0d8; --accent:#1f6f4f; --accent-ink:#ffffff;
+  --crit:#b3261e; --high:#c2410c; --med:#a16207; --low:#3f6f8a; --code:#f0efe9; --rec:#eef6f1;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#141a17; --panel:#1c2420; --ink:#e8ede9; --muted:#9fb0a7; --line:#2b3630; --accent:#5fb890; --accent-ink:#0f1a15;
+    --crit:#ff7b72; --high:#ffa657; --med:#e3b341; --low:#79c0ff; --code:#242e29; --rec:#1e2f27; }
+}
+* { box-sizing:border-box }
+body { margin:0; padding-block:0 4rem; background:var(--bg); color:var(--ink); font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif; }
+.wrap { max-width:1080px; margin:0 auto; padding:0 20px; }
+header.top { background:var(--accent); color:var(--accent-ink); padding:2.2rem 0 1.8rem; }
+header.top h1 { margin:0 0 .3rem; font-size:1.9rem; letter-spacing:-.01em }
+header.top p { margin:.2rem 0; opacity:.92 }
+h2 { font-size:1.35rem; margin:2.6rem 0 .6rem; padding-top:1.2rem; border-top:1px solid var(--line) }
+h2 small { font-size:.8rem; font-weight:500; color:var(--muted); margin-left:.5rem }
+h3 { font-size:1.05rem; margin:1.6rem 0 .5rem }
+h4 { margin:0; font-size:1rem; font-weight:600 }
+code { font:.86em ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:var(--code); padding:.08em .35em; border-radius:4px; word-break:break-word }
+a { color:var(--accent) }
+.lbl { display:inline-block; min-width:11em; font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); vertical-align:top }
+.pill { display:inline-block; font-size:.7rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; padding:.12em .55em; border-radius:999px; border:1px solid currentColor; vertical-align:middle }
+.pill.cat { color:var(--muted); text-transform:none; letter-spacing:0; font-weight:600 }
+.sev-critical { color:var(--crit) } .sev-high { color:var(--high) } .sev-medium { color:var(--med) } .sev-low { color:var(--low) }
+.fid { font:700 .8rem ui-monospace,Menlo,monospace; color:var(--muted) }
+table.sum { border-collapse:collapse; width:100%; max-width:720px; margin:.6rem 0 1rem; background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden }
+table.sum th, table.sum td { padding:.45rem .7rem; border-bottom:1px solid var(--line); text-align:left }
+table.sum th { font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted) }
+table.sum td.num { text-align:right; font-variant-numeric:tabular-nums }
+table.sum tr.tot td { border-top:2px solid var(--line); border-bottom:0 }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:1rem }
+.theme, .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1rem 1.1rem }
+.theme h4 { margin-bottom:.35rem }
+.theme p { margin:0; color:var(--ink) }
+ol.prio { padding-left:1.3rem } ol.prio li { margin:.35rem 0 }
+.filters { position:sticky; top:0; z-index:5; background:var(--bg); padding:.7rem 0; border-bottom:1px solid var(--line); display:flex; flex-wrap:wrap; gap:.5rem .8rem; align-items:center }
+.filters label { font-size:.8rem; color:var(--muted) }
+.filters select, .filters input { font:inherit; font-size:.9rem; padding:.3rem .5rem; border:1px solid var(--line); border-radius:6px; background:var(--panel); color:var(--ink) }
+.filters input { min-width:200px; flex:1 }
+.filters button { font:inherit; font-size:.8rem; padding:.3rem .7rem; border:1px solid var(--line); border-radius:999px; background:var(--panel); color:var(--ink); cursor:pointer }
+.filters button.on { background:var(--accent); color:var(--accent-ink); border-color:var(--accent) }
+.filters .count { margin-left:auto; font-size:.8rem; color:var(--muted) }
+.scope, .overall { color:var(--ink) }
+.overall { background:var(--panel); border-left:4px solid var(--accent); padding:.7rem 1rem; border-radius:0 8px 8px 0 }
+.finding { background:var(--panel); border:1px solid var(--line); border-radius:10px; margin:.9rem 0; padding:.9rem 1.1rem 1rem; scroll-margin-top:4.5rem }
+.finding header { display:flex; flex-wrap:wrap; gap:.45rem .6rem; align-items:center; margin-bottom:.5rem }
+.finding header h4 { flex-basis:100%; margin-top:.15rem }
+.finding p { margin:.45rem 0 }
+.finding .loc ul { display:inline-block; margin:0; padding-left:1.1rem; vertical-align:top }
+.finding .loc li { margin:.1rem 0 }
+.finding .rec { background:var(--rec); padding:.5rem .7rem; border-radius:6px }
+.finding .res { border-left:3px solid var(--accent); padding:.5rem .7rem; background:color-mix(in srgb, var(--accent) 8%, transparent); border-radius:0 6px 6px 0 }
+.res-fixed { color:var(--accent); border-color:var(--accent) } .res-doc, .res-verified { color:var(--low); border-color:var(--low) }
+.finding[hidden] { display:none }
+.area.empty h2::after { content:" — no findings match the filter"; color:var(--muted); font-weight:400; font-size:.8rem }
+ul.strengths li { margin:.4rem 0 }
+.muted { color:var(--muted) }
+@media (max-width:640px) { .lbl { display:block; min-width:0; margin-bottom:.15rem } .finding .loc ul { display:block; padding-left:1.1rem } }
+@media print { .filters { display:none } .finding { break-inside:avoid } }
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <h1>Thermometer project — code review</h1>
+  <p>DA14535 BLE thermometer firmware and its platform (Spring Boot backend, React web app, Go gateway, Capacitor wrapper, docker-compose deployment).</p>
+  <p>Project folder: <code style="background:rgba(255,255,255,.18);color:inherit">renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/</code> · Reviewed 2026-09-14 at commit <code style="background:rgba(255,255,255,.18);color:inherit">0178d01</code></p>
+</div></header>
+
+<main class="wrap">
+<h2 id="summary">Summary</h2>
+<div class="theme" style="margin:.6rem 0 1.2rem">
+  <h4>Fix pass — 2026-09-14 (same day)</h4>
+  <p>All 92 findings were worked through after this review was written: 89 are <strong>fixed</strong> (FW-05 fixed but awaiting hardware validation per collector platform; BE-16 and BE-18 in the pragmatic form the review allowed; FE-23 resolved differently — the sticky header turned out to be inert inside the table's scroll wrapper and was removed rather than offset), FW-06 is <strong>documented</strong> as the mandatory OTP provisioning step the recommendation offered as the alternative, and INF-18 was <strong>verified</strong> as already correct. Every finding below carries a <em>Resolution</em> line stating what changed. Verification at the end of the pass: host codec tests, both <code>build.sh</code> builds and the Eclipse DA14585 compile; backend <code>mvn verify</code> (98 unit + 32 integration tests against a dynamic-security Mosquitto); frontend lint + 158 vitest tests + build + image; gateway vet + 87 tests; both compose files validated and the full local stack brought up with the browser e2e suite. Backlog view: <code>proposals.md</code> §12. Line numbers in the findings refer to commit <code>0178d01</code>, i.e. the code <em>before</em> the fixes.</p>
+</div>
+<p>Every finding below was verified by reading the referenced code or configuration; line numbers refer to the working tree at the commit above. Findings are grouped by area and ordered by severity. Severity means: <span class="sev-critical"><b>critical</b></span> exploitable or data-corrupting as deployed · <span class="sev-high"><b>high</b></span> real bug or serious gap to fix before the next release · <span class="sev-medium"><b>medium</b></span> should be fixed, limited blast radius · <span class="sev-low"><b>low</b></span> quality, structure or hygiene.</p>
+<table class="sum">
+<thead><tr><th>Area</th><th class="num">Critical</th><th class="num">High</th><th class="num">Medium</th><th class="num">Low</th><th class="num">Total</th></tr></thead>
+<tbody><tr><td><a href='#area-firmware'>Firmware (C, DA1453x SDK6)</a></td><td class='num sev-critical-t'>·</td><td class='num sev-high-t'>4</td><td class='num sev-medium-t'>7</td><td class='num sev-low-t'>5</td><td class='num'><strong>16</strong></td></tr><tr><td><a href='#area-backend'>Backend (Spring Boot / Java 21)</a></td><td class='num sev-critical-t'>·</td><td class='num sev-high-t'>3</td><td class='num sev-medium-t'>4</td><td class='num sev-low-t'>12</td><td class='num'><strong>19</strong></td></tr><tr><td><a href='#area-frontend'>Web frontend (React + Vite + TS)</a></td><td class='num sev-critical-t'>3</td><td class='num sev-high-t'>8</td><td class='num sev-medium-t'>16</td><td class='num sev-low-t'>6</td><td class='num'><strong>33</strong></td></tr><tr><td><a href='#area-infra'>Gateway, mobile, deploy, CI, repo</a></td><td class='num sev-critical-t'>3</td><td class='num sev-high-t'>8</td><td class='num sev-medium-t'>9</td><td class='num sev-low-t'>4</td><td class='num'><strong>24</strong></td></tr><tr class='tot'><td>Total</td><td class='num'>6</td><td class='num'>23</td><td class='num'>36</td><td class='num'>27</td><td class='num'><strong>92</strong></td></tr></tbody></table>
+<p class="muted">By category: <span class='pill cat'>correctness <b>21</b></span> <span class='pill cat'>security <b>21</b></span> <span class='pill cat'>dry <b>12</b></span> <span class='pill cat'>performance <b>6</b></span> <span class='pill cat'>design <b>6</b></span> <span class='pill cat'>hygiene <b>5</b></span> <span class='pill cat'>testing <b>5</b></span> <span class='pill cat'>clean-code <b>4</b></span> <span class='pill cat'>maintainability <b>4</b></span> <span class='pill cat'>docs <b>3</b></span> <span class='pill cat'>operability <b>3</b></span> <span class='pill cat'>solid <b>1</b></span> <span class='pill cat'>accessibility <b>1</b></span> </p>
+
+<h3>Fix first</h3>
+<p>All critical and high findings, in the order worth tackling them.</p>
+<ol class="prio"><li><a href='#FE-01'><span class='fid'>FE-01</span></a> <span class='pill sev-critical'>critical</span> Demo credentials for all four roles, including admin, rendered unconditionally on the login page</li><li><a href='#FE-02'><span class='fid'>FE-02</span></a> <span class='pill sev-critical'>critical</span> OIDC refresh token persisted in localStorage with no CSP or security headers as a second line of defence</li><li><a href='#FE-03'><span class='fid'>FE-03</span></a> <span class='pill sev-critical'>critical</span> Browser connects to the MQTT broker unauthenticated; topic scoping relies on client-supplied identifiers</li><li><a href='#INF-01'><span class='fid'>INF-01</span></a> <span class='pill sev-critical'>critical</span> MQTT broker allows anonymous publish, no ACLs, exposed on the host network</li><li><a href='#INF-02'><span class='fid'>INF-02</span></a> <span class='pill sev-critical'>critical</span> Default credentials for Postgres, Keycloak admin and MinIO bound to the host network</li><li><a href='#INF-03'><span class='fid'>INF-03</span></a> <span class='pill sev-critical'>critical</span> No TLS anywhere in the stack</li><li><a href='#FW-01'><span class='fid'>FW-01</span></a> <span class='pill sev-high'>high</span> DA14585 Eclipse target no longer compiles: unguarded 4-argument arch_set_deep_sleep()</li><li><a href='#FW-02'><span class='fid'>FW-02</span></a> <span class='pill sev-high'>high</span> Disconnect handler cancels timers before clearing the connection guards, letting an in-flight I2C ISR re-arm a timer</li><li><a href='#FW-03'><span class='fid'>FW-03</span></a> <span class='pill sev-high'>high</span> State shared between I2C ISR context and BLE task context is not volatile</li><li><a href='#FW-04'><span class='fid'>FW-04</span></a> <span class='pill sev-high'>high</span> Button-press ISR reconfigures the I2C pads with no exclusion against an in-flight transaction</li><li><a href='#BE-01'><span class='fid'>BE-01</span></a> <span class='pill sev-high'>high</span> Hand-built JSON in the device-rename audit log breaks on any label containing a quote or backslash</li><li><a href='#BE-02'><span class='fid'>BE-02</span></a> <span class='pill sev-high'>high</span> audit_log has no index for any of its query patterns</li><li><a href='#BE-03'><span class='fid'>BE-03</span></a> <span class='pill sev-high'>high</span> application-local.yml points at the wrong Postgres port relative to docker-compose.yml</li><li><a href='#FE-04'><span class='fid'>FE-04</span></a> <span class='pill sev-high'>high</span> IEEE-11073 FLOAT decoder does not recognise the reserved NaN / NRes / ±Infinity sentinels</li><li><a href='#FE-05'><span class='fid'>FE-05</span></a> <span class='pill sev-high'>high</span> ConnectPage never disconnects the active BLE transport on unmount</li><li><a href='#FE-06'><span class='fid'>FE-06</span></a> <span class='pill sev-high'>high</span> WebBluetoothTransport never removes its characteristicvaluechanged listener and keeps no reference to do so</li><li><a href='#FE-07'><span class='fid'>FE-07</span></a> <span class='pill sev-high'>high</span> Admin device edit and force-release mutations fail silently</li><li><a href='#FE-08'><span class='fid'>FE-08</span></a> <span class='pill sev-high'>high</span> No linter is installed; npm run lint only re-runs tsc, and eslint-disable comments reference a rule that has never run</li><li><a href='#FE-09'><span class='fid'>FE-09</span></a> <span class='pill sev-high'>high</span> Concurrent 401s each trigger their own signinSilent() with no single-flight de-duplication</li><li><a href='#FE-10'><span class='fid'>FE-10</span></a> <span class='pill sev-high'>high</span> Dashboard's single-device history keeps polling every 5 s while compare mode hides it</li><li><a href='#FE-11'><span class='fid'>FE-11</span></a> <span class='pill sev-high'>high</span> No test covers any page or component; only pure modules and four e2e scenarios</li><li><a href='#INF-04'><span class='fid'>INF-04</span></a> <span class='pill sev-high'>high</span> Gateway auth package is dead code, contradicting the README's 'stand-in' framing</li><li><a href='#INF-05'><span class='fid'>INF-05</span></a> <span class='pill sev-high'>high</span> Gateway MQTT connect/publish block indefinitely with no timeout or cancellation</li><li><a href='#INF-06'><span class='fid'>INF-06</span></a> <span class='pill sev-high'>high</span> CI covers only firmware; backend, frontend, gateway and mobile are never built or tested in CI</li><li><a href='#INF-07'><span class='fid'>INF-07</span></a> <span class='pill sev-high'>high</span> Measurement envelope schema has no single source of truth across Go, Java and TypeScript</li><li><a href='#INF-08'><span class='fid'>INF-08</span></a> <span class='pill sev-high'>high</span> Hundreds of build artifacts tracked in git, some with the developer's absolute path in the filename</li><li><a href='#INF-09'><span class='fid'>INF-09</span></a> <span class='pill sev-high'>high</span> fe/nginx.conf has no security headers and no gzip</li><li><a href='#INF-10'><span class='fid'>INF-10</span></a> <span class='pill sev-high'>high</span> Floating image tags for stateful services</li><li><a href='#INF-11'><span class='fid'>INF-11</span></a> <span class='pill sev-high'>high</span> Gateway drops every reading during a broker outage with no retry, buffer or metric</li></ol>
+
+<h3>Cross-cutting themes</h3>
+<div class="grid"><div class='theme'><h4>Two contexts, one set of variables (firmware)</h4><p>FW-02, FW-03 and FW-04 are one underlying gap: state shared between the I2C interrupt and the BLE task loop is neither <code>volatile</code> nor protected, and cleanup order assumes no interrupt can land in between. Fix them together and add a pure, host-testable decision function (FW-15) so the state machine has coverage.</p></div><div class='theme'><h4>Local-dev defaults are the only deployment that exists</h4><p>INF-01, INF-02, INF-03 and INF-18 all stem from a single <code>docker-compose.yml</code> that is honest about being for a laptop but has no hardened sibling, no reverse proxy and ports on 0.0.0.0. A production override plus a Caddy service closes most of it.</p></div><div class='theme'><h4>Contracts defined more than once</h4><p>The measurement envelope exists in Go, Java and TypeScript (INF-07); the tier list exists twice in the backend (BE-08); role checks are copied into eight controllers (BE-17); I2C constants live in two headers (FW-07). Each is small, but together they are where the next silent desync will come from.</p></div><div class='theme'><h4>Documentation drift despite a strict docs rule</h4><p>CLAUDE.md requires docs to be current at all times, yet the V1 migration header contradicts the README (BE-11), rollout comments describe a status that is never written (BE-06), the gateway README overstates auth (INF-04), and the README's structure tree omits <code>Eclipse/</code> and the design-system files (FW-16).</p></div><div class='theme'><h4>Nothing but firmware is gated by CI</h4><p>Backend, frontend and gateway all have real test suites that only run when a developer remembers (INF-06). Combined with 390 tracked build artifacts and no <code>.gitignore</code> (FW-09 / INF-08), the repository's hygiene lags the quality of its code.</p></div></div>
+
+<h3>What is done well</h3>
+<ul class="strengths"><li>Firmware: fully asynchronous, interrupt-driven AHT20 driver with no polling; pure codec isolated in <code>codec.h</code> and unit-tested on the host; careful sleep and power design with the reasoning written down.</li><li>Backend: authorization centralised in <code>DeviceAccessGuard</code>; enumeration-safe 404s; batched queries in hot paths; constant-time collector-token compare; idempotent MQTT ingest; <code>RbacIT</code> and <code>IngestPipelineIT</code> run against real Postgres and Mosquitto via Testcontainers.</li><li>Deploy: Keycloak public client with PKCE S256, no direct access grants, scoped redirect URIs; CSS-only login theme on the stock parent so Keycloak upgrades don't fork templates; backend image is multi-stage and non-root.</li><li>Gateway: a <code>Source</code> interface cleanly separates the unimplemented BlueZ path from the simulator; envelope, simulator and token packages have targeted unit tests.</li><li>Honesty: every security shortcut found is already named as a known gap in <code>deploy/README.md</code>, <code>proposals.md</code> or <code>ARCHITECTURE_V3.html</code> §11. The work is closing gaps, not discovering them.</li><li>Frontend: 75 passing vitest tests over extracted pure modules; the IEEE-11073 decoder is deliberately ported byte-for-byte from a proven implementation to sidestep a known vendor bug, with a regression test guarding it.</li></ul>
+
+<h2 id="findings">Findings</h2>
+<div class="filters" id="filters">
+  <label>Severity:</label>
+  <button data-sev="critical" class="on">Critical</button><button data-sev="high" class="on">High</button><button data-sev="medium" class="on">Medium</button><button data-sev="low" class="on">Low</button>
+  <label>Area <select id="fArea"><option value="">all</option><option value='firmware'>Firmware (C, DA1453x SDK6)</option><option value='backend'>Backend (Spring Boot / Java 21)</option><option value='frontend'>Web frontend (React + Vite + TS)</option><option value='infra'>Gateway, mobile, deploy, CI, repo</option></select></label>
+  <label>Category <select id="fCat"><option value="">all</option><option value='accessibility'>accessibility</option><option value='clean-code'>clean-code</option><option value='correctness'>correctness</option><option value='design'>design</option><option value='docs'>docs</option><option value='dry'>dry</option><option value='hygiene'>hygiene</option><option value='maintainability'>maintainability</option><option value='operability'>operability</option><option value='performance'>performance</option><option value='security'>security</option><option value='solid'>solid</option><option value='testing'>testing</option></select></label>
+  <input id="fText" type="search" placeholder="search title, path or text…">
+  <span class="count" id="fCount"></span>
+</div>
+
+
+<section class="area" id="area-firmware" data-area="firmware">
+  <h2>Firmware (C, DA1453x SDK6) <small>16 findings · <span class="pill sev-high">4 high</span> <span class="pill sev-medium">7 medium</span> <span class="pill sev-low">5 low</span></small></h2>
+  <p class="scope"><span class="lbl">Scope</span><code>src/, build.sh, tests/, Eclipse/</code></p>
+  <p class="overall">The measurement pipeline is well engineered for an embedded BLE context: the AHT20 driver is fully asynchronous and interrupt-driven, <code>codec.h</code> cleanly isolates pure host-testable logic from SDK code, the sleep and power design is thoughtful and well commented, and the codec tests cover meaningful edge cases. The risks cluster in two themes. First, the async multi-context design introduces real ISR/task races (FW-02, FW-03, FW-04), compounded by <code>-flto</code>. Second, build hygiene has drifted: a second real build target has silently broken (FW-01) while roughly 390 stale artifacts sit in git with no <code>.gitignore</code> (FW-09). The open pairing posture (FW-05) and the boilerplate IRK (FW-08) deserve a conscious sign-off for a health wearable.</p>
+  
+<article class="finding" id="FW-01" data-sev="high" data-area="firmware" data-cat="correctness">
+  <header>
+    <span class="fid">FW-01</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>DA14585 Eclipse target no longer compiles: unguarded 4-argument arch_set_deep_sleep()</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.c:589-592</code></li><li><code>Eclipse/.cproject (DA14585 configuration, no chip macro defined)</code></li><li><code>sdk/platform/arch/arch_api.h:138-181</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>app_advertise_complete()</code> calls <code>arch_set_deep_sleep(PD_SYS_DOWN_RAM_OFF, PD_SYS_DOWN_RAM_OFF, PD_SYS_DOWN_RAM_OFF, true)</code> with no <code>#if defined(__DA14531__)</code> guard. The SDK header only declares that 4-argument form for the DA14531 family; the <code>#else</code> branch used by DA14585 declares a 1-argument <code>arch_set_deep_sleep(bool)</code>. The checked-in <code>Eclipse/DA14585</code> configuration defines no chip macro, so it takes the <code>#else</code> branch. Its committed <code>thermometer.elf/.hex/.map</code> (Apr 6) predate the current <code>thermometer.c</code> (Jul 20): the target built once and is now stale.</p>
+    <p><span class="lbl">Why it matters</span>A real, checked-in build target silently fails to compile and nobody tests it.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Wrap the call in <code>#if defined(__DA14531__) … #else arch_set_deep_sleep(true); #endif</code>, or remove the DA14585 Eclipse project and its artifacts and state in the README that DA14585 is unsupported.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>arch_set_deep_sleep()</code> guarded: 4-argument form under <code>__DA14531__</code>, <code>arch_set_deep_sleep(true)</code> otherwise. The Eclipse DA14585 configuration compiles again (verified with the CDT makefiles); it never linked a bootable image from those makefiles, so the README documents DA14585 as compile-checked only and the Eclipse path as IDE-only.</p>
+  </div>
+</article>
+<article class="finding" id="FW-02" data-sev="high" data-area="firmware" data-cat="correctness">
+  <header>
+    <span class="fid">FW-02</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Disconnect handler cancels timers before clearing the connection guards, letting an in-flight I2C ISR re-arm a timer</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.c:649-661 (user_app_on_disconnect)</code></li><li><code>src/thermometer.c:528-540 (user_htpt_ind_cfg_ind, correct order)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>user_app_on_disconnect()</code> calls <code>stop_temp_timer()</code> first and only then sets <code>indications_enabled = false</code> and <code>current_conidx = GAP_INVALID_CONIDX</code>. Every I2C-ISR callback (<code>on_trigger_done</code>, <code>on_read_done</code> → <code>handle_sample_done</code>) gates on those two variables. If the I2C interrupt fires in the window between the two statements, the guards still read as connected and <code>handle_sample_done()</code> calls <code>app_easy_timer()</code> again, re-arming a timer that was just cleaned up. <code>user_htpt_ind_cfg_ind()</code> does it in the right order.</p>
+    <p><span class="lbl">Why it matters</span>Leaks or resurrects an <code>app_easy_timer</code> pool slot right after disconnect on a chip with a small fixed pool that this app already uses heavily.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Clear <code>current_conidx</code> and <code>indications_enabled</code> before calling <code>stop_temp_timer()</code>, matching <code>user_htpt_ind_cfg_ind()</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>user_app_on_disconnect()</code> clears <code>indications_enabled</code> / <code>current_conidx</code> before <code>stop_temp_timer()</code>, and <code>stop_temp_timer()</code> itself runs inside <code>GLOBAL_INT_DISABLE/RESTORE</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FW-03" data-sev="high" data-area="firmware" data-cat="correctness">
+  <header>
+    <span class="fid">FW-03</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>State shared between I2C ISR context and BLE task context is not volatile</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.c:100-130</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>current_conidx</code>, <code>indications_enabled</code>, <code>s_pending_temp_x100</code>, <code>s_measurement_pending</code>, <code>s_samples</code>, <code>s_sample_count</code>, <code>s_sample_attempts</code>, <code>s_consecutive_fail_cycles</code> and the timer handles are written from I2C hardware-interrupt callbacks and read from task-context timer callbacks (the file's own flow comment at lines 217-240 documents this), yet none is <code>volatile</code>. The SDK marks equivalent ISR-shared state volatile (e.g. <code>i2c.c:137</code>).</p>
+    <p><span class="lbl">Why it matters</span><code>build.sh</code> compiles with <code>-flto -Os</code>, which gives the compiler whole-program visibility and makes caching or reordering of these accesses realistic rather than theoretical.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Mark every variable touched from both contexts <code>volatile</code>, or hand the result across contexts inside an explicit critical section.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Every ISR/task-shared variable (guards, sample buffer and counters, pending result, the three ISR-armed timer handles) is <code>volatile</code>; the aggregator receives a snapshot copy.</p>
+  </div>
+</article>
+<article class="finding" id="FW-04" data-sev="high" data-area="firmware" data-cat="correctness">
+  <header>
+    <span class="fid">FW-04</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Button-press ISR reconfigures the I2C pads with no exclusion against an in-flight transaction</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.c:490-510 (app_button_press_cb → periph_init)</code></li><li><code>src/platform/user_periph_setup.c:60-86 (set_pad_functions)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Every button press (WKUPCT interrupt) unconditionally calls <code>periph_init()</code> → <code>set_pad_functions()</code>, which calls <code>GPIO_ConfigurePin()</code> on the I2C SCL/SDA pads. This is the SDK's hibernation-wake boilerplate, but none of the SDK examples it was copied from drive an active I2C sensor. A press during an AHT20 trigger/read reconfigures the pads mid-transaction.</p>
+    <p><span class="lbl">Why it matters</span>Can corrupt the in-flight I2C transaction or leave the bus in an undefined state, undermining the otherwise careful async driver.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Skip pad reconfiguration when a sample is in flight (<code>s_sample_attempts &gt; 0</code> or the read timer is armed), or move the work to the debounced <code>app_button_wakeup_cb()</code> main-loop callback.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — The driver exposes <code>i2c_temp_sensor_busy()</code> (volatile flag raised for the lifetime of every transaction); <code>set_pad_functions()</code> skips the SCL/SDA pads while it is set.</p>
+  </div>
+</article>
+<article class="finding" id="FW-05" data-sev="medium" data-area="firmware" data-cat="security">
+  <header>
+    <span class="fid">FW-05</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed — needs hardware validation</span>
+    <h4>No pairing or encryption required to read live temperature data</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/config/user_config.h:337-355 (DEF_SEC_REQ_NEVER)</code></li><li><code>src/config/user_config.h:461-510 (GAP_AUTH_NONE, GAP_NO_SEC)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The peripheral never requests security and the HTP GATT database is built with <code>sec_req = GAP_NO_SEC</code>, so any central in range during the advertising window can connect, enable indications and read the wearer's temperature stream in plaintext.</p>
+    <p><span class="lbl">Why it matters</span>This is a personal-health wearable; unauthenticated, unencrypted GATT access to physiological data is a privacy exposure even if the README documents it as a simplification.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Require at least unauthenticated encryption (<code>GAP_SEC1_NOAUTH_PAIR_ENC</code>) for the HTP characteristics so passive sniffing is not possible.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed — needs hardware validation</strong> — HTP service created with <code>SRV_PERM_UNAUTH</code> (<code>app_set_prf_srv_perm</code>) and <code>DEF_SEC_REQ_ON_CONNECT</code>: Just Works pairing without bonding on every connection, link encrypted before any temperature flows. Behaviour of each collector platform's automatic Just-Works handling still has to be confirmed on hardware (README).</p>
+  </div>
+</article>
+<article class="finding" id="FW-06" data-sev="medium" data-area="firmware" data-cat="correctness">
+  <header>
+    <span class="fid">FW-06</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-doc">documented</span>
+    <h4>Hardcoded default BD address shared with other firmware images</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/config/da14535_config_advanced.h:119</code></li><li><code>src/config/da14531_config_advanced.h:119</code></li><li><code>src/config/da14585_config_advanced.h:138</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>CFG_NVDS_TAG_BD_ADDRESS {0x10,0x00,0xF4,0x35,0x23,0x48}</code> is the same value used by <code>temp_reporter</code> and the SDK's <code>prox_reporter</code>. It is only a fallback when OTP has no address, but nothing documents that per-unit OTP programming is mandatory.</p>
+    <p><span class="lbl">Why it matters</span>For a fleet, any unit without an OTP address collides with every other unit built from this source, confusing central-side scan filters and bond tables.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Document OTP BD-address provisioning as a mandatory step in README / PACKAGING_CONCEPT, or derive a unique fallback from the chip ID at first boot.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>documented</strong> — README "Hardware → Bluetooth device address" and <code>PACKAGING_CONCEPT.md</code> §8 make per-unit OTP provisioning a mandatory production step; the config-reference row now calls the value a fallback.</p>
+  </div>
+</article>
+<article class="finding" id="FW-07" data-sev="medium" data-area="firmware" data-cat="dry">
+  <header>
+    <span class="fid">FW-07</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Dead, duplicated I2C configuration in user_periph_setup.h</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/config/user_periph_setup.h:68-73</code></li><li><code>src/i2c_temp_sensor.h:50</code></li><li><code>src/i2c_temp_sensor.c:76-89 (build_i2c_cfg)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>I2C_TEMP_SENSOR_ADDRESS</code>, <code>I2C_SPEED_MODE</code> and <code>I2C_ADDRESS_MODE</code> are defined but never referenced anywhere in <code>src/</code>. The driver independently defines <code>AHT20_I2C_ADDRESS</code> (same 0x38) and hardcodes <code>I2C_SPEED_FAST</code> / <code>I2C_ADDRESSING_7B</code> in <code>build_i2c_cfg()</code>.</p>
+    <p><span class="lbl">Why it matters</span>Two sources of truth: a maintainer editing the header expecting the sensor address to change sees no effect.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Delete the three unused defines or make <code>build_i2c_cfg()</code> consume them.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>build_i2c_cfg()</code> consumes <code>I2C_SPEED_MODE</code> / <code>I2C_ADDRESS_MODE</code> from <code>user_periph_setup.h</code>; the duplicate <code>I2C_TEMP_SENSOR_ADDRESS</code> is gone (the sensor address stays in the driver header where it belongs).</p>
+  </div>
+</article>
+<article class="finding" id="FW-08" data-sev="medium" data-area="firmware" data-cat="security">
+  <header>
+    <span class="fid">FW-08</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Placeholder IRK {0x00..0x0f} left in GAPM configuration</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/config/user_config.h:251-252</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The IRK is the sequential SDK boilerplate value. It is inert today because <code>USER_CFG_ADDRESS_MODE = APP_CFG_ADDR_PUB</code>, but it is the value that would be used the moment privacy / RPA is enabled.</p>
+    <p><span class="lbl">Why it matters</span>Enabling privacy later with this well-known IRK would make every device's 'private' address trivially resolvable and linkable.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Generate the IRK from the TRNG at first boot and persist it in NVDS, or add a loud comment that it must be randomised before privacy is ever enabled.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Loud placeholder comment on the IRK plus an <code>#error</code> guard in <code>user_config.h</code> that refuses any privacy (RPA) address mode until it is randomised per device.</p>
+  </div>
+</article>
+<article class="finding" id="FW-09" data-sev="medium" data-area="firmware" data-cat="hygiene">
+  <header>
+    <span class="fid">FW-09</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">hygiene</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>~390 build artifacts and machine-local files tracked in git, no .gitignore anywhere</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>build/DA14535-release/ (274 tracked .o/.d files)</code></li><li><code>Eclipse/DA14585/ (111 tracked .o/.d/.elf/.hex/.map)</code></li><li><code>compile_commands.json (940 KB)</code></li><li><code>.DS_Store</code></li><li><code>.vscode/settings.json</code></li><li><code>tests/test_codec (compiled binary)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Verified with <code>git ls-files</code>: 274 objects under <code>build/</code>, 111 under <code>Eclipse/DA14585/</code>, the generated <code>compile_commands.json</code>, a <code>.DS_Store</code>, the compiled test binary and a <code>.vscode/settings.json</code> containing unrelated MicroPython keybindings are all committed. Object filenames embed the developer's absolute path (<code>Users_alexv_projects_da14531_…</code>). There is no <code>.gitignore</code> at the repo root or in the project.</p>
+    <p><span class="lbl">Why it matters</span>Bloats the repo, produces noisy diffs on every rebuild, leaks a local filesystem layout, and (see FW-01) stale committed binaries look like valid artifacts for a target that no longer builds.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a project <code>.gitignore</code> for <code>build/</code>, <code>Eclipse/**/*.{o,d,elf,hex,map}</code>, <code>compile_commands.json</code>, <code>.DS_Store</code>, <code>.vscode/</code>, <code>tests/test_codec</code>; then <code>git rm -r --cached</code> the tracked instances in one cleanup commit.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Project <code>.gitignore</code> (build/, Eclipse per-config dirs, compile_commands.json, tests/test_codec, .vscode/, .DS_Store) and repo-root <code>.gitignore</code> (.DS_Store, SDK .metadata/); 660 tracked artifacts untracked with <code>git rm --cached</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FW-10" data-sev="medium" data-area="firmware" data-cat="clean-code">
+  <header>
+    <span class="fid">FW-10</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">clean-code</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>meas.type is assigned but never transmitted</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.c:389-392</code></li><li><code>sdk/ble_stack/profiles/htp/htpt/src/htpt.c:279-286 (htpt_pack_temp_value)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The code sets <code>meas.flags = HTP_FLAG_CELSIUS</code> (0x00) and <code>meas.type = HTP_TYPE_BODY</code>. The SDK only packs the type byte when <code>flags &amp; HTP_FLAG_TYPE</code> is set, so the assignment is dead and the type byte never goes over the air.</p>
+    <p><span class="lbl">Why it matters</span>A reader will assume this controls the reported measurement type; it does not, and it may mask a real intent.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Either set <code>HTP_FLAG_TYPE</code> in <code>flags</code> if the type should be embedded, or remove the assignment with a comment that type is conveyed via the separate Temperature Type characteristic.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>meas.type</code> assignment removed with a comment: the type is conveyed by the Temperature Type characteristic (<code>HTPT_TEMP_TYPE_CHAR_SUP</code> / <code>APP_HTPT_TEMP_TYPE</code>).</p>
+  </div>
+</article>
+<article class="finding" id="FW-11" data-sev="medium" data-area="firmware" data-cat="maintainability">
+  <header>
+    <span class="fid">FW-11</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">maintainability</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>No compile-time check that TEMP_SAMPLES_PER_MEASUREMENT &lt;= 3</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.h:31</code></li><li><code>src/codec.h:116-139 (median3_i16, aggregate_samples_i16)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>aggregate_samples_i16()</code> documents 'n must be 1..3' and its <code>n &gt;= 3</code> branch always takes a median of the first three samples. <code>s_samples</code> is sized by the define, so bumping it to 5 compiles cleanly and silently discards two samples.</p>
+    <p><span class="lbl">Why it matters</span>A very plausible tuning change regresses without any diagnostic.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>_Static_assert(TEMP_SAMPLES_PER_MEASUREMENT &lt;= 3, …)</code> next to the define, or generalise the aggregator to median-of-n.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>_Static_assert(TEMP_SAMPLES_PER_MEASUREMENT >= 1 &amp;&amp; &lt;= 3)</code> in <code>thermometer.h</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FW-12" data-sev="low" data-area="firmware" data-cat="clean-code">
+  <header>
+    <span class="fid">FW-12</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">clean-code</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>HTP indication confirmation status is discarded</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.c:542-546</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>user_htpt_send_measurement_cfm()</code> casts both parameters to void. There is no logging, even under <code>CFG_PRINTF</code>, and no counter.</p>
+    <p><span class="lbl">Why it matters</span>Indication failures on a flaky link are invisible without a debugger; combined with silent sensor-failure drops the device offers no transmission-health visibility.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Log non-success statuses via <code>arch_printf()</code> when <code>CFG_PRINTF</code> is enabled.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Non-success statuses increment <code>s_indication_failures</code> and are printed via <code>arch_printf()</code> under <code>CFG_PRINTF</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FW-13" data-sev="low" data-area="firmware" data-cat="maintainability">
+  <header>
+    <span class="fid">FW-13</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">maintainability</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Failure-recovery threshold relationship is documented but not enforced</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/thermometer.h:44-47</code></li><li><code>src/thermometer.c:414-428</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The comment says <code>AHT20_FAILS_BEFORE_BUS_RECOVERY</code> must be a multiple of <code>AHT20_FAILS_BEFORE_SOFT_RESET</code> for the recovery ladder to fire at the intended cadence. Nothing checks it.</p>
+    <p><span class="lbl">Why it matters</span>Changing one constant shifts bus recovery to the LCM of the two values without warning.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>_Static_assert(AHT20_FAILS_BEFORE_BUS_RECOVERY % AHT20_FAILS_BEFORE_SOFT_RESET == 0, …)</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>_Static_assert(AHT20_FAILS_BEFORE_BUS_RECOVERY % AHT20_FAILS_BEFORE_SOFT_RESET == 0)</code> (and <code>&gt; 0</code>) in <code>thermometer.h</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FW-14" data-sev="low" data-area="firmware" data-cat="dry">
+  <header>
+    <span class="fid">FW-14</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Per-chip config headers duplicated for targets that are neither built nor documented</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>src/config/da14531_config_basic.h</code></li><li><code>src/config/da14531_config_advanced.h</code></li><li><code>src/config/da14585_config_basic.h</code></li><li><code>src/config/da14585_config_advanced.h</code></li></ul></div>
+    <p><span class="lbl">Problem</span>These are near-copies of the DA14535 variants. <code>build.sh</code> always defines <code>-D__DA14531__ -D__DA14535__</code>, so the dispatcher never selects them, and the only DA14585 project (Eclipse) is broken (FW-01).</p>
+    <p><span class="lbl">Why it matters</span>Four files that must be kept in sync by hand for targets nobody can currently build.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Fix and document the DA14585 target and keep them, or delete the unused variants and the vestigial Eclipse artifacts.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Kept, because the DA14585 target is fixed (FW-01); the README now explains that the DA14531/DA14585 variants serve the Eclipse configurations and are compile-checked only.</p>
+  </div>
+</article>
+<article class="finding" id="FW-15" data-sev="low" data-area="firmware" data-cat="testing">
+  <header>
+    <span class="fid">FW-15</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">testing</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>The ISR/task state machine, where the real bugs live, has no automated coverage</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>tests/test_codec.c</code></li><li><code>src/thermometer.c</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>test_codec.c</code> covers the pure <code>codec.h</code> functions well (CRC-8 vector, decode edge cases, IEEE-11073 encode in both modes, aggregation, offset saturation). FW-02, FW-03 and FW-04 all live in the SDK-coupled state machine in <code>thermometer.c</code>, which has zero tests.</p>
+    <p><span class="lbl">Why it matters</span>The one part doing tricky cross-context work can regress without any test noticing.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Factor the sample-count / next-action decision logic into a pure host-testable function in the <code>codec.h</code> style, so at least the decision table is covered.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>cycle_next_action()</code> and <code>recovery_action()</code> in <code>codec.h</code> drive <code>handle_sample_done()</code> / <code>temp_timer_cb()</code>; host tests cover the decision table and a 40-cycle dead-sensor simulation of the recovery cadence.</p>
+  </div>
+</article>
+<article class="finding" id="FW-16" data-sev="low" data-area="firmware" data-cat="docs">
+  <header>
+    <span class="fid">FW-16</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">docs</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>The Eclipse build path is undocumented in the README</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>README.md 'Building' (lines 155-221) and 'Project structure' (466+)</code></li><li><code>Eclipse/</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The README describes only the <code>build.sh</code> / DA14535 path. The <code>Eclipse/</code> project with DA14535 and DA14585 configurations is not mentioned anywhere, and neither are <code>DESIGN_SYSTEM.md</code> / <code>DESIGN_SYSTEM.html</code> in the structure tree.</p>
+    <p><span class="lbl">Why it matters</span>An undocumented build target is one nobody runs before a release, which is how FW-01 went unnoticed. The CLAUDE.md rule that docs must always be current is violated.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Document Eclipse as a supported alternative (and add it to CI) or remove it; add the design-system files to the structure tree.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — README "Eclipse (alternative, IDE-only)" section, support-level statement, and DESIGN_SYSTEM.md/.html, docs/superseded/, schema/, .gitignore, Eclipse/ in the structure tree.</p>
+  </div>
+</article>
+</section>
+<section class="area" id="area-backend" data-area="backend">
+  <h2>Backend (Spring Boot / Java 21) <small>19 findings · <span class="pill sev-high">3 high</span> <span class="pill sev-medium">4 medium</span> <span class="pill sev-low">12 low</span></small></h2>
+  <p class="scope"><span class="lbl">Scope</span><code>backend/</code></p>
+  <p class="overall">An unusually mature backend for its scope: ownership and consent authorization are centralised in <code>DeviceAccessGuard</code>, non-owned resources return enumeration-safe 404s, hot paths batch queries to avoid N+1, the collector token comparison is constant-time, SQL is parameterised throughout, and <code>RbacIT</code> drives the authorization matrix end-to-end against real Postgres and Mosquitto via Testcontainers. No critical issue was found. The findings are sharp edges: one reproducible data-corruption 500 (BE-01), missing indexes on the fastest-growing table (BE-02), a quick-start port mismatch (BE-03), and the DRY / package-structure drift expected once a project outgrows its original shape.</p>
+  
+<article class="finding" id="BE-01" data-sev="high" data-area="backend" data-cat="correctness">
+  <header>
+    <span class="fid">BE-01</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Hand-built JSON in the device-rename audit log breaks on any label containing a quote or backslash</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/api/DeviceController.java:137-138</code></li><li><code>backend/src/main/resources/db/migration/V1__init.sql (audit_log.detail JSONB)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>renameLabel</code> writes the audit detail as <code>label == null ? "null" : "\"" + label + "\""</code> (string concatenation). <code>AuditLog.detail</code> is a JSONB column, so Postgres validates the text. <code>RenameDeviceRequest</code> only enforces <code>@Size(max = 64)</code>, so a label like <code>He said "hi"</code> produces invalid JSON and the insert throws, failing the rename with a 500.</p>
+    <p><span class="lbl">Why it matters</span>A perfectly ordinary customer action can 500. <code>AccessDeniedAuditor</code>'s own Javadoc warns about exactly this failure mode and fixed it there, but the fix was missed here.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Serialise via the shared <code>ObjectMapper</code> (<code>objectMapper.writeValueAsString(Map.of("label", label))</code>), the pattern <code>AccessDeniedAuditor.detailOf</code> already uses.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — New <code>AuditDetailWriter</code> (shared <code>ObjectMapper</code>) used for <code>device.rename</code> and <code>admin.user.role_change</code>.</p>
+  </div>
+</article>
+<article class="finding" id="BE-02" data-sev="high" data-area="backend" data-cat="performance">
+  <header>
+    <span class="fid">BE-02</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">performance</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>audit_log has no index for any of its query patterns</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/resources/db/migration/V1__init.sql:206-213</code></li><li><code>backend/src/main/java/com/dialog/thermometer/domain/AuditLogRepository.java:18-25</code></li><li><code>backend/src/main/java/com/dialog/thermometer/api/AdminController.java:283-307</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The table has only a primary key. Every reader (<code>findByActorIdAndActionInOrderByAtDesc</code>, <code>findByActorIdOrSubjectOrderByAtDesc</code>, the admin <code>Specification</code> on actorId/action/subject/at range) filters and sorts on unindexed columns. The table is written on every audited action and on every 403 via <code>AccessDeniedAuditor</code>.</p>
+    <p><span class="lbl">Why it matters</span>The fastest-growing table degrades every paged audit endpoint into a sequential scan plus sort.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>(actor_id, at DESC)</code>, <code>(subject, at DESC)</code> and <code>(action, at DESC)</code> indexes in a <code>V3__</code> migration.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>V3__audit_log_indexes.sql</code>: (actor_id, at DESC), (subject, at DESC), (action, at DESC); exercised by a new RBAC IT.</p>
+  </div>
+</article>
+<article class="finding" id="BE-03" data-sev="high" data-area="backend" data-cat="correctness">
+  <header>
+    <span class="fid">BE-03</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>application-local.yml points at the wrong Postgres port relative to docker-compose.yml</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/resources/application-local.yml:8</code></li><li><code>docker-compose.yml:25-30</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Compose deliberately publishes Postgres on host port 5433 ('5432 is commonly taken on dev machines'). The local profile used by the documented <code>mvn spring-boot:run</code> loop connects to <code>localhost:5432</code>.</p>
+    <p><span class="lbl">Why it matters</span>Following the README quick start verbatim either fails to connect or silently talks to an unrelated local Postgres on 5432, exactly the ambiguity the compose comment says it avoids.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Point <code>application-local.yml</code> at <code>localhost:5433</code>, or drop the host remap in compose.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>application-local.yml</code> points at <code>localhost:5433</code>; compose keeps the remap and says so.</p>
+  </div>
+</article>
+<article class="finding" id="BE-04" data-sev="medium" data-area="backend" data-cat="correctness">
+  <header>
+    <span class="fid">BE-04</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>GET /api/measurements/{deviceId} has no lower bound on limit</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/api/MeasurementController.java:65,72</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>Math.min(limit, 5000)</code> clamps only the upper bound. <code>limit=0</code> or a negative value flows into raw SQL <code>LIMIT ?</code>; Postgres rejects negative LIMIT so <code>limit=-1</code> becomes an unhandled 500. <code>AnnotationController</code> does it correctly with <code>Math.max(1, Math.min(limit, MAX_LIMIT))</code>.</p>
+    <p><span class="lbl">Why it matters</span>Client bugs turn into server errors instead of clean 400s.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Use <code>Math.max(1, Math.min(limit, 5000))</code>, matching the annotation controller.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>Math.max(1, Math.min(limit, MAX_LIMIT))</code> with named constants.</p>
+  </div>
+</article>
+<article class="finding" id="BE-05" data-sev="medium" data-area="backend" data-cat="security">
+  <header>
+    <span class="fid">BE-05</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Role.fromRealmRoles has no precedence for a multi-role JWT</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/security/Role.java:8-17</code></li><li><code>backend/src/main/java/com/dialog/thermometer/security/CurrentUserService.java:146-153</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The method returns the first <code>realm_access.roles</code> entry that matches a known role, i.e. whichever role Keycloak happens to list first. Keycloak does not guarantee stable ordering.</p>
+    <p><span class="lbl">Why it matters</span>The whole authorization model assumes exactly one role per user; a user with two realm roles gets an assignment that can flip between logins.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Scan in an explicit precedence order (ADMIN, then DOCTOR, then CUSTOMER).</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>Role.fromRealmRoles</code> scans an explicit ADMIN → DOCTOR → CUSTOMER precedence; unit-tested against claim order.</p>
+  </div>
+</article>
+<article class="finding" id="BE-06" data-sev="medium" data-area="backend" data-cat="docs">
+  <header>
+    <span class="fid">BE-06</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">docs</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Rollout status comments say 'installed' but the code only ever writes 'success'</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/rollout/RolloutTargetRepository.java:29</code></li><li><code>backend/src/main/java/com/dialog/thermometer/rollout/RolloutService.java:88</code></li><li><code>backend/src/main/java/com/dialog/thermometer/api/dto/RolloutSummaryResponse.java:13</code></li><li><code>backend/src/main/java/com/dialog/thermometer/api/dto/RolloutStatusRequest.java:11</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Three comments describe the status vocabulary as pending / installed / failed, but <code>RolloutStatusRequest</code> validates <code>^(success|failed)$</code> and 'installed' is never produced anywhere. No test asserts the <code>statusCounts</code> key names.</p>
+    <p><span class="lbl">Why it matters</span>Either stale docs that mislead the next maintainer, or a real bug if the frontend keys its 'installed' bucket on a value the backend never emits.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Reconcile the comments with <code>success|failed|pending</code> (or rename the wire value) and add a test asserting the exact keys in <code>RolloutSummaryResponse.statusCounts</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — All comments say <code>pending</code>/<code>success</code>/<code>failed</code>; <code>RolloutSummaryResponseTest</code> asserts the exact <code>statusCounts</code> keys and that <code>installed</code> is rejected.</p>
+  </div>
+</article>
+<article class="finding" id="BE-07" data-sev="medium" data-area="backend" data-cat="security">
+  <header>
+    <span class="fid">BE-07</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>JWT validation checks issuer and timestamps but not audience</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/config/SecurityConfig.java:144-153</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>JwtValidators.createDefaultWithIssuer(issuerUri)</code> validates <code>iss</code>, <code>exp</code>, <code>nbf</code> only. Any token minted by the same realm for a different client would be accepted.</p>
+    <p><span class="lbl">Why it matters</span>Low risk with a single client today, but a latent widening of trust the moment a second OAuth client is added to the realm.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Chain a <code>JwtClaimValidator</code> on <code>azp</code> (or <code>aud</code>) scoped to the <code>thermometer-web</code> client id.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>DelegatingOAuth2TokenValidator</code> with an <code>azp</code>/<code>aud</code> validator scoped to <code>thermometer.oidc.client-id</code> (default <code>thermometer-web</code>); 5 unit tests.</p>
+  </div>
+</article>
+<article class="finding" id="BE-08" data-sev="low" data-area="backend" data-cat="dry">
+  <header>
+    <span class="fid">BE-08</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Tier-order list duplicated between AlertThresholdService and TemperatureEventService</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/threshold/AlertThresholdService.java:116</code></li><li><code>backend/src/main/java/com/dialog/thermometer/event/TemperatureEventService.java:45-46</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Both classes define the same five-element tier list. <code>TemperatureEventService</code> even carries a comment saying it 'matches AlertThresholdService.tierOf' instead of importing it.</p>
+    <p><span class="lbl">Why it matters</span>A tier rename only needs to touch one copy to compile and pass, silently desynchronising episode detection from threshold resolution.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Use <code>AlertThresholdService.TIER_ORDER</code> / <code>tierRank</code> directly.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>TemperatureEventService</code> uses <code>AlertThresholdService.tierRank()</code>; the duplicate list is gone.</p>
+  </div>
+</article>
+<article class="finding" id="BE-09" data-sev="low" data-area="backend" data-cat="performance">
+  <header>
+    <span class="fid">BE-09</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">performance</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>RolloutService.findPending loads the whole rollouts table into memory on every collector poll</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/rollout/RolloutService.java:90-100</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>rollouts.findAll().stream().filter(...)</code> pulls every row and filters status, chip model, version and target group in Java, once per <code>GET /api/rollouts/pending</code>, which every collector polls.</p>
+    <p><span class="lbl">Why it matters</span>Unlike every other list query in the codebase, this one does not push filters into SQL and scales with fleet size times poll rate.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a derived query such as <code>findByStatusAndChipModelIgnoreCase</code> to narrow the candidate set first.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>findByStatusAndChipModelIgnoreCase</code> narrows the candidate set in SQL.</p>
+  </div>
+</article>
+<article class="finding" id="BE-10" data-sev="low" data-area="backend" data-cat="security">
+  <header>
+    <span class="fid">BE-10</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Inconsistent request validation across near-identical device-edit DTOs</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/api/dto/ClaimDeviceRequest.java:11</code></li><li><code>backend/src/main/java/com/dialog/thermometer/api/dto/EditDeviceRequest.java:4</code></li><li><code>backend/src/main/java/com/dialog/thermometer/api/AdminController.java:252</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>RenameDeviceRequest.label</code> is bounded to 64 chars, but <code>ClaimDeviceRequest</code> and <code>EditDeviceRequest</code> have no <code>@Size</code> on <code>model</code> / <code>fwVersion</code> / <code>label</code>, and <code>AdminController#editDevice</code> lacks <code>@Valid</code> entirely.</p>
+    <p><span class="lbl">Why it matters</span>Over-length input hits a Hibernate/Postgres length error (500) instead of a clean 400.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>@Size</code> constraints matching the <code>VARCHAR(64)/VARCHAR(32)</code> columns and <code>@Valid</code> on <code>editDevice</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>@Size</code> matching the columns on <code>ClaimDeviceRequest</code> / <code>EditDeviceRequest</code>; <code>@Valid</code> on claim and admin edit.</p>
+  </div>
+</article>
+<article class="finding" id="BE-11" data-sev="low" data-area="backend" data-cat="docs">
+  <header>
+    <span class="fid">BE-11</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">docs</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Stale, self-contradicting migration-policy comment in V1__init.sql</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/resources/db/migration/V1__init.sql:4-8</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The header says 'there is exactly one migration file. Edit this script directly instead of adding V2__…sql', but <code>V2__device_label.sql</code> exists and the README documents the opposite policy.</p>
+    <p><span class="lbl">Why it matters</span>The natural first place a contributor looks gives instructions that contradict both the README and actual practice.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Delete or rewrite the stale paragraph.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — V1 header rewritten as an immutable baseline. Note: this changes V1's Flyway checksum — pre-existing volumes need <code>docker compose down -v</code> or <code>flyway repair</code> (README).</p>
+  </div>
+</article>
+<article class="finding" id="BE-12" data-sev="low" data-area="backend" data-cat="clean-code">
+  <header>
+    <span class="fid">BE-12</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">clean-code</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Dead repository method RolloutTargetRepository.findByDevice</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/rollout/RolloutTargetRepository.java:13</code></li></ul></div>
+    <p><span class="lbl">Problem</span>No callers anywhere in <code>src/main</code>.</p>
+    <p><span class="lbl">Why it matters</span>Unused query methods accumulate as false leads for readers.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Remove it, or wire it into a per-device OTA-history view if planned.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>findByDevice</code> removed.</p>
+  </div>
+</article>
+<article class="finding" id="BE-13" data-sev="low" data-area="backend" data-cat="dry">
+  <header>
+    <span class="fid">BE-13</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Rate-limit fallback defaults in code disagree with application.yml</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/config/RateLimitConfig.java:62-67</code></li><li><code>backend/src/main/resources/application.yml:59,61</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>@Value</code> fallbacks are 60 req/min, burst 20; <code>application.yml</code> ships 240/80. The fallbacks are effectively dead but read as 'the default'.</p>
+    <p><span class="lbl">Why it matters</span>Removing the YAML entries 'because they look redundant' would silently cut the effective limit by 4x.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Make the fallback literals match (240/80) or point to one canonical source in a comment.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Fallbacks now 240/80 with an <code>@implNote</code> naming <code>application.yml</code> as canonical.</p>
+  </div>
+</article>
+<article class="finding" id="BE-14" data-sev="low" data-area="backend" data-cat="performance">
+  <header>
+    <span class="fid">BE-14</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">performance</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Admin branch of GET /api/devices and GET /api/consents dumps whole tables unpaged</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/api/DeviceController.java:161</code></li><li><code>backend/src/main/java/com/dialog/thermometer/api/ConsentController.java:145</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>case ADMIN -&gt; enrich(devices.findAll())</code> and <code>case ADMIN -&gt; consentLinks.findAll()</code> return the entire tables, although paged admin equivalents already exist under <code>/api/admin/*</code>.</p>
+    <p><span class="lbl">Why it matters</span>Unbounded response size as the fleet grows, plus two endpoints answering the same question differently.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Paginate the admin branch or restrict these endpoints to non-admin roles and document the admin equivalents.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Admin branches bounded to 500 rows with deterministic ordering and Javadoc/README pointers to the paged <code>/api/admin/*</code> endpoints (response type unchanged to keep the FE contract).</p>
+  </div>
+</article>
+<article class="finding" id="BE-15" data-sev="low" data-area="backend" data-cat="hygiene">
+  <header>
+    <span class="fid">BE-15</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">hygiene</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>mvn dependency:go-offline || true in the Dockerfile swallows failures</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/Dockerfile:8</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>RUN mvn -q -B dependency:go-offline || true</code> discards any error from dependency resolution.</p>
+    <p><span class="lbl">Why it matters</span>A broken pom or unreachable repository is masked until the later package step fails less clearly.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Drop <code>|| true</code>, or comment that it is a best-effort layer-cache warmup.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>|| true</code> removed with a comment on why the layer exists; <code>curl</code> + <code>HEALTHCHECK</code> on <code>/actuator/health</code> added.</p>
+  </div>
+</article>
+<article class="finding" id="BE-16" data-sev="low" data-area="backend" data-cat="design">
+  <header>
+    <span class="fid">BE-16</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">design</span>
+    <span class="pill res-fixed">fixed (pragmatic form)</span>
+    <h4>Package structure mixes package-by-layer and package-by-feature</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/api/*</code></li><li><code>backend/src/main/java/com/dialog/thermometer/{admin,annotation,care,event,threshold}/</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Half the controllers live in a shared <code>api/</code> package; the others sit in feature packages next to their services. <code>AdminController</code> (api/) and <code>AdminAnalyticsController</code> (admin/) split one concept across both conventions.</p>
+    <p><span class="lbl">Why it matters</span>No single mental model for where to find the controller for X.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Pick feature packages going forward and record the target shape in the README's source-layout section.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed (pragmatic form)</strong> — <code>AdminController</code> → <code>admin/</code>, <code>RolloutController</code> → <code>rollout/</code>; target shape (package-by-feature, <code>api/</code> reduced to DTOs) recorded in the README with the four remaining pure renames listed.</p>
+  </div>
+</article>
+<article class="finding" id="BE-17" data-sev="low" data-area="backend" data-cat="dry">
+  <header>
+    <span class="fid">BE-17</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Role-check boilerplate reimplemented in at least eight controllers</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>api/DeviceController.java:165-169</code></li><li><code>threshold/ThresholdController.java:196-208</code></li><li><code>api/ConsentController.java:351-357</code></li><li><code>care/CareNoteController.java:243-249</code></li><li><code>api/AdminController.java:275-281</code></li><li><code>admin/AdminAnalyticsController.java:353-357</code></li><li><code>api/RolloutController.java:133-137</code></li><li><code>event/EventController.java:475-477</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The same three-line shape (resolve <code>CurrentUser</code>, compare <code>role()</code>, throw 403 <code>ResponseStatusException</code>) is copied per controller, sometimes as a private helper, sometimes inline.</p>
+    <p><span class="lbl">Why it matters</span>A change to the 403 shape or an audit hook has to be applied in eight places and will eventually be applied in seven.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>requireRole(CurrentUser, Role...)</code> to <code>CurrentUserService</code> or a small authorization support class and call it everywhere.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>CurrentUserService.requireRole()</code> / <code>resolveWithRole()</code> used by every controller; unit-tested.</p>
+  </div>
+</article>
+<article class="finding" id="BE-18" data-sev="low" data-area="backend" data-cat="solid">
+  <header>
+    <span class="fid">BE-18</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">solid</span>
+    <span class="pill res-fixed">fixed (pragmatic form)</span>
+    <h4>Business and query logic embedded in controllers instead of a service layer</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/api/ConsentController.java:216-293 (summarize, riskScoreOf, riskTierOf)</code></li><li><code>backend/src/main/java/com/dialog/thermometer/admin/AdminAnalyticsController.java (six panels of raw SQL)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>ConsentController</code> contains a risk-scoring heuristic and three hand-rolled <code>JdbcTemplate</code> queries per patient as private methods. The analytics controller holds all its SQL inline.</p>
+    <p><span class="lbl">Why it matters</span>Pure, unit-testable logic is only reachable through a full HTTP round trip in <code>RbacIT</code>.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Extract a <code>PatientSummaryService</code> (as <code>AlertThresholdService</code> / <code>TemperatureEventService</code> already are) and leave controllers to role checks and response mapping.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed (pragmatic form)</strong> — <code>PatientSummaryService</code> extracted with 9 unit tests on the risk scoring; the analytics controller's read-only SQL deliberately stays inline (documented).</p>
+  </div>
+</article>
+<article class="finding" id="BE-19" data-sev="low" data-area="backend" data-cat="testing">
+  <header>
+    <span class="fid">BE-19</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">testing</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Rollout auto-abort and the consent/audit pagination endpoints have no tests</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>backend/src/main/java/com/dialog/thermometer/rollout/RolloutService.java:110-127 (maybeAutoAbort)</code></li><li><code>backend/src/main/java/com/dialog/thermometer/api/ConsentController.java:307-349</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>RolloutServiceTest</code> covers bucketing and version comparison but never exercises <code>reportStatus</code> / <code>maybeAutoAbort</code>. None of <code>/api/consents/access-history</code>, <code>/api/doctor/consent-activity</code>, <code>/api/doctor/audit-log</code> appear in <code>RbacIT</code>.</p>
+    <p><span class="lbl">Why it matters</span>Auto-abort is the only thing between a bad firmware push and 100% of the fleet; it has zero coverage of its threshold arithmetic.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Unit-test <code>maybeAutoAbort</code> with mocked repositories (flips at/above threshold, not below) and add <code>@WebMvcTest</code> cases for the three pagination endpoints.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>RolloutAutoAbortTest</code> (7 tests through the real <code>reportStatus</code>), <code>ConsentPaginationMvcTest</code> (7 tests, <code>standaloneSetup</code> because <code>@WebMvcTest</code>/<code>@MockBean</code> cannot instrument on this JDK) and an RBAC IT over the three pagination endpoints.</p>
+  </div>
+</article>
+</section>
+<section class="area" id="area-frontend" data-area="frontend">
+  <h2>Web frontend (React + Vite + TS) <small>33 findings · <span class="pill sev-critical">3 critical</span> <span class="pill sev-high">8 high</span> <span class="pill sev-medium">16 medium</span> <span class="pill sev-low">6 low</span></small></h2>
+  <p class="scope"><span class="lbl">Scope</span><code>fe/</code></p>
+  <p class="overall">An unusually disciplined frontend for its size. Computational logic is consistently extracted into pure, tested modules (<code>temperatureWindow</code>, <code>trendInsight</code>, <code>doctorFeeds</code>, <code>dailySeries</code>, <code>rolloutProgress</code>) with real edge cases covered (DST-safe streaks, sparse-series gaps). The <code>BleTransport</code> strategy (web / native / simulated) pays for itself: the e2e suite runs entirely against the simulator. Auth is a textbook Authorization Code + PKCE flow, query keys and invalidation are thoughtful, and the Pine &amp; Ember tokens are genuinely followed with essentially no hard-coded colours. The three criticals (FE-01 to FE-03) are deployment-posture issues that must be closed before any exposure beyond a local loop; the BLE lifecycle leaks (FE-05, FE-06), silent admin failures (FE-07) and missing IEEE-11073 sentinels (FE-04) are real bugs that no existing test or CI run would catch.</p>
+  
+<article class="finding" id="FE-01" data-sev="critical" data-area="frontend" data-cat="security">
+  <header>
+    <span class="fid">FE-01</span>
+    <span class="pill sev-critical">critical</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Demo credentials for all four roles, including admin, rendered unconditionally on the login page</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/LoginPage.tsx:28-49</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The login screen prints <code>customer1</code>/<code>Customer1!</code>, <code>customer2</code>/<code>Customer2!</code>, <code>doctor1</code>/<code>Doctor1!</code> and <code>admin1</code>/<code>Admin123!</code> in plain text with no <code>import.meta.env.DEV</code> gate or any other guard. The production Dockerfile builds exactly this.</p>
+    <p><span class="lbl">Why it matters</span>Any build reachable outside an isolated local loop hands every visitor a working admin credential.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Gate the block behind <code>import.meta.env.DEV</code>, or move the demo accounts to the README and out of app code.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Demo block rendered only under <code>import.meta.env.DEV</code>; verified absent from <code>dist/</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-02" data-sev="critical" data-area="frontend" data-cat="security">
+  <header>
+    <span class="fid">FE-02</span>
+    <span class="pill sev-critical">critical</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>OIDC refresh token persisted in localStorage with no CSP or security headers as a second line of defence</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/auth/oidc.ts:44 (WebStorageStateStore({ store: window.localStorage }))</code></li><li><code>fe/nginx.conf:1-14</code></li><li><code>fe/index.html (no CSP meta)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>oidc-client-ts</code> persists the full user object including the refresh token in <code>localStorage</code>, readable by any in-origin script. The served <code>nginx.conf</code> sets no <code>Content-Security-Policy</code>, <code>X-Frame-Options</code>, <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code> or HSTS (see also INF-09).</p>
+    <p><span class="lbl">Why it matters</span>A single XSS, e.g. from a dependency vulnerability (FE-12), gets a durable path to steal the refresh token and impersonate the user beyond one tab's lifetime.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a restrictive CSP with explicit <code>connect-src</code> for the API, MQTT and Keycloak origins; reconsider whether the refresh token must survive a browser restart for a health-data app (session storage or in-memory with silent renew).</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — oidc-client-ts user and state stores in <code>sessionStorage</code> (in-memory fallback), silent renew kept; CSP and the full header set served by nginx (see INF-09). Trade-off documented in <code>fe/README.md</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-03" data-sev="critical" data-area="frontend" data-cat="security">
+  <header>
+    <span class="fid">FE-03</span>
+    <span class="pill sev-critical">critical</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Browser connects to the MQTT broker unauthenticated; topic scoping relies on client-supplied identifiers</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/live/mqttClient.ts:37-45 (mqtt.connect with no credentials)</code></li><li><code>fe/src/live/mqttClient.ts:52-55, 71-97 (publishMeasurement / subscribeLive)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>mqtt.connect(MQTT_WS_URL, { clientId, reconnectPeriod })</code> presents no username, password or token. Publish topics embed a caller-supplied <code>userId</code> / <code>device_id</code> (the file's own comment says the user segment is 'not identity-bearing on the backend side') and <code>subscribeLive</code> subscribes to <code>live/{backendUserId}/#</code> from another caller-supplied value. The broker has no ACLs (INF-01).</p>
+    <p><span class="lbl">Why it matters</span>Any client that reaches the WebSocket listener can publish fabricated readings for any device or subscribe to another patient's live feed by enumerating user ids.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Mint a short-lived broker credential server-side per authenticated user and enforce per-topic ACLs on the broker so a client can only publish and subscribe under its own identity.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — The client connects only with credentials minted by <code>POST /api/live/credentials</code> and uses the server-asserted <code>userId</code> for both the publish topic and the live subscription; the JWT-<code>sub</code>/dev-fallback path is gone. The broker enforces per-user ACLs (INF-01).</p>
+  </div>
+</article>
+<article class="finding" id="FE-04" data-sev="high" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-04</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>IEEE-11073 FLOAT decoder does not recognise the reserved NaN / NRes / ±Infinity sentinels</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/ble/ieee11073.ts:17-38</code></li><li><code>fe/src/ble/ieee11073.test.ts (no sentinel cases)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>decodeHtpTemperature</code> treats every 24-bit mantissa as a plain two's-complement integer (<code>mantRaw &gt;= 0x800000 ? mantRaw - 0x1000000 : mantRaw</code>). The standard reserves <code>0x7FFFFF</code> (NaN), <code>0x800000</code> (NRes) and <code>0x7FFFFE</code> / <code>0x800002</code> (±Inf) as sensor-fault values; none are handled, so a NaN sentinel decodes to a finite-looking <code>83886.07</code>.</p>
+    <p><span class="lbl">Why it matters</span>Nothing downstream filters it (<code>trendInsight.ts</code> only drops non-finite values), so a hardware fault can render as 'High Fever', skew the chart Y-domain and pollute trend averages.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Detect the reserved mantissas before the two's-complement conversion and return <code>null</code> (the existing short-buffer contract); add a regression test per sentinel.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Reserved mantissas 0x7FFFFF / 0x800000 / 0x7FFFFE / 0x800002 return <code>null</code> before the two's-complement conversion; one regression test per sentinel in both firmware modes.</p>
+  </div>
+</article>
+<article class="finding" id="FE-05" data-sev="high" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-05</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>ConnectPage never disconnects the active BLE transport on unmount</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/ConnectPage.tsx:29-194 (no unmount cleanup; disconnect() only in handleDisconnect at line 90)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>transportRef</code> holds the connected <code>BleTransport</code> but there is no <code>useEffect(() =&gt; () =&gt; transportRef.current?.disconnect(), [])</code>. The only effect (line 44) is the live-feed subscription. Navigating away via any in-app link unmounts without tearing the transport down.</p>
+    <p><span class="lbl">Why it matters</span>The simulator's <code>setInterval</code> keeps publishing to MQTT and REST forever in the background; a real device keeps its GATT connection and notification stream open, draining battery with no way to stop it short of returning to <code>/connect</code>.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add an unmount cleanup effect that calls <code>transportRef.current?.disconnect()</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Unmount cleanup effect disconnects the transport; component test pins it.</p>
+  </div>
+</article>
+<article class="finding" id="FE-06" data-sev="high" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-06</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>WebBluetoothTransport never removes its characteristicvaluechanged listener and keeps no reference to do so</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/ble/webBluetoothTransport.ts:56-75</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>requestDevice()</code> attaches <code>characteristic.addEventListener('characteristicvaluechanged', this.handleValueChanged)</code> on a local variable that is never stored on <code>this</code>. <code>disconnect()</code> removes only the <code>gattserverdisconnected</code> listener.</p>
+    <p><span class="lbl">Why it matters</span>Browsers cache <code>BluetoothRemoteGATTCharacteristic</code> objects per device, so reconnecting in one page session (each reconnect creates a new transport instance) leaves stale listeners attached: one hardware notification fires on several instances and duplicates MQTT publishes and REST uploads.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Store the characteristic on <code>this</code> and remove the listener in <code>disconnect()</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Characteristic stored on the instance and its listener removed in <code>disconnect()</code>; test uses cached-characteristic fakes to pin the duplicate-notification symptom.</p>
+  </div>
+</article>
+<article class="finding" id="FE-07" data-sev="high" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-07</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Admin device edit and force-release mutations fail silently</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/admin/AdminDevicesPage.tsx:171-179 (edit)</code></li><li><code>fe/src/pages/admin/AdminDevicesPage.tsx:113-134 (release)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>editDevice.mutate({...})</code> is followed unconditionally by <code>setEditingBdAddr(null)</code> and <code>releaseDevice.mutate(...)</code> by <code>setConfirmingRelease(null)</code>, closing the UI whether the request succeeded or not. No <code>isError</code> branch exists in the file, unlike <code>AdminUsersPage</code>, <code>AdminAuditPage</code> and <code>AdminRelationshipsPage</code>.</p>
+    <p><span class="lbl">Why it matters</span>An admin believes an edit or release succeeded when it did not.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Close the editor only <code>onSuccess</code> and render <code>Alert status="danger"</code> on <code>isError</code>, matching the rest of the admin console.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Editor/confirm close only <code>onSuccess</code>; dismissible danger alerts on error; 6 component tests.</p>
+  </div>
+</article>
+<article class="finding" id="FE-08" data-sev="high" data-area="frontend" data-cat="hygiene">
+  <header>
+    <span class="fid">FE-08</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">hygiene</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>No linter is installed; npm run lint only re-runs tsc, and eslint-disable comments reference a rule that has never run</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/package.json:14 ("lint": "tsc -b --noEmit")</code></li><li><code>fe/src/pages/DashboardPage.tsx, HistoryPage.tsx, PatientsPage.tsx (eslint-disable-next-line react-hooks/exhaustive-deps)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>There is no ESLint dependency or config anywhere in <code>fe/</code>. The three <code>eslint-disable</code> comments look like reviewed exceptions but the <code>react-hooks/exhaustive-deps</code> rule has never been installed, let alone evaluated.</p>
+    <p><span class="lbl">Why it matters</span>Nothing in the toolchain checks hook-dependency correctness, unused code beyond tsc's flags, or accessibility rules.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add ESLint with <code>eslint-plugin-react-hooks</code> and <code>eslint-plugin-jsx-a11y</code>, and make <code>npm run lint</code> invoke it.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — ESLint flat config (typescript-eslint type-checked, react-hooks, jsx-a11y); <code>npm run lint</code> runs it; 28 reported problems fixed; zero <code>eslint-disable</code> comments remain.</p>
+  </div>
+</article>
+<article class="finding" id="FE-09" data-sev="high" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-09</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Concurrent 401s each trigger their own signinSilent() with no single-flight de-duplication</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/api/client.ts:403-418</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>request()</code> awaits <code>userManager.signinSilent()</code> inline on every 401. When several queries mount together as the access token expires (Dashboard's me / devices / measurements / annotations), each starts an independent renewal.</p>
+    <p><span class="lbl">Why it matters</span>Racing renewals against Keycloak: one can invalidate the token another in-flight request is about to retry with, and IdP load multiplies needlessly.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Wrap <code>signinSilent()</code> in a module-level in-flight promise so concurrent 401s share one renewal.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>renewSession()</code> shares one in-flight promise; test: four concurrent 401s → one renewal.</p>
+  </div>
+</article>
+<article class="finding" id="FE-10" data-sev="high" data-area="frontend" data-cat="performance">
+  <header>
+    <span class="fid">FE-10</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">performance</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Dashboard's single-device history keeps polling every 5 s while compare mode hides it</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/DashboardPage.tsx:73 (useMeasurementHistory called unconditionally)</code></li><li><code>fe/src/pages/DashboardPage.tsx:217, 312 (usages gated on !comparing)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>useMeasurementHistory</code> carries <code>refetchInterval: 5000</code> and is invoked regardless of <code>comparing</code>; compare mode adds its own set of 5 s queries via <code>useMeasurementHistories</code> without stopping the original.</p>
+    <p><span class="lbl">Why it matters</span>Two overlapping polling sets for as long as compare mode stays open, one of them feeding nothing visible.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Pass <code>enabled: !comparing</code> or only call the hook outside compare mode.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>useMeasurementHistory(…, { enabled: !comparing })</code>; test counts fetches across three polling windows.</p>
+  </div>
+</article>
+<article class="finding" id="FE-11" data-sev="high" data-area="frontend" data-cat="testing">
+  <header>
+    <span class="fid">FE-11</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">testing</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>No test covers any page or component; only pure modules and four e2e scenarios</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/**/*.test.ts (pure logic only)</code></li><li><code>fe/e2e/thermometer.spec.ts (4 auth/role scenarios)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Not one <code>.tsx</code> file has a unit or integration test. The transport leaks (FE-05, FE-06) and silent mutation failures (FE-07) are exactly what a Testing Library test would catch; the e2e suite never navigates away while connected or fails an admin mutation. The 75 vitest tests that do exist pass.</p>
+    <p><span class="lbl">Why it matters</span>A large, behaviourally complex surface (brush/zoom, forms, connect lifecycle) is protected only by manual QA.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add component tests at least for <code>ConnectPage</code>'s connect / disconnect / unmount lifecycle and the admin mutation error paths.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — 83 new tests incl. component tests for ConnectPage lifecycle, AdminDevicesPage error paths, Dashboard polling, routing and the 401 race (158 total).</p>
+  </div>
+</article>
+<article class="finding" id="FE-12" data-sev="medium" data-area="frontend" data-cat="security">
+  <header>
+    <span class="fid">FE-12</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>react-router-dom carries known moderate advisories (open redirect / XSS)</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/package.json:29 (react-router-dom ^6.27.0, resolved 6.30.4)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>npm audit</code> reports GHSA-wrjc-x8rr-h8h6 (open redirect via backslash in <code>Link</code> / <code>useNavigate</code>) and a related open-redirect-to-XSS advisory; a fix is available.</p>
+    <p><span class="lbl">Why it matters</span>An open-redirect primitive is directly exploitable for phishing next to an OIDC redirect-based login.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Bump to the patched version (<code>npm audit fix</code>) and re-verify routing.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>react-router-dom</code> 7.18.3 (no patched v6 exists); routing re-verified by route-table and NavBar tests.</p>
+  </div>
+</article>
+<article class="finding" id="FE-13" data-sev="medium" data-area="frontend" data-cat="security">
+  <header>
+    <span class="fid">FE-13</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Promoting a user to admin has no confirmation step, unlike device force-release</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/admin/AdminUsersPage.tsx:216-230</code></li><li><code>fe/src/pages/admin/AdminDevicesPage.tsx:107-141 (confirm pattern)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The row's Save button calls <code>updateRole.mutate(...)</code> directly, including for <code>admin</code>, with no confirm dialog.</p>
+    <p><span class="lbl">Why it matters</span>Privilege escalation is one accidental select-and-click away, with less friction than a lower-stakes device release.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Require an explicit confirm before submitting a change to <code>admin</code>, reusing the existing Alert-based confirm pattern.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Alert-based confirm before promoting to admin, naming the granted capabilities.</p>
+  </div>
+</article>
+<article class="finding" id="FE-14" data-sev="medium" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-14</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>ConnectPage hardcodes the claimed device model as 'DA14535'</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/ConnectPage.tsx:95-98</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>claimDevice.mutate({ bdAddr: deviceId, model: 'DA14535' })</code> records a fixed literal for every claimed device, simulated or real.</p>
+    <p><span class="lbl">Why it matters</span>Feeds admin analytics (<code>DeviceInventoryResponse.byModel</code>) with a value unrelated to the actual hardware.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Omit <code>model</code> and let the backend default it, or derive it from Device Information Service / a picker.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Model omitted from the claim; backend defaults it.</p>
+  </div>
+</article>
+<article class="finding" id="FE-15" data-sev="medium" data-area="frontend" data-cat="design">
+  <header>
+    <span class="fid">FE-15</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">design</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>SettingsPage.tsx mixes six unrelated concerns in 461 lines</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/SettingsPage.tsx:1-461</code></li></ul></div>
+    <p><span class="lbl">Problem</span>One module defines <code>SettingsPage</code>, <code>ChangePassword</code>, <code>MyThresholds</code>, <code>SystemThresholds</code>, <code>ConsentHistory</code> and <code>MyDoctors</code>: profile editing, the Keycloak redirect, two threshold-editor integrations, consent granting and paginated history, each with its own state and mutations, spanning customer-, doctor- and admin-only sections.</p>
+    <p><span class="lbl">Why it matters</span>Complicates ownership, isolated testing and per-role code splitting.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Split into <code>pages/settings/*Section.tsx</code> composed by a thin <code>SettingsPage</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>pages/settings/*Section.tsx</code> composed by a 40-line <code>SettingsPage</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-16" data-sev="medium" data-area="frontend" data-cat="dry">
+  <header>
+    <span class="fid">FE-16</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>StatTile reimplemented three times</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/admin/AdminUi.tsx:22</code></li><li><code>fe/src/pages/EventsPage.tsx:225</code></li><li><code>fe/src/pages/DoctorDashboardPage.tsx:398</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Three 'label + big number + hint' components with the same structure and small prop differences (icon, tone).</p>
+    <p><span class="lbl">Why it matters</span>The README credits the <code>ui/</code> kit with preventing exactly this pattern.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Consolidate into <code>components/ui/StatTile.tsx</code> with the union of props.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>components/ui/StatTile.tsx</code> replaces four copies.</p>
+  </div>
+</article>
+<article class="finding" id="FE-17" data-sev="medium" data-area="frontend" data-cat="dry">
+  <header>
+    <span class="fid">FE-17</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Themed &lt;select&gt; styling retyped inline in six files with no shared Select component</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/DashboardPage.tsx</code></li><li><code>fe/src/pages/HistoryPage.tsx</code></li><li><code>fe/src/pages/SettingsPage.tsx</code></li><li><code>fe/src/pages/DoctorDashboardPage.tsx</code></li><li><code>fe/src/pages/admin/AdminAuditPage.tsx</code></li><li><code>fe/src/pages/admin/AdminUsersPage.tsx (local selectClasses helper)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The identical long Tailwind class string (<code>h-touch w-full cursor-pointer rounded-md border border-sand-500 …</code>) is copied per call site; <code>components/ui/</code> has <code>Input</code> but no <code>Select</code>.</p>
+    <p><span class="lbl">Why it matters</span>A token change to radius or border colour requires editing six files.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>components/ui/Select.tsx</code> mirroring <code>Input</code>'s API and migrate the call sites.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>components/ui/Select.tsx</code> mirrors <code>Input</code>; six call sites migrated.</p>
+  </div>
+</article>
+<article class="finding" id="FE-18" data-sev="medium" data-area="frontend" data-cat="accessibility">
+  <header>
+    <span class="fid">FE-18</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">accessibility</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Sparkline is aria-hidden with no text alternative</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/components/Sparkline.tsx:39</code></li><li><code>fe/src/pages/DoctorDashboardPage.tsx (bare table cell)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The SVG is <code>aria-hidden</code> and its table cell provides no summary text.</p>
+    <p><span class="lbl">Why it matters</span>A primary at-a-glance clinical signal on the doctor dashboard is invisible to screen-reader users.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>sr-only</code> text stating the range, e.g. 'ranged from X °C to Y °C over the period'.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>Sparkline</code> takes a required <code>label</code> rendered <code>sr-only</code>; doctor dashboard supplies a range summary.</p>
+  </div>
+</article>
+<article class="finding" id="FE-19" data-sev="medium" data-area="frontend" data-cat="performance">
+  <header>
+    <span class="fid">FE-19</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">performance</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>computeYDomain scans the entire series on every render instead of the visible window</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/components/temperatureWindow.ts:150-171</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The loop iterates every point of every series and filters by window inside the loop; it is recomputed via <code>useMemo</code> on each brush change and each 5 s refetch.</p>
+    <p><span class="lbl">Why it matters</span>On 30-day ranges at 5 s cadence this is a repeated full O(n) scan, undermining the care taken elsewhere in the window code.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Binary-search to the window's start and end indices (an <code>nearestIndex</code>-style helper already exists) and scan only that slice.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Binary-searched window start and early exit at the window end.</p>
+  </div>
+</article>
+<article class="finding" id="FE-20" data-sev="medium" data-area="frontend" data-cat="dry">
+  <header>
+    <span class="fid">FE-20</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Device-selection reconciliation effects duplicated between Dashboard and History</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/DashboardPage.tsx (selection + persistence effects)</code></li><li><code>fe/src/pages/HistoryPage.tsx:89-98</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Both pages carry the same pair of <code>useEffect</code>s (one with an <code>eslint-disable</code> that never runs, FE-08) resolving <code>selectedBdAddr</code> via <code>resolveSelectedBdAddr</code> and persisting it to <code>useUiPreferences</code>.</p>
+    <p><span class="lbl">Why it matters</span>Stateful cross-cutting logic copied rather than shared will diverge on the next edit.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Extract a <code>useSelectedDevice(devices)</code> hook and use it in both pages.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>hooks/useSelectedDevice.ts</code> shared by Dashboard and History, with honest dependency arrays.</p>
+  </div>
+</article>
+<article class="finding" id="FE-21" data-sev="medium" data-area="frontend" data-cat="dry">
+  <header>
+    <span class="fid">FE-21</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>PatientsPage compare view hand-rolls useMeasurementHistories</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/PatientsPage.tsx:356-362</code></li><li><code>fe/src/api/useMeasurementHistories.ts:32-53</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>CompareView</code> reimplements the same <code>useQueries</code> + <code>['measurements', bdAddr, timeWindowKey]</code> + <code>api.measurementHistory</code> pattern the shared hook provides and <code>DashboardPage</code> uses.</p>
+    <p><span class="lbl">Why it matters</span>Two copies of cache-key-sensitive fetch logic drift when one changes its interval or key shape.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Call <code>useMeasurementHistories(patients.map(p =&gt; p.deviceBdAddr).filter(Boolean), RANGE_WINDOW)</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>CompareView</code> calls <code>useMeasurementHistories()</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-22" data-sev="medium" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-22</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Patient report's threshold query is not gated on a valid patientId</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/PatientReportPage.tsx (useResolvedThresholds(patientId) with no enabled guard)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>With <code>patientId = ''</code>, <code>queryString()</code> drops the empty <code>subjectUserId</code>, so <code>/api/thresholds/resolved</code> returns the doctor's own scale, rendered as if it were this patient's. <code>useCareNotes</code> and <code>useMeasurementHistory</code> on the same page are gated.</p>
+    <p><span class="lbl">Why it matters</span>A clinical report silently showing the wrong person's alert scale.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>enabled: !!patientId</code> and render the not-found state before any patient-scoped query fires.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>useResolvedThresholds(subject, { enabled: !!patientId })</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-23" data-sev="medium" data-area="frontend" data-cat="design">
+  <header>
+    <span class="fid">FE-23</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">design</span>
+    <span class="pill res-fixed">fixed differently</span>
+    <h4>Sticky table header and sticky NavBar overlap on long admin tables</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/components/ui/Table.tsx:7-17 (TableHead sticky top-0 z-10)</code></li><li><code>fe/src/components/NavBar.tsx (sticky top-0 z-20 h-16)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>TableHead</code> sticks to the page scroll at <code>top: 0</code>, so on tall tables it lands behind the higher-z-index nav instead of under it.</p>
+    <p><span class="lbl">Why it matters</span>Confusing sticky stack on <code>AdminAuditPage</code> and <code>AdminUsersPage</code>.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Offset <code>TableHead</code> by the nav height (<code>top-16</code>) or scope stickiness to a bounded-height table container.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed differently</strong> — The header is no longer positioned at all. Its <code>sticky top-0</code> was inert: <code>Table</code>'s <code>overflow-x-auto</code> wrapper is the header's scroll container, so the overlap with the nav could not occur, and offsetting it to <code>top-16</code> (tried first) pins the header 64px inside the wrapper and permanently covers the first rows — caught by the e2e suite. A page-sticky header would need a different table layout (bounded-height scroll box or no horizontal-scroll wrapper), not worth it at current table lengths; documented in <code>Table.tsx</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-24" data-sev="medium" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-24</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>PatientReportPage shows 'Patient not found' for a failed patient-list request</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/PatientReportPage.tsx (only patientsQuery.isLoading checked; no isError branch)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>A network failure fetching <code>useDoctorPatients()</code> renders the same message as a genuine consent revocation.</p>
+    <p><span class="lbl">Why it matters</span>Misleads a doctor into believing access was withdrawn, with no retry offered.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add an explicit <code>isError</code> branch with <code>ErrorState</code> and retry.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Explicit <code>isError</code> branch with <code>ErrorState</code> + retry, worded as a connection problem.</p>
+  </div>
+</article>
+<article class="finding" id="FE-25" data-sev="medium" data-area="frontend" data-cat="dry">
+  <header>
+    <span class="fid">FE-25</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Duration formatting implemented three times with three signatures</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/components/TrendInsightCard.tsx (formatDuration(hours))</code></li><li><code>fe/src/pages/HistoryPage.tsx (formatDuration(ms))</code></li><li><code>fe/src/utils/doctorFeeds.ts:46-50 (durationText(startMs, endMs))</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Three human-readable elapsed-time formatters with different unit conventions, after the codebase already consolidated <code>relativeTime()</code> once.</p>
+    <p><span class="lbl">Why it matters</span>Same class of drift the README's token-consistency audit was meant to catch.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>One <code>formatDuration(ms)</code> in <code>utils/time.ts</code>; convert at call sites.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>utils/time.ts#formatDuration(ms)</code>; the three formatters delegate/are removed.</p>
+  </div>
+</article>
+<article class="finding" id="FE-26" data-sev="medium" data-area="frontend" data-cat="design">
+  <header>
+    <span class="fid">FE-26</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">design</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Folder structure asymmetry: admin pages namespaced, doctor pages flat, generic components under pages/admin/</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/{DoctorDashboardPage,DoctorAuditPage,PatientsPage,PatientReportPage,EventsPage}.tsx</code></li><li><code>fe/src/pages/admin/AdminUi.tsx</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Admin has <code>pages/admin/</code> plus <code>AdminUi.tsx</code> for shared pieces (<code>StatTile</code>, <code>Segmented</code>, <code>largestOf</code>), while the equally large doctor set has no namespace and <code>AdminUi.tsx</code>'s generic components live outside <code>components/ui/</code>.</p>
+    <p><span class="lbl">Why it matters</span>Directly enables FE-16: <code>EventsPage</code> and <code>DoctorDashboardPage</code> reinvent <code>StatTile</code> because the admin one is not where reusable components live.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>pages/doctor/</code> (or flatten both) and move generic pieces from <code>AdminUi.tsx</code> into <code>components/ui/</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>pages/doctor/</code> added; <code>AdminUi.tsx</code> dissolved into <code>components/ui/</code> and <code>utils/</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-27" data-sev="medium" data-area="frontend" data-cat="dry">
+  <header>
+    <span class="fid">FE-27</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>TIER_ICON map duplicated byte-for-byte, comment included</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/HistoryPage.tsx:34-40</code></li><li><code>fe/src/pages/EventsPage.tsx:34-41</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Both files declare the identical <code>Record&lt;TemperatureTier, LucideIcon&gt;</code> with the same explanatory comment.</p>
+    <p><span class="lbl">Why it matters</span>An iconography change has two places to update.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Export it from <code>theme/temperature.ts</code> next to <code>TEMPERATURE_TIER_BANDS</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>theme/temperature.ts#TIER_ICON</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-28" data-sev="low" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-28</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>ConnectPage live-events list keyed by index while items are prepended</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/ConnectPage.tsx:184-188</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>[measurement, ...prev].slice(0, 5)</code> unshifts, but each <code>li</code> uses <code>key={i}</code>.</p>
+    <p><span class="lbl">Why it matters</span>React reconciles by position instead of identity as events arrive.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Key by <code>event.ts + event.device_id</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Keyed by <code>ts + device_id</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-29" data-sev="low" data-area="frontend" data-cat="design">
+  <header>
+    <span class="fid">FE-29</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">design</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>'Claimed ✓' / 'Saved ✓' indicators never expire</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/ConnectPage.tsx (claimDevice.isSuccess)</code></li><li><code>fe/src/pages/SettingsPage.tsx (updateMe.isSuccess)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>TanStack Query's <code>isSuccess</code> resets only on the next <code>mutate()</code> or unmount, so the badges stay forever.</p>
+    <p><span class="lbl">Why it matters</span>Stale feedback.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Track a local 'just succeeded' flag cleared after a few seconds.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>useTransientFlag</code> clears the badges after 8 s (above the e2e suite's 5 s budget).</p>
+  </div>
+</article>
+<article class="finding" id="FE-30" data-sev="low" data-area="frontend" data-cat="clean-code">
+  <header>
+    <span class="fid">FE-30</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">clean-code</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Compare-device cap declared twice under two names</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/pages/DashboardPage.tsx (MAX_COMPARE_DEVICES = 5)</code></li><li><code>fe/src/pages/PatientsPage.tsx:41 (COMPARE_LIMIT = 5)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Both cap overlays at 5 for the same reason (the six-slot <code>seriesPalette</code>).</p>
+    <p><span class="lbl">Why it matters</span>Magic number with two names.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Derive one <code>MAX_OVERLAY_SERIES</code> from <code>seriesPalette.length</code> in <code>theme/chartColors.ts</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>MAX_OVERLAY_SERIES</code> derived from the palette in <code>theme/chartColors.ts</code>.</p>
+  </div>
+</article>
+<article class="finding" id="FE-31" data-sev="low" data-area="frontend" data-cat="performance">
+  <header>
+    <span class="fid">FE-31</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">performance</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>No route-based code splitting: one 1.26 MB chunk for every role</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/App.tsx:1-19 (all pages statically imported)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>npm run build</code> produces <code>index-*.js 1,265 kB (gzip 362 kB)</code> with Rollup's oversized-chunk warning. Already tracked in <code>proposals.md</code> 10.3.</p>
+    <p><span class="lbl">Why it matters</span>Every role downloads every other role's pages.</p>
+    <p class="rec"><span class="lbl">Recommendation</span><code>React.lazy</code> the <code>/admin/*</code> and doctor-only routes first.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>React.lazy</code> for doctor and admin routes, vendor chunks split, mqtt.js loaded on demand: entry chunk 1,265 kB → 184 kB.</p>
+  </div>
+</article>
+<article class="finding" id="FE-32" data-sev="low" data-area="frontend" data-cat="correctness">
+  <header>
+    <span class="fid">FE-32</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>NavBar active-link check is a naive prefix match</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/components/NavBar.tsx:51</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>location.pathname.startsWith(to)</code> has no boundary check.</p>
+    <p><span class="lbl">Why it matters</span>A future <code>/history-export</code> route would highlight <code>/history</code> too.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Use <code>pathname === to || pathname.startsWith(to + '/')</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>pathname === to || pathname.startsWith(to + '/')</code>, tested both ways.</p>
+  </div>
+</article>
+<article class="finding" id="FE-33" data-sev="low" data-area="frontend" data-cat="security">
+  <header>
+    <span class="fid">FE-33</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>RequireRole is a client-side gate with no note tying it to server enforcement</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/src/components/RequireRole.tsx:1-19</code></li><li><code>fe/src/App.tsx:87-166</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Route protection derives from the JWT role on the client. The backend does re-derive roles per endpoint (see backend review), but nothing in the FE says so.</p>
+    <p><span class="lbl">Why it matters</span>The security boundary should be documented, not assumed.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a one-line comment cross-referencing server-side enforcement.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Header comment cross-references the server-side role checks, consent scoping and <code>access.denied</code> audit rows.</p>
+  </div>
+</article>
+</section>
+<section class="area" id="area-infra" data-area="infra">
+  <h2>Gateway, mobile, deploy, CI, repo <small>24 findings · <span class="pill sev-critical">3 critical</span> <span class="pill sev-high">8 high</span> <span class="pill sev-medium">9 medium</span> <span class="pill sev-low">4 low</span></small></h2>
+  <p class="scope"><span class="lbl">Scope</span><code>gateway/, mobile/, deploy/, docker-compose.yml, .github/</code></p>
+  <p class="overall">The Go gateway is clean and well tested for what it implements, the Keycloak realm gets the public-client OIDC posture right (PKCE S256, no direct grants, scoped redirect URIs), the backend Dockerfile is a good multi-stage non-root example, and every local-dev shortcut is honestly self-documented as a known gap. But the 'local dev' defaults (anonymous MQTT, admin/admin, no TLS) are wired into the only compose file that exists, with no production overlay, no reverse proxy and ports bound to 0.0.0.0. CI covers only firmware, and repo hygiene on the firmware side is poor.</p>
+  
+<article class="finding" id="INF-01" data-sev="critical" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-01</span>
+    <span class="pill sev-critical">critical</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>MQTT broker allows anonymous publish, no ACLs, exposed on the host network</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>deploy/mosquitto/mosquitto.conf:16 (allow_anonymous true)</code></li><li><code>docker-compose.yml (mosquitto ports 1883:1883, 9001:9001)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>No <code>acl_file</code>, no <code>password_file</code>, no TLS directives. Both the raw MQTT port and the WebSocket port (explicitly for direct browser use) are published on the default 0.0.0.0 bind.</p>
+    <p><span class="lbl">Why it matters</span>Any host that can reach the compose network can inject arbitrary measurement envelopes into any device / tenant / user topic of a health-measurement pipeline.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Keep the broker on an internal-only network and add a <code>password_file</code> / <code>acl_file</code> even for the local profile; enforce non-anonymous access via a production compose override.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Dynamic-security plugin, <code>allow_anonymous false</code>, database created on first start; the backend provisions <code>collector</code>, its own <code>backend</code> role and per-user clients with exact ACLs (identity table in <code>deploy/README.md</code>); host ports on 127.0.0.1 only; the prod overlay publishes no broker port at all.</p>
+  </div>
+</article>
+<article class="finding" id="INF-02" data-sev="critical" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-02</span>
+    <span class="pill sev-critical">critical</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Default credentials for Postgres, Keycloak admin and MinIO bound to the host network</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>docker-compose.yml (POSTGRES_PASSWORD: thermometer; KC_BOOTSTRAP_ADMIN_USERNAME/PASSWORD: admin/admin; MINIO_ROOT_USER/PASSWORD: thermometer/thermometer123; ports 5433, 8082, 9000, 9091)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>All three privileged services use trivially guessable plaintext credentials in the only compose file the project ships, and every port is mapped on 0.0.0.0 rather than 127.0.0.1.</p>
+    <p><span class="lbl">Why it matters</span>There is no hardened overlay; running this file on any machine with inbound exposure gives away the DB, the Keycloak admin console and the object store.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a <code>docker-compose.override.yml</code> / prod profile that injects secrets from <code>.env</code> or Docker secrets and binds ports to 127.0.0.1 or drops host mappings.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — All infra ports bound to 127.0.0.1; every credential <code>.env</code>-overridable (<code>.env.example</code>); <code>docker-compose.prod.yml</code> requires secrets (<code>${VAR:?}</code>) and drops the host mappings.</p>
+  </div>
+</article>
+<article class="finding" id="INF-03" data-sev="critical" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-03</span>
+    <span class="pill sev-critical">critical</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>No TLS anywhere in the stack</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>deploy/keycloak/realm-export.json:7 (sslRequired: none)</code></li><li><code>deploy/mosquitto/mosquitto.conf (no cafile/certfile/keyfile)</code></li><li><code>fe/nginx.conf (listen 80 only)</code></li><li><code>docker-compose.yml (all VITE_* URLs http:// / ws://)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Browser to FE, FE to backend, FE/gateway to MQTT, backend to Postgres and Keycloak are all plaintext. <code>ARCHITECTURE_V3.html</code> §11 already lists TLS as not implemented and §12 mentions Caddy, but no proxy exists in compose.</p>
+    <p><span class="lbl">Why it matters</span>Credentials, JWTs and patient temperature data are exposed to anyone with network visibility; compounds INF-01 and INF-02.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a TLS-terminating reverse proxy (Caddy, as the architecture doc intends) before any deployment beyond a laptop and flip <code>sslRequired</code> to <code>external</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>docker-compose.prod.yml</code> adds a Caddy TLS terminator (<code>deploy/caddy/Caddyfile</code>: one public hostname, path-routed to FE / API / Keycloak / MQTT-WS, ACME or internal CA); Keycloak <code>sslRequired: external</code> and production mode behind the proxy; HSTS at the proxy.</p>
+  </div>
+</article>
+<article class="finding" id="INF-04" data-sev="high" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-04</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Gateway auth package is dead code, contradicting the README's 'stand-in' framing</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/internal/auth/token.go:8-22</code></li><li><code>gateway/main.go (no import of internal/auth)</code></li><li><code>gateway/internal/mqtt/publisher.go:11-19 (Username/Password never populated)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>TokenProvider</code> / <code>StaticTokenProvider</code> exist and are unit-tested but have zero call sites outside their own package. No flag or env var feeds the MQTT options' credentials.</p>
+    <p><span class="lbl">Why it matters</span>The README's implementation table overstates the gateway's security posture; there is no code path by which it could authenticate to a broker.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Wire a <code>--token</code> / <code>GATEWAY_TOKEN</code> flag through to <code>mqtt.Options</code>, or correct the README to say credential auth is unimplemented.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>--mqtt-username/--mqtt-password</code> (env <code>GATEWAY_MQTT_*</code>) through the <code>auth</code> package's <code>TokenProvider</code>, consulted on every reconnect; refuses to start without a password unless <code>--allow-anonymous</code>; README corrected.</p>
+  </div>
+</article>
+<article class="finding" id="INF-05" data-sev="high" data-area="infra" data-cat="correctness">
+  <header>
+    <span class="fid">INF-05</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Gateway MQTT connect/publish block indefinitely with no timeout or cancellation</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/internal/mqtt/publisher.go:37,47 (token.Wait())</code></li><li><code>gateway/main.go:56-70 (ctx never threaded into publishOnce)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Both <code>Connect</code> and <code>Publish</code> use Paho's <code>token.Wait()</code> without a timeout, and the <code>signal.NotifyContext</code> context is never passed to <code>publishOnce</code>, <code>source.Read()</code> or <code>Publish()</code>.</p>
+    <p><span class="lbl">Why it matters</span>A broker that accepts TCP but never acks hangs the single-goroutine loop; <code>ctx.Done()</code> cannot fire until the blocked call returns, so graceful shutdown is defeated.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Use <code>token.WaitTimeout(...)</code> bounded by the context and thread <code>ctx</code> through the publish path.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>WaitTimeout</code>-bounded connect/publish, context threaded through <code>publishOnce</code>, <code>Source.Read(ctx)</code> and <code>Publish(ctx)</code>; tests against a never-acking broker prove shutdown returns.</p>
+  </div>
+</article>
+<article class="finding" id="INF-06" data-sev="high" data-area="infra" data-cat="testing">
+  <header>
+    <span class="fid">INF-06</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">testing</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>CI covers only firmware; backend, frontend, gateway and mobile are never built or tested in CI</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>.github/workflows/firmware.yml (only workflow)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>No workflow runs <code>mvn verify</code> for backend, <code>npm run build</code> / <code>npm test</code> for fe, or <code>go vet</code> / <code>go test</code> for gateway, although all three have real test suites.</p>
+    <p><span class="lbl">Why it matters</span>Regressions in any platform component can merge to main undetected.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add path-filtered jobs mirroring <code>firmware.yml</code>: <code>mvn -B verify</code>, <code>npm ci &amp;&amp; npm run build &amp;&amp; npm test</code>, <code>go build ./... &amp;&amp; go vet ./... &amp;&amp; go test ./...</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>backend.yml</code>, <code>frontend.yml</code>, <code>gateway.yml</code>, <code>mobile.yml</code> next to <code>firmware.yml</code>, path-filtered, same <code>PROJECT_DIR</code> convention.</p>
+  </div>
+</article>
+<article class="finding" id="INF-07" data-sev="high" data-area="infra" data-cat="dry">
+  <header>
+    <span class="fid">INF-07</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">dry</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Measurement envelope schema has no single source of truth across Go, Java and TypeScript</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/internal/envelope/envelope.go:11-19</code></li><li><code>backend/src/main/java/com/dialog/thermometer/ingest/MeasurementEnvelope.java:15-22</code></li><li><code>fe/src/live/mqttClient.ts:20</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The wire shape (<code>v</code>, <code>device_id</code>, <code>collector_id</code>, <code>ts</code>, <code>type</code>, <code>payload</code>, <code>meta</code>) is hand-encoded three times with no shared JSON Schema, OpenAPI or parity test.</p>
+    <p><span class="lbl">Why it matters</span>A field rename on any side silently desyncs from the other two with no compile-time or CI signal.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Introduce one JSON Schema that all three implementations validate against in their tests, or at minimum a parity test on the Java side referenced from the other two.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>schema/measurement-envelope.v1.schema.json</code> (JSON Schema 2020-12) is the single source of truth; Go, Java and TypeScript each validate their own encoder/decoder against the file in their tests.</p>
+  </div>
+</article>
+<article class="finding" id="INF-08" data-sev="high" data-area="infra" data-cat="hygiene">
+  <header>
+    <span class="fid">INF-08</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">hygiene</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Hundreds of build artifacts tracked in git, some with the developer's absolute path in the filename</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>build/DA14535-release/ (274 tracked files)</code></li><li><code>Eclipse/DA14585/ (111 tracked .o/.d/.elf/.hex/.map)</code></li><li><code>compile_commands.json</code></li><li><code>.DS_Store</code></li><li><code>no .gitignore at repo or project root</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Same underlying issue as FW-09, listed here because the fix is repository-level: add <code>.gitignore</code> files and remove the tracked artifacts in a dedicated cleanup commit.</p>
+    <p><span class="lbl">Why it matters</span>Repo bloat, spurious diffs on every rebuild, leaked local filesystem layout, and stale binaries that look current.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>See FW-09.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — See FW-09.</p>
+  </div>
+</article>
+<article class="finding" id="INF-09" data-sev="high" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-09</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>fe/nginx.conf has no security headers and no gzip</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/nginx.conf:1-16</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The whole config is a SPA fallback plus <code>/health</code>. No CSP, <code>X-Frame-Options</code>, <code>X-Content-Type-Options</code>, <code>Referrer-Policy</code> or HSTS; no <code>gzip on</code>.</p>
+    <p><span class="lbl">Why it matters</span>The public serving layer of a login-gated health app is more exposed to XSS and clickjacking than necessary, and every asset ships uncompressed.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a baseline header set (CSP scoped to the Keycloak / API / MQTT-WS origins, nosniff, DENY, strict-origin-when-cross-origin) and standard gzip types.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — CSP (<code>connect-src</code>/<code>frame-src</code> rendered from the runtime URLs), nosniff, DENY, Referrer-Policy, Permissions-Policy, cache headers, <code>server_tokens off</code>, gzip.</p>
+  </div>
+</article>
+<article class="finding" id="INF-10" data-sev="high" data-area="infra" data-cat="maintainability">
+  <header>
+    <span class="fid">INF-10</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">maintainability</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Floating image tags for stateful services</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>docker-compose.yml (timescale/timescaledb:latest-pg16, axllent/mailpit:latest, minio/minio:latest)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Three services float while <code>keycloak:26.0</code> and <code>eclipse-mosquitto:2</code> are pinned. The database in particular can silently change TimescaleDB extension version between pulls.</p>
+    <p><span class="lbl">Why it matters</span>Non-reproducible environments and potential data-compatibility breaks on the DB.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Pin to explicit versions, e.g. <code>timescale/timescaledb:2.17.2-pg16</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>timescale/timescaledb:2.28.3-pg16</code>, <code>keycloak:26.0.8</code>, <code>mailpit:v1.31.1</code>, <code>quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z</code>, <code>eclipse-mosquitto:2@sha256:…</code> (no per-patch tags exist), <code>caddy:2.10.0-alpine</code>.</p>
+  </div>
+</article>
+<article class="finding" id="INF-11" data-sev="high" data-area="infra" data-cat="operability">
+  <header>
+    <span class="fid">INF-11</span>
+    <span class="pill sev-high">high</span>
+    <span class="pill cat">operability</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Gateway drops every reading during a broker outage with no retry, buffer or metric</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/main.go:80-99 (publishOnce)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Sensor-read, marshal and publish failures are each <code>log.Printf</code>'d and the reading is discarded until the next tick.</p>
+    <p><span class="lbl">Why it matters</span>Under a sustained outage every reading is permanently lost with only a log line to show for it.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a small in-memory ring buffer flushed on reconnect, or at least an exported failure counter.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Bounded ring buffer (<code>--buffer-size</code>, default 256) replayed in order after an outage, Prometheus-format counters on <code>--metrics-addr</code>, counters logged on shutdown and every 10th failure.</p>
+  </div>
+</article>
+<article class="finding" id="INF-12" data-sev="medium" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-12</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Gateway container runs as root; backend container does not</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/Dockerfile:12-15</code></li><li><code>backend/Dockerfile:15,17 (useradd / USER appuser)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>The gateway runtime stage never adds a <code>USER</code>, while the backend Dockerfile does.</p>
+    <p><span class="lbl">Why it matters</span>The gateway is the component most likely to run unattended on edge hardware where defense in depth matters most.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>RUN adduser -D -H gateway</code> and <code>USER gateway</code>.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>adduser</code> + <code>USER gateway</code> (uid 10001); builder pinned to the <code>go.mod</code> version.</p>
+  </div>
+</article>
+<article class="finding" id="INF-13" data-sev="medium" data-area="infra" data-cat="operability">
+  <header>
+    <span class="fid">INF-13</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">operability</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Most depends_on entries lack condition: service_healthy</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>docker-compose.yml (keycloak→mailpit, fe→backend, gateway-N→mosquitto)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Only backend→postgres is health-gated. The compose comment acknowledges the Keycloak race ('restarting converges') instead of fixing it.</p>
+    <p><span class="lbl">Why it matters</span>Cold-start races: fe serving before backend/Keycloak accept connections, gateways publishing before Mosquitto is ready.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add lightweight healthchecks and <code>condition: service_healthy</code> on dependents, at least backend→keycloak.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Every dependency uses <code>condition: service_healthy</code>; gateways also wait for the backend that provisions their broker client.</p>
+  </div>
+</article>
+<article class="finding" id="INF-14" data-sev="medium" data-area="infra" data-cat="operability">
+  <header>
+    <span class="fid">INF-14</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">operability</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>No HEALTHCHECK for keycloak, mailpit, minio, mosquitto, fe or backend</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>docker-compose.yml</code></li><li><code>backend/Dockerfile</code></li><li><code>fe/Dockerfile</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Only Postgres has <code>pg_isready</code>. <code>fe/nginx.conf</code> already exposes <code>/health</code> and the backend <code>/actuator/health</code>, but nothing uses them.</p>
+    <p><span class="lbl">Why it matters</span>Orchestration cannot distinguish 'started' from 'serving', which directly enables INF-13.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add <code>HEALTHCHECK</code> instructions against the existing endpoints and reference them from compose.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Healthchecks on all services (Postgres, Keycloak <code>/health/ready</code>, mailpit <code>readyz</code>, MinIO <code>mc ready</code>, broker <code>$SYS</code> subscription, backend <code>/actuator/health</code>, FE <code>/health</code>) plus <code>HEALTHCHECK</code> in the backend and FE Dockerfiles.</p>
+  </div>
+</article>
+<article class="finding" id="INF-15" data-sev="medium" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-15</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>GitHub Actions pinned to floating major tags, not commit SHAs</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>.github/workflows/firmware.yml (actions/checkout@v4, carlosperate/arm-none-eabi-gcc-action@v1, actions/upload-artifact@v4)</code></li></ul></div>
+    <p><span class="lbl">Problem</span>All third-party actions are referenced by mutable tag.</p>
+    <p><span class="lbl">Why it matters</span>A compromised or force-pushed tag, especially on the small third-party GCC action, executes arbitrary code in CI.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Pin to commit SHAs with a version comment, at least for the non-GitHub-owned action.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Every action in all five workflows pinned to a full commit SHA with a version comment.</p>
+  </div>
+</article>
+<article class="finding" id="INF-16" data-sev="medium" data-area="infra" data-cat="correctness">
+  <header>
+    <span class="fid">INF-16</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Gateway builds MQTT topics and envelopes without validating inputs</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/internal/envelope/envelope.go:22-24 (Topic)</code></li><li><code>gateway/internal/envelope/envelope.go:27-37 (NewTemperature)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>Topic</code> concatenates tenant / user / deviceID with no check for MQTT wildcard characters (<code>/</code>, <code>+</code>, <code>#</code>); <code>NewTemperature</code> accepts NaN / Inf.</p>
+    <p><span class="lbl">Why it matters</span>Low exploitability today (operator-supplied flags), but a NaN already corrupts downstream aggregation and the multi-tenant direction points to user-supplied values.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Validate topic segments against an allowed character set and reject non-finite temperatures.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>ValidateSegment</code> allowlist on all topic segments (rejects <code>/ + #</code>, NUL, whitespace); <code>NewTemperature</code> rejects NaN/±Inf, out-of-range values and malformed ids; table-tested.</p>
+  </div>
+</article>
+<article class="finding" id="INF-17" data-sev="medium" data-area="infra" data-cat="design">
+  <header>
+    <span class="fid">INF-17</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">design</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Backend, Keycloak and MQTT URLs are baked into the FE bundle at image build time</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>docker-compose.yml (fe build args VITE_API_BASE_URL, VITE_MQTT_WS_URL, VITE_KEYCLOAK_URL)</code></li><li><code>fe/Dockerfile:12-14</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Vite build-time env vars are compiled into the static bundle, so one image cannot be promoted across environments.</p>
+    <p><span class="lbl">Why it matters</span>Contradicts the OCI-packaged, promotable-image posture described in <code>ARCHITECTURE_V3.html</code>.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Generate a small runtime <code>env.js</code> from an nginx entrypoint (<code>envsubst</code>) instead of build-time substitution.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — nginx entrypoint renders <code>/env.js</code> and the server config from <code>API_BASE_URL</code> / <code>MQTT_WS_URL</code> / <code>KEYCLOAK_URL</code> at container start; <code>src/config/env.ts</code> is the one reader; build args removed (Capacitor shell still builds with <code>VITE_*</code>, documented).</p>
+  </div>
+</article>
+<article class="finding" id="INF-18" data-sev="medium" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-18</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-verified">verified, no code change</span>
+    <h4>Backend trusts X-Forwarded-For but no reverse proxy exists in docker-compose</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>docker-compose.yml (backend 8080:8080, no proxy service)</code></li><li><code>proposals.md ('trust-forwarded-for defaulting to true')</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Clients reach the backend directly, so any client can forge its apparent source IP for rate limiting and audit logging.</p>
+    <p><span class="lbl">Why it matters</span>Defeats the purpose of the header-based client identification.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add the proxy layer from the architecture doc and trust only that hop, or default <code>trust-forwarded-for</code> to false until a proxy exists.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>verified, no code change</strong> — <code>trust-forwarded-for</code> already defaults to <code>false</code> in both <code>application.yml</code> and the <code>@Value</code> fallback (the review read §5.8's historical description as current). The prod overlay sets it to <code>true</code> only there, where Caddy is the sole hop.</p>
+  </div>
+</article>
+<article class="finding" id="INF-19" data-sev="medium" data-area="infra" data-cat="hygiene">
+  <header>
+    <span class="fid">INF-19</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">hygiene</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>mobile/.gitignore only covers node_modules</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>mobile/.gitignore</code></li></ul></div>
+    <p><span class="lbl">Problem</span>No entries for <code>android/</code>, <code>ios/</code>, <code>.gradle/</code>, <code>Pods/</code>, <code>.DS_Store</code> although the README documents running <code>npx cap add android/ios</code>.</p>
+    <p><span class="lbl">Why it matters</span>Nothing prevents committing large generated native trees, the same mistake already made on the firmware side.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Pre-emptively add the Capacitor native directories and build outputs.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>android/</code>, <code>ios/</code>, <code>.gradle/</code>, <code>Pods/</code>, Xcode user state, <code>dist/</code>, <code>www/</code>, <code>.DS_Store</code>.</p>
+  </div>
+</article>
+<article class="finding" id="INF-20" data-sev="medium" data-area="infra" data-cat="correctness">
+  <header>
+    <span class="fid">INF-20</span>
+    <span class="pill sev-medium">medium</span>
+    <span class="pill cat">correctness</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Gateway never populates envelope meta (battery), although the schema and tests support it</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/main.go:87 (envelope.NewTemperature(..., nil))</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>meta</code> is hardcoded nil at the only call site while <code>envelope_test.go</code> exercises a populated <code>meta</code>.</p>
+    <p><span class="lbl">Why it matters</span>Battery telemetry never flows from this collector, inconsistent with the schema's intent and <code>proposals.md</code> 10.2.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Wire battery data once the BlueZ source exists, or state in the gateway README that <code>meta</code> is always empty.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Simulator supplies a slowly draining battery percentage and a fake RSSI; <code>meta</code> is omitted (not <code>{}</code>) when unknown; README states the BlueZ source will provide real values.</p>
+  </div>
+</article>
+<article class="finding" id="INF-21" data-sev="low" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-21</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Keycloak demo admin password follows a weaker pattern than the other demo users</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>deploy/keycloak/realm-export.json (admin1 / Admin123!)</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>Admin123!</code> is a far more commonly guessed pattern than the sibling <code>&lt;Role&gt;&lt;N&gt;!</code> passwords, for the most privileged account.</p>
+    <p><span class="lbl">Why it matters</span>Demo-only, but the realm export is the natural starting point for something less throwaway.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Use the same pattern for consistency, or generate demo passwords at first run instead of committing them.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>admin1</code> now <code>Admin01!</code> (the <code>&lt;Role&gt;&lt;NN&gt;!</code> pattern at the policy's 8-char minimum); the prod overlay does not import the demo realm at all.</p>
+  </div>
+</article>
+<article class="finding" id="INF-22" data-sev="low" data-area="infra" data-cat="testing">
+  <header>
+    <span class="fid">INF-22</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">testing</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>No tests for the gateway MQTT publisher or main-loop shutdown</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>gateway/internal/mqtt/ (no publisher_test.go)</code></li><li><code>gateway/main.go</code></li></ul></div>
+    <p><span class="lbl">Problem</span><code>envelope</code>, <code>sensor/simulator</code> and <code>auth/token</code> are tested; the connect / publish / disconnect wrapper and the signal wiring are not.</p>
+    <p><span class="lbl">Why it matters</span>This is exactly the code with the blocking-call issues in INF-05.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Add a test against an embedded or mock broker covering connect failure, publish failure and <code>Disconnect</code> on cancellation.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Embedded-broker tests (mochi-mqtt) for connect/publish failure, timeouts, cancellation and disconnect; main-loop tests for buffering, flush order, drops and shutdown while stalled.</p>
+  </div>
+</article>
+<article class="finding" id="INF-23" data-sev="low" data-area="infra" data-cat="maintainability">
+  <header>
+    <span class="fid">INF-23</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">maintainability</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>Two superseded architecture documents sit beside the current one</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>ARCHITECTURE.html</code></li><li><code>ARCHITECTURE_V2.html</code></li></ul></div>
+    <p><span class="lbl">Problem</span>Deliberately kept as history per CLAUDE.md, but at the same directory level as <code>ARCHITECTURE_V3.html</code>.</p>
+    <p><span class="lbl">Why it matters</span>A future reader or search can act on stale security and architecture claims; this review had to explicitly discard V1/V2 content.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Move them to <code>docs/superseded/</code> and update the CLAUDE.md registry path.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — Moved to <code>docs/superseded/</code>; CLAUDE.md registry, README tree and ARCHITECTURE_V3 cross-references updated.</p>
+  </div>
+</article>
+<article class="finding" id="INF-24" data-sev="low" data-area="infra" data-cat="security">
+  <header>
+    <span class="fid">INF-24</span>
+    <span class="pill sev-low">low</span>
+    <span class="pill cat">security</span>
+    <span class="pill res-fixed">fixed</span>
+    <h4>fe container's nginx master runs as root</h4>
+  </header>
+  <div class="body">
+    <div class="loc"><span class="lbl">Where</span><ul><li><code>fe/Dockerfile:20-22</code></li></ul></div>
+    <p><span class="lbl">Problem</span>No <code>USER</code> directive; stock <code>nginx:1.27-alpine</code> starts the master as root (workers drop to <code>nginx</code>).</p>
+    <p><span class="lbl">Why it matters</span>Common and low risk, but inconsistent with the backend image's hardening.</p>
+    <p class="rec"><span class="lbl">Recommendation</span>Consider the unprivileged nginx image variant.</p>
+    <p class="res"><span class="lbl">Resolution</span><strong>fixed</strong> — <code>nginxinc/nginx-unprivileged:1.27-alpine</code> (uid 101, port 8080; compose maps 8090:8080).</p>
+  </div>
+</article>
+</section>
+
+<h2 id="method">Method and caveats</h2>
+<ul>
+<li>Static review of the full source of each area plus the project READMEs, migrations, compose and Keycloak/Mosquitto configuration. SDK code under <code>sdk/</code> was consulted only to verify API contracts (e.g. <code>arch_set_deep_sleep</code>, <code>htpt_pack_temp_value</code>), not reviewed.</li>
+<li>Nothing was executed: no build, test run or container start. Findings about runtime behaviour (races, 500s, hangs) are derived from the code paths quoted and should be confirmed with a test before closing.</li>
+<li>Counts of tracked artifacts come from <code>git ls-files</code> at the commit above.</li>
+<li>Findings marked as already acknowledged in <code>proposals.md</code> or <code>ARCHITECTURE_V3.html</code> are still listed, because the review is of the code as it stands, not of the roadmap.</li>
+</ul>
+</main>
+
+<script>
+(function(){
+  const cards=[...document.querySelectorAll('.finding')];
+  const sevBtns=[...document.querySelectorAll('#filters button[data-sev]')];
+  const area=document.getElementById('fArea'), cat=document.getElementById('fCat'), txt=document.getElementById('fText'), cnt=document.getElementById('fCount');
+  function apply(){
+    const sevs=new Set(sevBtns.filter(b=>b.classList.contains('on')).map(b=>b.dataset.sev));
+    const a=area.value, c=cat.value, q=txt.value.trim().toLowerCase();
+    let shown=0;
+    cards.forEach(el=>{
+      let ok=sevs.has(el.dataset.sev)&&(!a||el.dataset.area===a)&&(!c||el.dataset.cat===c);
+      if(ok&&q) ok=el.textContent.toLowerCase().includes(q);
+      el.hidden=!ok; if(ok) shown++;
+    });
+    document.querySelectorAll('.area').forEach(s=>{
+      const any=[...s.querySelectorAll('.finding')].some(f=>!f.hidden);
+      s.classList.toggle('empty',!any);
+      s.hidden=!!a&&s.dataset.area!==a;
+    });
+    cnt.textContent=shown+' of '+cards.length+' shown';
+  }
+  sevBtns.forEach(b=>b.addEventListener('click',()=>{b.classList.toggle('on');apply();}));
+  [area,cat].forEach(e=>e.addEventListener('change',apply));
+  txt.addEventListener('input',apply);
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -17,7 +17,7 @@ const DEMO_PASSWORDS: Record<string, string> = {
   customer1: 'Customer1!',
   customer2: 'Customer2!',
   doctor1: 'Doctor1!',
-  admin1: 'Admin123!',
+  admin1: 'Admin01!',
 };
 
 const MAILPIT_URL = process.env.MAILPIT_URL ?? 'http://localhost:8025';
@@ -111,7 +111,11 @@ test('customer claims a fleet device, grants doctor consent, and doctor/admin se
   await expect(page.getByRole('heading', { name: 'Devices', exact: true })).toBeVisible();
 
   const claimButtons = page.getByRole('button', { name: 'Claim' });
-  const somethingToClaim = await claimButtons.first().isVisible().catch(() => false);
+  const releaseButtons = page.getByRole('button', { name: 'Release' });
+  // Both lists are fetched after the page mounts; `isVisible()` does not wait,
+  // so first wait until either list has rendered a row, then decide.
+  await expect(claimButtons.first().or(releaseButtons.first())).toBeVisible({ timeout: 15_000 });
+  const somethingToClaim = await claimButtons.first().isVisible();
   if (!somethingToClaim) {
     // Every fleet device is already claimed — inevitable once this suite has
     // run against the same persisted volume a few times (each run claims one).
@@ -137,11 +141,18 @@ test('customer claims a fleet device, grants doctor consent, and doctor/admin se
   // needs exists — assert that and move on.
   await page.getByRole('link', { name: 'Settings' }).click();
   const grantSelect = page.getByLabel('Grant access to');
-  if (await grantSelect.isVisible().catch(() => false)) {
+  const revokeButtons = page.getByRole('button', { name: 'Revoke' });
+  // The section renders the grant form only once the doctor list has loaded
+  // (and a Revoke row only once a consent exists); `isVisible()` does not
+  // wait, so wait for whichever of the two appears first before deciding.
+  await expect(grantSelect.or(revokeButtons.first())).toBeVisible({ timeout: 15_000 });
+  if (await grantSelect.isVisible()) {
     await grantSelect.selectOption({ index: 1 });
     await page.getByRole('button', { name: 'Grant' }).click();
   }
-  await expect(page.getByText('doctor1')).toBeVisible({ timeout: 10_000 });
+  // A granted doctor is listed with a Revoke action; the <option> in the grant
+  // select also carries the name, so assert on the row, not on the text.
+  await expect(revokeButtons.first()).toBeVisible({ timeout: 10_000 });
   await logout(page);
 
   // doctor1's dashboard (their home page — DoctorDashboardPage's fleet

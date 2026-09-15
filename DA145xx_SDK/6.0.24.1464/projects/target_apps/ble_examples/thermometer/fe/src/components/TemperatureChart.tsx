@@ -245,7 +245,7 @@ export function TemperatureChart({
   // Below two rows there is no window to draw: start === end, so the XAxis
   // domain is zero-width and recharts divides by that span. Reachable right
   // after a device's first-ever reading, or when a short range happens to hold
-  // a single sample — same floor as ReportChart in pages/PatientReportPage.tsx.
+  // a single sample — same floor as ReportChart in pages/doctor/PatientReportPage.tsx.
   if (rows.length < 2) {
     return (
       <div className="py-12 text-center text-body text-ink-muted">

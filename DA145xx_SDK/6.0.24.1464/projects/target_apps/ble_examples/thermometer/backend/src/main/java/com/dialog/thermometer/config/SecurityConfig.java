@@ -10,7 +10,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
+import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtValidators;
@@ -145,11 +148,44 @@ public class SecurityConfig {
     @ConditionalOnProperty(prefix = "thermometer.security", name = "enabled", havingValue = "true", matchIfMissing = true)
     public JwtDecoder jwtDecoder(
             @Value("${thermometer.oidc.jwk-set-uri}") String jwkSetUri,
-            @Value("${thermometer.oidc.issuer-uri}") String issuerUri) {
+            @Value("${thermometer.oidc.issuer-uri}") String issuerUri,
+            @Value("${thermometer.oidc.client-id:}") String clientId) {
         NimbusJwtDecoder decoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
-        OAuth2TokenValidator<Jwt> validator = JwtValidators.createDefaultWithIssuer(issuerUri);
-        decoder.setJwtValidator(validator);
+        decoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(
+                JwtValidators.createDefaultWithIssuer(issuerUri),
+                audienceValidator(clientId)));
         return decoder;
+    }
+
+    /**
+     * Restricts accepted tokens to the one OAuth2 client this API is for.
+     *
+     * <p>{@code JwtValidators.createDefaultWithIssuer} checks {@code iss},
+     * {@code exp} and {@code nbf} — but nothing about <i>who the token was
+     * issued to</i>, so any token minted by the same Keycloak realm for a
+     * different client would be accepted here. Harmless with a single client,
+     * but it widens trust silently the moment a second one is added to the
+     * realm (a mobile client, a service account, an unrelated app sharing the
+     * realm), which is exactly the kind of change nobody revisits this file for.
+     *
+     * <p>Keycloak puts the requesting client in {@code azp} and only lists an
+     * API in {@code aud} when an audience mapper says so, so {@code azp} is the
+     * primary check with {@code aud} accepted as the standard alternative. A
+     * blank {@code thermometer.oidc.client-id} disables the check, which is the
+     * escape hatch for a realm whose tokens carry neither claim.
+     */
+    static OAuth2TokenValidator<Jwt> audienceValidator(String clientId) {
+        if (clientId == null || clientId.isBlank()) {
+            return jwt -> OAuth2TokenValidatorResult.success();
+        }
+        return jwt -> {
+            boolean issuedToUs = clientId.equals(jwt.getClaimAsString("azp"))
+                    || (jwt.getAudience() != null && jwt.getAudience().contains(clientId));
+            return issuedToUs
+                    ? OAuth2TokenValidatorResult.success()
+                    : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_token",
+                            "token was not issued to " + clientId, null));
+        };
     }
 
     @Bean

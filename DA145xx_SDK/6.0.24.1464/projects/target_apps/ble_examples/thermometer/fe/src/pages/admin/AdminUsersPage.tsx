@@ -8,6 +8,7 @@ import { Card } from '../../components/ui/Card';
 import { EmptyState, SkeletonBlock } from '../../components/ui/EmptyState';
 import { Input } from '../../components/ui/Input';
 import { Pagination } from '../../components/ui/Pagination';
+import { Select } from '../../components/ui/Select';
 import {
   Table,
   TableBody,
@@ -18,8 +19,7 @@ import {
   TableRow,
 } from '../../components/ui/Table';
 import { TrendChart } from '../../components/ui/TrendChart';
-import { cn } from '../../components/ui/cn';
-import { StatTile, StatTileGrid } from './AdminUi';
+import { StatTile, StatTileGrid } from '../../components/ui/StatTile';
 import { fillDailySeries } from './dailySeries';
 
 const PAGE_SIZE = 25;
@@ -28,15 +28,6 @@ const GROWTH_DAYS = 90;
 type UserRole = AdminUserResponse['role'];
 
 const ROLES: UserRole[] = ['customer', 'doctor', 'admin'];
-
-/** Mirrors the native-select styling SettingsPage uses; `sm` matches Button's row height. */
-function selectClasses(size: 'sm' | 'md'): string {
-  return cn(
-    size === 'sm' ? 'h-9' : 'h-touch',
-    'rounded-md border border-sand-500 bg-surface-1 px-2 text-body text-ink-primary dark:border-sand-600',
-    'focus-visible:outline-none focus-visible:border-primary-600 focus-visible:shadow-focus',
-  );
-}
 
 /**
  * Search runs server-side, so it fires a request per change of the term —
@@ -84,9 +75,9 @@ function UserGrowthStrip() {
   return (
     <div className="space-y-3">
       <StatTileGrid>
-        <StatTile label="Users" value={growth.total.toLocaleString()} hint="All roles" />
+        <StatTile size="lg" label="Users" value={growth.total.toLocaleString()} hint="All roles" />
         {ROLES.map((role) => (
-          <StatTile key={role} label={role} value={(countsByRole.get(role) ?? 0).toLocaleString()} />
+          <StatTile size="lg" key={role} label={role} value={(countsByRole.get(role) ?? 0).toLocaleString()} />
         ))}
       </StatTileGrid>
 
@@ -129,6 +120,28 @@ function UserBrowser() {
 
   /** Pending role edits, by user id — only the rows the admin actually touched. */
   const [roleDrafts, setRoleDrafts] = useState<Record<string, UserRole>>({});
+  /**
+   * A pending promotion TO admin, awaiting confirmation (review FE-13).
+   *
+   * Privilege escalation was the one action on the console with less friction
+   * than a device force-release: Save submitted it straight away. Every other
+   * role change still saves immediately — this gate is specifically about
+   * handing out admin.
+   */
+  const [confirmingAdmin, setConfirmingAdmin] = useState<AdminUserResponse | null>(null);
+
+  const clearDraft = (id: string) =>
+    setRoleDrafts((drafts) => {
+      const remaining = { ...drafts };
+      delete remaining[id];
+      return remaining;
+    });
+
+  /** Persists a role change and drops its draft, so the row reflects the server again. */
+  const commitRole = (id: string, role: UserRole) => {
+    setConfirmingAdmin(null);
+    updateRole.mutate({ id, role }, { onSuccess: () => clearDraft(id) });
+  };
 
   const users = usersQuery.data?.content ?? [];
   const totalPages = usersQuery.data?.totalPages ?? 1;
@@ -150,27 +163,23 @@ function UserBrowser() {
             }}
           />
         </div>
-        <div className="space-y-1.5">
-          <label className="block text-label uppercase tracking-wide text-ink-secondary" htmlFor="user-role-filter">
-            Role
-          </label>
-          <select
-            id="user-role-filter"
-            className={selectClasses('md')}
-            value={role}
-            onChange={(event) => {
-              setRole(event.target.value);
-              resetToFirstPage();
-            }}
-          >
-            <option value="">Any role</option>
-            {ROLES.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Select
+          id="user-role-filter"
+          label="Role"
+          className="!w-auto"
+          value={role}
+          onChange={(event) => {
+            setRole(event.target.value);
+            resetToFirstPage();
+          }}
+        >
+          <option value="">Any role</option>
+          {ROLES.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
         {usersQuery.data && (
           <p className="pb-2.5 text-caption text-ink-muted" aria-live="polite">
             {usersQuery.data.totalElements.toLocaleString()} matching
@@ -186,6 +195,32 @@ function UserBrowser() {
       {updateRole.isError && (
         <Alert status="danger" className="mb-3">
           {updateRole.error.message}
+        </Alert>
+      )}
+
+      {/* Same Alert-based confirm pattern as AdminDevicesPage's force-release. */}
+      {confirmingAdmin && (
+        <Alert status="danger" className="mb-3" onDismiss={() => setConfirmingAdmin(null)}>
+          <div className="space-y-2">
+            <p>
+              Make <span className="font-semibold">{confirmingAdmin.displayName ?? confirmingAdmin.username}</span>{' '}
+              an administrator? They will be able to see every user, device and consent link, force-release
+              devices, read doctors' care notes, and change other users' roles.
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="destructive"
+                size="sm"
+                loading={updateRole.isPending}
+                onClick={() => commitRole(confirmingAdmin.id, 'admin')}
+              >
+                Grant admin
+              </Button>
+              <Button variant="tertiary" size="sm" onClick={() => setConfirmingAdmin(null)}>
+                Cancel
+              </Button>
+            </div>
+          </div>
         </Alert>
       )}
 
@@ -214,19 +249,7 @@ function UserBrowser() {
                 saving={updateRole.isPending && updateRole.variables?.id === user.id}
                 onDraftChange={(next) => setRoleDrafts((drafts) => ({ ...drafts, [user.id]: next }))}
                 onSave={(next) =>
-                  updateRole.mutate(
-                    { id: user.id, role: next },
-                    {
-                      // Drop the draft once it's persisted, so the row goes
-                      // back to reflecting the server's value.
-                      onSuccess: () =>
-                        setRoleDrafts((drafts) => {
-                          const remaining = { ...drafts };
-                          delete remaining[user.id];
-                          return remaining;
-                        }),
-                    },
-                  )
+                  next === 'admin' ? setConfirmingAdmin(user) : commitRole(user.id, next)
                 }
               />
             ))}
@@ -269,9 +292,9 @@ function UserRow({ user, isMe, draft, saving, onDraftChange, onSave }: UserRowPr
             <label className="sr-only" htmlFor={`role-${user.id}`}>
               Role for {user.username}
             </label>
-            <select
+            <Select
               id={`role-${user.id}`}
-              className={selectClasses('sm')}
+              size="sm"
               value={selected}
               onChange={(event) => onDraftChange(event.target.value as UserRole)}
             >
@@ -280,7 +303,7 @@ function UserRow({ user, isMe, draft, saving, onDraftChange, onSave }: UserRowPr
                   {option}
                 </option>
               ))}
-            </select>
+            </Select>
             {isDirty && (
               <Button size="sm" loading={saving} onClick={() => onSave(selected)}>
                 Save

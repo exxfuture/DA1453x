@@ -2,15 +2,17 @@ package com.dialog.thermometer.it;
 
 import com.dialog.thermometer.admin.AdminAnalyticsController;
 import com.dialog.thermometer.annotation.AnnotationController;
-import com.dialog.thermometer.api.AdminController;
+import com.dialog.thermometer.admin.AdminController;
 import com.dialog.thermometer.api.ConsentController;
 import com.dialog.thermometer.api.DeviceController;
 import com.dialog.thermometer.api.MeController;
 import com.dialog.thermometer.api.MeasurementController;
-import com.dialog.thermometer.api.RolloutController;
+import com.dialog.thermometer.rollout.RolloutController;
 import com.dialog.thermometer.api.dto.AdminUserResponse;
 import com.dialog.thermometer.api.dto.AnnotationResponse;
+import com.dialog.thermometer.api.dto.AuditLogResponse;
 import com.dialog.thermometer.api.dto.CareNoteResponse;
+import com.dialog.thermometer.api.dto.ConsentHistoryResponse;
 import com.dialog.thermometer.api.dto.ConsentResponse;
 import com.dialog.thermometer.api.dto.CreateAnnotationRequest;
 import com.dialog.thermometer.api.dto.CreateCareNoteRequest;
@@ -19,6 +21,7 @@ import com.dialog.thermometer.api.dto.DeviceResponse;
 import com.dialog.thermometer.api.dto.GrantConsentRequest;
 import com.dialog.thermometer.api.dto.MeResponse;
 import com.dialog.thermometer.api.dto.MeasurementResponse;
+import com.dialog.thermometer.api.dto.PageResponse;
 import com.dialog.thermometer.api.dto.PatientEventsResponse;
 import com.dialog.thermometer.api.dto.PatientSummaryResponse;
 import com.dialog.thermometer.api.dto.RenameDeviceRequest;
@@ -65,7 +68,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
-import org.testcontainers.utility.MountableFile;
 
 import java.time.Instant;
 import java.util.List;
@@ -101,19 +103,24 @@ class RbacIT {
             .withUsername("thermometer")
             .withPassword("thermometer");
 
+    /**
+     * The broker this service talks to refuses anonymous connections (see
+     * {@link MosquittoDynsecContainer}); these tests don't publish over MQTT
+     * themselves, but the application context connects on startup, so the
+     * credentials have to be real ones.
+     */
     @Container
-    static GenericContainer<?> mosquitto = new GenericContainer<>(DockerImageName.parse("eclipse-mosquitto:2"))
-            .withExposedPorts(1883)
-            .withCopyFileToContainer(MountableFile.forClasspathResource("mosquitto-test.conf"),
-                    "/mosquitto/config/mosquitto.conf");
+    static GenericContainer<?> mosquitto = MosquittoDynsecContainer.create();
 
     @DynamicPropertySource
     static void registerProperties(DynamicPropertyRegistry registry) {
         registry.add("spring.datasource.url", postgres::getJdbcUrl);
         registry.add("spring.datasource.username", postgres::getUsername);
         registry.add("spring.datasource.password", postgres::getPassword);
-        registry.add("thermometer.mqtt.broker-url",
-                () -> "tcp://" + mosquitto.getHost() + ":" + mosquitto.getMappedPort(1883));
+        registry.add("thermometer.mqtt.broker-url", () -> MosquittoDynsecContainer.brokerUrl(mosquitto));
+        registry.add("thermometer.mqtt.username", () -> MosquittoDynsecContainer.ADMIN_USERNAME);
+        registry.add("thermometer.mqtt.password", () -> MosquittoDynsecContainer.ADMIN_PASSWORD);
+        registry.add("thermometer.mqtt.collector-password", () -> MosquittoDynsecContainer.COLLECTOR_PASSWORD);
     }
 
     @Autowired
@@ -381,6 +388,55 @@ class RbacIT {
 
         assertEquals(HttpStatus.NO_CONTENT, consentController.revoke(consentId, admin).getStatusCode(),
                 "an admin may still revoke any link on a patient's behalf");
+    }
+
+    /**
+     * The three paged audit feeds, end to end against real Postgres: rows
+     * written by real grant/revoke calls, read back through the derived queries
+     * the {@code V3__audit_log_indexes.sql} indexes exist for.
+     *
+     * <p>{@code ConsentPaginationMvcTest} pins their HTTP shape and role rules;
+     * what only a real database can show is that each feed contains exactly the
+     * rows it claims to — in particular that the customer feed is scoped to the
+     * caller, and that the doctor feed picks up entries where the doctor is the
+     * <i>subject</i> rather than the actor (which is why the dedicated
+     * consent-activity feed is empty by design).
+     */
+    @Test
+    void consentAndAuditFeedsContainExactlyTheCallersOwnEntries() {
+        Authentication patient = authFor("rbac-feed-patient-1", "rbac-feed-patient1", "customer");
+        Authentication otherPatient = authFor("rbac-feed-patient-2", "rbac-feed-patient2", "customer");
+        Authentication doctor = authFor("rbac-feed-doctor-1", "rbac-feed-doctor1", "doctor");
+        Pageable firstPage = PageRequest.of(0, 50);
+
+        UUID consentId = consentController.grant(new GrantConsentRequest("rbac-feed-doctor-1"), patient)
+                .getBody().id();
+        consentController.revoke(consentId, patient);
+        consentController.grant(new GrantConsentRequest("rbac-feed-doctor-1"), otherPatient);
+
+        PageResponse<ConsentHistoryResponse> myHistory = consentController.myConsentHistory(firstPage, patient);
+        assertEquals(2, myHistory.totalElements(), "one grant and one revoke, and nobody else's");
+        assertEquals(List.of("consent.revoke", "consent.grant"),
+                myHistory.content().stream().map(ConsentHistoryResponse::action).toList(),
+                "newest first by default — these feeds are only ever read that way");
+        assertTrue(myHistory.content().stream().allMatch(entry -> "rbac-feed-doctor-1".equals(entry.doctorUserId())),
+                "the subject of a consent row is the doctor it concerns");
+
+        assertEquals(0, consentController.doctorConsentActivity(firstPage, doctor).totalElements(),
+                "empty by design: consent is patient-initiated, so a doctor is never the actor");
+
+        PageResponse<AuditLogResponse> doctorFeed = consentController.myAuditLog(firstPage, doctor);
+        assertEquals(3, doctorFeed.totalElements(),
+                "actor OR subject: both patients' grants and the revoke all name this doctor");
+        assertTrue(doctorFeed.content().stream().allMatch(entry -> "rbac-feed-doctor-1".equals(entry.subject())),
+                "every entry here names the doctor as its subject");
+
+        assertRejects(HttpStatus.FORBIDDEN, () -> consentController.myConsentHistory(firstPage, doctor),
+                "a doctor has no consent history of their own to read");
+        assertRejects(HttpStatus.FORBIDDEN, () -> consentController.myAuditLog(firstPage, patient),
+                "the doctor audit feed is doctor-only");
+        assertRejects(HttpStatus.FORBIDDEN, () -> consentController.doctorConsentActivity(firstPage, patient),
+                "...as is the doctor consent-activity feed");
     }
 
     /**

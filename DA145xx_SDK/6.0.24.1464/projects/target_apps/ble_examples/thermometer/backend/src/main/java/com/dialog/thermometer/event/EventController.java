@@ -105,10 +105,7 @@ public class EventController {
     public List<PatientEventsResponse> patientEvents(@RequestParam(required = false) Instant from,
                                                       @RequestParam(required = false) Instant to,
                                                       Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.DOCTOR) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "only doctors have patients");
-        }
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only doctors have patients", Role.DOCTOR);
         Window window = Window.of(from, to);
 
         List<String> patientIds = consentLinks.findByDoctorUserIdAndRevokedAtIsNull(me.id()).stream()

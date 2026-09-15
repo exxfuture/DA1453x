@@ -185,7 +185,7 @@
 }
 
 /*
- * Print. Only the doctor's clinical report (pages/PatientReportPage.tsx) is a
+ * Print. Only the doctor's clinical report (pages/doctor/PatientReportPage.tsx) is a
  * document; it tags <body> with `report-print-mode` while mounted, so the
  * chrome-hiding rules below never affect an ad-hoc print of another page.
  *

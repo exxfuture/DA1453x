@@ -15,7 +15,8 @@ import {
   TableHeadRow,
   TableRow,
 } from '../../components/ui/Table';
-import { StatTile, StatTileGrid, Segmented } from './AdminUi';
+import { Segmented } from '../../components/ui/Segmented';
+import { StatTile, StatTileGrid } from '../../components/ui/StatTile';
 
 const PAGE_SIZE = 25;
 
@@ -59,13 +60,13 @@ export function AdminRelationshipsPage() {
       ) : (
         <>
           <StatTileGrid className="lg:grid-cols-3">
-            <StatTile label="Active links" value={integrity.activeLinks.toLocaleString()} />
-            <StatTile
+            <StatTile size="lg" label="Active links" value={integrity.activeLinks.toLocaleString()} />
+            <StatTile size="lg"
               label="Orphaned"
               value={orphanedCount.toLocaleString()}
               hint="Point at an account that doesn't exist"
             />
-            <StatTile
+            <StatTile size="lg"
               label="Overloaded doctors"
               value={overloadedCount.toLocaleString()}
               hint="Hold an unusual number of patients"

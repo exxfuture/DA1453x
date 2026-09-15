@@ -16,7 +16,8 @@ import {
   TableRow,
 } from '../../components/ui/Table';
 import { relativeTime } from '../../utils/time';
-import { StatTile, StatTileGrid, largestOf } from './AdminUi';
+import { StatTile, StatTileGrid } from '../../components/ui/StatTile';
+import { largestOf } from '../../utils/breakdown';
 
 /**
  * The device registry, with an inventory strip above it (admin feature #2):
@@ -46,10 +47,10 @@ function DeviceInventoryStrip() {
   return (
     <div className="space-y-3">
       <StatTileGrid>
-        <StatTile label="Devices" value={inventory.total.toLocaleString()} hint="Known to the platform" />
-        <StatTile label="Claimed" value={inventory.claimed.toLocaleString()} hint="Have an owner" />
-        <StatTile label="Unclaimed" value={inventory.unclaimed.toLocaleString()} />
-        <StatTile
+        <StatTile size="lg" label="Devices" value={inventory.total.toLocaleString()} hint="Known to the platform" />
+        <StatTile size="lg" label="Claimed" value={inventory.claimed.toLocaleString()} hint="Have an owner" />
+        <StatTile size="lg" label="Unclaimed" value={inventory.unclaimed.toLocaleString()} />
+        <StatTile size="lg"
           label="Reporting"
           value={inventory.reportingLastDay.toLocaleString()}
           hint="Seen in the last 24 h"
@@ -114,6 +115,19 @@ function DeviceRegistry() {
 
   return (
     <div className="space-y-3">
+      {/* Mutation failures are surfaced, not swallowed (review FE-07) — the same
+          isError treatment AdminUsersPage/AdminAuditPage/AdminRelationshipsPage use. */}
+      {editDevice.isError && (
+        <Alert status="danger" onDismiss={() => editDevice.reset()}>
+          Could not save this device: {editDevice.error.message}
+        </Alert>
+      )}
+      {releaseDevice.isError && (
+        <Alert status="danger" onDismiss={() => releaseDevice.reset()}>
+          Could not force-release this device: {releaseDevice.error.message}
+        </Alert>
+      )}
+
       {confirmingRelease && (
         <Alert status="danger" onDismiss={() => setConfirmingRelease(null)}>
           <div className="space-y-2">
@@ -127,8 +141,10 @@ function DeviceRegistry() {
                 size="sm"
                 loading={releaseDevice.isPending}
                 onClick={() => {
-                  releaseDevice.mutate(confirmingRelease);
-                  setConfirmingRelease(null);
+                  // Dismiss on success only (review FE-07): closing the confirm
+                  // unconditionally told the admin the device had been released
+                  // whether or not the request succeeded.
+                  releaseDevice.mutate(confirmingRelease, { onSuccess: () => setConfirmingRelease(null) });
                 }}
               >
                 Force-release device
@@ -171,13 +187,18 @@ function DeviceRegistry() {
                     <Input className="!w-32" aria-label="Model" value={modelDraft} onChange={(e) => setModelDraft(e.target.value)} />
                     <Button
                       size="sm"
+                      loading={editDevice.isPending && editDevice.variables?.bdAddr === device.bdAddr}
                       onClick={() => {
                         // Empty string clears the owner's label (backend trims to null).
-                        editDevice.mutate({
-                          bdAddr: device.bdAddr,
-                          edit: { model: modelDraft, label: labelDraft },
-                        });
-                        setEditingBdAddr(null);
+                        // Editor closes on success only (review FE-07) — otherwise a
+                        // rejected edit looked exactly like a saved one.
+                        editDevice.mutate(
+                          {
+                            bdAddr: device.bdAddr,
+                            edit: { model: modelDraft, label: labelDraft },
+                          },
+                          { onSuccess: () => setEditingBdAddr(null) },
+                        );
                       }}
                     >
                       Save

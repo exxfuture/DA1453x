@@ -23,6 +23,42 @@ npm install
 npm run build-web   # builds ../fe -> ../fe/dist, which webDir points at
 ```
 
+### Configuring the endpoints (build-time here, unlike the web container)
+
+The web app reads its API / MQTT / Keycloak URLs through one helper
+(`../fe/src/config/env.ts`), which resolves
+
+```
+window.__ENV__?.X  ??  import.meta.env.VITE_X  ??  http://localhost:<port>
+```
+
+The **web container** takes the first branch: its nginx entrypoint writes
+`env.js` from container environment variables at start, so one image is
+promotable across environments (see `../fe/README.md`, "Runtime configuration").
+
+**This shell takes the second branch.** `webDir` points at `../fe/dist`, which
+Capacitor copies into the app bundle — there is no server to render `env.js`, and
+the `public/env.js` that ships in `dist/` is deliberately an empty
+`window.__ENV__` so the `<script src="/env.js">` tag doesn't 404 inside the
+WebView. The URLs therefore have to be baked in at build time, exactly as before:
+
+```bash
+# from mobile/ — a device/emulator cannot reach the host's "localhost"
+VITE_API_BASE_URL=http://192.168.1.10:8080 VITE_MQTT_WS_URL=ws://192.168.1.10:9001 VITE_KEYCLOAK_URL=http://192.168.1.10:8082   npm run sync
+```
+
+(or put the same three lines in `../fe/.env.local`, which Vite picks up
+automatically — see `../fe/.env.example`). Without them the bundle falls back to
+`localhost`, which on a phone means the phone itself, so every request fails.
+
+A real app build would set these per flavour/scheme rather than per shell
+invocation; that is not wired up here (see the status table at the end).
+
+The broker also requires credentials now: the app mints its own per-user MQTT
+credential from `POST /api/live/credentials`, so `VITE_API_BASE_URL` has to be
+reachable for the live feed to work — there is nothing to configure for MQTT auth
+itself.
+
 ## Adding the native platforms
 
 The `android/` and `ios/` folders are **not** pre-generated in this repo —
@@ -88,5 +124,6 @@ Not done in this scaffold — needed before a real device build:
 | Runtime web/native transport switch | ✅ implemented (`../fe/src/ble/createBleTransport.ts`) |
 | Simulated BLE transport (no hardware/device needed) | ✅ works here too — it's plain JS with no native dependency, so "Connect (Simulated Device)" exercises the whole app inside the Capacitor WebView exactly like it does in the browser (see `../fe/README.md` "Testing without real hardware") |
 | Android/iOS manifest permissions | ⏸ not added — see above |
+| Per-environment endpoint configuration | ⏸ not implemented — the three `VITE_*` URLs are passed on the `npm run sync` command line (see "Configuring the endpoints" above). A shipped app would bind them to a build flavour (Android) / scheme (iOS) instead. The web container needs none of this: it configures itself at runtime. |
 | Background BLE collection | ⏸ not implemented (roadmap) |
 | App store builds/signing | ⏸ out of scope for this environment |

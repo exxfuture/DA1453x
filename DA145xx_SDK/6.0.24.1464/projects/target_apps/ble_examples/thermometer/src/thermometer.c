@@ -27,6 +27,23 @@
  *     - LED off
  *     - Restart advertising automatically
  *
+ * Link security:
+ *   - The HTP service is created with SRV_PERM_UNAUTH, so its characteristics
+ *     (temperature indications, interval) are only reachable over an
+ *     encrypted link, and the default handlers send a security request on
+ *     every connection (DEF_SEC_REQ_ON_CONNECT).  Pairing is Just Works
+ *     without bonding: each connection re-pairs, nothing persists, and a
+ *     passive sniffer never sees plaintext measurements.
+ *
+ * Concurrency:
+ *   - The AHT20 driver completes in I2C interrupt context; everything it
+ *     touches that the BLE task context also reads or writes is declared
+ *     volatile, and the cycle is torn down (guards cleared, then timers
+ *     cancelled) inside a critical section so a late ISR callback can never
+ *     re-arm a timer that was just cancelled.
+ *   - The "what next" decisions of the cycle (cycle_next_action,
+ *     recovery_action) are pure functions in codec.h with host tests.
+ *
  * Power management:
  *   - Extended sleep (ARCH_EXT_SLEEP_ON) is always active
  *   - The CPU sleeps between BLE events and timer callbacks
@@ -71,6 +88,8 @@
 #include "app_default_handlers.h"
 #include "i2c_temp_sensor.h"
 #include "codec.h"
+#include "ll.h"
+#include "app_prf_perm_types.h"
 
 #if defined (__DA14531__)
 #include "timer1.h"
@@ -96,38 +115,52 @@ typedef enum
 /// Current application state
 static therm_state_t therm_state = APP_STATE_ADVERTISING;
 
+/*
+ * Everything below marked volatile is shared between the BLE task context
+ * (timer callbacks, profile callbacks) and the I2C interrupt context
+ * (on_trigger_done / on_read_done -> handle_sample_done).  build.sh compiles
+ * with -flto -Os, which gives the compiler whole-program visibility, so
+ * without volatile it may legitimately cache or reorder these accesses.
+ */
+
 /// Active BLE connection index (GAP_INVALID_CONIDX when not connected)
-static uint8_t current_conidx = GAP_INVALID_CONIDX;
+static volatile uint8_t current_conidx = GAP_INVALID_CONIDX;
 
 /// Whether the collector has enabled HTP temperature indications
-static bool indications_enabled = false;
+static volatile bool indications_enabled = false;
 
 /// Timer handle for periodic temperature measurements (fires -> triggers AHT20)
 static timer_hnd temp_timer = EASY_TIMER_INVALID_TIMER;
 
-/// Timer handle for the AHT20 conversion window.
-static timer_hnd aht20_read_timer = EASY_TIMER_INVALID_TIMER;
+/// Timer handle for the AHT20 conversion window (armed from the I2C ISR).
+static volatile timer_hnd aht20_read_timer = EASY_TIMER_INVALID_TIMER;
 
-/// Timer handle used to bounce the measurement result to the BLE event loop.
-static timer_hnd send_ind_timer = EASY_TIMER_INVALID_TIMER;
+/// Timer handle used to bounce the measurement result to the BLE event loop
+/// (armed from the I2C ISR).
+static volatile timer_hnd send_ind_timer = EASY_TIMER_INVALID_TIMER;
 
 /// Timer handle for LED blink while advertising
 static timer_hnd led_blink_timer = EASY_TIMER_INVALID_TIMER;
 
 /// Timer handle for the gap between samples within one measurement cycle
-static timer_hnd sample_gap_timer = EASY_TIMER_INVALID_TIMER;
+/// (armed from the I2C ISR).
+static volatile timer_hnd sample_gap_timer = EASY_TIMER_INVALID_TIMER;
 
 /// Pending measurement result (written from I2C ISR, read in BLE event loop).
-static int16_t s_pending_temp_x100;
-static bool    s_measurement_pending;
+static volatile int16_t s_pending_temp_x100;
+static volatile bool    s_measurement_pending;
 
 /// Samples collected in the current measurement cycle (ISR-written)
-static int16_t s_samples[TEMP_SAMPLES_PER_MEASUREMENT];
-static uint8_t s_sample_count;
-static uint8_t s_sample_attempts;
+static volatile int16_t s_samples[TEMP_SAMPLES_PER_MEASUREMENT];
+static volatile uint8_t s_sample_count;
+static volatile uint8_t s_sample_attempts;
 
 /// Consecutive measurement cycles that yielded zero valid samples
-static uint8_t s_consecutive_fail_cycles;
+static volatile uint8_t s_consecutive_fail_cycles;
+
+/// HTP indications the stack reported as not delivered (debug counter; the
+/// value is also printed via arch_printf when CFG_PRINTF is enabled)
+static uint16_t s_indication_failures;
 
 /// Current LED state used by the blink routine
 static bool led_state = false;
@@ -228,7 +261,9 @@ static void stop_led_blink(void)
  *       v  i2c_temp_sensor_read(on_read_done)          [returns immediately]
  *       |
  *   on_read_done  -- I2C ISR context
- *       |  stores result; app_easy_timer(1, send_indication_cb)   [IRQ-safe]
+ *       |  handle_sample_done(): cycle_next_action() decides between another
+ *       |  sample (app_easy_timer -> sample_gap_cb), a dead cycle, or
+ *       |  aggregate + app_easy_timer(1, send_indication_cb)    [IRQ-safe]
  *       |
  *   send_indication_cb  -- BLE event loop
  *       |  app_htpt_send_measurement(...)              [safe here]
@@ -310,30 +345,40 @@ static void handle_sample_done(bool ok, int16_t temp_x100)
         s_samples[s_sample_count++] = temp_x100;
     }
 
-    if (s_sample_attempts < TEMP_SAMPLES_PER_MEASUREMENT)
+    switch (cycle_next_action(s_sample_attempts, s_sample_count,
+                              TEMP_SAMPLES_PER_MEASUREMENT))
     {
-        /* More samples to take this cycle */
+    case CYCLE_NEXT_SAMPLE:
         if (sample_gap_timer == EASY_TIMER_INVALID_TIMER)
         {
             sample_gap_timer = app_easy_timer(TEMP_SAMPLE_GAP_TICKS, sample_gap_cb);
         }
         return;
-    }
 
-    /* Cycle complete */
-    if (s_sample_count == 0)
-    {
+    case CYCLE_FAILED:
         if (s_consecutive_fail_cycles < UINT8_MAX)
         {
             s_consecutive_fail_cycles++;
         }
         return;
+
+    case CYCLE_COMPLETE:
+    default:
+        break;
+    }
+
+    /* Snapshot the volatile sample buffer for the pure aggregator (no other
+     * writer can run: we are in the ISR that produced the last sample). */
+    int16_t samples[TEMP_SAMPLES_PER_MEASUREMENT];
+    uint8_t n = s_sample_count;
+    for (uint8_t i = 0; i < n; i++)
+    {
+        samples[i] = s_samples[i];
     }
 
     s_consecutive_fail_cycles = 0;
-    s_pending_temp_x100 = apply_offset_i16(
-        aggregate_samples_i16(s_samples, s_sample_count),
-        CFG_TEMP_OFFSET_X100);
+    s_pending_temp_x100 = apply_offset_i16(aggregate_samples_i16(samples, n),
+                                           CFG_TEMP_OFFSET_X100);
     s_measurement_pending = true;
 
     /* Post to BLE event loop -- app_easy_timer(ke_timer_set) is IRQ-safe */
@@ -386,10 +431,14 @@ static void send_indication_cb(void)
     uint32_t ieee_float = ieee11073_encode_temp(s_pending_temp_x100, false);
 #endif
 
-    struct htp_temp_meas meas;
+    /* flags = Celsius, no timestamp, no type byte.  The measurement type
+     * (body) is exposed through the separate Temperature Type characteristic
+     * (APP_HTPT_TEMP_TYPE / HTPT_TEMP_TYPE_CHAR_SUP, user_profiles_config.h);
+     * the SDK only packs meas.type into the indication when HTP_FLAG_TYPE is
+     * set, so it is deliberately not assigned here. */
+    struct htp_temp_meas meas = {0};
     meas.temp  = ieee_float;
     meas.flags = HTP_FLAG_CELSIUS;
-    meas.type  = HTP_TYPE_BODY;
 
     app_htpt_send_measurement(current_conidx, true, &meas);
 }
@@ -407,14 +456,17 @@ static void temp_timer_cb(void)
     /* Schedule the next measurement cycle regardless of this cycle's outcome */
     temp_timer = app_easy_timer(temp_interval_ticks, temp_timer_cb);
 
-    /* Recovery ladder: after AHT20_FAILS_BEFORE_SOFT_RESET consecutive dead
-     * cycles soft-reset the AHT20; every AHT20_FAILS_BEFORE_BUS_RECOVERY,
-     * manually recover the I2C bus first.  The recovery replaces this
-     * cycle's measurement so it never overlaps another I2C transaction. */
-    if (s_consecutive_fail_cycles >= AHT20_FAILS_BEFORE_SOFT_RESET &&
-        (s_consecutive_fail_cycles % AHT20_FAILS_BEFORE_SOFT_RESET) == 0)
+    /* Recovery ladder (recovery_action, codec.h): after
+     * AHT20_FAILS_BEFORE_SOFT_RESET consecutive dead cycles soft-reset the
+     * AHT20; every AHT20_FAILS_BEFORE_BUS_RECOVERY, manually recover the I2C
+     * bus first.  The recovery replaces this cycle's measurement so it never
+     * overlaps another I2C transaction. */
+    recovery_action_t recovery = recovery_action(s_consecutive_fail_cycles,
+                                                 AHT20_FAILS_BEFORE_SOFT_RESET,
+                                                 AHT20_FAILS_BEFORE_BUS_RECOVERY);
+    if (recovery != RECOVERY_NONE)
     {
-        if ((s_consecutive_fail_cycles % AHT20_FAILS_BEFORE_BUS_RECOVERY) == 0)
+        if (recovery == RECOVERY_BUS_AND_SOFT_RESET)
         {
             i2c_bus_recover();
         }
@@ -441,8 +493,20 @@ static void start_temp_timer(void)
     temp_timer = app_easy_timer(temp_interval_ticks, temp_timer_cb);
 }
 
+/*
+ * Tear down the measurement cycle.  Runs inside a critical section: the
+ * I2C ISR callbacks (on_trigger_done / on_read_done -> handle_sample_done)
+ * arm aht20_read_timer, sample_gap_timer and send_ind_timer, so an interrupt
+ * landing between "cancel" and "clear the handle" — or between clearing the
+ * connection guards and cancelling — could otherwise re-arm a timer that was
+ * just cleaned up and leak an app_easy_timer pool slot.  Callers must clear
+ * indications_enabled / current_conidx BEFORE calling this so that any ISR
+ * that does run afterwards sees the cycle as abandoned and returns early.
+ */
 static void stop_temp_timer(void)
 {
+    GLOBAL_INT_DISABLE();
+
     if (temp_timer != EASY_TIMER_INVALID_TIMER)
     {
         app_easy_timer_cancel(temp_timer);
@@ -467,6 +531,8 @@ static void stop_temp_timer(void)
     s_sample_count            = 0;
     s_sample_attempts         = 0;
     s_consecutive_fail_cycles = 0;
+
+    GLOBAL_INT_RESTORE();
 }
 
 /*
@@ -527,6 +593,9 @@ void app_button_enable(void)
 
 void user_htpt_ind_cfg_ind(uint8_t conidx, bool ind_en)
 {
+    (void)conidx;
+
+    /* Guard first, then tear down — see stop_temp_timer() */
     indications_enabled = ind_en;
 
     if (ind_en)
@@ -542,7 +611,18 @@ void user_htpt_ind_cfg_ind(uint8_t conidx, bool ind_en)
 void user_htpt_send_measurement_cfm(uint8_t conidx, uint8_t status)
 {
     (void)conidx;
-    (void)status;
+
+    if (status != GAP_ERR_NO_ERROR)
+    {
+        if (s_indication_failures < UINT16_MAX)
+        {
+            s_indication_failures++;
+        }
+#if defined (CFG_PRINTF)
+        arch_printf("HTP indication failed: status 0x%02x (total %u)\r\n",
+                    status, s_indication_failures);
+#endif
+    }
 }
 
 void user_htpt_meas_intv_chg_cfm(uint8_t conidx, uint16_t intv)
@@ -586,10 +666,16 @@ void app_advertise_complete(const uint8_t status)
          * Pad states are latched (pad_latch_en=true) so the button pull-up
          * remains active and can trigger the wakeup controller.
          * On wakeup the device reboots and starts advertising automatically. */
+#if defined (__DA14531__)
         arch_set_deep_sleep(PD_SYS_DOWN_RAM_OFF,
                             PD_SYS_DOWN_RAM_OFF,
                             PD_SYS_DOWN_RAM_OFF,
                             true);
+#else
+        /* DA14585/586: single-argument form — allow the external (button)
+         * wake-up interrupt to reboot the system. */
+        arch_set_deep_sleep(true);
+#endif
     }
 }
 
@@ -616,11 +702,21 @@ void user_app_on_init(void)
     s_sample_count            = 0;
     s_sample_attempts         = 0;
     s_consecutive_fail_cycles = 0;
+    s_indication_failures     = 0;
 }
 
 void user_app_on_db_init_complete(void)
 {
     default_app_on_db_init_complete();
+
+    /* The HTP characteristics carry the wearer's temperature: require an
+     * encrypted link (unauthenticated / Just Works is enough — the threat is
+     * passive sniffing, not an active MITM with a display-less device).  A
+     * collector that touches them before pairing gets ATT "insufficient
+     * encryption"; combined with DEF_SEC_REQ_ON_CONNECT (user_config.h) the
+     * link is normally encrypted before service discovery finishes.
+     * Battery level and Device Information stay readable without pairing. */
+    app_set_prf_srv_perm(TASK_ID_HTPT, SRV_PERM_UNAUTH);
 
     app_htpt_create_db();
     app_batt_init();
@@ -648,9 +744,13 @@ void user_app_on_connection(uint8_t conidx, struct gapc_connection_req_ind const
 
 void user_app_on_disconnect(struct gapc_disconnect_ind const *param)
 {
-    stop_temp_timer();
+    /* Clear the guards every I2C-ISR callback checks BEFORE cancelling the
+     * timers, so an interrupt that lands in between sees the cycle as
+     * abandoned instead of re-arming a timer we are about to cancel
+     * (same order as user_htpt_ind_cfg_ind). */
     indications_enabled = false;
     current_conidx      = GAP_INVALID_CONIDX;
+    stop_temp_timer();
 
     led_set(false);
 

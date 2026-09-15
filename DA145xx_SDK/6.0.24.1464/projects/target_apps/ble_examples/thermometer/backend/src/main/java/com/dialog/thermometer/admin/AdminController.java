@@ -1,4 +1,4 @@
-package com.dialog.thermometer.api;
+package com.dialog.thermometer.admin;
 
 import com.dialog.thermometer.api.dto.AdminUserResponse;
 import com.dialog.thermometer.api.dto.AuditLogResponse;
@@ -18,6 +18,7 @@ import com.dialog.thermometer.domain.Device;
 import com.dialog.thermometer.domain.DeviceRepository;
 import com.dialog.thermometer.domain.User;
 import com.dialog.thermometer.domain.UserRepository;
+import com.dialog.thermometer.security.AuditDetailWriter;
 import com.dialog.thermometer.security.CurrentUser;
 import com.dialog.thermometer.security.CurrentUserService;
 import com.dialog.thermometer.security.Role;
@@ -58,16 +59,18 @@ public class AdminController {
     private final AuditLogRepository auditLogs;
     private final CareNoteRepository careNotes;
     private final CurrentUserService currentUserService;
+    private final AuditDetailWriter auditDetail;
 
     public AdminController(UserRepository users, DeviceRepository devices, ConsentLinkRepository consentLinks,
                             AuditLogRepository auditLogs, CareNoteRepository careNotes,
-                            CurrentUserService currentUserService) {
+                            CurrentUserService currentUserService, AuditDetailWriter auditDetail) {
         this.users = users;
         this.devices = devices;
         this.consentLinks = consentLinks;
         this.auditLogs = auditLogs;
         this.careNotes = careNotes;
         this.currentUserService = currentUserService;
+        this.auditDetail = auditDetail;
     }
 
     /**
@@ -152,11 +155,11 @@ public class AdminController {
         user.setRole(newRole.dbValue());
         user.touch();
         users.save(user);
-        // audit_log.detail is JSONB — the value has to be valid JSON, not a
-        // bare "old->new" string, or the insert fails at flush time. Both
-        // values come from the role enum, so no escaping is needed.
+        // audit_log.detail is JSONB, so the value has to be valid JSON — built
+        // through AuditDetailWriter rather than string-formatted, which is the
+        // one habit that keeps a future non-enum value from breaking the insert.
         auditLogs.save(new AuditLog(me.id(), "admin.user.role_change", id,
-                "{\"from\":\"%s\",\"to\":\"%s\"}".formatted(oldRole, newRole.dbValue())));
+                auditDetail.of("from", oldRole, "to", newRole.dbValue())));
 
         return new AdminUserResponse(user.getId(), user.getUsername(), user.getEmail(), user.getRole(),
                 user.getDisplayName(), List.of(), 0);
@@ -249,7 +252,8 @@ public class AdminController {
     }
 
     @PatchMapping("/devices/{bdAddr}")
-    public ResponseEntity<DeviceResponse> editDevice(@PathVariable String bdAddr, @RequestBody EditDeviceRequest request,
+    public ResponseEntity<DeviceResponse> editDevice(@PathVariable String bdAddr,
+                                                      @Valid @RequestBody EditDeviceRequest request,
                                                       Authentication authentication) {
         CurrentUser me = requireAdmin(authentication);
         Device device = devices.findByBdAddr(bdAddr).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
@@ -273,11 +277,7 @@ public class AdminController {
     }
 
     private CurrentUser requireAdmin(Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.ADMIN) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "admin role required");
-        }
-        return me;
+        return currentUserService.resolveWithRole(authentication, "admin role required", Role.ADMIN);
     }
 
     private static Specification<AuditLog> auditLogFilter(String actorId, String action, String subject,

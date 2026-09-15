@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react';
 import { roleOf } from '../auth/oidc';
+import { closeLiveSession } from '../live/mqttClient';
 import { ThemeToggle } from './ui/ThemeToggle';
 import { cn } from './ui/cn';
 
@@ -48,7 +49,13 @@ export function NavBar() {
   const links = role ? LINKS_BY_ROLE[role] : [];
   const isCustomer = role === 'customer';
 
-  const isActive = (to: string) => location.pathname.startsWith(to);
+  /**
+   * Path-segment match, not a bare prefix (review FE-32): `startsWith('/history')`
+   * would also light up on a future `/history-export`. A trailing slash makes the
+   * boundary explicit, so `/admin` still matches every `/admin/*` sub-path — which
+   * is what keeps the admin console's deep links showing the right nav entry.
+   */
+  const isActive = (to: string) => location.pathname === to || location.pathname.startsWith(`${to}/`);
 
   return (
     <>
@@ -102,7 +109,13 @@ export function NavBar() {
           <ThemeToggle />
           <button
             type="button"
-            onClick={() => void auth.signoutRedirect()}
+            onClick={() => {
+              // Drop the broker session before leaving: its credential was
+              // minted for this user and must not outlive their sign-out
+              // (review FE-03).
+              closeLiveSession();
+              void auth.signoutRedirect();
+            }}
             className="h-touch rounded-md px-3 text-body font-semibold text-ink-secondary hover:bg-sand-50 dark:hover:bg-surface-2 focus-visible:outline-none focus-visible:shadow-focus"
           >
             Sign out

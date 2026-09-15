@@ -65,7 +65,7 @@ public class CareNoteController {
     @PostMapping
     public ResponseEntity<CareNoteResponse> create(@Valid @RequestBody CreateCareNoteRequest request,
                                                     Authentication authentication) {
-        CurrentUser me = requireDoctor(authentication);
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only doctors keep care notes", Role.DOCTOR);
         if (!consentLinks.existsByPatientUserIdAndDoctorUserIdAndRevokedAtIsNull(request.patientUserId(), me.id())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "no active consent from this patient");
         }
@@ -76,7 +76,7 @@ public class CareNoteController {
 
     @GetMapping
     public List<CareNoteResponse> list(@RequestParam String patientUserId, Authentication authentication) {
-        CurrentUser me = requireDoctor(authentication);
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only doctors keep care notes", Role.DOCTOR);
         String patientUsername = usernameOf(patientUserId);
         return careNotes.findByDoctorUserIdAndPatientUserIdOrderByCreatedAtDesc(me.id(), patientUserId).stream()
                 .map(note -> CareNoteResponse.from(note, me.username(), patientUsername))
@@ -86,7 +86,7 @@ public class CareNoteController {
     @PatchMapping("/{id}")
     public CareNoteResponse update(@PathVariable UUID id, @Valid @RequestBody UpdateCareNoteRequest request,
                                     Authentication authentication) {
-        CurrentUser me = requireDoctor(authentication);
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only doctors keep care notes", Role.DOCTOR);
         CareNote note = requireOwnNote(id, me);
         note.edit(request.note());
         return CareNoteResponse.from(careNotes.save(note), me.username(), usernameOf(note.getPatientUserId()));
@@ -94,17 +94,9 @@ public class CareNoteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable UUID id, Authentication authentication) {
-        CurrentUser me = requireDoctor(authentication);
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "only doctors keep care notes", Role.DOCTOR);
         careNotes.delete(requireOwnNote(id, me));
         return ResponseEntity.noContent().build();
-    }
-
-    private CurrentUser requireDoctor(Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.DOCTOR) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "only doctors keep care notes");
-        }
-        return me;
     }
 
     /** 404 rather than 403 for another doctor's note — a 403 would confirm it exists. */

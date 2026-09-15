@@ -17,7 +17,8 @@ import {
   TableRow,
 } from '../../components/ui/Table';
 import { relativeTime } from '../../utils/time';
-import { Segmented, StatTile, StatTileGrid } from './AdminUi';
+import { Segmented } from '../../components/ui/Segmented';
+import { StatTile, StatTileGrid } from '../../components/ui/StatTile';
 import { TARGET_STATUSES, progressVariant, rolloutProgress, rolloutStatusBadge, targetStatusBadge } from './rolloutProgress';
 
 type StatusFilter = 'all' | (typeof TARGET_STATUSES)[number];
@@ -108,10 +109,10 @@ export function AdminRolloutDetailPage() {
       )}
 
       <StatTileGrid className="lg:grid-cols-4">
-        <StatTile label="Targets" value={rollout.targetCount.toLocaleString()} />
-        <StatTile label="Installed" value={progress.installed.toLocaleString()} />
-        <StatTile label="Failed" value={progress.failed.toLocaleString()} />
-        <StatTile label="Pending" value={progress.pending.toLocaleString()} hint="Not yet reported" />
+        <StatTile size="lg" label="Targets" value={rollout.targetCount.toLocaleString()} />
+        <StatTile size="lg" label="Installed" value={progress.installed.toLocaleString()} />
+        <StatTile size="lg" label="Failed" value={progress.failed.toLocaleString()} />
+        <StatTile size="lg" label="Pending" value={progress.pending.toLocaleString()} hint="Not yet reported" />
       </StatTileGrid>
 
       <Card density="compact" header={<h2 className="text-h3 font-semibold text-ink-primary">Devices</h2>}>

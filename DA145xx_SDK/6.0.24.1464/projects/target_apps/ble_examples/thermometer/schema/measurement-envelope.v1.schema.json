@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://thermometer.local/schema/measurement-envelope.v1.schema.json",
+  "title": "Measurement envelope v1",
+  "description": "The one wire format every collector (web app, mobile app, Go gateway) publishes to v1/{tenant}/{user}/{device_id}/measurement/{type} and the backend re-publishes unchanged to live/{owner_user_id}/{device_id}/{type}. This file is the single source of truth: gateway/internal/envelope (Go), backend ingest/MeasurementEnvelope (Java) and fe/src/live/mqttClient.ts (TypeScript) each carry a test that validates their own encoder/decoder output against it. Change the format here first, then the three implementations and their tests.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["v", "device_id", "collector_id", "ts", "type", "payload"],
+  "properties": {
+    "v": {
+      "description": "Envelope version. Only 1 exists.",
+      "type": "integer",
+      "const": 1
+    },
+    "device_id": {
+      "description": "The device's Bluetooth device address as the collector saw it (devices.bd_addr, VARCHAR(17)).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 17
+    },
+    "collector_id": {
+      "description": "Free-form identifier of the collector that produced the reading (measurements.collector_id, VARCHAR(128)).",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "ts": {
+      "description": "Reading timestamp, RFC 3339 / ISO-8601 with offset (UTC 'Z' preferred).",
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\.\\d+)?(Z|[+-]\\d{2}:\\d{2})$"
+    },
+    "type": {
+      "description": "Measurement type. Registered types have a fixed payload shape (see allOf); unknown types are stored verbatim with no primary scalar.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32,
+      "pattern": "^[a-z][a-z0-9_]*$"
+    },
+    "payload": {
+      "description": "Typed measurement document; must not be empty.",
+      "type": "object",
+      "minProperties": 1
+    },
+    "meta": {
+      "description": "Optional collector-side context (battery, RSSI, firmware version...). Omitted, not null, when absent.",
+      "type": "object",
+      "properties": {
+        "battery_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+        "rssi_dbm": { "type": "number" },
+        "fw_version": { "type": "string", "maxLength": 32 }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "temperature" } } },
+      "then": {
+        "properties": {
+          "payload": {
+            "required": ["celsius"],
+            "properties": {
+              "celsius": { "type": "number", "minimum": -273.15, "maximum": 1000 }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "humidity" } } },
+      "then": {
+        "properties": {
+          "payload": {
+            "required": ["relative_humidity_pct"],
+            "properties": {
+              "relative_humidity_pct": { "type": "number", "minimum": 0, "maximum": 100 }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "battery" } } },
+      "then": {
+        "properties": {
+          "payload": {
+            "required": ["percent"],
+            "properties": {
+              "percent": { "type": "number", "minimum": 0, "maximum": 100 }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

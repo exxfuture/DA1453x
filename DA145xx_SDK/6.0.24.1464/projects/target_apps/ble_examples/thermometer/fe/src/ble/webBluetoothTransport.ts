@@ -23,6 +23,16 @@ const TEMP_MEASUREMENT_UUID = 'temperature_measurement'; // 0x2A1C
 export class WebBluetoothTransport implements BleTransport {
   private device: BluetoothDevice | null = null;
   private server: BluetoothRemoteGATTServer | null = null;
+  /**
+   * Held so `disconnect()` can detach the notification listener (review FE-06).
+   *
+   * Browsers cache `BluetoothRemoteGATTCharacteristic` objects per device, and
+   * every reconnect in one page session creates a NEW transport instance — so a
+   * listener left attached here stays attached to the cached characteristic and
+   * keeps firing on the dead instance. One hardware notification then fans out
+   * to every instance ever created, duplicating MQTT publishes and REST uploads.
+   */
+  private characteristic: BluetoothRemoteGATTCharacteristic | null = null;
   private temperatureCallback: ((celsius: number, ts: Date) => void) | null = null;
   private disconnectedCallback: (() => void) | null = null;
   private rawCelsiusMode = false;
@@ -57,19 +67,29 @@ export class WebBluetoothTransport implements BleTransport {
 
     this.server = await this.device.gatt!.connect();
     const service = await this.server.getPrimaryService(HT_SERVICE_UUID);
-    const characteristic = await service.getCharacteristic(TEMP_MEASUREMENT_UUID);
+    this.characteristic = await service.getCharacteristic(TEMP_MEASUREMENT_UUID);
 
-    characteristic.addEventListener('characteristicvaluechanged', this.handleValueChanged);
-    await characteristic.startNotifications();
+    this.characteristic.addEventListener('characteristicvaluechanged', this.handleValueChanged);
+    await this.characteristic.startNotifications();
 
     return { id: this.device.id, name: this.device.name ?? 'DLG_THRM' };
   }
 
   disconnect(): void {
-    if (this.server?.connected) {
-      this.server.disconnect(); // triggers 'gattserverdisconnected' -> handleGattDisconnected
-    }
+    // Both listeners come off, in the order that leaves nothing dangling if a
+    // step throws: the characteristic's first (see the field's comment for why
+    // a leaked one duplicates every reading), then the device's, then the GATT
+    // link itself.
+    this.characteristic?.removeEventListener('characteristicvaluechanged', this.handleValueChanged);
+    this.characteristic = null;
+
     this.device?.removeEventListener('gattserverdisconnected', this.handleGattDisconnected);
+    if (this.server?.connected) {
+      // The listener is already off, so this no longer calls back into
+      // handleGattDisconnected — an explicit disconnect is not an "unexpected
+      // disconnect" and the caller does its own teardown.
+      this.server.disconnect();
+    }
     this.device = null;
     this.server = null;
   }

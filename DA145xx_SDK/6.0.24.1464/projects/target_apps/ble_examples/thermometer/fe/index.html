@@ -7,6 +7,14 @@
     <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)" />
     <meta name="theme-color" content="#121412" media="(prefers-color-scheme: dark)" />
     <title>Thermometer</title>
+    <!--
+      Runtime configuration (review INF-17). An EXTERNAL script, never inline,
+      so the served CSP can stay `script-src 'self'` with no nonce or hash:
+      the nginx entrypoint rewrites this file's contents at container start
+      from API_BASE_URL / MQTT_WS_URL / KEYCLOAK_URL. Must load before the
+      bundle — see src/config/env.ts.
+    -->
+    <script src="/env.js"></script>
   </head>
   <body>
     <div id="root"></div>

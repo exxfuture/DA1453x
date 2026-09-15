@@ -39,7 +39,7 @@ export interface ChartColors {
 }
 
 /** Exported for the print/report chart, which is always drawn on paper white
- *  regardless of the app theme (see pages/PatientReportPage.tsx). */
+ *  regardless of the app theme (see pages/doctor/PatientReportPage.tsx). */
 export const LIGHT_CHART_COLORS: ChartColors = {
   line: '#1F7A6A', // primary-600
   grid: '#DEDACD', // sand-200
@@ -76,6 +76,19 @@ const DARK_CHART_COLORS: ChartColors = {
   seriesPalette: ['#199E70', '#3987E5', '#D95926', '#9085E9', '#D55181', '#C98500'],
   noteMarker: '#ED6F1F', // ember-500
 };
+
+/**
+ * How many series may be overlaid on one chart, derived from the palette rather
+ * than restated as a literal.
+ *
+ * The cap is the palette: `seriesPalette` has six fixed validated slots and is
+ * never cycled, so a seventh series would have to repeat a colour. One below
+ * that keeps a legend readable, which is the practical limit anyway. Both
+ * overlay call sites — the customer's multi-device compare and the doctor's
+ * multi-patient compare — used to declare their own `5` under two different
+ * names (review FE-30).
+ */
+export const MAX_OVERLAY_SERIES = LIGHT_CHART_COLORS.seriesPalette.length - 1;
 
 export function useChartColors(): ChartColors {
   const theme = useThemeStore((s) => s.theme);

@@ -53,13 +53,18 @@ describe('groupByPatient', () => {
 });
 
 describe('durationText', () => {
-  it('reports short episodes in minutes and longer ones in hours', () => {
+  // Now the shared utils/time#formatDuration convention (review FE-25), so the
+  // doctor's feed and the customer's history word the same episode identically:
+  // "1 h 30 min", not "1.5 h" on one page and "1 h 30 min" on the other.
+  it('reports short episodes in minutes and longer ones in hours + minutes', () => {
     expect(durationText(0, 45 * 60_000)).toBe('45 min');
-    expect(durationText(0, 90 * 60_000)).toBe('1.5 h');
+    expect(durationText(0, 90 * 60_000)).toBe('1 h 30 min');
+    expect(durationText(0, 120 * 60_000)).toBe('2 h');
   });
 
   it('never reports a negative duration', () => {
-    expect(durationText(60_000, 0)).toBe('0 min');
+    // Clamped to zero, which the formatter's 1-minute floor renders as "1 min".
+    expect(durationText(60_000, 0)).toBe('1 min');
   });
 });
 

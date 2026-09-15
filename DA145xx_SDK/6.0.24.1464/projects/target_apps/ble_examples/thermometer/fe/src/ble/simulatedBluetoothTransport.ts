@@ -24,7 +24,10 @@ export class SimulatedBluetoothTransport implements BleTransport {
     return true;
   }
 
-  async requestDevice(): Promise<ConnectedDevice> {
+  // Declared as returning a promise rather than `async`: there is genuinely
+  // nothing to await here (no pairing dialog, no GATT handshake), and the
+  // BleTransport interface is async because the *real* transports are.
+  requestDevice(): Promise<ConnectedDevice> {
     // Shaped like a real BD address — unlike genuine Web Bluetooth (see the
     // note in webBluetoothTransport.ts), this simulator stands in for a
     // device reached the way a gateway or the mobile native plugin would,
@@ -40,7 +43,7 @@ export class SimulatedBluetoothTransport implements BleTransport {
     // so the UI isn't sitting on "waiting for a reading…" for no reason.
     setTimeout(() => this.temperatureCallback?.(this.nextReading(), new Date()), 50);
 
-    return { id, name: 'DLG_THRM (simulated)' };
+    return Promise.resolve({ id, name: 'DLG_THRM (simulated)' });
   }
 
   disconnect(): void {

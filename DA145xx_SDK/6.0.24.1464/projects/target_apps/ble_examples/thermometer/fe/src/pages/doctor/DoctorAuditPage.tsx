@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import { AlertTriangle, History, KeyRound, ShieldCheck, ShieldOff, SlidersHorizontal } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { AuditLogResponse } from '../api/client';
-import { useDoctorAuditLog, useDoctorPatients, useMe } from '../api/queries';
-import { Alert } from '../components/ui/Alert';
-import { Card } from '../components/ui/Card';
-import { ErrorState, SkeletonBlock } from '../components/ui/EmptyState';
-import { Pagination } from '../components/ui/Pagination';
-import { Timeline, TimelineItem } from '../components/ui/Timeline';
+import { AuditLogResponse } from '../../api/client';
+import { useDoctorAuditLog, useDoctorPatients, useMe } from '../../api/queries';
+import { Alert } from '../../components/ui/Alert';
+import { Card } from '../../components/ui/Card';
+import { ErrorState, SkeletonBlock } from '../../components/ui/EmptyState';
+import { Pagination } from '../../components/ui/Pagination';
+import { Timeline, TimelineItem } from '../../components/ui/Timeline';
 
 const PAGE_SIZE = 25;
 

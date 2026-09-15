@@ -1,33 +1,65 @@
 # One-command local stack for the whole platform (architecture v3). See
-# README.md "Quick start". All ports below are host-side; change the left
-# side of any "host:container" mapping if something else on your machine
-# already uses it.
+# README.md "Quick start".
+#
+# Posture: this is the LAPTOP profile. Every host port is bound to 127.0.0.1
+# (nothing is reachable from the LAN), every credential has a development
+# default that can be overridden from a .env file (see .env.example), the
+# broker requires authentication (no anonymous MQTT anywhere), and all
+# images are pinned. It is still plain HTTP: for anything reachable beyond
+# localhost layer docker-compose.prod.yml on top —
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+# — which drops the host port mappings, requires real secrets, and puts a
+# TLS-terminating Caddy in front (deploy/caddy/Caddyfile).
 name: thermometer
 
 services:
   # --- Infra --------------------------------------------------------------
 
   mosquitto:
-    image: eclipse-mosquitto:2
+    # 2.1.2 — pinned by digest because eclipse-mosquitto publishes no
+    # per-patch tags for the 2.1 line.
+    image: eclipse-mosquitto:2@sha256:6f8d8a947c506f8a2290ec65cd4bd2bc7cb4d43fb5f6271f861cb013e2ef9797
+    environment:
+      MQTT_ADMIN_USERNAME: ${MQTT_ADMIN_USERNAME:-admin}
+      MQTT_ADMIN_PASSWORD: ${MQTT_ADMIN_PASSWORD:-mqtt-admin-dev}
+    # First start: create the dynamic-security database with the admin client
+    # the backend connects as (deploy/mosquitto/mosquitto.conf). It lives on
+    # the mosquitto_data volume, so a changed MQTT_ADMIN_* only takes effect
+    # after `docker compose down -v` (or a manual mosquitto_ctrl edit).
+    command:
+      - /bin/sh
+      - -c
+      - |
+        set -e
+        if [ ! -f /mosquitto/data/dynamic-security.json ]; then
+          mosquitto_ctrl dynsec init /mosquitto/data/dynamic-security.json "$$MQTT_ADMIN_USERNAME" "$$MQTT_ADMIN_PASSWORD"
+          chown 1883:1883 /mosquitto/data/dynamic-security.json
+        fi
+        exec mosquitto -c /mosquitto/config/mosquitto.conf
     ports:
-      - "1883:1883" # MQTT
-      - "9001:9001" # MQTT over WebSocket (browsers subscribe here directly — v3 §7)
+      - "127.0.0.1:1883:1883" # MQTT — for a host-run backend (mvn spring-boot:run) and mosquitto_pub
+      - "127.0.0.1:9001:9001" # MQTT over WebSocket — browsers subscribe here directly (v3 §7), with backend-minted credentials
     volumes:
       - ./deploy/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - mosquitto_data:/mosquitto/data
+    healthcheck:
+      test: ["CMD-SHELL", "mosquitto_sub -h localhost -p 1883 -u \"$$MQTT_ADMIN_USERNAME\" -P \"$$MQTT_ADMIN_PASSWORD\" -t '$$SYS/broker/uptime' -C 1 -W 3 >/dev/null"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   postgres:
-    image: timescale/timescaledb:latest-pg16
+    image: timescale/timescaledb:2.28.3-pg16
     environment:
       POSTGRES_DB: thermometer
       POSTGRES_USER: thermometer
-      POSTGRES_PASSWORD: thermometer
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-thermometer}
     ports:
       # Published on 5433 because 5432 is commonly taken on dev machines by a
-      # locally-running Postgres; the backend always reaches this service over
-      # the compose network (db:5432), so only direct host-side psql access
-      # uses the mapped port.
-      - "5433:5432"
+      # locally-running Postgres; the backend container reaches this service
+      # over the compose network (postgres:5432). A host-run backend uses the
+      # `local` Spring profile, which points at localhost:5433 to match.
+      - "127.0.0.1:5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -37,11 +69,11 @@ services:
       retries: 10
 
   keycloak:
-    image: quay.io/keycloak/keycloak:26.0
+    image: quay.io/keycloak/keycloak:26.0.8
     command: start-dev --import-realm
     environment:
-      KC_BOOTSTRAP_ADMIN_USERNAME: admin
-      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME:-admin}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD:-admin}
       # Fixes every URL Keycloak generates about itself — login form actions,
       # redirects, password-reset email links, the token `iss` claim — to
       # this one hostname, regardless of which internal path a request
@@ -57,6 +89,8 @@ services:
       KC_HOSTNAME: localhost
       KC_HOSTNAME_PORT: "8082"
       KC_HOSTNAME_STRICT_HTTPS: "false"
+      # /health/* on the management port (9000) for the healthcheck below.
+      KC_HEALTH_ENABLED: "true"
       # Custom "thermometer" login theme (./deploy/keycloak/themes) reloads
       # from disk on every request instead of once at boot — dev-only, so
       # editing login.css and refreshing the browser is enough to see the
@@ -67,31 +101,49 @@ services:
       - ./deploy/keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json:ro
       - ./deploy/keycloak/themes/thermometer:/opt/keycloak/themes/thermometer:ro
     ports:
-      - "8082:8080" # admin console: http://localhost:8082 (admin/admin)
+      - "127.0.0.1:8082:8080" # admin console: http://localhost:8082 (KC_BOOTSTRAP_ADMIN_*)
     depends_on:
-      - mailpit
+      mailpit:
+        condition: service_healthy
+    healthcheck:
+      # The Keycloak image ships no curl/wget; bash's /dev/tcp does the job.
+      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/9000 && printf 'GET /health/ready HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n' >&3 && grep -q '\"status\": \"UP\"' <&3"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
 
   # Local SMTP catcher — Keycloak's realm (realm-export.json's smtpServer
   # block) sends real "forgot password"/verification emails here instead of
   # to the void, so that standard flow is genuinely testable locally: view
   # what was "sent" at http://localhost:8025.
   mailpit:
-    image: axllent/mailpit:latest
+    image: axllent/mailpit:v1.31.1
     ports:
-      - "8025:8025" # web UI
-      - "1025:1025" # SMTP
+      - "127.0.0.1:8025:8025" # web UI
+      - "127.0.0.1:1025:1025" # SMTP
+    healthcheck:
+      test: ["CMD", "/mailpit", "readyz"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   minio:
-    image: minio/minio:latest
+    image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: thermometer
-      MINIO_ROOT_PASSWORD: thermometer123
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-thermometer}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-thermometer123}
     ports:
-      - "9000:9000"   # S3 API
-      - "9091:9001"   # console: http://localhost:9091
+      - "127.0.0.1:9000:9000" # S3 API
+      - "127.0.0.1:9091:9001" # console: http://localhost:9091
     volumes:
       - minio_data:/data
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   # --- Platform -------------------------------------------------------------
 
@@ -99,31 +151,51 @@ services:
     build: ./backend
     environment:
       SPRING_PROFILES_ACTIVE: docker
+      # Broker identities — see backend/README.md "MQTT broker identities".
+      THERMOMETER_MQTT_BROKER_URL: tcp://mosquitto:1883
+      THERMOMETER_MQTT_USERNAME: ${MQTT_ADMIN_USERNAME:-admin}
+      THERMOMETER_MQTT_PASSWORD: ${MQTT_ADMIN_PASSWORD:-mqtt-admin-dev}
+      THERMOMETER_MQTT_COLLECTOR_PASSWORD: ${MQTT_COLLECTOR_PASSWORD:-collector-dev}
+      THERMOMETER_MQTT_USER_CREDENTIAL_TTL: ${MQTT_USER_CREDENTIAL_TTL:-PT24H}
+      THERMOMETER_DEVICE_COLLECTOR_TOKEN: ${THERMOMETER_DEVICE_COLLECTOR_TOKEN:-dev-collector-token}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-thermometer}
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
     depends_on:
       postgres:
         condition: service_healthy
       mosquitto:
-        condition: service_started
+        condition: service_healthy
       keycloak:
-        condition: service_started
-    # A cold dev-mode Keycloak boot can still race other backend startup
-    # concerns; restarting converges without needing a full Keycloak
-    # healthcheck (see backend/README.md).
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fs http://127.0.0.1:8080/actuator/health >/dev/null || wget -qO- http://127.0.0.1:8080/actuator/health >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
     restart: on-failure
 
   fe:
-    build:
-      context: ./fe
-      args:
-        VITE_API_BASE_URL: http://localhost:8080
-        VITE_MQTT_WS_URL: ws://localhost:9001
-        VITE_KEYCLOAK_URL: http://localhost:8082
+    build: ./fe
+    # Runtime configuration (fe/README.md "Runtime configuration"): the
+    # nginx entrypoint renders these into /env.js and into the CSP
+    # connect-src, so one image serves any environment. They are the URLs
+    # the *browser* calls, hence host-side addresses.
+    environment:
+      API_BASE_URL: http://localhost:8080
+      MQTT_WS_URL: ws://localhost:9001
+      KEYCLOAK_URL: http://localhost:8082
     ports:
-      - "8090:80"
+      - "127.0.0.1:8090:8080" # nginx runs unprivileged on 8080 inside the container
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:8080/health >/dev/null"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
 
   # --- Optional: a fleet of "devices" with no physical hardware needed -----
   # Four simulated devices so the claim flow (one device per customer,
@@ -132,33 +204,43 @@ services:
   # devices table on its first reading (MeasurementIngestService), so all
   # four show up in GET /api/devices/available within a few seconds of
   # `docker compose up`, no manual seeding needed.
+  #
+  # They authenticate to the broker as the `collector` client, which the
+  # backend provisions on its first successful broker connection — hence the
+  # dependency on a healthy backend rather than just on Mosquitto.
 
   gateway-1:
     build: ./gateway
     command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:01", "--collector-id", "gateway-01", "--interval", "5s"]
-    depends_on:
-      - mosquitto
+    environment: &gateway-env
+      GATEWAY_MQTT_USERNAME: collector
+      GATEWAY_MQTT_PASSWORD: ${MQTT_COLLECTOR_PASSWORD:-collector-dev}
+    depends_on: &gateway-deps
+      mosquitto:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
     restart: unless-stopped
 
   gateway-2:
     build: ./gateway
     command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:02", "--collector-id", "gateway-02", "--interval", "5s"]
-    depends_on:
-      - mosquitto
+    environment: *gateway-env
+    depends_on: *gateway-deps
     restart: unless-stopped
 
   gateway-3:
     build: ./gateway
     command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:03", "--collector-id", "gateway-03", "--interval", "5s"]
-    depends_on:
-      - mosquitto
+    environment: *gateway-env
+    depends_on: *gateway-deps
     restart: unless-stopped
 
   gateway-4:
     build: ./gateway
     command: ["--broker-url", "tcp://mosquitto:1883", "--device-id", "AA:BB:CC:DD:EE:04", "--collector-id", "gateway-04", "--interval", "5s"]
-    depends_on:
-      - mosquitto
+    environment: *gateway-env
+    depends_on: *gateway-deps
     restart: unless-stopped
 
 volumes:

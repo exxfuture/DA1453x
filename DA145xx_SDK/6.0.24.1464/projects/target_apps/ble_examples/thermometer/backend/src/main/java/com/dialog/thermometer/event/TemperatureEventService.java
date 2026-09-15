@@ -41,9 +41,14 @@ public class TemperatureEventService {
      */
     private static final int MAX_READINGS = 20_000;
 
-    /** Ranks matching AlertThresholdService.tierOf's five tier names. */
-    private static final List<String> TIER_ORDER = List.of("low", "normal", "elevated", "fever", "highFever");
-    private static final int ELEVATED_RANK = TIER_ORDER.indexOf("elevated");
+    /**
+     * The severity an episode starts at. Ranked through
+     * {@link AlertThresholdService#tierRank} rather than against a local copy of
+     * the tier list: a second copy compiles and passes its tests after a tier is
+     * renamed on one side only, silently desynchronising episode detection from
+     * threshold resolution.
+     */
+    private static final int ELEVATED_RANK = AlertThresholdService.tierRank("elevated");
 
     private final JdbcTemplate jdbcTemplate;
     private final AlertThresholdService alertThresholds;
@@ -130,7 +135,7 @@ public class TemperatureEventService {
 
         for (Reading reading : readings) {
             String tier = alertThresholds.tierOf(reading.celsius(), thresholds);
-            if (TIER_ORDER.indexOf(tier) < ELEVATED_RANK) {
+            if (AlertThresholdService.tierRank(tier) < ELEVATED_RANK) {
                 if (current != null) {
                     events.add(current.toEvent(bdAddr));
                     current = null;
@@ -172,7 +177,7 @@ public class TemperatureEventService {
             if (reading.celsius() > peakCelsius) {
                 peakCelsius = reading.celsius();
             }
-            if (TIER_ORDER.indexOf(tier) > TIER_ORDER.indexOf(worstTier)) {
+            if (AlertThresholdService.tierRank(tier) > AlertThresholdService.tierRank(worstTier)) {
                 worstTier = tier;
             }
         }

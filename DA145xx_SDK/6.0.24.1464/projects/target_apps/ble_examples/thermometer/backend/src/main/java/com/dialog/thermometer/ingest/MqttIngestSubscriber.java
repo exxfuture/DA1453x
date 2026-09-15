@@ -17,6 +17,15 @@ import org.springframework.stereotype.Component;
  * persistent (non-clean) session redelivers it after reconnect — the same
  * at-least-once guarantee a durable log would provide, with one fewer
  * service to run.
+ *
+ * <p>The broker requires credentials and enforces per-identity publish ACLs
+ * (dynamic-security — see {@code live/BrokerCredentialService}), so the topic a
+ * message arrived on carries authorization information: the subscription filter
+ * keeps the topic's user segment, and
+ * {@link MeasurementIngestService#ingestFromTopic} decides from it whether this
+ * is a trusted collector or a browser user who may only write their own
+ * device's readings. This subscriber therefore passes the topic on rather than
+ * only the decoded envelope.
  */
 @Component
 public class MqttIngestSubscriber {
@@ -38,7 +47,7 @@ public class MqttIngestSubscriber {
     public void start() {
         mqttGateway.subscribe(TOPIC_FILTER, 1, (topic, message) -> {
             MeasurementEnvelope envelope = objectMapper.readValue(message.getPayload(), MeasurementEnvelope.class);
-            boolean inserted = ingestService.ingest(envelope);
+            boolean inserted = ingestService.ingestFromTopic(topic, envelope);
             log.debug("Ingested from topic {} device={} type={} inserted={}",
                     topic, envelope.deviceId(), envelope.type(), inserted);
         });

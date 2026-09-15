@@ -14,6 +14,32 @@
  *            bits[23: 0] = signed mantissa (int24)
  */
 
+/**
+ * Mantissa values IEEE-11073-20601 §A.1 reserves for "this is not a
+ * measurement" (review FE-04). They are ordinary-looking 24-bit patterns, so
+ * without this check a sensor fault decodes to a plausible finite temperature —
+ * 0x7FFFFF at exponent -2 comes out as 83886.07 °C, which nothing downstream
+ * filters (`trendInsight.ts` only drops non-finite values) and which would then
+ * render as "High Fever", stretch the chart's Y domain and skew trend averages.
+ *
+ * Detected BEFORE the two's-complement conversion, since that is what turns
+ * 0x800000 and 0x800002 into negative numbers indistinguishable from real
+ * sub-zero readings.
+ */
+const RESERVED_MANTISSAS = new Set([
+  0x7fffff, // NaN — value could not be represented
+  0x800000, // NRes — not at this resolution
+  0x7ffffe, // +INFINITY — above the sensor's range
+  0x800002, // -INFINITY — below the sensor's range
+]);
+
+/**
+ * Returns the temperature in °C, or `null` when the value cannot be read as a
+ * measurement: a short buffer, or one of the reserved sentinels above. `null`
+ * is the established "no reading" contract here — every caller
+ * (webBluetoothTransport, nativeBluetoothTransport, the simulator's tests)
+ * already drops it rather than publishing.
+ */
 export function decodeHtpTemperature(value: DataView, rawCelsiusMode: boolean): number | null {
   if (!value || value.byteLength < 5) {
     return null;
@@ -23,6 +49,9 @@ export function decodeHtpTemperature(value: DataView, rawCelsiusMode: boolean): 
 
   // Decode signed 24-bit mantissa from the lower 3 bytes
   const mantRaw = rawFloat & 0x00ffffff;
+  if (RESERVED_MANTISSAS.has(mantRaw)) {
+    return null;
+  }
   const mantissa = mantRaw >= 0x800000 ? mantRaw - 0x1000000 : mantRaw;
 
   if (rawCelsiusMode) {

@@ -11,19 +11,21 @@ import {
   Users,
   WifiOff,
 } from 'lucide-react';
-import { PatientSummaryResponse } from '../api/client';
-import { useDoctorPatientsSummary, useMe } from '../api/queries';
-import { Badge, TemperatureBadge } from '../components/ui/Badge';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { EmptyState, SkeletonBlock } from '../components/ui/EmptyState';
-import { Input } from '../components/ui/Input';
-import { computeTrend, RiskBadge, RISK_RANK, TrendArrow } from '../components/PatientTriage';
-import { Sparkline } from '../components/Sparkline';
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableHeadRow, TableRow } from '../components/ui/Table';
-import { getTemperatureTier, TemperatureTier } from '../theme/temperature';
-import { formatTemperature, formatTemperatureDelta } from '../utils/temperatureFormat';
-import { relativeTime } from '../utils/time';
+import { PatientSummaryResponse, TemperatureUnit } from '../../api/client';
+import { useDoctorPatientsSummary, useMe } from '../../api/queries';
+import { Badge, TemperatureBadge } from '../../components/ui/Badge';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { EmptyState, SkeletonBlock } from '../../components/ui/EmptyState';
+import { Input } from '../../components/ui/Input';
+import { Select } from '../../components/ui/Select';
+import { StatTile } from '../../components/ui/StatTile';
+import { computeTrend, RiskBadge, RISK_RANK, TrendArrow } from '../../components/PatientTriage';
+import { Sparkline } from '../../components/Sparkline';
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableHeadRow, TableRow } from '../../components/ui/Table';
+import { getTemperatureTier, TemperatureTier } from '../../theme/temperature';
+import { formatTemperature, formatTemperatureDelta } from '../../utils/temperatureFormat';
+import { relativeTime } from '../../utils/time';
 
 const RANGES = [
   { label: '1h', hours: 1 },
@@ -48,6 +50,22 @@ function displayName(patient: { patientUsername: string | null; patientUserId: s
   return patient.patientUsername ?? patient.patientUserId;
 }
 
+/**
+ * Text equivalent of a patient's sparkline (review FE-18).
+ *
+ * The trend line is a primary at-a-glance clinical signal on this table, and an
+ * aria-hidden SVG in a bare cell made it invisible to a screen reader. The shape
+ * of a line can't be spoken, so this gives what the shape is read *for*: the
+ * range it covers and how many readings it is drawn from.
+ */
+function sparklineSummary(patient: PatientSummaryResponse, unit: TemperatureUnit, rangeLabel: string): string {
+  if (patient.sparkline.length < 2) return 'Trend: not enough readings to plot.';
+  const values = patient.sparkline.map((point) => point.celsius);
+  const low = formatTemperature(Math.min(...values), unit);
+  const high = formatTemperature(Math.max(...values), unit);
+  return `Trend over ${rangeLabel}: ranged from ${low} to ${high} across ${patient.sparkline.length} readings.`;
+}
+
 export function DoctorDashboardPage() {
   const [rangeHours, setRangeHours] = useState(24);
   const [search, setSearch] = useState('');
@@ -58,7 +76,10 @@ export function DoctorDashboardPage() {
   const meQuery = useMe();
   const unit = meQuery.data?.temperatureUnit ?? 'CELSIUS';
 
-  const patients = summaryQuery.data ?? [];
+  // Memoised so it is the same array identity between renders: several
+  // useMemo/useEffect hooks below depend on it, and `?? []` would hand them a
+  // fresh empty array on every render (react-hooks/exhaustive-deps, review FE-08).
+  const patients = useMemo(() => summaryQuery.data ?? [], [summaryQuery.data]);
 
   const stats = useMemo(() => {
     const withDevice = patients.filter((p) => p.deviceBdAddr != null);
@@ -247,9 +268,9 @@ export function DoctorDashboardPage() {
                   </Button>
                 ))}
               </div>
-              <select
+              <Select
                 aria-label="Sort by"
-                className="h-9 rounded-md border border-sand-500 bg-surface-1 px-2 text-body text-ink-primary dark:border-sand-600 focus-visible:outline-none focus-visible:border-primary-600 focus-visible:shadow-focus"
+                size="sm"
                 value={sortKey}
                 onChange={(e) => setSortKey(e.target.value as SortKey)}
               >
@@ -257,7 +278,7 @@ export function DoctorDashboardPage() {
                 <option value="sick">Sort: Most sick</option>
                 <option value="recent">Sort: Most recent</option>
                 <option value="name">Sort: Name</option>
-              </select>
+              </Select>
             </div>
           </Card>
 
@@ -311,7 +332,10 @@ export function DoctorDashboardPage() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <Sparkline points={p.sparkline} />
+                          {/* The SVG itself is aria-hidden (decorative), so the
+                              cell carries the same information as text for
+                              screen readers — review FE-18. */}
+                          <Sparkline points={p.sparkline} label={sparklineSummary(p, unit, rangeLabel)} />
                         </TableCell>
                         <TableCell mono muted>
                           {formatTemperature(p.avgCelsius, unit)} / {formatTemperature(p.minCelsius, unit)} /{' '}
@@ -392,32 +416,5 @@ export function DoctorDashboardPage() {
         </>
       )}
     </div>
-  );
-}
-
-function StatTile({
-  icon: Icon,
-  label,
-  value,
-  hint,
-  tone,
-}: {
-  icon: typeof Users;
-  label: string;
-  value: string;
-  hint?: string;
-  tone?: 'danger';
-}) {
-  return (
-    <Card density="compact" className={tone === 'danger' ? 'border border-danger-border' : undefined}>
-      <div className="flex items-center gap-2 text-ink-muted">
-        <Icon className={`size-4 ${tone === 'danger' ? 'text-danger-text' : ''}`} aria-hidden />
-        <span className="text-label uppercase tracking-wide">{label}</span>
-      </div>
-      <div className={`mt-1 font-tabular text-h2 font-semibold ${tone === 'danger' ? 'text-danger-text' : 'text-ink-primary'}`}>
-        {value}
-      </div>
-      {hint && <div className="mt-0.5 text-caption text-ink-muted">{hint}</div>}
-    </Card>
   );
 }

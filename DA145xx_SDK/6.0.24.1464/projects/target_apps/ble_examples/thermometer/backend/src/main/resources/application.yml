@@ -25,6 +25,32 @@ server:
     include-message: always
 
 thermometer:
+  mqtt:
+    # Broker credentials. Mosquitto runs with the dynamic-security plugin and
+    # `allow_anonymous false` (deploy/mosquitto/mosquitto.conf), so nothing
+    # connects anonymously any more — on either 1883 or the 9001 WebSocket
+    # listener. This service connects as the plugin's *admin* client and is the
+    # single provisioning authority for every other broker identity (see
+    # live/BrokerCredentialService):
+    #   - role+client `collector` for gateways (collector-password below),
+    #   - one short-lived role+client per browser user, minted through
+    #     POST /api/live/credentials and swept after user-credential-ttl.
+    # The defaults are development placeholders matching ../docker-compose.yml;
+    # override all three in any deployment reachable beyond localhost.
+    username: ${THERMOMETER_MQTT_USERNAME:admin}
+    password: ${THERMOMETER_MQTT_PASSWORD:mqtt-admin-dev}
+    collector-password: ${THERMOMETER_MQTT_COLLECTOR_PASSWORD:collector-dev}
+    # How long a minted browser credential stays valid: the sweep deletes user
+    # clients that haven't been re-minted within this window, and the mint
+    # response's `expiresAt` is now + this. ISO-8601 duration.
+    user-credential-ttl: ${THERMOMETER_MQTT_USER_CREDENTIAL_TTL:PT24H}
+  oidc:
+    # The OAuth2 client every accepted token must have been issued to. Checked
+    # against the token's `azp` (falling back to `aud`) on top of the standard
+    # issuer/expiry validation, so a token minted by the same realm for a
+    # *different* client is rejected here — see SecurityConfig.jwtDecoder.
+    # Blank disables the check. jwk-set-uri/issuer-uri are docker-profile only.
+    client-id: ${THERMOMETER_OIDC_CLIENT_ID:thermometer-web}
   device:
     # Shared secret every collector/gateway must send as `X-Device-Token` on
     # the two OTA endpoints that have no user identity behind them

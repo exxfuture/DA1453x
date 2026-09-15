@@ -46,6 +46,20 @@
 /// Consecutive fully-failed cycles before SCL bus recovery (multiple of the above)
 #define AHT20_FAILS_BEFORE_BUS_RECOVERY 10
 
+/*
+ * Compile-time guards for the tuning constants above.  aggregate_samples_i16()
+ * (codec.h) only knows median-of-3 / mean-of-2 / single, so more than three
+ * samples per cycle would silently discard the extra ones; and the recovery
+ * ladder (recovery_action(), codec.h) only fires at the documented cadence
+ * when the bus-recovery threshold is a multiple of the soft-reset one.
+ */
+_Static_assert(TEMP_SAMPLES_PER_MEASUREMENT >= 1 && TEMP_SAMPLES_PER_MEASUREMENT <= 3,
+               "TEMP_SAMPLES_PER_MEASUREMENT must be 1..3 (aggregate_samples_i16 supports no more)");
+_Static_assert(AHT20_FAILS_BEFORE_SOFT_RESET > 0,
+               "AHT20_FAILS_BEFORE_SOFT_RESET must be > 0");
+_Static_assert(AHT20_FAILS_BEFORE_BUS_RECOVERY % AHT20_FAILS_BEFORE_SOFT_RESET == 0,
+               "AHT20_FAILS_BEFORE_BUS_RECOVERY must be a multiple of AHT20_FAILS_BEFORE_SOFT_RESET");
+
 /**
  * BLE transmit power level (rf_tx_pwr_lvl_t, applied in periph_init).
  * RF_TX_PWR_LVL_0d0 = 0 dBm — ample for bedside range and cheaper than the

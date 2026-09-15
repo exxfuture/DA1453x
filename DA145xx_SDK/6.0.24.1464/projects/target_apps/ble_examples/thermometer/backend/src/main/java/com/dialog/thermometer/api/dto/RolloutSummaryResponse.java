@@ -10,11 +10,13 @@ import java.util.UUID;
  * A rollout plus its per-status target tallies, for the admin list.
  *
  * <p>{@code statusCounts} is keyed by the raw status strings
- * rollout_targets uses ({@code pending}/{@code installed}/{@code failed}) and
- * only contains statuses that actually occur — a rollout nobody has reported
- * on yet has an empty map, not three zeroes. Counts come from one grouped
- * query for the whole page (RolloutTargetRepository.countByStatusForRollouts),
- * never one query per row.
+ * rollout_targets uses — exactly {@code pending}, {@code success} and
+ * {@code failed}, the vocabulary {@code RolloutStatusRequest} validates (there
+ * is no {@code installed} key; nothing has ever written that value) — and only
+ * contains statuses that actually occur: a rollout nobody has reported on yet
+ * has an empty map, not three zeroes. Clients must therefore treat a missing key
+ * as zero. Counts come from one grouped query for the whole page
+ * (RolloutTargetRepository.countByStatusForRollouts), never one query per row.
  */
 public record RolloutSummaryResponse(
         UUID id,

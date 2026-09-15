@@ -106,4 +106,14 @@ void i2c_temp_sensor_read(i2c_temp_read_cb_t cb);
  */
 void i2c_temp_sensor_soft_reset(void);
 
+/**
+ * @brief Whether an async transaction started by this driver is still in
+ *        flight (its completion callback has not fired yet).
+ *
+ * set_pad_functions() consults this so the hibernation-wake boilerplate
+ * (periph_init() from the button ISR) never reconfigures the SCL/SDA pads
+ * underneath a running transfer.  Safe to call from any context.
+ */
+bool i2c_temp_sensor_busy(void);
+
 #endif // _I2C_TEMP_SENSOR_H_

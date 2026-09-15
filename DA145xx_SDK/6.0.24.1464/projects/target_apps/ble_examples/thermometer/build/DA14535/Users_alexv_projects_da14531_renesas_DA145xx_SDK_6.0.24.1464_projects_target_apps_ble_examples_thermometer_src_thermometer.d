@@ -124,6 +124,7 @@
  /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/app_modules/api/app_easy_timer.h \
  /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/i2c_temp_sensor.h \
  /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/codec.h \
+ /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/app_modules/api/app_prf_perm_types.h \
  /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/platform/driver/timer/timer1.h
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/config/da1458x_config_basic.h:
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/config/da14535_config_basic.h:
@@ -249,4 +250,5 @@
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/app_modules/api/app_easy_timer.h:
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/i2c_temp_sensor.h:
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/codec.h:
+/Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/app_modules/api/app_prf_perm_types.h:
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/../../../../sdk/platform/driver/timer/timer1.h:

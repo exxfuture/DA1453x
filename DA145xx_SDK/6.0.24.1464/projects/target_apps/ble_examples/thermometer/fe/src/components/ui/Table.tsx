@@ -12,8 +12,24 @@ export function Table({ children, className }: { children: ReactNode; className?
   );
 }
 
+/**
+ * Plain (non-sticky) header — review FE-23, resolved differently than
+ * recommended.
+ *
+ * The header used to carry `sticky top-0 z-10`. Because `Table` wraps the
+ * table in an `overflow-x-auto` div, that div — not the page — is the
+ * header's scroll container, so `sticky` was inert (the wrapper never scrolls
+ * vertically) and the overlap with the `h-16` NavBar the review described
+ * could not actually occur. Offsetting it to `top-16` instead pins the header
+ * 64px *inside the wrapper*, permanently covering the first data rows (it
+ * intercepted the "View" link on the doctor dashboard in the e2e suite).
+ * A page-sticky header would need the wrapper to stop being a scroll
+ * container (breaking horizontal scrolling of wide tables on mobile) or a
+ * bounded-height table box with its own vertical scroll; neither is worth it
+ * for the current table lengths, so the header simply scrolls with the page.
+ */
 export function TableHead({ children }: { children: ReactNode }) {
-  return <thead className="sticky top-0 z-10 bg-surface-1">{children}</thead>;
+  return <thead className="bg-surface-1">{children}</thead>;
 }
 
 export function TableHeadRow({ children }: { children: ReactNode }) {

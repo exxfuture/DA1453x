@@ -1,8 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { useQueries } from '@tanstack/react-query';
 import { FileText, GitCompare, Users } from 'lucide-react';
-import { api, PatientResponse, TemperatureUnit, ThresholdSource } from '../api/client';
+import { PatientResponse, TemperatureUnit, ThresholdSource } from '../../api/client';
 import {
   useCareNotes,
   useClearPatientThreshold,
@@ -14,31 +13,25 @@ import {
   usePatientThreshold,
   useResolvedThresholds,
   useUpsertPatientThreshold,
-} from '../api/queries';
-import { MeasurementChart } from '../components/MeasurementChart';
-import { NoteThread } from '../components/NoteThread';
-import { TemperatureChart, TemperatureSeries } from '../components/TemperatureChart';
-import { ThresholdEditor, ThresholdValues } from '../components/ThresholdEditor';
-import { Alert } from '../components/ui/Alert';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { cn } from '../components/ui/cn';
-import { EmptyState, SkeletonBlock } from '../components/ui/EmptyState';
-import { useChartColors } from '../theme/chartColors';
-import { convertFromCelsius } from '../utils/temperature';
-import { resolveTimeWindow, timeWindowKey, type TimeWindow } from '../utils/timeWindow';
+} from '../../api/queries';
+import { useMeasurementHistories } from '../../api/useMeasurementHistories';
+import { MeasurementChart } from '../../components/MeasurementChart';
+import { NoteThread } from '../../components/NoteThread';
+import { TemperatureChart, TemperatureSeries } from '../../components/TemperatureChart';
+import { ThresholdEditor, ThresholdValues } from '../../components/ThresholdEditor';
+import { Alert } from '../../components/ui/Alert';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { cn } from '../../components/ui/cn';
+import { EmptyState, SkeletonBlock } from '../../components/ui/EmptyState';
+import { MAX_OVERLAY_SERIES, useChartColors } from '../../theme/chartColors';
+import { convertFromCelsius } from '../../utils/temperature';
+import type { TimeWindow } from '../../utils/timeWindow';
 
 /** Window every chart on this page reads, in hours. No custom-range UI here
  *  (doctor fleet view) — see DashboardPage/HistoryPage for that. */
 const RANGE_HOURS = 24;
 const RANGE_WINDOW: TimeWindow = { kind: 'sliding', hours: RANGE_HOURS };
-
-/**
- * Overlay cap. Past ~5 lines the tier bands stop being readable and the
- * categorical palette runs out of slots that stay distinguishable (see
- * theme/chartColors.ts).
- */
-const COMPARE_LIMIT = 5;
 
 /** Height of the chart skeleton: 280 plot + 48 brush strip + 40 step-button row. */
 const CHART_SKELETON = 'h-[368px]';
@@ -58,7 +51,10 @@ export function PatientsPage() {
   const [compareMode, setCompareMode] = useState(false);
   const [compareIds, setCompareIds] = useState<string[]>([]);
 
-  const patients = patientsQuery.data ?? [];
+  // Memoised so it is the same array identity between renders: several
+  // useMemo/useEffect hooks below depend on it, and `?? []` would hand them a
+  // fresh empty array on every render (react-hooks/exhaustive-deps, review FE-08).
+  const patients = useMemo(() => patientsQuery.data ?? [], [patientsQuery.data]);
   const selected = patients.find((p) => p.patientUserId === selectedPatientId) ?? null;
 
   const comparePatients = useMemo(
@@ -70,7 +66,7 @@ export function PatientsPage() {
     setCompareIds((previous) =>
       previous.includes(patientUserId)
         ? previous.filter((id) => id !== patientUserId)
-        : previous.length >= COMPARE_LIMIT
+        : previous.length >= MAX_OVERLAY_SERIES
           ? previous
           : [...previous, patientUserId],
     );
@@ -105,10 +101,12 @@ export function PatientsPage() {
           <ul className="space-y-1">
             {patients.map((patient) => {
               const checked = compareIds.includes(patient.patientUserId);
-              const disabled = compareMode && !checked && compareIds.length >= COMPARE_LIMIT;
+              const disabled = compareMode && !checked && compareIds.length >= MAX_OVERLAY_SERIES;
               const isSelected = !compareMode && selectedPatientId === patient.patientUserId;
+              // A claimed device can have a null model: nothing forces a
+              // collector to report one (see ConnectPage, review FE-14).
               const subtitle = patient.deviceBdAddr
-                ? `${patient.deviceModel} (${patient.deviceBdAddr})`
+                ? `${patient.deviceModel ?? 'unknown model'} (${patient.deviceBdAddr})`
                 : 'no device claimed';
 
               if (compareMode) {
@@ -353,23 +351,18 @@ function CareNotesCard({ patientUserId, patientName }: { patientUserId: string; 
 function CompareView({ patients, unit }: { patients: PatientResponse[]; unit: TemperatureUnit }) {
   const colors = useChartColors();
 
-  const results = useQueries({
-    queries: patients.map((patient) => ({
-      queryKey: ['measurements', patient.deviceBdAddr, timeWindowKey(RANGE_WINDOW)],
-      queryFn: () => api.measurementHistory(patient.deviceBdAddr as string, 'temperature', resolveTimeWindow(RANGE_WINDOW)),
-      refetchInterval: 5000,
-    })),
-  });
+  // The shared parallel-history hook (review FE-21) — this used to re-implement
+  // it with its own useQueries call, a second copy of the
+  // ['measurements', bdAddr, timeWindowKey(window)] key that the customer
+  // dashboard's overlay and the single-patient chart above also use. Two copies
+  // of cache-key-sensitive fetch logic drift the moment one changes its interval
+  // or key shape; one hook cannot.
+  const histories = useMeasurementHistories(
+    patients.map((patient) => patient.deviceBdAddr).filter((bdAddr): bdAddr is string => bdAddr != null),
+    RANGE_WINDOW,
+  );
 
-  const isLoading = results.some((result) => result.isLoading);
-
-  /**
-   * `useQueries` hands back a fresh array every render, and its length changes
-   * as patients are checked on and off — so the memo keys off a scalar built
-   * from the selection plus each query's last-updated stamp, never a
-   * variable-length dependency list (React requires a stable arity).
-   */
-  const seriesKey = results.map((result, index) => `${patients[index].patientUserId}@${result.dataUpdatedAt}`).join('|');
+  const isLoading = histories.isLoading;
 
   const series = useMemo<TemperatureSeries[]>(
     () =>
@@ -377,7 +370,7 @@ function CompareView({ patients, unit }: { patients: PatientResponse[]; unit: Te
         id: patient.patientUserId,
         label: displayName(patient),
         color: colors.seriesPalette[index % colors.seriesPalette.length],
-        points: [...(results[index]?.data ?? [])]
+        points: [...(histories.byBdAddr[patient.deviceBdAddr ?? ''] ?? [])]
           // Backend returns newest-first; the chart reads oldest-first.
           .reverse()
           .filter((m) => m.valueNum !== null)
@@ -386,9 +379,7 @@ function CompareView({ patients, unit }: { patients: PatientResponse[]; unit: Te
             return { ts: new Date(m.ts).getTime(), celsius, value: convertFromCelsius(celsius, unit) };
           }),
       })),
-    // results/patients are read through the closure and are fully described by seriesKey.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [seriesKey, unit, colors.seriesPalette],
+    [patients, histories.byBdAddr, unit, colors.seriesPalette],
   );
 
   if (patients.length === 0) {
@@ -397,7 +388,7 @@ function CompareView({ patients, unit }: { patients: PatientResponse[]; unit: Te
         <EmptyState
           icon={GitCompare}
           title="Pick patients to compare"
-          description={`Select up to ${COMPARE_LIMIT} patients with a claimed device to overlay their last ${RANGE_HOURS}h.`}
+          description={`Select up to ${MAX_OVERLAY_SERIES} patients with a claimed device to overlay their last ${RANGE_HOURS}h.`}
         />
       </Card>
     );

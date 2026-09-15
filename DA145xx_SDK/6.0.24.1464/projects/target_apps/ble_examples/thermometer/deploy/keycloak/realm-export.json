@@ -4,7 +4,7 @@
   "displayName": "Thermometer",
   "displayNameHtml": "<span>Thermometer</span>",
   "loginTheme": "thermometer",
-  "sslRequired": "none",
+  "sslRequired": "external",
   "registrationAllowed": false,
   "resetPasswordAllowed": true,
   "passwordPolicy": "length(8) and digits(1) and lowerCase(1) and upperCase(1) and specialChars(1) and notUsername and notEmail",
@@ -98,7 +98,7 @@
       "enabled": true,
       "emailVerified": true,
       "requiredActions": [],
-      "credentials": [{ "type": "password", "value": "Admin123!", "temporary": false }],
+      "credentials": [{ "type": "password", "value": "Admin01!", "temporary": false }],
       "realmRoles": ["admin"]
     }
   ]

@@ -14,7 +14,8 @@ import {
   TableRow,
 } from '../../components/ui/Table';
 import { relativeTime } from '../../utils/time';
-import { StatTile, StatTileGrid, largestOf } from './AdminUi';
+import { StatTile, StatTileGrid } from '../../components/ui/StatTile';
+import { largestOf } from '../../utils/breakdown';
 
 const BYTE_UNITS = ['B', 'kB', 'MB', 'GB', 'TB', 'PB'];
 
@@ -57,17 +58,17 @@ export function AdminRetentionPage() {
       </Alert>
 
       <StatTileGrid className="lg:grid-cols-3">
-        <StatTile
+        <StatTile size="lg"
           label="Stored readings"
           value={`≈ ${retention.estimatedRows.toLocaleString()}`}
           hint="Estimate, not a count"
         />
-        <StatTile
+        <StatTile size="lg"
           label="Storage used"
           value={formatBytes(retention.totalBytes)}
           hint="Measurements table, indexes included"
         />
-        <StatTile
+        <StatTile size="lg"
           label="Oldest recent reading"
           value={retention.oldestRecentReading ? relativeTime(retention.oldestRecentReading) : '—'}
           hint={

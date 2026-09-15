@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
  *   ({@code GET /api/rollouts/pending}, {@code POST /api/rollouts/*<!---->/status}).
  *   Those sit outside the JWT filter chain and authenticate with one shared
  *   {@code X-Device-Token} for the whole fleet (see
- *   {@link com.dialog.thermometer.api.RolloutController}), so a leaked token
+ *   {@link com.dialog.thermometer.rollout.RolloutController}), so a leaked token
  *   is the one credential that still buys an attacker useful API access —
  *   worth capping much harder than ordinary traffic.</li>
  * </ul>

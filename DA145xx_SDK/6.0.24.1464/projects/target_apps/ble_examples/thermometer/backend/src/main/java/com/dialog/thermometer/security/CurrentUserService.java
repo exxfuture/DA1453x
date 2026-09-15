@@ -4,10 +4,12 @@ import com.dialog.thermometer.domain.TemperatureUnit;
 import com.dialog.thermometer.domain.User;
 import com.dialog.thermometer.domain.UserRepository;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Map;
@@ -52,6 +54,37 @@ public class CurrentUserService {
             return provisionFromJwt(jwt);
         }
         return provisionLocalDevUser();
+    }
+
+    /**
+     * {@link #resolve} plus a role check — the shape every controller needs at
+     * the top of a role-restricted handler.
+     *
+     * <p>This exists because that three-line shape (resolve, compare
+     * {@code role()}, throw a 403 {@code ResponseStatusException}) was copied
+     * into eight controllers, sometimes as a private helper and sometimes
+     * inline. A change to the 403 shape, or adding an audit hook to refusals,
+     * had to be applied in eight places and would eventually be applied in
+     * seven.
+     *
+     * @param message the 403 reason shown to the caller — deliberately a
+     *                parameter rather than a generated string, because
+     *                "only customers can claim a device" is a better answer
+     *                than "customer role required"
+     * @throws ResponseStatusException 403 if the caller holds none of {@code allowed}
+     */
+    public CurrentUser resolveWithRole(Authentication authentication, String message, Role... allowed) {
+        return requireRole(resolve(authentication), message, allowed);
+    }
+
+    /** @see #resolveWithRole */
+    public static CurrentUser requireRole(CurrentUser me, String message, Role... allowed) {
+        for (Role role : allowed) {
+            if (me.role() == role) {
+                return me;
+            }
+        }
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, message);
     }
 
     @Transactional

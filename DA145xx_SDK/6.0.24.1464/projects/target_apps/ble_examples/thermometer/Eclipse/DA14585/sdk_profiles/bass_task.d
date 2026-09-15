@@ -73,18 +73,23 @@ sdk_profiles/bass_task.o: \
  ../../../../../../sdk/app_modules/api/app_msg_utils.h \
  ../../../../../../sdk/app_modules/api/app_easy_msg_utils.h \
  ../../../../../../sdk/app_modules/api/app_easy_timer.h \
+ ../../../../../../sdk/app_modules/api/app_diss.h \
+ ../../../../../../sdk/app_modules/api/app_diss_task.h \
+ ../../../../../../sdk/ble_stack/profiles/dis/diss/api/diss_task.h \
+ ../../../../../../sdk/ble_stack/profiles/dis/diss/api/diss.h \
+ ../../../../../../sdk/ble_stack/host/att/atts/atts.h \
+ ../../../../../../sdk/ble_stack/host/gatt/gattc/gattc_task.h \
+ ../../../../../../sdk/ble_stack/host/gatt/gatt.h \
+ ../../../../../../sdk/ble_stack/profiles/prf_types.h \
+ ../../../../../../sdk/ble_stack/profiles/prf.h \
  ../../../../../../sdk/app_modules/api/app_bass.h \
  ../../../../../../sdk/app_modules/api/app_bass_task.h \
  ../../../../../../sdk/ble_stack/profiles/bas/bass/api/bass_task.h \
- ../../../../../../sdk/ble_stack/profiles/prf_types.h \
  ../../../../../../sdk/app_modules/api/app_htpt.h \
  ../../../../../../sdk/ble_stack/profiles/htp/htp_common.h \
  ../../../../../../sdk/app_modules/api/app_htpt_task.h \
  ../../../../../../sdk/ble_stack/profiles/htp/htpt/api/htpt_task.h \
  ../../../../../../sdk/ble_stack/profiles/htp/htpt/api/htpt.h \
- ../../../../../../sdk/ble_stack/host/att/atts/atts.h \
- ../../../../../../sdk/ble_stack/host/gatt/gattc/gattc_task.h \
- ../../../../../../sdk/ble_stack/host/gatt/gatt.h \
  ../../../../../../sdk/ble_stack/profiles/prf_utils.h \
  ../../../../../../sdk/ble_stack/profiles/prf_types.h \
  ../../../../../../sdk/ble_stack/host/att/attm/attm_db.h \
@@ -99,8 +104,7 @@ sdk_profiles/bass_task.o: \
  ../../../../../../sdk/platform/driver/dma/dma.h \
  ../../../../../../sdk/platform/driver/i2c/i2c.h \
  ../../../../../../sdk/ble_stack/profiles/bas/bass/api/bass.h \
- ../../../../../../sdk/ble_stack/profiles/bas/bass/api/bass_task.h \
- ../../../../../../sdk/ble_stack/profiles/prf.h
+ ../../../../../../sdk/ble_stack/profiles/bas/bass/api/bass_task.h
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/config/da1458x_config_basic.h:
 /Users/alexv/projects/da14531/renesas/DA145xx_SDK/6.0.24.1464/projects/target_apps/ble_examples/thermometer/src/config/da14585_config_basic.h:
 ../../../../../../sdk/common_project_files/da1458x_stack_config.h:
@@ -174,18 +178,23 @@ sdk_profiles/bass_task.o: \
 ../../../../../../sdk/app_modules/api/app_msg_utils.h:
 ../../../../../../sdk/app_modules/api/app_easy_msg_utils.h:
 ../../../../../../sdk/app_modules/api/app_easy_timer.h:
+../../../../../../sdk/app_modules/api/app_diss.h:
+../../../../../../sdk/app_modules/api/app_diss_task.h:
+../../../../../../sdk/ble_stack/profiles/dis/diss/api/diss_task.h:
+../../../../../../sdk/ble_stack/profiles/dis/diss/api/diss.h:
+../../../../../../sdk/ble_stack/host/att/atts/atts.h:
+../../../../../../sdk/ble_stack/host/gatt/gattc/gattc_task.h:
+../../../../../../sdk/ble_stack/host/gatt/gatt.h:
+../../../../../../sdk/ble_stack/profiles/prf_types.h:
+../../../../../../sdk/ble_stack/profiles/prf.h:
 ../../../../../../sdk/app_modules/api/app_bass.h:
 ../../../../../../sdk/app_modules/api/app_bass_task.h:
 ../../../../../../sdk/ble_stack/profiles/bas/bass/api/bass_task.h:
-../../../../../../sdk/ble_stack/profiles/prf_types.h:
 ../../../../../../sdk/app_modules/api/app_htpt.h:
 ../../../../../../sdk/ble_stack/profiles/htp/htp_common.h:
 ../../../../../../sdk/app_modules/api/app_htpt_task.h:
 ../../../../../../sdk/ble_stack/profiles/htp/htpt/api/htpt_task.h:
 ../../../../../../sdk/ble_stack/profiles/htp/htpt/api/htpt.h:
-../../../../../../sdk/ble_stack/host/att/atts/atts.h:
-../../../../../../sdk/ble_stack/host/gatt/gattc/gattc_task.h:
-../../../../../../sdk/ble_stack/host/gatt/gatt.h:
 ../../../../../../sdk/ble_stack/profiles/prf_utils.h:
 ../../../../../../sdk/ble_stack/profiles/prf_types.h:
 ../../../../../../sdk/ble_stack/host/att/attm/attm_db.h:
@@ -201,4 +210,3 @@ sdk_profiles/bass_task.o: \
 ../../../../../../sdk/platform/driver/i2c/i2c.h:
 ../../../../../../sdk/ble_stack/profiles/bas/bass/api/bass.h:
 ../../../../../../sdk/ble_stack/profiles/bas/bass/api/bass_task.h:
-../../../../../../sdk/ble_stack/profiles/prf.h:

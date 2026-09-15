@@ -13,7 +13,8 @@ import {
   TableHeadRow,
   TableRow,
 } from '../../components/ui/Table';
-import { StatTile, StatTileGrid, largestOf } from './AdminUi';
+import { StatTile, StatTileGrid } from '../../components/ui/StatTile';
+import { largestOf } from '../../utils/breakdown';
 
 /**
  * Ingest health (admin feature #1): is data still arriving, and from how many
@@ -47,10 +48,10 @@ export function AdminHealthPage() {
       )}
 
       <StatTileGrid>
-        <StatTile label="Readings" value={stats.readingsLastHour.toLocaleString()} hint="Last hour" />
-        <StatTile label="Readings" value={stats.readingsLastDay.toLocaleString()} hint="Last 24 hours" />
-        <StatTile label="Devices reporting" value={stats.devicesLastHour.toLocaleString()} hint="Last hour" />
-        <StatTile label="Devices reporting" value={stats.devicesLastDay.toLocaleString()} hint="Last 24 hours" />
+        <StatTile size="lg" label="Readings" value={stats.readingsLastHour.toLocaleString()} hint="Last hour" />
+        <StatTile size="lg" label="Readings" value={stats.readingsLastDay.toLocaleString()} hint="Last 24 hours" />
+        <StatTile size="lg" label="Devices reporting" value={stats.devicesLastHour.toLocaleString()} hint="Last hour" />
+        <StatTile size="lg" label="Devices reporting" value={stats.devicesLastDay.toLocaleString()} hint="Last 24 hours" />
       </StatTileGrid>
 
       <Card

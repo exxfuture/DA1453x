@@ -5,7 +5,8 @@ Reads temperature and humidity from an AHT20 sensor over I2C and transmits tempe
 
 This README covers the **firmware**. The rest of the system — backend, web
 app, mobile app, and an optional headless gateway — is documented in
-`ARCHITECTURE_V3.html` and implemented in the folders below.
+`ARCHITECTURE_V3.html` and implemented in the folders below. The prior
+architecture revisions live in `docs/superseded/` as history only.
 
 ---
 
@@ -24,13 +25,32 @@ real hardware (a synthetic device simulator stands in for the BLE thermometer).
 docker compose up --build
 ```
 
-If you have a **pre-existing** local stack (a `postgres_data` volume from
-before 2026-08-07): the backend's schema migrations were consolidated into a
-single `V1__init.sql` (pre-prod, no versioning discipline yet — see
-`backend/README.md` "Data model"), which Flyway will reject against an old
-volume's migration history as a checksum mismatch. Reset it once with
+This is the **laptop profile**: every host port is bound to `127.0.0.1`,
+every credential has a development default (override any of them from a
+`.env` file — copy `.env.example`), the MQTT broker requires authentication,
+all images are pinned, but traffic is plain HTTP. For anything reachable
+beyond localhost layer the hardened overlay on top — it drops the host
+ports, requires real secrets, and terminates TLS in a Caddy reverse proxy:
+
+```bash
+cp .env.example .env            # fill in every value
+docker compose -f docker-compose.yml -f docker-compose.prod.yml config   # fails on any missing secret
+docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+```
+
+See the header of `docker-compose.prod.yml` and `deploy/README.md` for what
+the overlay changes (single public hostname, path-routed; Keycloak in
+production mode without the demo realm; simulated gateways removed).
+
+If you have a **pre-existing** local stack: a `postgres_data` volume from
+before 2026-09-14 will be rejected by Flyway as a checksum mismatch (the
+`V1__init.sql` header was rewritten in the code-review fix pass; the same
+happened on 2026-08-07 when the migrations were consolidated — see
+`backend/README.md` "Data model"), and a `mosquitto_data` volume from before
+that date has no dynamic-security database yet. Reset both once with
 `docker compose down -v` before bringing the stack back up; this drops local
-dev data only.
+dev data only (`flyway repair` is the data-preserving alternative for the
+database).
 
 This starts Mosquitto, PostgreSQL+TimescaleDB, Keycloak (with a demo realm
 pre-imported, styled to match the web app — see `deploy/README.md`), MinIO,
@@ -43,13 +63,15 @@ a few seconds.
 
 | Service | URL | Notes |
 |---------|-----|-------|
-| Web app | http://localhost:8090 | React + Vite; Web Bluetooth needs Chrome/Edge |
+| Web app | http://localhost:8090 | React + Vite served by an unprivileged nginx; Web Bluetooth needs Chrome/Edge. The API / broker / Keycloak URLs are injected at container start (`fe/README.md` "Runtime configuration"), not baked into the image |
 | Backend API | http://localhost:8080 | `/actuator/health` is open; the rest of `/actuator/**` needs an **admin** JWT, everything else any Keycloak JWT. The two OTA collector endpoints take an `X-Device-Token` header instead of a JWT — see `backend/README.md` "Device & operator authentication" |
-| Keycloak admin | http://localhost:8082 | `admin` / `admin` |
+| Keycloak admin | http://localhost:8082 | `admin` / `admin` (`KC_BOOTSTRAP_ADMIN_*` in `.env`) |
 | Mailpit (local email catcher) | http://localhost:8025 | Catches Keycloak's password-reset emails — see "Demo accounts" below |
-| MinIO console | http://localhost:9091 | `thermometer` / `thermometer123` |
-| Postgres | localhost:5433 | `thermometer` / `thermometer` (host port 5433 — 5432 often taken by a local Postgres; containers use the internal network) |
-| Mosquitto | localhost:1883 (MQTT), localhost:9001 (WebSocket) | anonymous access — local dev only |
+| MinIO console | http://localhost:9091 | `thermometer` / `thermometer123` (`MINIO_ROOT_*` in `.env`) |
+| Postgres | localhost:5433 | `thermometer` / `thermometer` (`POSTGRES_PASSWORD` in `.env`; host port 5433 — 5432 often taken by a local Postgres; containers use the internal network, and the backend's `local` profile points at 5433 too) |
+| Mosquitto | localhost:1883 (MQTT), localhost:9001 (WebSocket) | **Authenticated** (dynamic-security plugin, no anonymous access). The backend connects as the broker admin (`MQTT_ADMIN_*`), gateways as `collector` (`MQTT_COLLECTOR_PASSWORD`), and the web app with a per-user credential it mints from the backend (`POST /api/live/credentials`) — see `deploy/README.md` for the identity/ACL table |
+
+All of the above listen on `127.0.0.1` only.
 
 Sign in at the web app with "Sign in with Keycloak" — this redirects to
 Keycloak's own hosted login page (standard OAuth2 Authorization Code + PKCE,
@@ -70,7 +92,7 @@ admin sees and can edit everything but never claims a device itself.
 | `customer1` | `Customer1!` | customer | Claim one or more devices from the fleet; scroll/zoom the history chart; compare several devices on one chart; export CSV; see fever-episode history and a trend digest; annotate individual readings; set personal alert thresholds; grant/revoke doctor access and review that consent history; edit own profile (display name, preferred °C/°F unit); change own password |
 | `customer2` | `Customer2!` | customer | Same as `customer1` |
 | `doctor1` | `Doctor1!` | doctor | For every customer who's granted consent: a risk-ranked patient worklist with variability and staleness, a fleet-wide fever-episode feed, per-patient charts and multi-patient compare, per-patient alert-threshold overrides, private care notes, a printable clinical report, and their own audit trail |
-| `admin1` | `Admin123!` | admin | View/edit all users (search, filter, local-registry role correction), all devices (incl. force-release) with inventory stats, all doctor-patient relationships with integrity warnings, plus ingest health, OTA rollout progress, the audit log with a security-anomaly view, storage/retention insight, and the system-default alert thresholds |
+| `admin1` | `Admin01!` | admin | View/edit all users (search, filter, local-registry role correction), all devices (incl. force-release) with inventory stats, all doctor-patient relationships with integrity warnings, plus ingest health, OTA rollout progress, the audit log with a security-anomaly view, storage/retention insight, and the system-default alert thresholds |
 
 Prove a simulated device's readings are flowing end to end (needs a Keycloak
 token — see `deploy/README.md`):
@@ -80,7 +102,8 @@ curl -H "Authorization: Bearer $TOKEN" "http://localhost:8080/api/measurements/A
 ```
 
 Or publish a one-off reading by hand instead of waiting for the simulator:
-`tools/simulate-device.sh`.
+`tools/simulate-device.sh` (authenticates to the broker as the `collector`
+client).
 
 ### Components
 
@@ -90,7 +113,8 @@ Or publish a one-off reading by hand instead of waiting for the simulator:
 | `fe/` | React + TypeScript + Vite web app (Web Bluetooth) | `fe/README.md` |
 | `mobile/` | Capacitor wrapper of `fe/` for Android/iOS | `mobile/README.md` |
 | `gateway/` | Optional Go binary for headless/unattended collection | `gateway/README.md` |
-| `deploy/` | Mosquitto/Keycloak config consumed by `docker-compose.yml` | `deploy/README.md` |
+| `deploy/` | Mosquitto / Keycloak / Caddy / Postgres-init config consumed by `docker-compose.yml` and `docker-compose.prod.yml` | `deploy/README.md` |
+| `schema/` | `measurement-envelope.v1.schema.json` — the single source of truth for the MQTT wire envelope; the Go, Java and TypeScript implementations each validate against it in their tests | header of the schema file |
 | `tools/` | `simulate-device.sh` — publish a one-off fake reading | — |
 
 Each folder's README has its own **Build / Run / Test** sections and an
@@ -104,10 +128,14 @@ faster iteration):
 
 ```bash
 cd backend && mvn test              # unit tests, ~1s
-cd backend && mvn verify            # + Testcontainers integration tests (needs Docker)
-cd fe       && npm test             # vitest — pins the IEEE-11073 decode correctness
-cd gateway  && go test ./...
+cd backend && mvn verify            # + Testcontainers integration tests (needs Docker; the broker container runs with the same dynamic-security setup as compose)
+cd fe       && npm run lint         # tsc + ESLint (react-hooks, jsx-a11y)
+cd fe       && npm test             # vitest — pure modules + component tests; pins the IEEE-11073 decode incl. the NaN/NRes/±Inf sentinels
+cd gateway  && go vet ./... && go test ./...
 ```
+
+All four (plus the firmware) run in CI on every push touching their folder
+(`.github/workflows/*.yml`, actions pinned to commit SHAs).
 
 For a full real-browser, real-backend end-to-end check (needs the whole
 stack running — `docker compose up -d` first): `cd fe && npm run test:e2e`.
@@ -115,7 +143,10 @@ It logs in, connects a simulated device (no hardware needed — see
 `fe/README.md` "Testing without real hardware"), claims it, and confirms the
 reading round-trips through the live feed onto the dashboard chart — plus a
 second scenario covering device-fleet claiming, doctor consent, and the
-doctor/admin views.
+doctor/admin views, and two Keycloak password flows. Last run in full on
+2026-09-14 (code-review fix pass, `proposals.md` §12) against a stack started
+from empty volumes: 4 of 4 scenarios pass, with the broker authenticated and
+the web app minting its own MQTT credential.
 
 ---
 
@@ -150,6 +181,19 @@ The AHT20 I2C address is fixed at **0x38** — no address-select pin.
 | User LED | P0_9 | 50 ms flash every 2 s while advertising (2.5 % duty to save battery); solid on when connected |
 | User Button | P0_11 | Disconnects current peer and restarts advertising |
 
+### Bluetooth device address — per-unit OTP provisioning is mandatory
+
+The firmware's `CFG_NVDS_TAG_BD_ADDRESS` (`{0x10,0x00,0xF4,0x35,0x23,0x48}`)
+is only a **fallback** used when the OTP header carries no address, and it is
+the same value the SDK examples and the superseded `temp_reporter` use. Two
+units running with the fallback advertise the same address, which confuses
+collectors' scan filters and the platform's device registry (`devices.bd_addr`
+is unique). Programming a unique address into the OTP header is therefore a
+mandatory production step for every unit (SmartSnippets Toolbox → OTP
+Header → BD address, or the Renesas Flash Programmer CLI — see
+`PACKAGING_CONCEPT.md` §8); the fallback is acceptable only for a single
+development kit on a bench.
+
 ---
 
 ## Building
@@ -182,10 +226,34 @@ dependency files, and a change to the compile flags forces a full rebuild
 automatically. Each build also regenerates `compile_commands.json` at the
 project root so clangd/IDE diagnostics work correctly.
 
+### Eclipse (alternative, IDE-only)
+
+`Eclipse/` holds a GNU MCU Eclipse project (`.cproject` / `.project`,
+`makefile.targets`) with `DA14535`, `DA14535_01`, `DA14585` and `DA14586`
+build configurations, wired to the same `src/` tree and the same
+`src/config/da1458x_config_*.h` dispatchers (which is why the `da14531_*` /
+`da14585_*` config variants exist next to the `da14535_*` ones that
+`build.sh` uses). Import it into Eclipse with the SDK's GNU MCU plug-ins and
+build a configuration from the IDE; Eclipse regenerates the per-configuration
+build directories (`Eclipse/DA14535/`, `Eclipse/DA14585/`, …), which are
+therefore git-ignored — they embed machine-local absolute paths and are not
+a source of truth.
+
+Support level: **DA14535 via `build.sh` is the supported, CI-built and
+hardware-tested target.** The DA14585 configuration is kept compiling (every
+chip-specific SDK call is guarded, e.g. the one- vs four-argument
+`arch_set_deep_sleep()`), and that is verified by compiling the application
+sources against the DA14585 SDK headers; it is not built in CI, not linked
+into a tested image, and has never been flashed. Treat it as a porting
+starting point, not a release target.
+
 ### Host-side unit tests
 
-The pure codec logic (AHT20 CRC-8 and frame decode, IEEE 11073 encoding,
-sample aggregation) lives in `src/codec.h` and is tested on the host:
+The pure logic in `src/codec.h` — AHT20 CRC-8 and frame decode, IEEE 11073
+encoding, sample aggregation, offset saturation, and the measurement-cycle
+decision table (`cycle_next_action()` / `recovery_action()`) that
+`thermometer.c`'s ISR/task state machine is driven by — is tested on the
+host:
 
 ```bash
 bash tests/run_tests.sh
@@ -193,6 +261,9 @@ bash tests/run_tests.sh
 
 A GitHub Actions workflow (`.github/workflows/firmware.yml` at the repo root)
 runs the tests plus both firmware builds on every push touching this project.
+The platform components have their own workflows next to it
+(`backend.yml`, `frontend.yml`, `gateway.yml`, `mobile.yml`), all path-filtered
+the same way.
 
 ---
 
@@ -232,6 +303,19 @@ After power-on the device advertises as **`DLG_THRM`** with the Health Thermomet
 ### Connection
 
 - LED turns solid on when a collector connects.
+- The thermometer immediately sends a **security request**: pairing is Just
+  Works (no display, no keyboard) **without bonding**, so the link is
+  encrypted before any data flows and nothing is stored on either side —
+  every connection pairs afresh. The Health Thermometer service is created
+  with `SRV_PERM_UNAUTH`: its characteristics (Temperature Measurement,
+  Measurement Interval, Temperature Type) can only be read, written or
+  subscribed to over an encrypted link; a collector that tries before pairing
+  completes gets an ATT "insufficient encryption" error. Battery Level and
+  Device Information stay readable in the clear. A passive sniffer therefore
+  never sees plaintext temperatures. *Validated so far against the SDK's
+  security flow only — the behaviour of each collector platform's automatic
+  Just-Works handling (Chrome Web Bluetooth on macOS/Windows/Linux, Android,
+  iOS) still has to be confirmed on hardware; see "Edge-case behavior".*
 - Temperature measurements begin when the collector **enables HTP indications** (writes `0x0002` to the Temperature Measurement CCCD, UUID 0x2A1C).
 - Default measurement interval: **5 seconds** (configurable at runtime via the Measurement Interval characteristic, range 1–300 s).
 - Each measurement cycle takes up to **3 samples 100 ms apart** and sends the **median** (mean of 2 / single value if some samples fail), after adding the `CFG_TEMP_OFFSET_X100` calibration offset.
@@ -266,9 +350,22 @@ After power-on the device advertises as **`DLG_THRM`** with the Health Thermomet
   "Out of Range" error; the current interval is kept.
 - **Humidity** is read from the AHT20 but not transmitted — the HTP
   Temperature Measurement characteristic carries temperature only.
-- **No bonding persistence:** pairing (Just Works) is supported, but the bond
-  database callbacks are not implemented, so nothing survives a disconnect —
-  the collector must re-enable indications on every new connection.
+- **No bonding persistence:** pairing (Just Works) is requested on every
+  connection and required for the HTP characteristics, but no keys are
+  distributed for bonding and the bond database callbacks are not
+  implemented, so nothing survives a disconnect — the collector re-pairs and
+  must re-enable indications on every new connection. A collector that
+  insists on encrypting with a previously stored key (i.e. one that bonded
+  against a different firmware) will fail with "key missing" and has to
+  forget the device first.
+- **Indication not delivered:** the HTP stack reports every indication's
+  outcome; failures are counted (`s_indication_failures`, visible in a
+  debugger) and, with `CFG_PRINTF` enabled, printed via `arch_printf()`. No
+  retry — the next measurement cycle sends a fresh value anyway.
+- **Button pressed mid-measurement:** the wake-up ISR's peripheral
+  re-initialisation skips the I2C pads while an AHT20 transfer is in flight
+  (`i2c_temp_sensor_busy()`), so the transaction completes normally before
+  the disconnect it triggers is processed.
 
 ---
 
@@ -362,7 +459,16 @@ Each cycle runs the chain below up to `TEMP_SAMPLES_PER_MEASUREMENT` (3)
 times, 100 ms apart (`sample_gap_cb`); `handle_sample_done()` collects the
 samples and only the final aggregate is sent. If the failure-recovery ladder
 is due, `temp_timer_cb` performs the AHT20 soft reset / bus recovery *instead
-of* the chain for that cycle.
+of* the chain for that cycle. The two decisions — "another sample, dead
+cycle, or send" after each attempt and "which recovery step, if any" at the
+start of a cycle — are the pure functions `cycle_next_action()` and
+`recovery_action()` in `src/codec.h`, covered by the host tests.
+
+Everything the I2C interrupt context and the BLE task context share
+(connection guards, sample buffer and counters, the ISR-armed timer handles)
+is `volatile`, and the cycle is torn down — connection guards cleared first,
+then all timers cancelled inside a critical section — so a late I2C
+completion can never re-arm a timer that was just cancelled.
 
 ```
 BLE event loop
@@ -398,11 +504,11 @@ All user-facing configuration is in `src/thermometer.h`, `src/config/user_profil
 |--------|---------|-------------|
 | `CFG_TEMP_RAW_CELSIUS` | *(undefined)* | Temperature encoding mode — see [Temperature encoding](#temperature-encoding) |
 | `TEMP_MEAS_INTERVAL_DEFAULT_SEC` | `5` | Default measurement interval in seconds at power-on |
-| `TEMP_SAMPLES_PER_MEASUREMENT` | `3` | Samples per cycle: 3 → median, 2 → mean, 1 → raw single reading |
+| `TEMP_SAMPLES_PER_MEASUREMENT` | `3` | Samples per cycle: 3 → median, 2 → mean, 1 → raw single reading (1..3, enforced by `_Static_assert`) |
 | `TEMP_SAMPLE_GAP_TICKS` | `10` | Gap between samples within a cycle (10 ms ticks; 10 = 100 ms) |
 | `CFG_TEMP_OFFSET_X100` | `0` | Calibration offset added to every reported value, 0.01 °C units |
-| `AHT20_FAILS_BEFORE_SOFT_RESET` | `5` | Consecutive dead cycles before an AHT20 soft reset |
-| `AHT20_FAILS_BEFORE_BUS_RECOVERY` | `10` | Consecutive dead cycles before manual I2C bus recovery |
+| `AHT20_FAILS_BEFORE_SOFT_RESET` | `5` | Consecutive dead cycles before an AHT20 soft reset (must be > 0, enforced by `_Static_assert`) |
+| `AHT20_FAILS_BEFORE_BUS_RECOVERY` | `10` | Consecutive dead cycles before manual I2C bus recovery (must be a multiple of the soft-reset threshold, enforced by `_Static_assert`) |
 | `CFG_TX_POWER_LEVEL` | `RF_TX_PWR_LVL_0d0` | BLE TX power (0 dBm); comment out for SDK default (+2.5 dBm) |
 
 ### BLE profiles — `src/config/user_profiles_config.h`
@@ -435,7 +541,7 @@ All user-facing configuration is in `src/thermometer.h`, `src/config/user_profil
 |--------|---------|-------------|
 | `CFG_LP_CLK` | `LP_CLK_RCX20` | Low-power clock source. `LP_CLK_RCX20` = internal RC oscillator (no external crystal needed). `LP_CLK_XTAL32` = external 32 kHz crystal (more accurate). |
 | `CFG_NVDS_TAG_LPCLK_DRIFT` | `DRIFT_500PPM` | Low-power clock drift tolerance. RCX20 typically needs 500 ppm; XTAL32 can use 20–50 ppm for tighter timing. |
-| `CFG_NVDS_TAG_BD_ADDRESS` | `{0x10,0x00,0xF4,0x35,0x23,0x48}` | Default Bluetooth device address. Overridden if a BD address is programmed in OTP. |
+| `CFG_NVDS_TAG_BD_ADDRESS` | `{0x10,0x00,0xF4,0x35,0x23,0x48}` | **Fallback** Bluetooth device address, used only if no address is programmed in the OTP header. Shared with the SDK examples — every production unit must get its own address in OTP (see "Bluetooth device address" under Hardware). |
 | `CFG_MAX_SLEEP_DURATION_EXTERNAL_WAKEUP_MS` | `600000` | Maximum sleep duration (ms) when waiting for external wakeup only — 600 s |
 | `CFG_TRNG` | defined | True Random Number Generator enabled; seeds the PRNG at startup |
 | `CFG_ENABLE_SMP_SECURE` | defined | BLE Secure Connections (ECDH) pairing supported |
@@ -476,47 +582,78 @@ thermometer/
 │                               kept as the historical record of the cost/complexity review)
 ├── ARCHITECTURE.html           v1 architecture (superseded, kept as the historical
 │                               record of the initial design)
+├── DESIGN_SYSTEM.md            "Pine & Ember" design system: fonts, type scale,
+│                               colour/spacing/radius/shadow tokens, component kit,
+│                               Keycloak login-theme parity
+├── DESIGN_SYSTEM.html          The same system as a self-contained visual reference
+│                               (live swatches, specimens, light/dark toggle) — kept
+│                               in sync with the .md by hand
 ├── PACKAGING_CONCEPT.md        Wearable product/packaging concept (enclosure,
-│                               battery, sensor choice, baby safety, regulatory)
+│                               battery, sensor choice, baby safety, regulatory,
+│                               per-unit OTP provisioning)
 ├── proposals.md                Improvement backlog with implementation status
+├── CODE_REVIEW.html            Whole-project code review (2026-09-14): 92 verified
+│                               findings across firmware, backend, fe, gateway,
+│                               deploy and repo hygiene, filterable by severity/area,
+│                               each with its resolution status after the fix pass
+├── docs/superseded/            ARCHITECTURE.html (v1) and ARCHITECTURE_V2.html (v2):
+│                               historical record only, superseded by ARCHITECTURE_V3.html
 │
-├── docker-compose.yml          Runs the whole platform locally — see "Platform" above
-├── deploy/                     Mosquitto + Keycloak config for docker-compose.yml
+├── docker-compose.yml          Runs the whole platform locally (laptop profile) — see "Platform" above
+├── docker-compose.prod.yml     Hardened overlay: no host ports, secrets from .env, Caddy TLS
+├── .env.example                Every variable the two compose files read
+├── deploy/                     Mosquitto (dynamic security), Keycloak realm + theme,
+│                               Caddyfile, Postgres init — see deploy/README.md
+├── schema/                     measurement-envelope.v1.schema.json — the wire-envelope
+│                               contract all three collectors/ingest test against
 ├── tools/simulate-device.sh    Publish a one-off fake reading without the gateway
 ├── backend/                    Spring Boot 3 / Java 21 ingest + REST API
 ├── fe/                         React + Vite web app (Web Bluetooth)
 ├── mobile/                     Capacitor wrapper of fe/ for Android/iOS
 ├── gateway/                    Optional Go headless-collector binary
 │
+├── .gitignore                  build/, Eclipse per-config dirs, compile_commands.json,
+│                               tests/test_codec, editor/OS noise
 ├── build.sh                    Standalone GCC build script (dev/release, incremental)
-├── compile_commands.json       Generated by build.sh for clangd (do not edit)
+├── compile_commands.json       Generated by build.sh for clangd (git-ignored)
+├── Eclipse/                    GNU MCU Eclipse project (.cproject/.project/.settings,
+│                               makefile.targets) with DA14535/DA14535_01/DA14585/DA14586
+│                               configurations — see "Eclipse (alternative, IDE-only)";
+│                               the per-configuration build dirs are git-ignored
 ├── tests/
-│   ├── test_codec.c            Host-side unit tests for src/codec.h
+│   ├── test_codec.c            Host-side unit tests for src/codec.h (codec + cycle
+│   │                           decision table)
 │   └── run_tests.sh            Build & run the tests with the host compiler
-├── build/
-│   ├── DA14535/                Development build output (generated)
+├── build/                      Generated by build.sh (git-ignored)
+│   ├── DA14535/                Development build output
 │   │   ├── thermometer.elf
 │   │   ├── thermometer.hex
 │   │   └── thermometer.map
-│   └── DA14535-release/        Production build output (generated)
+│   └── DA14535-release/        Production build output
 └── src/
     ├── thermometer.c           Application logic and BLE state machine
     ├── thermometer.h           Application compile-time config (sampling, offset,
-    │                           TX power, recovery thresholds, encoding mode)
-    ├── codec.h                 Pure codec functions (CRC-8, AHT20 decode,
-    │                           IEEE 11073 encode, aggregation) — host-testable
+    │                           TX power, recovery thresholds, encoding mode) with
+    │                           _Static_asserts guarding the tuning constants
+    ├── codec.h                 Pure functions (CRC-8, AHT20 decode, IEEE 11073
+    │                           encode, aggregation, cycle_next_action /
+    │                           recovery_action decision table) — host-testable
     ├── i2c_temp_sensor.c       AHT20 async interrupt-driven I2C driver + soft reset
-    ├── i2c_temp_sensor.h       AHT20 driver API and constants (AHT20_CONVERSION_MS)
+    ├── i2c_temp_sensor.h       AHT20 driver API and constants (AHT20_I2C_ADDRESS,
+    │                           AHT20_CONVERSION_MS, i2c_temp_sensor_busy())
     ├── platform/
-    │   └── user_periph_setup.c GPIO and peripheral initialisation
+    │   └── user_periph_setup.c GPIO and peripheral initialisation, I2C bus recovery
     └── config/
         ├── da14535_config_basic.h    Chip-level feature flags (watchdog, debug, UART)
         ├── da14535_config_advanced.h Low-power clock, sleep, RAM retention, BLE timing
+        ├── da14531_config_*.h        DA14531 variants of the two above (Eclipse configs)
+        ├── da14585_config_*.h        DA14585/586 variants of the two above (Eclipse configs)
         ├── da1458x_config_basic.h    Dispatcher — includes the correct chip variant header
         ├── da1458x_config_advanced.h Dispatcher — includes the correct chip variant header
         ├── user_callback_config.h    Maps BLE stack events to application callbacks
-        ├── user_config.h             BLE advertising, GAP, security, sleep mode
+        ├── user_config.h             BLE advertising, GAP, security (security request on
+        │                             connect, placeholder-IRK guard), sleep mode
         ├── user_modules_config.h     SDK module enable/disable switches
-        ├── user_periph_setup.h       Pin definitions (I2C SCL/SDA, LED, button)
+        ├── user_periph_setup.h       Pin definitions (I2C SCL/SDA + bus parameters, LED, button)
         └── user_profiles_config.h   HTP and BASS profile configuration and intervals
 ```

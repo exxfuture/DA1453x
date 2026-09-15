@@ -1,3 +1,6 @@
+import { AlertTriangle, Flame } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+
 /**
  * The 5-tier temperature-status scale from the design system ("Pine &
  * Ember" spec §1.4). Thresholds are oral-equivalent °C placeholders for
@@ -50,3 +53,32 @@ export const TEMPERATURE_TIER_BANDS: TemperatureTierBand[] = TIERS.map((t, i) =>
   min: i === 0 ? -Infinity : TIERS[i - 1].max,
   max: t.max,
 }));
+
+/** Tier label by tier, for the feeds that render a tier name without a band. */
+export const TIER_LABEL: Record<TemperatureTier, string> = Object.fromEntries(
+  TEMPERATURE_TIER_BANDS.map((band) => [band.tier, band.label]),
+) as Record<TemperatureTier, string>;
+
+/**
+ * The concrete lucide icon per tier, for list/timeline rows.
+ *
+ * Declared here, next to the bands, rather than in each feed page: HistoryPage
+ * and EventsPage carried byte-for-byte identical copies of this map, comment
+ * included (review FE-27), so an iconography change had two places to miss.
+ *
+ * `TemperatureTierInfo.icon` above stays the abstract name — it is what the
+ * design-system doc and the badge components key off, and keeping the concrete
+ * `LucideIcon` separate is what lets `theme/` stay free of a hard dependency on
+ * one icon set for anything but this convenience map.
+ *
+ * Only the three raised tiers can appear in a fever episode; `low` and `normal`
+ * are mapped because the tier union is shared, and are never rendered by the
+ * episode feeds.
+ */
+export const TIER_ICON: Record<TemperatureTier, LucideIcon> = {
+  low: AlertTriangle,
+  normal: AlertTriangle,
+  elevated: AlertTriangle,
+  fever: Flame,
+  highFever: Flame,
+};

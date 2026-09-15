@@ -1,0 +1,47 @@
+# TLS-terminating reverse proxy for docker-compose.prod.yml (architecture v3
+# §12 names Caddy for exactly this). One public hostname, path-routed:
+#
+#   /api/*, /actuator/*  -> backend        (Spring Boot, port 8080)
+#   /auth/*              -> keycloak       (KC_HTTP_RELATIVE_PATH=/auth)
+#   /mqtt                -> mosquitto      (MQTT over WebSocket, port 9001)
+#   everything else      -> fe             (nginx, port 8080)
+#
+# PUBLIC_HOST and CADDY_TLS come from .env (see .env.example):
+#   CADDY_TLS=internal        Caddy's own local CA (lab / staging on a LAN)
+#   CADDY_TLS=ops@example.com ACME (Let's Encrypt) for a public hostname
+#
+# Because everything is same-origin the backend's CORS list and Keycloak's
+# web origins collapse to https://PUBLIC_HOST, and the proxy is the only
+# hop the backend trusts X-Forwarded-For from
+# (THERMOMETER_RATELIMIT_TRUST_FORWARDED_FOR=true in the overlay).
+
+{$PUBLIC_HOST} {
+	tls {$CADDY_TLS}
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		# The fe image sets its own CSP / nosniff / referrer / permissions
+		# headers; Keycloak and the backend set theirs. Only HSTS is added here.
+		-Server
+	}
+
+	handle /api/* {
+		reverse_proxy backend:8080
+	}
+	handle /actuator/* {
+		reverse_proxy backend:8080
+	}
+	handle /auth/* {
+		reverse_proxy keycloak:8080
+	}
+	handle /mqtt {
+		# Mosquitto's WebSocket listener serves the MQTT sub-protocol on any
+		# path; strip the routing prefix so the broker sees "/".
+		rewrite * /
+		reverse_proxy mosquitto:9001
+	}
+	handle {
+		reverse_proxy fe:8080
+	}
+}

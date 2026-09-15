@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Printer, Users } from 'lucide-react';
 import { CartesianGrid, Line, LineChart, ReferenceArea, XAxis, YAxis } from 'recharts';
-import { TemperatureUnit } from '../api/client';
+import { TemperatureUnit } from '../../api/client';
 import {
   useCareNotes,
   useDoctorPatients,
@@ -10,19 +10,20 @@ import {
   useMe,
   useMeasurementHistory,
   useResolvedThresholds,
-} from '../api/queries';
-import { computeYDomain, TemperatureSeriesPoint } from '../components/temperatureWindow';
-import { RiskBadge } from '../components/PatientTriage';
-import { TemperatureBadge } from '../components/ui/Badge';
-import { Button } from '../components/ui/Button';
-import { Card } from '../components/ui/Card';
-import { EmptyState, SkeletonBlock } from '../components/ui/EmptyState';
-import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableHeadRow, TableRow } from '../components/ui/Table';
-import { LIGHT_CHART_COLORS } from '../theme/chartColors';
-import { getTemperatureTier, TEMPERATURE_TIER_BANDS } from '../theme/temperature';
-import { convertFromCelsius, unitSuffix } from '../utils/temperature';
-import { bucketMsFor, bucketReadings } from '../utils/doctorFeeds';
-import { formatTemperature, formatTemperatureDelta } from '../utils/temperatureFormat';
+} from '../../api/queries';
+import { computeYDomain, TemperatureSeriesPoint } from '../../components/temperatureWindow';
+import { RiskBadge } from '../../components/PatientTriage';
+import { TemperatureBadge } from '../../components/ui/Badge';
+import { Button } from '../../components/ui/Button';
+import { Card } from '../../components/ui/Card';
+import { EmptyState, ErrorState, SkeletonBlock } from '../../components/ui/EmptyState';
+import { StatTile } from '../../components/ui/StatTile';
+import { Table, TableBody, TableCell, TableHead, TableHeadCell, TableHeadRow, TableRow } from '../../components/ui/Table';
+import { LIGHT_CHART_COLORS } from '../../theme/chartColors';
+import { getTemperatureTier, TEMPERATURE_TIER_BANDS } from '../../theme/temperature';
+import { convertFromCelsius, unitSuffix } from '../../utils/temperature';
+import { bucketMsFor, bucketReadings } from '../../utils/doctorFeeds';
+import { formatTemperature, formatTemperatureDelta } from '../../utils/temperatureFormat';
 
 const RANGES = [
   { label: '24 hours', hours: 24 },
@@ -56,7 +57,12 @@ export function PatientReportPage() {
   const summaryQuery = useDoctorPatientsSummary(rangeHours);
   const meQuery = useMe();
   const notesQuery = useCareNotes(patientId);
-  const thresholdsQuery = useResolvedThresholds(patientId);
+  // Gated on a real id (review FE-22): with patientId = '' the empty
+  // subjectUserId is dropped from the query string and /api/thresholds/resolved
+  // answers for the *doctor*, whose scale would then be rendered as this
+  // patient's on a clinical report. useCareNotes and useMeasurementHistory on
+  // this page were already gated; this one was not.
+  const thresholdsQuery = useResolvedThresholds(patientId, { enabled: !!patientId });
 
   const patient = (patientsQuery.data ?? []).find((p) => p.patientUserId === patientId) ?? null;
   const summary = (summaryQuery.data ?? []).find((p) => p.patientUserId === patientId) ?? null;
@@ -93,6 +99,25 @@ export function PatientReportPage() {
     return (
       <div className="mx-auto max-w-4xl p-4 sm:p-6">
         <SkeletonBlock className="h-64" />
+      </div>
+    );
+  }
+
+  /**
+   * A failed patient-list request is not a withdrawn consent (review FE-24).
+   * Rendering "Patient not found" for a network error tells a doctor their
+   * access was revoked, which is both wrong and unactionable — this says what
+   * actually happened and offers the retry.
+   */
+  if (patientsQuery.isError) {
+    return (
+      <div className="mx-auto max-w-4xl p-4 sm:p-6">
+        <Card density="compact">
+          <ErrorState
+            message="Could not load your patient list, so this report can't be prepared. This is a connection problem, not a change to your access."
+            onRetry={() => void patientsQuery.refetch()}
+          />
+        </Card>
       </div>
     );
   }
@@ -158,7 +183,15 @@ export function PatientReportPage() {
         </div>
         <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-body sm:grid-cols-3">
           <ReportField label="Patient" value={patientName} />
-          <ReportField label="Device" value={patient.deviceBdAddr ? `${patient.deviceModel} · ${patient.deviceBdAddr}` : 'none claimed'} />
+          {/* A claimed device may have no model recorded — see ConnectPage (review FE-14). */}
+          <ReportField
+            label="Device"
+            value={
+              patient.deviceBdAddr
+                ? `${patient.deviceModel ?? 'unknown model'} · ${patient.deviceBdAddr}`
+                : 'none claimed'
+            }
+          />
           <ReportField label="Readings" value={summary ? String(summary.readingCount) : '—'} />
           <ReportField label="Prepared by" value={clinician} />
           <ReportField label="Generated" value={new Date().toLocaleString()} />
@@ -178,11 +211,11 @@ export function PatientReportPage() {
 
       {summary && (
         <div className="print-avoid-break grid grid-cols-2 gap-3 sm:grid-cols-5">
-          <SummaryTile label="Latest" value={formatTemperature(summary.latestCelsius, unit)} />
-          <SummaryTile label="Average" value={formatTemperature(summary.avgCelsius, unit)} />
-          <SummaryTile label="Minimum" value={formatTemperature(summary.minCelsius, unit)} />
-          <SummaryTile label="Maximum" value={formatTemperature(summary.maxCelsius, unit)} />
-          <SummaryTile label="Variability" value={formatTemperatureDelta(summary.stddevCelsius, unit)} />
+          <StatTile size="sm" label="Latest" value={formatTemperature(summary.latestCelsius, unit)} />
+          <StatTile size="sm" label="Average" value={formatTemperature(summary.avgCelsius, unit)} />
+          <StatTile size="sm" label="Minimum" value={formatTemperature(summary.minCelsius, unit)} />
+          <StatTile size="sm" label="Maximum" value={formatTemperature(summary.maxCelsius, unit)} />
+          <StatTile size="sm" label="Variability" value={formatTemperatureDelta(summary.stddevCelsius, unit)} />
         </div>
       )}
 
@@ -277,15 +310,6 @@ function ReportField({ label, value }: { label: string; value: string }) {
       <dt className="text-label uppercase tracking-wide text-ink-muted">{label}</dt>
       <dd className="text-body text-ink-primary">{value}</dd>
     </div>
-  );
-}
-
-function SummaryTile({ label, value }: { label: string; value: string }) {
-  return (
-    <Card density="compact">
-      <div className="text-label uppercase tracking-wide text-ink-muted">{label}</div>
-      <div className="mt-1 font-tabular text-h3 font-semibold text-ink-primary">{value}</div>
-    </Card>
   );
 }
 

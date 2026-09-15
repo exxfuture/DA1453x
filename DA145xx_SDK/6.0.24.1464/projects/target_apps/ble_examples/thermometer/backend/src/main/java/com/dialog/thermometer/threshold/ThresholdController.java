@@ -93,14 +93,16 @@ public class ThresholdController {
 
     @GetMapping("/mine")
     public ResponseEntity<ThresholdResponse> mine(Authentication authentication) {
-        CurrentUser me = requireRole(authentication, Role.CUSTOMER, "only a customer has a personal threshold scale");
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a customer has a personal threshold scale", Role.CUSTOMER);
         return respond(thresholds.findByScopeAndSubjectUserId(AlertThreshold.SCOPE_SELF, me.id()));
     }
 
     @PutMapping("/mine")
     public ThresholdResponse upsertMine(@Valid @RequestBody UpsertThresholdRequest request,
                                          Authentication authentication) {
-        CurrentUser me = requireRole(authentication, Role.CUSTOMER, "only a customer has a personal threshold scale");
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a customer has a personal threshold scale", Role.CUSTOMER);
         AlertThreshold row = thresholds.findByScopeAndSubjectUserId(AlertThreshold.SCOPE_SELF, me.id())
                 .orElseGet(() -> new AlertThreshold(AlertThreshold.SCOPE_SELF, me.id(), me.id(),
                         request.normalStartC(), request.elevatedStartC(), request.feverStartC(), request.highFeverStartC()));
@@ -111,7 +113,8 @@ public class ThresholdController {
 
     @DeleteMapping("/mine")
     public ResponseEntity<Void> clearMine(Authentication authentication) {
-        CurrentUser me = requireRole(authentication, Role.CUSTOMER, "only a customer has a personal threshold scale");
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a customer has a personal threshold scale", Role.CUSTOMER);
         thresholds.findByScopeAndSubjectUserId(AlertThreshold.SCOPE_SELF, me.id()).ifPresent(thresholds::delete);
         return ResponseEntity.noContent().build();
     }
@@ -121,7 +124,8 @@ public class ThresholdController {
     @GetMapping("/patient/{patientUserId}")
     public ResponseEntity<ThresholdResponse> patientOverride(@PathVariable String patientUserId,
                                                               Authentication authentication) {
-        CurrentUser me = requireRole(authentication, Role.DOCTOR, "only a doctor can set a patient override");
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a doctor can set a patient override", Role.DOCTOR);
         requireActiveConsent(me, patientUserId);
         return respond(thresholds.findByScopeAndSubjectUserIdAndSetByUserId(AlertThreshold.SCOPE_DOCTOR_OVERRIDE,
                 patientUserId, me.id()));
@@ -131,7 +135,8 @@ public class ThresholdController {
     public ThresholdResponse upsertPatientOverride(@PathVariable String patientUserId,
                                                     @Valid @RequestBody UpsertThresholdRequest request,
                                                     Authentication authentication) {
-        CurrentUser me = requireRole(authentication, Role.DOCTOR, "only a doctor can set a patient override");
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a doctor can set a patient override", Role.DOCTOR);
         requireActiveConsent(me, patientUserId);
 
         AlertThreshold row = thresholds
@@ -151,7 +156,8 @@ public class ThresholdController {
     @DeleteMapping("/patient/{patientUserId}")
     public ResponseEntity<Void> clearPatientOverride(@PathVariable String patientUserId,
                                                       Authentication authentication) {
-        CurrentUser me = requireRole(authentication, Role.DOCTOR, "only a doctor can clear their patient override");
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a doctor can clear their patient override", Role.DOCTOR);
         requireActiveConsent(me, patientUserId);
         thresholds.findByScopeAndSubjectUserIdAndSetByUserId(AlertThreshold.SCOPE_DOCTOR_OVERRIDE, patientUserId,
                 me.id()).ifPresent(row -> {
@@ -165,7 +171,7 @@ public class ThresholdController {
 
     @GetMapping("/system")
     public ResponseEntity<ThresholdResponse> system(Authentication authentication) {
-        requireRole(authentication, Role.ADMIN, "admin role required");
+        currentUserService.resolveWithRole(authentication, "admin role required", Role.ADMIN);
         return respond(thresholds.findByScope(AlertThreshold.SCOPE_SYSTEM));
     }
 
@@ -177,7 +183,7 @@ public class ThresholdController {
     @PutMapping("/system")
     public ThresholdResponse upsertSystem(@Valid @RequestBody UpsertThresholdRequest request,
                                            Authentication authentication) {
-        CurrentUser me = requireRole(authentication, Role.ADMIN, "admin role required");
+        CurrentUser me = currentUserService.resolveWithRole(authentication, "admin role required", Role.ADMIN);
         AlertThreshold row = thresholds.findByScope(AlertThreshold.SCOPE_SYSTEM)
                 .orElseGet(() -> new AlertThreshold(AlertThreshold.SCOPE_SYSTEM, null, me.id(),
                         request.normalStartC(), request.elevatedStartC(), request.feverStartC(), request.highFeverStartC()));
@@ -191,14 +197,6 @@ public class ThresholdController {
     private static ResponseEntity<ThresholdResponse> respond(Optional<AlertThreshold> row) {
         return row.map(ThresholdResponse::from).map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
-    }
-
-    private CurrentUser requireRole(Authentication authentication, Role required, String message) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != required) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, message);
-        }
-        return me;
     }
 
     private void requireActiveConsent(CurrentUser doctor, String patientUserId) {

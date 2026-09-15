@@ -1,6 +1,7 @@
 import { PatientEventsResponse, TemperatureEventResponse } from '../api/client';
 import { TemperatureSeriesPoint } from '../components/temperatureWindow';
 import { getTemperatureTier, TemperatureTier } from '../theme/temperature';
+import { formatDuration } from './time';
 
 /**
  * Pure shaping behind the doctor's fleet event feed and printable report.
@@ -42,11 +43,17 @@ export function groupByPatient(rows: PatientEventsResponse[]): PatientFeed[] {
   return [...byPatient.values()];
 }
 
-/** Human-readable length of an episode. */
+/**
+ * Human-readable length of an episode, from its two instants.
+ *
+ * Delegates to the one elapsed-time formatter (review FE-25) instead of the
+ * third convention this file used to carry — a `(startMs, endMs)` signature that
+ * rendered "2.5 h" where the customer's history rendered "2 h 30 min" for the
+ * same episode. Kept as a named helper because the call sites hold a start and
+ * an end, not a difference.
+ */
 export function durationText(startMs: number, endMs: number): string {
-  const minutes = Math.max(0, Math.round((endMs - startMs) / 60_000));
-  if (minutes < 60) return `${minutes} min`;
-  return `${(minutes / 60).toFixed(1)} h`;
+  return formatDuration(Math.max(0, endMs - startMs));
 }
 
 /** Bucket width for the report's readings table, chosen so a report is ~20-30 rows. */

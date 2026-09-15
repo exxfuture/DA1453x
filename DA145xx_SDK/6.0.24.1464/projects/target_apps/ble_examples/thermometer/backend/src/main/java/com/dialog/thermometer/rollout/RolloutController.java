@@ -1,4 +1,4 @@
-package com.dialog.thermometer.api;
+package com.dialog.thermometer.rollout;
 
 import com.dialog.thermometer.api.dto.CreateRolloutRequest;
 import com.dialog.thermometer.api.dto.PageResponse;
@@ -6,9 +6,6 @@ import com.dialog.thermometer.api.dto.RolloutDetailResponse;
 import com.dialog.thermometer.api.dto.RolloutResponse;
 import com.dialog.thermometer.api.dto.RolloutStatusRequest;
 import com.dialog.thermometer.api.dto.RolloutSummaryResponse;
-import com.dialog.thermometer.rollout.Rollout;
-import com.dialog.thermometer.rollout.RolloutService;
-import com.dialog.thermometer.rollout.RolloutTarget;
 import com.dialog.thermometer.security.CurrentUserService;
 import com.dialog.thermometer.security.Role;
 import jakarta.validation.Valid;

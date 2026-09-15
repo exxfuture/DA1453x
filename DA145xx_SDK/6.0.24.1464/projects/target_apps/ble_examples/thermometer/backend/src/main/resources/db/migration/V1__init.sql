@@ -2,10 +2,12 @@
 -- available in the target Postgres image (see ../../../docker-compose.yml,
 -- which uses timescale/timescaledb:latest-pg16).
 --
--- Pre-prod: this project has no versioning discipline yet, so there is
--- exactly one migration file. Edit this script directly for schema changes
--- instead of adding V2__...sql — once there's a real deployed environment
--- with data to preserve, switch back to incremental Flyway migrations.
+-- This is the schema *baseline* and is now immutable: the local compose stack
+-- holds real data (readings accumulate in the postgres_data volume), so schema
+-- changes go in a new V<n>__….sql file and existing databases migrate in place.
+-- Do not edit this script — Flyway checksums it, and an edit makes every
+-- already-migrated database fail validation on the next start. See
+-- backend/README.md "Data model".
 CREATE EXTENSION IF NOT EXISTS timescaledb;
 CREATE EXTENSION IF NOT EXISTS pgcrypto; -- gen_random_uuid()
 

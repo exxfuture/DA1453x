@@ -69,10 +69,8 @@ public class AnnotationController {
     @PostMapping
     public ResponseEntity<AnnotationResponse> create(@Valid @RequestBody CreateAnnotationRequest request,
                                                       Authentication authentication) {
-        CurrentUser me = currentUserService.resolve(authentication);
-        if (me.role() != Role.CUSTOMER) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "only a customer can annotate their own readings");
-        }
+        CurrentUser me = currentUserService.resolveWithRole(authentication,
+                "only a customer can annotate their own readings", Role.CUSTOMER);
         requireOwnership(me, request.deviceBdAddr());
 
         MeasurementAnnotation saved = annotations.save(new MeasurementAnnotation(
